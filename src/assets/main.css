@@ -1,0 +1,42 @@
+@font-face {
+  font-family: "Poppins";
+  src: url("./fonts/Poppins-Regular.ttf") format("truetype");
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: "Kantumruy Pro";
+  src: url("./fonts/KantumruyPro-Regular.ttf") format("truetype");
+  font-weight: 400;
+}
+
+:root {
+  --green-primary: #3fba7f;
+  --green-dark: #2a9d6a;
+  --green-light: #e8f8f0;
+  --green-mid: #b7ecd4;
+  --green-accent: #00c67a;
+  --sidebar-bg: #f4fdf8;
+  --sidebar-width: 240px;
+  --card-radius: 16px;
+  --body-bg: #eef8f3;
+  --text-main: #1a2e25;
+  --text-muted: #6b8f7a;
+  --white: #ffffff;
+  --shadow: 0 4px 24px rgba(63, 186, 127, 0.1);
+  --shadow-sm: 0 2px 10px rgba(63, 186, 127, 0.08);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Poppins", "Kantumruy Pro", sans-serif;
+  background: var(--body-bg);
+  color: var(--text-main);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
