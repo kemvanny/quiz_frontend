@@ -3,8 +3,8 @@
     <div id="section-quizzes" style="display: block">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <div>
-                <div class="page-title">Quiz Management</div>
-                <div class="page-subtitle">Monitor all quizzes across all rooms</div>
+                <div class="page-title">ការគ្រប់គ្រងកម្រងសំណួរ</div>
+                <div class="page-subtitle">តាមដានរាល់កម្រងសំណួរនៅតាមបន្ទប់ទាំងអស់</div>
             </div>
         </div>
 
@@ -20,7 +20,7 @@
                         2,221
                     </div>
                     <div style="font-size: 12px; color: var(--text-muted); font-weight: 600">
-                        Total Quizzes
+                        កម្រងសំណួរសរុប
                     </div>
                 </div>
             </div>
@@ -30,7 +30,7 @@
                         43
                     </div>
                     <div style="font-size: 12px; color: var(--text-muted); font-weight: 600">
-                        Draft
+                        សេចក្តីព្រាង
                     </div>
                 </div>
             </div>
@@ -40,7 +40,7 @@
                         121
                     </div>
                     <div style="font-size: 12px; color: var(--text-muted); font-weight: 600">
-                        Active
+                        កំពុងដំណើរការ
                     </div>
                 </div>
             </div>
@@ -50,31 +50,43 @@
                         2,057
                     </div>
                     <div style="font-size: 12px; color: var(--text-muted); font-weight: 600">
-                        Closed
+                        បានបញ្ចប់
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="dash-card">
-            <div style="overflow-x: auto">
-                <table class="dash-table">
-                    <thead>
-                        <tr>
-                            <th>Quiz ID</th>
-                            <th>Title</th>
-                            <th>Room</th>
-                            <th>Teacher</th>
-                            <th>Status</th>
-                            <th>Submissions</th>
-                            <th>Avg Score</th>
-                            <th>Created</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="quizzesTable"></tbody>
-                </table>
-            </div>
-        </div>
+        <DataTable :headers="quizHeaders" :items="quizzes">
+            <template #row="{ item, index }">
+                <td>{{ index + 1 }}</td>
+                <td>{{ item.title }}</td>
+                <td>{{ item.room }}</td>
+                <td>{{ item.teacher }}</td>
+                <td>{{ item.status }}</td>
+                <td>{{ item.submissions }}</td>
+                <td>{{ item.averageScore }}</td>
+                <td>{{ item.createdAt }}</td>
+                <td>
+                    <button class="btn btn-sm bi bi-pencil-square"></button>
+                    <button class="btn btn-sm bi bi-trash text-danger"></button>
+                </td>
+            </template>
+        </DataTable>
     </div>
 </template>
+<script setup>
+import { ref } from "vue";
+import DataTable from "@/components/common/DataTable.vue";
+const quizHeaders = [
+    { label: "លេខសម្គាល់", key: "id" },
+    { label: "ចំណងជើង", key: "title" },
+    { label: "បន្ទប់", key: "room" },
+    { label: "គ្រូបង្រៀន", key: "teacher" },
+    { label: "ស្ថានភាព", key: "status" },
+    { label: "ការដាក់បញ្ជូន", key: "submissions" },
+    { label: "ពិន្ទុមធ្យម", key: "averageScore" },
+    { label: "ថ្ងៃបង្កើត", key: "createdAt" },
+    { label: "សកម្មភាព", key: "actions" },
+];
+const quizzes = ref([]);
+</script>
