@@ -9,10 +9,6 @@
             ស្វាគមន៍ការត្រឡប់មកវិញ! នេះគឺជាអ្វីដែលកំពុងកើតឡើងនៅថ្ងៃនេះ
           </div>
         </div>
-
-        <BaseButton @click="isModalOpen = true">
-          <i class="bi bi-plus-lg me-1"></i> បន្ថែមអ្នកប្រើប្រាស់
-        </BaseButton>
       </div>
 
       <!-- STAT CARDS -->
@@ -158,67 +154,11 @@
       </div>
     </div>
 
-    <BaseModal :is-open="isModalOpen" title="បង្កើតគណនី" subtitle="បន្ថែមអ្នកប្រើប្រាស់ទៅក្នុងប្រព័ន្ធរបស់អ្នក" tag="អ្នកប្រើប្រាស់ថ្មី"
-      width="600px" @close="isModalOpen = false">
-      <!-- BODY របស់ Modal -->
-      <div class="glass-grid">
-        <div class="glass-field">
-          <label>នាមខ្លួន</label>
-          <input type="text" placeholder="អាន">
-        </div>
-
-        <div class="glass-field">
-          <label>នាមត្រកូល</label>
-          <input type="text" placeholder="ដានីកា">
-        </div>
-
-        <div class="glass-field full">
-          <label>អ៊ីមែល</label>
-          <input type="email" placeholder="andanika@gmail.com">
-        </div>
-
-        <!-- ROLE CHIPS -->
-        <div class="glass-field full">
-          <label>តួនាទី</label>
-
-          <div class="role-chips" >
-            <label class="chip " :class="{ 'active': selectedRole === 'student' }">
-              <input type="radio" value="student" v-model="selectedRole" checked hidden>
-              <i class="bi bi-mortarboard"></i> សិស្ស
-            </label>
-
-            <label class="chip" :class="{ 'active': selectedRole === 'teacher' }">
-              <input type="radio" value="teacher" v-model="selectedRole" hidden>
-              <i class="bi bi-easel"></i> គ្រូបង្រៀន
-            </label>
-
-            <label class="chip" :class="{ 'active': selectedRole === 'admin' }">
-              <input type="radio" value="admin" v-model="selectedRole" hidden>
-              <i class="bi bi-shield-lock"></i>អ្នកគ្រប់គ្រង
-            </label>
-          </div>
-        </div>
-      </div>
-
-      <template #footer>
-        <button class="btn  btn-outline-secondary" @click="isModalOpen = false">បោះបង់</button>
-        <BaseButton @click="handleCreate" >បង្កើតអ្នកប្រើប្រាស់</BaseButton>
-      </template>
-    </BaseModal>
+    
   </div>
 </template>
 
 <script setup>
-import BaseButton from '@/components/common/BaseButton.vue';
-import { ref } from 'vue';
-
-const isModalOpen = ref(false);
-
-const selectedRole = ref('student');
-
-const handleCreate = (data) => {
-  isModalOpen.value = false;
-}
 
 </script>
 
@@ -230,7 +170,7 @@ const handleCreate = (data) => {
 }
 
 .page-subtitle {
-  font-size: 13px;
+  font-size: 15px;
   color: var(--text-muted);
   font-weight: 500;
 }
@@ -410,7 +350,7 @@ const handleCreate = (data) => {
 }
 
 .dash-table th {
-  font-size: 11px;
+  font-size: 15px;
   font-weight: 700;
   color: var(--text-muted);
   text-transform: uppercase;
@@ -420,7 +360,7 @@ const handleCreate = (data) => {
 }
 
 .dash-table td {
-  font-size: 13px;
+  font-size: 15px;
   padding: 12px 12px;
   border-bottom: 1px solid var(--green-light);
   vertical-align: middle;
@@ -651,7 +591,7 @@ const handleCreate = (data) => {
   background: var(--green-primary);
   color: #fff;
   font-weight: 700;
-  font-size: 13px;
+  font-size: 15px;
   border: none;
   padding: 8px 18px;
   border-radius: 10px;
