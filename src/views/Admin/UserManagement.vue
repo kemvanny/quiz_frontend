@@ -6,12 +6,11 @@
                 <div class="page-title">គ្រប់គ្រងអ្នកប្រើប្រាស់</div>
                 <div class="page-subtitle">គ្រប់គ្រងគណនីគ្រូបង្រៀន សិស្ស និង admin</div>
             </div>
-            <BaseButton>
-                <i class="bi bi-person-plus-fill me-1"></i>បង្កើតគណនី
+            <BaseButton @click="isModalOpen = true">
+                <i class="bi bi-person-plus-fill me-1"></i>បង្កើតគណនីអ្នកប្រើប្រាស់
             </BaseButton>
-            
-        </div>
 
+        </div>
         <!-- Search Component -->
         <SearchFilter placeholder="ស្វែងរកតាមឈ្មោះ ឬអ៊ីមែល..." @update:search="searchQuery = $event">
             <template #filters>
@@ -37,7 +36,6 @@
                 <span>ចំនួនសរុប: {{ filteredUsers.length }}</span>
             </template>
         </SearchFilter>
-
         <!-- Table Component -->
         <DataTable :headers="userHeaders" :items="filteredUsers">
             <template #row="{ item, index }">
@@ -55,15 +53,67 @@
                 </td>
             </template>
         </DataTable>
+        <!-- BaseModal -->
+        <BaseModal :is-open="isModalOpen" title="បង្កើតគណនី" subtitle="បន្ថែមអ្នកប្រើប្រាស់ទៅក្នុងប្រព័ន្ធរបស់អ្នក"
+            tag="អ្នកប្រើប្រាស់ថ្មី" width="600px" @close="isModalOpen = false">
+            <div class="glass-grid">
+                <div class="glass-field">
+                    <label>នាមខ្លួន</label>
+                    <input type="text" placeholder="អាន">
+                </div>
+
+                <div class="glass-field">
+                    <label>នាមត្រកូល</label>
+                    <input type="text" placeholder="ដានីកា">
+                </div>
+
+                <div class="glass-field full">
+                    <label>អ៊ីមែល</label>
+                    <input type="email" placeholder="andanika@gmail.com">
+                </div>
+                <div class="glass-field full">
+                    <label>តួនាទី</label>
+
+                    <div class="role-chips">
+                        <label class="chip " :class="{ 'active': selectedRole === 'student' }">
+                            <input type="radio" value="student" v-model="selectedRole" checked hidden>
+                            <i class="bi bi-mortarboard"></i> សិស្ស
+                        </label>
+
+                        <label class="chip" :class="{ 'active': selectedRole === 'teacher' }">
+                            <input type="radio" value="teacher" v-model="selectedRole" hidden>
+                            <i class="bi bi-easel"></i> គ្រូបង្រៀន
+                        </label>
+
+                        <label class="chip" :class="{ 'active': selectedRole === 'admin' }">
+                            <input type="radio" value="admin" v-model="selectedRole" hidden>
+                            <i class="bi bi-shield-lock"></i>អ្នកគ្រប់គ្រង
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <template #footer>
+                <button class="btn  btn-outline-secondary" @click="isModalOpen = false">បោះបង់</button>
+                <BaseButton @click="handleCreate">បង្កើតអ្នកប្រើប្រាស់</BaseButton>
+            </template>
+        </BaseModal>
     </div>
 </template>
 
 <script setup>
-import BaseButton from "@/components/common/BaseButton.vue";
 import { ref, computed } from "vue";
 
+const isModalOpen = ref(false);
+
+const selectedRole = ref('student');
+
+const handleCreate = (data) => {
+  isModalOpen.value = false;
+}
+
 const searchQuery = ref("");
-const selectedRole = ref("");
+const selectedRoles = ref("");
 
 //  Header
 const userHeaders = [
@@ -84,7 +134,7 @@ const filteredUsers = computed(() => {
     return users.value.filter(
         (u) =>
             u.name.toLowerCase().includes(searchQuery.value.toLowerCase()) &&
-            (selectedRole.value === "" || u.role === selectedRole.value),
+            (selectedRoles.value === "" || u.role === selectedRoles.value),
     );
 });
 </script>

@@ -8,14 +8,14 @@
       <div class="brand-name">Pralong <span>Admin</span></div>
     </div>
 
-    <div class="nav-section-label">មឺនុយមេ</div>
+    <div class="nav-section-label">មុខងារ</div>
     <nav class="nav flex-column">
       <router-link  class="nav-link" :to="{ name: 'AdminDashboard' }">
         <i class="bi bi-grid-1x2-fill"></i> ផ្ទាំងគ្រប់គ្រង
       </router-link>
       <router-link class="nav-link" :to="{name: 'UserManagement' }">
         <i class="bi bi-people-fill"></i> គ្រប់គ្រងអ្នកប្រើប្រាស់
-        <span class="badge-count">24</span>
+       
       </router-link>
       <router-link class="nav-link" :to="{ name: 'QuizManagement' }">
         <i class="bi bi-journal-check"></i> គ្រប់គ្រងការប្រឡង
@@ -94,7 +94,7 @@
 }
 
 .nav-section-label {
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 700;
   color: var(--text-muted);
   letter-spacing: 1.2px;
