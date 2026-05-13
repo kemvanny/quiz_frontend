@@ -9,11 +9,10 @@
             ស្វាគមន៍ការត្រឡប់មកវិញ! នេះគឺជាអ្វីដែលកំពុងកើតឡើងនៅថ្ងៃនេះ
           </div>
         </div>
-        <button class="btn-green" onclick="
-                document.getElementById('addUserModal').style.display = 'flex'
-              ">
+
+        <BaseButton @click="isModalOpen = true">
           <i class="bi bi-plus-lg me-1"></i> បន្ថែមអ្នកប្រើប្រាស់
-        </button>
+        </BaseButton>
       </div>
 
       <!-- STAT CARDS -->
@@ -159,84 +158,69 @@
       </div>
     </div>
 
-
-    <div id="addUserModal" class="glass-modal">
-      <div class="glass-box">
-
-        <!-- HEADER -->
-        <div class="glass-header">
-          <div>
-            <div class="glass-tag">NEW USER</div>
-            <h3>Create Account</h3>
-            <p>Add a user to your system</p>
-          </div>
-
-          <button class="glass-close" onclick="document.getElementById('addUserModal').style.display='none'">
-            <i class="bi bi-x-lg"></i>
-          </button>
+    <BaseModal :is-open="isModalOpen" title="បង្កើតគណនី" subtitle="បន្ថែមអ្នកប្រើប្រាស់ទៅក្នុងប្រព័ន្ធរបស់អ្នក" tag="អ្នកប្រើប្រាស់ថ្មី"
+      width="600px" @close="isModalOpen = false">
+      <!-- BODY របស់ Modal -->
+      <div class="glass-grid">
+        <div class="glass-field">
+          <label>នាមខ្លួន</label>
+          <input type="text" placeholder="អាន">
         </div>
 
-        <!-- BODY -->
-        <div class="glass-body">
+        <div class="glass-field">
+          <label>នាមត្រកូល</label>
+          <input type="text" placeholder="ដានីកា">
+        </div>
 
-          <!-- FORM GRID -->
-          <div class="glass-grid">
+        <div class="glass-field full">
+          <label>អ៊ីមែល</label>
+          <input type="email" placeholder="andanika@gmail.com">
+        </div>
 
-            <div class="glass-field">
-              <label>First Name</label>
-              <input type="text" placeholder="John">
-            </div>
+        <!-- ROLE CHIPS -->
+        <div class="glass-field full">
+          <label>តួនាទី</label>
 
-            <div class="glass-field">
-              <label>Last Name</label>
-              <input type="text" placeholder="Doe">
-            </div>
+          <div class="role-chips" >
+            <label class="chip " :class="{ 'active': selectedRole === 'student' }">
+              <input type="radio" value="student" v-model="selectedRole" checked hidden>
+              <i class="bi bi-mortarboard"></i> សិស្ស
+            </label>
 
-            <div class="glass-field full">
-              <label>Email</label>
-              <input type="email" placeholder="john@school.com">
-            </div>
+            <label class="chip" :class="{ 'active': selectedRole === 'teacher' }">
+              <input type="radio" value="teacher" v-model="selectedRole" hidden>
+              <i class="bi bi-easel"></i> គ្រូបង្រៀន
+            </label>
 
-            <!-- ROLE CHIPS -->
-            <div class="glass-field full">
-              <label>Role</label>
-
-              <div class="role-chips">
-                <label class="chip active">
-                  <input type="radio" name="role" checked hidden>
-                  <i class="bi bi-mortarboard"></i> Student
-                </label>
-
-                <label class="chip">
-                  <input type="radio" name="role" hidden>
-                  <i class="bi bi-easel"></i> Teacher
-                </label>
-
-                <label class="chip">
-                  <input type="radio" name="role" hidden>
-                  <i class="bi bi-shield-lock"></i> Admin
-                </label>
-              </div>
-            </div>
-
+            <label class="chip" :class="{ 'active': selectedRole === 'admin' }">
+              <input type="radio" value="admin" v-model="selectedRole" hidden>
+              <i class="bi bi-shield-lock"></i>អ្នកគ្រប់គ្រង
+            </label>
           </div>
         </div>
-
-        <!-- FOOTER -->
-        <div class="glass-footer">
-          <button class="btn-cancel" onclick="document.getElementById('addUserModal').style.display='none'">
-            Cancel
-          </button>
-
-          <button class="btn-create">
-            Create User
-          </button>
-        </div>
-
       </div>
-    </div>
+
+      <template #footer>
+        <button class="btn  btn-outline-secondary" @click="isModalOpen = false">បោះបង់</button>
+        <BaseButton @click="handleCreate" >បង្កើតអ្នកប្រើប្រាស់</BaseButton>
+      </template>
+    </BaseModal>
   </div>
 </template>
+
+<script setup>
+import BaseButton from '@/components/common/BaseButton.vue';
+import { ref } from 'vue';
+
+const isModalOpen = ref(false);
+
+const selectedRole = ref('student');
+
+const handleCreate = (data) => {
+  isModalOpen.value = false;
+}
+
+</script>
 
 <style>
 .page-title {
@@ -776,7 +760,7 @@
 }
 
 .form-control,
-.form-select  {
+.form-select {
   border: 1.5px solid var(--green-mid) !important;
   font-family: inherit !important;
   font-size: 13.5px !important;

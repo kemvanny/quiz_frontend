@@ -8,25 +8,25 @@
           រាល់ការដាក់បញ្ជូនចម្លើយរបស់សិស្សនៅក្នុងប្រព័ន្ធទាំងមូល
         </div>
       </div>
-      <button class="btn-outline-green">
+      <BaseButton extraClass="btn-outline-green">
         <i class="bi bi-download me-1"></i> ទាញយកជាឯកសារ CSV
-      </button>
+      </BaseButton>
     </div>
 
     <!-- SearchFilter Component -->
-    <SearchFilter 
-      placeholder="ស្វែងរកសិស្ស ឬកម្រងសំណួរ..." 
+    <SearchFilter
+      placeholder="ស្វែងរកសិស្ស ឬកម្រងសំណួរ..."
       @update:search="searchQuery = $event"
     >
       <template #filters>
         <div class="col-md-2">
-          <select class="form-select " v-model="selectedQuiz">
+          <select class="form-select" v-model="selectedQuiz">
             <option value="">កម្រងសំណួរទាំងអស់</option>
             <!-- loopបង្ហាញកម្រងសំណួរ -->
           </select>
         </div>
         <div class="col-md-2">
-          <select class="form-select " v-model="selectedRoom">
+          <select class="form-select" v-model="selectedRoom">
             <option value="">បន្ទប់ទាំងអស់</option>
           </select>
         </div>
@@ -55,20 +55,17 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
-import SearchFilter from '@/components/common/SearchFilter.vue';
-import DataTable from '@/components/common/DataTable.vue';
-
+import { ref, computed } from "vue";
 const submissionHeaders = [
-  { label: 'លេខសម្គាល់', key: 'id' },
-  { label: 'សិស្ស', key: 'student' },
-  { label: 'កម្រងសំណួរ', key: 'quiz' },
-  { label: 'បន្ទប់', key: 'room' },
-  { label: 'ពិន្ទុ', key: 'score' },
-  { label: 'ពិន្ទុសរុប', key: 'total' },
-  { label: 'ភាគរយ', key: 'percentage' },
-  { label: 'ថ្ងៃបញ្ជូនចម្លើយ', key: 'date' },
-  { label: 'និទ្ទេស', key: 'grade' }
+  { label: "លេខសម្គាល់", key: "id" },
+  { label: "សិស្ស", key: "student" },
+  { label: "កម្រងសំណួរ", key: "quiz" },
+  { label: "បន្ទប់", key: "room" },
+  { label: "ពិន្ទុ", key: "score" },
+  { label: "ពិន្ទុសរុប", key: "total" },
+  { label: "ភាគរយ", key: "percentage" },
+  { label: "ថ្ងៃបញ្ជូនចម្លើយ", key: "date" },
+  { label: "និទ្ទេស", key: "grade" },
 ];
 
 // ទិន្នន័យ ទាញពី API
@@ -76,23 +73,24 @@ const submissions = ref([
   // ឧទាហរណ៍៖ { id: 'S-001', studentName: 'កក្កដា', ... }
 ]);
 
-const searchQuery = ref('');
-const selectedQuiz = ref('');
-const selectedRoom = ref('');
+const searchQuery = ref("");
+const selectedQuiz = ref("");
+const selectedRoom = ref("");
 
 // Filter
 const filteredSubmissions = computed(() => {
-  return submissions.value.filter(s => {
-    const matchSearch = s.studentName.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-                        s.quizTitle.toLowerCase().includes(searchQuery.value.toLowerCase());
+  return submissions.value.filter((s) => {
+    const matchSearch =
+      s.studentName.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+      s.quizTitle.toLowerCase().includes(searchQuery.value.toLowerCase());
     return matchSearch;
   });
 });
 
 //  Grade
 const getGradeClass = (grade) => {
-  if (grade === 'A') return 'bg-success';
-  if (grade === 'F') return 'bg-danger';
-  return 'bg-primary';
+  if (grade === "A") return "bg-success";
+  if (grade === "F") return "bg-danger";
+  return "bg-primary";
 };
 </script>

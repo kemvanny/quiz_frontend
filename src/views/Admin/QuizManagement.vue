@@ -76,7 +76,6 @@
 </template>
 <script setup>
 import { ref } from "vue";
-import DataTable from "@/components/common/DataTable.vue";
 const quizHeaders = [
     { label: "លេខសម្គាល់", key: "id" },
     { label: "ចំណងជើង", key: "title" },

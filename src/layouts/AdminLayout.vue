@@ -41,7 +41,7 @@
   overflow-y: auto;
 }
 .page-body {
-  padding: 28px 32px 40px;
+  padding: 8px 2px;
 }
 .main-content {
   margin-left: var(--sidebar-width);
