@@ -6,7 +6,10 @@
                 <div class="page-title">គ្រប់គ្រងអ្នកប្រើប្រាស់</div>
                 <div class="page-subtitle">គ្រប់គ្រងគណនីគ្រូបង្រៀន សិស្ស និង admin</div>
             </div>
-            <button class="btn-green">បង្កើតគណនី</button>
+            <BaseButton>
+                <i class="bi bi-person-plus-fill me-1"></i>បង្កើតគណនី
+            </BaseButton>
+            
         </div>
 
         <!-- Search Component -->
@@ -56,9 +59,8 @@
 </template>
 
 <script setup>
+import BaseButton from "@/components/common/BaseButton.vue";
 import { ref, computed } from "vue";
-import SearchFilter from "@/components/common/SearchFilter.vue";
-import DataTable from "@/components/common/DataTable.vue";
 
 const searchQuery = ref("");
 const selectedRole = ref("");
