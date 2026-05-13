@@ -776,17 +776,16 @@
 }
 
 .form-control,
-.form-select {
-  border: 1.5px solid var(--green-mid);
-  border-radius: 10px;
-  font-family: inherit;
-  font-size: 13.5px;
+.form-select  {
+  border: 1.5px solid var(--green-mid) !important;
+  font-family: inherit !important;
+  font-size: 13.5px !important;
 }
 
 .form-control:focus,
 .form-select:focus {
-  border-color: var(--green-primary);
-  box-shadow: 0 0 0 3px rgba(63, 186, 127, 0.15);
+  border-color: var(--green-primary) !important;
+  box-shadow: 0 0 0 3px rgba(69, 235, 155, 0.15) !important;
 }
 
 @media (max-width: 768px) {
@@ -803,7 +802,7 @@
   }
 }
 
-/* ═════════ SMALL MODERN MODAL ═════════ */
+/* SMALL MODERN MODAL  */
 
 .modern-modal {
   position: fixed;

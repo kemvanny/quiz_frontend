@@ -10,7 +10,7 @@
 
     <div class="nav-section-label">មឺនុយមេ</div>
     <nav class="nav flex-column">
-      <router-link class="nav-link active"  :to="{ name: 'AdminDashboard' }">
+      <router-link  class="nav-link" :to="{ name: 'AdminDashboard' }">
         <i class="bi bi-grid-1x2-fill"></i> ផ្ទាំងគ្រប់គ្រង
       </router-link>
       <router-link class="nav-link" :to="{name: 'UserManagement' }">
@@ -46,7 +46,6 @@
   </aside>
 </template>
 <style>
-/* SIDEBAR */
 .sidebar {
   width: var(--sidebar-width);
   min-height: 100vh;
@@ -115,6 +114,8 @@
   color: var(--text-muted);
   transition: all 0.2s;
   position: relative;
+  text-decoration: none;
+  cursor: pointer;
 }
 
 .sidebar .nav-link i {
@@ -126,7 +127,7 @@
   color: var(--green-dark);
 }
 
-.sidebar .nav-link.active {
+.sidebar .nav-link.router-link-active {
   background: var(--green-primary);
   color: #fff;
   box-shadow: 0 4px 14px rgba(63, 186, 127, 0.35);
@@ -142,7 +143,7 @@
   padding: 1px 8px;
 }
 
-.sidebar .nav-link.active .badge-count {
+.sidebar .nav-link.router-link-active .badge-count {
   background: rgba(255, 255, 255, 0.3);
 }
 

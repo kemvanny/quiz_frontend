@@ -1,76 +1,88 @@
 <template>
-    <!-- ══ USER MANAGEMENT SECTION ══ -->
-    <div id="section-users" style="display: block">
+    <div>
+        <!-- Title Section -->
         <div class="d-flex justify-content-between align-items-center mb-4">
             <div>
-                <div class="page-title">User Management</div>
-                <div class="page-subtitle">
-                    Manage teachers, students and admin accounts
-                </div>
+                <div class="page-title">គ្រប់គ្រងអ្នកប្រើប្រាស់</div>
+                <div class="page-subtitle">គ្រប់គ្រងគណនីគ្រូបង្រៀន សិស្ស និង admin</div>
             </div>
-            <button class="btn-green" data-bs-toggle="modal" data-bs-target="#addUserModal">
-                <i class="bi bi-person-plus-fill me-1"></i> Create Account
-            </button>
+            <button class="btn-green">បង្កើតគណនី</button>
         </div>
 
-        <!-- FILTERS -->
-        <div class="dash-card mb-3">
-            <div class="row g-2 align-items-center">
-                <div class="col-md-4">
-                    <div class="input-group">
-                        <span class="input-group-text bg-white" style="
-                      border: 1.5px solid var(--green-mid);
-                      border-right: none;
-                      border-radius: 10px 0 0 10px;
-                    ">
-                            <i class="bi bi-search" style="color: var(--text-muted)"></i>
-                        </span>
-                        <input type="text" class="form-control" placeholder="Search by name or email…" id="userSearch"
-                            oninput="filterUsers()" style="border-left: none; border-radius: 0 10px 10px 0" />
-                    </div>
-                </div>
+        <!-- Search Component -->
+        <SearchFilter placeholder="ស្វែងរកតាមឈ្មោះ ឬអ៊ីមែល..." @update:search="searchQuery = $event">
+            <template #filters>
                 <div class="col-md-2">
-                    <select class="form-select" id="roleFilter" onchange="filterUsers()">
-                        <option value="">All Roles</option>
-                        <option value="Teacher">Teacher</option>
-                        <option value="Student">Student</option>
-                        <option value="Admin">Admin</option>
+                    <select class="form-select custom-input" v-model="selectedRole">
+                        <option value="">តួនាទីទាំងអស់</option>
+                        <option value="Teacher">គ្រូបង្រៀន</option>
+                        <option value="Student">សិស្ស</option>
+                        <option value="Admin">អ្នកគ្រប់គ្រង</option>
                     </select>
                 </div>
+            </template>
+            <template #status>
                 <div class="col-md-2">
-                    <select class="form-select" id="statusFilter" onchange="filterUsers()">
-                        <option value="">All Status</option>
-                        <option value="Active">Active</option>
-                        <option value="Inactive">Inactive</option>
+                    <select class="form-select custom-input" id="statusFilter" onchange="filterUsers()">
+                        <option value="">ស្ថានភាពទាំងអស់</option>
+                        <option value="Active">សកម្មភាព</option>
+                        <option value="Inactive">អសកម្ម</option>
                     </select>
                 </div>
-                <div class="col-md-4 text-end">
-                    <span id="userCount" style="
-                    font-size: 13px;
-                    color: var(--text-muted);
-                    font-weight: 600;
-                  "></span>
-                </div>
-            </div>
-        </div>
+            </template>
+            <template #right-side>
+                <span>ចំនួនសរុប: {{ filteredUsers.length }}</span>
+            </template>
+        </SearchFilter>
 
-        <div class="dash-card">
-            <div style="overflow-x: auto">
-                <table class="dash-table">
-                    <thead>
-                        <tr>
-                            <th>#</th>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Role</th>
-                            <th>Status</th>
-                            <th>Joined</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="usersTable"></tbody>
-                </table>
-            </div>
-        </div>
+        <!-- Table Component -->
+        <DataTable :headers="userHeaders" :items="filteredUsers">
+            <template #row="{ item, index }">
+                <td>{{ index + 1 }}</td>
+                <td>{{ item.name }}</td>
+                <td>{{ item.email }}</td>
+                <td>
+                    <span class="badge">{{ item.role }}</span>
+                </td>
+                <td>{{ item.status }}</td>
+                <td>{{ item.joinedDate }}</td>
+                <td>
+                    <button class="btn btn-sm bi bi-pencil-square"></button>
+                    <button class="btn btn-sm bi bi-trash text-danger"></button>
+                </td>
+            </template>
+        </DataTable>
     </div>
 </template>
+
+<script setup>
+import { ref, computed } from "vue";
+import SearchFilter from "@/components/common/SearchFilter.vue";
+import DataTable from "@/components/common/DataTable.vue";
+
+const searchQuery = ref("");
+const selectedRole = ref("");
+
+//  Header
+const userHeaders = [
+    { label: "លេខសម្គាល់", key: "id" },
+    { label: "ឈ្មោះ", key: "name" },
+    { label: "អ៊ីមែល", key: "email" },
+    { label: "តួនាទី", key: "role" },
+    { label: "ស្ថានភាព", key: "status" },
+    { label: "ចូលរួម", key: "date" },
+    { label: "សកម្មភាព", key: "actions" },
+];
+
+const users = ref([
+    /* ទិន្នន័យពី API */
+]);
+
+const filteredUsers = computed(() => {
+    return users.value.filter(
+        (u) =>
+            u.name.toLowerCase().includes(searchQuery.value.toLowerCase()) &&
+            (selectedRole.value === "" || u.role === selectedRole.value),
+    );
+});
+</script>
