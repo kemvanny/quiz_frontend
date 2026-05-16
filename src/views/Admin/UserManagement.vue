@@ -15,11 +15,11 @@
         <SearchFilter placeholder="ស្វែងរកតាមឈ្មោះ ឬអ៊ីមែល..." @update:search="searchQuery = $event">
             <template #filters>
                 <div class="col-md-2">
-                    <select class="form-select custom-input" v-model="selectedRole">
+                    <select class="form-select custom-input" v-model="selectedRoleForFilter">
                         <option value="">តួនាទីទាំងអស់</option>
-                        <option value="Teacher">គ្រូបង្រៀន</option>
-                        <option value="Student">សិស្ស</option>
-                        <option value="Admin">អ្នកគ្រប់គ្រង</option>
+                        <option value="teacher">គ្រូបង្រៀន</option>
+                        <option value="student">សិស្ស</option>
+                        <option value="admin">អ្នកគ្រប់គ្រង</option>
                     </select>
                 </div>
             </template>
@@ -38,15 +38,13 @@
         </SearchFilter>
         <!-- Table Component -->
         <DataTable :headers="userHeaders" :items="filteredUsers">
-            <template #row="{ item, index }">
-                <td>{{ index + 1 }}</td>
-                <td>{{ item.name }}</td>
+            <template #row="{ item }">
+                <td>{{item.user_code }}</td>
+                <td>{{ item.fullName }}</td>
                 <td>{{ item.email }}</td>
-                <td>
-                    <span class="badge">{{ item.role }}</span>
-                </td>
-                <td>{{ item.status }}</td>
-                <td>{{ item.joinedDate }}</td>
+                <td>{{ item.role}}</td>
+                <td>{{ item.status || 'Active' }}</td>
+                <td>{{ formatDate(item.created_at) }}</td>
                 <td>
                     <button class="btn btn-sm bi bi-pencil-square"></button>
                     <button class="btn btn-sm bi bi-trash text-danger"></button>
@@ -75,18 +73,18 @@
                     <label>តួនាទី</label>
 
                     <div class="role-chips">
-                        <label class="chip " :class="{ 'active': selectedRole === 'student' }">
-                            <input type="radio" value="student" v-model="selectedRole" checked hidden>
+                        <label class="chip " :class="{ 'active': selectedRoleForCreate === 'student' }">
+                            <input type="radio" value="student" v-model="selectedRoleForCreate" checked hidden>
                             <i class="bi bi-mortarboard"></i> សិស្ស
                         </label>
 
-                        <label class="chip" :class="{ 'active': selectedRole === 'teacher' }">
-                            <input type="radio" value="teacher" v-model="selectedRole" hidden>
+                        <label class="chip" :class="{ 'active': selectedRoleForCreate === 'teacher' }">
+                            <input type="radio" value="teacher" v-model="selectedRoleForCreate" hidden>
                             <i class="bi bi-easel"></i> គ្រូបង្រៀន
                         </label>
 
-                        <label class="chip" :class="{ 'active': selectedRole === 'admin' }">
-                            <input type="radio" value="admin" v-model="selectedRole" hidden>
+                        <label class="chip" :class="{ 'active': selectedRoleForCreate === 'admin' }">
+                            <input type="radio" value="admin" v-model="selectedRoleForCreate" hidden>
                             <i class="bi bi-shield-lock"></i>អ្នកគ្រប់គ្រង
                         </label>
                     </div>
@@ -102,20 +100,24 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, onMounted } from "vue";
+import { getAllUsers } from "@/api/admin.api";
+
+import { useDate } from "@/composables/useDate";
+
+const {formatDate} = useDate();
 
 const isModalOpen = ref(false);
+const selectedRoleForCreate = ref('student');
+const searchQuery = ref("");
+const selectedRoleForFilter = ref("");
 
-const selectedRole = ref('student');
+const loading = ref(false);
 
 const handleCreate = (data) => {
-  isModalOpen.value = false;
+    isModalOpen.value = false;
 }
 
-const searchQuery = ref("");
-const selectedRoles = ref("");
-
-//  Header
 const userHeaders = [
     { label: "លេខសម្គាល់", key: "id" },
     { label: "ឈ្មោះ", key: "name" },
@@ -126,15 +128,36 @@ const userHeaders = [
     { label: "សកម្មភាព", key: "actions" },
 ];
 
-const users = ref([
-    /* ទិន្នន័យពី API */
-]);
+const users = ref([]);
+
+const fetchUsers = async () => {
+    loading.value = true;
+    try {
+        const res = await getAllUsers();
+        users.value = res.data.data;
+    } catch (error) {
+        console.log('can not get users');
+    } finally {
+        loading.value = false;
+    }
+}
+
+onMounted(() => {
+    fetchUsers();
+})
 
 const filteredUsers = computed(() => {
-    return users.value.filter(
-        (u) =>
-            u.name.toLowerCase().includes(searchQuery.value.toLowerCase()) &&
-            (selectedRoles.value === "" || u.role === selectedRoles.value),
-    );
+    return users.value.filter((u) => {
+        const nameText = u.fullName ? u.fullName.toLowerCase() : "";
+        const emailText = u.email ? u.email.toLowerCase() : "";
+        const search = searchQuery.value.toLowerCase();
+        const matchesSearch = nameText.includes(search) || emailText.includes(search);
+
+        const roleText = u.role ? u.role.toLowerCase() : "";
+        const filterRole = selectedRoleForFilter.value.toLowerCase();
+        const matchesRole = selectedRoleForFilter.value === "" || roleText === filterRole;
+
+        return matchesSearch && matchesRole;
+    });
 });
 </script>

@@ -19,7 +19,7 @@
               <i class="bi bi-people-fill"></i>
             </div>
             <div class="stat-label">អ្នកប្រើប្រាស់សរុប</div>
-            <div class="stat-value">1,423</div>
+            <div class="stat-value">{{dashboardData.users}}</div>
             <span class="stat-badge badge-up"><i class="bi bi-arrow-up-short"></i> 91 នាក់ក្នុងសប្តាហ៍នេះ</span>
           </div>
         </div>
@@ -29,7 +29,7 @@
               <i class="bi bi-door-open-fill"></i>
             </div>
             <div class="stat-label">សរុបបន្ទប់</div>
-            <div class="stat-value">216</div>
+            <div class="stat-value">{{dashboardData.rooms}}</div>
             <span class="stat-badge badge-up"><i class="bi bi-arrow-up-short"></i> 12 បន្ថែមថ្មី</span>
           </div>
         </div>
@@ -39,7 +39,7 @@
               <i class="bi bi-journal-check"></i>
             </div>
             <div class="stat-label">វិញ្ញាសាសរុប</div>
-            <div class="stat-value">2,221</div>
+            <div class="stat-value">{{ dashboardData.quizzes }}</div>
             <span class="stat-badge badge-up"><i class="bi bi-arrow-up-short"></i> 121 កំពុងដំណើរការ</span>
           </div>
         </div>
@@ -49,7 +49,7 @@
               <i class="bi bi-send-check-fill"></i>
             </div>
             <div class="stat-label">ការដាក់ស្នើ</div>
-            <div class="stat-value">78%</div>
+            <div class="stat-value">{{ dashboardData.submissions }}%</div>
             <span class="stat-badge badge-down"><i class="bi bi-arrow-down-short"></i> 1% ធ្លាក់ចុះ</span>
           </div>
         </div>
@@ -159,6 +159,24 @@
 </template>
 
 <script setup>
+import { onMounted, ref } from 'vue';
+import { getSummerise } from '@/api/admin.api';
+
+const dashboardData = ref([]);
+
+const fetchDashboardSummary = async () => {
+  try{
+    const res = await getSummerise();
+    dashboardData.value = res.data.data.data;
+
+  }catch(error){
+    console.log('Data summary not found',error);
+  }
+}
+
+onMounted(() => {
+  fetchDashboardSummary();
+})
 
 </script>
 
