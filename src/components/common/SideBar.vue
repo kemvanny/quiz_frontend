@@ -1,50 +1,66 @@
 <template>
-  <!-- ══ SIDEBAR ══ -->
   <aside class="sidebar">
     <div class="sidebar-brand">
       <div class="brand-icon">
         <i class="bi bi-mortarboard-fill"></i>
       </div>
-      <div class="brand-name">Pralong <span>Admin</span></div>
+      <div class="brand-name">Pralong <span>{{ roleName }}</span></div>
     </div>
 
-    <div class="nav-section-label">មុខងារ</div>
-    <nav class="nav flex-column">
-      <router-link  class="nav-link" :to="{ name: 'AdminDashboard' }">
-        <i class="bi bi-grid-1x2-fill"></i> ផ្ទាំងគ្រប់គ្រង
-      </router-link>
-      <router-link class="nav-link" :to="{name: 'UserManagement' }">
-        <i class="bi bi-people-fill"></i> គ្រប់គ្រងអ្នកប្រើប្រាស់
-       
-      </router-link>
-      <router-link class="nav-link" :to="{ name: 'QuizManagement' }">
-        <i class="bi bi-journal-check"></i> គ្រប់គ្រងការប្រឡង
-      </router-link>
-      <router-link class="nav-link" :to="{ name: 'ResultSubmission' }">
-        <i class="bi bi-bar-chart-fill"></i> លទ្ធផល និងការបញ្ជូន
-      </router-link>
-    </nav>
+    <template v-if="mainMenus && mainMenus.length">
+      <div class="nav-section-label">មុខងារ</div>
+      <nav class="nav flex-column">
+        <router-link 
+          v-for="item in mainMenus" 
+          :key="item.name" 
+          class="nav-link" 
+          :to="{ name: item.routeName }"
+        >
+          <i :class="item.icon"></i> {{ item.name }}
+        </router-link>
+      </nav>
+    </template>
 
-    <div class="nav-section-label" style="margin-top: 12px">ប្រព័ន្ធ</div>
-    <nav class="nav flex-column">
-      <router-link class="nav-link" :to="{ name: 'Settings' }">
-        <i class="bi bi-gear-fill"></i> ការកំណត់
-      </router-link>
-      <router-link class="nav-link" :to="{ name: 'SystemHealth' }">
-        <i class="bi bi-shield-check"></i> ស្ថានភាពប្រព័ន្ធ
-      </router-link>
-      <router-link class="nav-link" :to="{ name: 'Help' }">
-        <i class="bi bi-question-circle"></i> ជំនួយ
-      </router-link>
-    </nav>
+    <template v-if="systemMenus && systemMenus.length">
+      <div class="nav-section-label" style="margin-top: 12px">ប្រព័ន្ធ</div>
+      <nav class="nav flex-column">
+        <router-link 
+          v-for="item in systemMenus" 
+          :key="item.name" 
+          class="nav-link" 
+          :to="{ name: item.routeName }"
+        >
+          <i :class="item.icon"></i> {{ item.name }}
+        </router-link>
+      </nav>
+    </template>
 
     <div class="sidebar-footer">
-      <a class="nav-link" href="#">
+      <a class="nav-link" href="#" @click.prevent="$emit('logout')">
         <i class="bi bi-box-arrow-left"></i> ចាកចេញ
       </a>
     </div>
   </aside>
 </template>
+
+<script setup>
+defineProps({
+  roleName: {
+    type: String,
+    default: 'User'
+  },
+  mainMenus: {
+    type: Array,
+    required: true
+  },
+  systemMenus: {
+    type: Array,
+    default: () => []
+  }
+})
+
+defineEmits(['logout'])
+</script>
 <style>
 .sidebar {
   width: var(--sidebar-width);
@@ -65,7 +81,7 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 20px 22px 20px;
+  padding: 20px 12px 20px;
   border-bottom: 1.5px solid var(--green-mid);
   margin-bottom: 30px;
 }

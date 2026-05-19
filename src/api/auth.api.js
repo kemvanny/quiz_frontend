@@ -1,1 +1,6 @@
-// សម្រាប់ Login, Register, Forget Password (គ្រប់ Role ប្រើរួមគ្នា)
+import api from "./axiosInstance";
+
+export const loginAPI = async (email, password) => {
+  const response = await api.post('/auth/login', { email, password })
+  return response.data;
+}
