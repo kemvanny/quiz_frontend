@@ -10,7 +10,6 @@
                 </thead>
                 <tbody>
                     <tr v-for="(item, index) in items" :key="index">
-                        <!-- ប្រើ Slot ដើម្បីឱ្យ Page បង្ហាញទិន្នន័យតាមចិត្ត -->
                         <slot name="row" :item="item" :index="index"></slot>
                     </tr>
                     <tr v-if="items.length === 0">

@@ -56,26 +56,34 @@
             </div>
         </div>
 
-        <DataTable :headers="quizHeaders" :items="quizzes">
+        <DataTable :headers="quizHeaders" :items="exams">
             <template #row="{ item, index }">
                 <td>{{ index + 1 }}</td>
                 <td>{{ item.title }}</td>
                 <td>{{ item.room }}</td>
-                <td>{{ item.teacher }}</td>
-                <td>{{ item.status }}</td>
+                <td>{{ item.teacher_name }}</td>
+                <td>
+                    <StatusBadge :type="item.status"/>
+                </td>
                 <td>{{ item.submissions }}</td>
                 <td>{{ item.averageScore }}</td>
-                <td>{{ item.createdAt }}</td>
+                <td>{{formatDate( item.created_at )}}</td>
                 <td>
-                    <button class="btn btn-sm bi bi-pencil-square"></button>
-                    <button class="btn btn-sm bi bi-trash text-danger"></button>
+                    <button class="btn btn-sm bi bi-eye text-success"></button>
                 </td>
             </template>
         </DataTable>
     </div>
 </template>
 <script setup>
-import { ref } from "vue";
+import { getAllExams } from "@/api/admin.api";
+import { onMounted, ref } from "vue";
+import { useDate } from "@/composables/useDate";
+import StatusBadge from "@/components/common/StatusBadge.vue";
+
+const { formatDate } = useDate();
+
+
 const quizHeaders = [
     { label: "លេខសម្គាល់", key: "id" },
     { label: "ចំណងជើង", key: "title" },
@@ -87,5 +95,21 @@ const quizHeaders = [
     { label: "ថ្ងៃបង្កើត", key: "createdAt" },
     { label: "សកម្មភាព", key: "actions" },
 ];
-const quizzes = ref([]);
+
+const exams = ref([]);
+
+const fetchExam = async () => {
+    try{
+        const res = await getAllExams();
+        exams.value = res.data.data;
+    }catch(error){
+        console.log(error);
+    }
+}
+
+onMounted(() => {
+    fetchExam();
+})
+
+
 </script>
