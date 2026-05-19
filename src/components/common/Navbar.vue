@@ -1,31 +1,50 @@
 <template>
+
   <div class="main-content">
     <div class="topbar">
       <div class="search-wrap">
         <i class="bi bi-search"></i>
-        <input type="text" placeholder="ស្វែងរកអ្នកប្រើប្រាស់, វិញ្ញាសា, ​បន្ទប់" />
+        <input type="text" :placeholder="searchPlaceholder" />
       </div>
       <div class="user-info">
         <button class="notif-btn">
           <i class="bi bi-bell"></i>
           <span class="dot"></span>
         </button>
-        <img
-          src="https://ui-avatars.com/api/?name=Admin+User&background=3fba7f&color=fff&bold=true"
-          class="avatar"
-          alt="Admin"
-        />
+        <img :src="avatarUrl" class="avatar"
+          alt="Admin" />
         <div>
-          <div class="user-name">អ្នកគ្រប់គ្រង</div>
-          <div class="user-role">អ្នកគ្រប់គ្រងជាន់ខ្ពស់</div>
+          <div class="user-name">{{ userName }}</div>
+          <div class="user-role">{{ userRole }}</div>
         </div>
       </div>
     </div>
   </div>
 </template>
+<script setup>
+import { computed } from 'vue';
 
-<style >
+const props = defineProps({
+  searchPlaceholder: {
+    type: String,
+    default: 'ស្វែងរក....'
+  },
+  userName: {
+    type: String,
+    default: 'គណនីប្រើប្រាស់'
+  },
+  userRole: {
+    type: String,
+    default: 'សមាជិក'
+  }
+})
 
+const avatarUrl = computed(() => {
+  const formattedName = props.userName.trim().replace(/\s+/g, '+')
+  return `https://ui-avatars.com/api/?name=${formattedName}&background=3fba7f&color=fff&bold=true`
+})
+</script>
+<style>
 .topbar {
   background: var(--white);
   border-bottom: 1.5px solid var(--green-mid);
