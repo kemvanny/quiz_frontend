@@ -42,12 +42,13 @@
                 <td>{{ item.user_code }}</td>
                 <td>{{ item.fullName }}</td>
                 <td>{{ item.email }}</td>
-                <td>{{ item.role }}</td>
+                <td>
+                    <StatusBadge :type="item.role" />
+                </td>
                 <td>{{ item.status || 'Active' }}</td>
                 <td>{{ formatDate(item.created_at) }}</td>
                 <td>
-                    <button class="btn btn-sm bi bi-pencil-square"></button>
-                    <button class="btn btn-sm bi bi-trash text-danger"></button>
+                    <button class="btn btn-sm bi bi-eye text-success"></button>
                 </td>
             </template>
         </DataTable>
@@ -112,6 +113,7 @@
 import { ref, computed, onMounted ,watch} from "vue";
 import { getAllUsers, createUser } from "@/api/admin.api";
 import { useDate } from "@/composables/useDate";
+import StatusBadge from "@/components/common/StatusBadge.vue";
 
 const { formatDate } = useDate();
 

@@ -19,7 +19,7 @@
               <i class="bi bi-people-fill"></i>
             </div>
             <div class="stat-label">អ្នកប្រើប្រាស់សរុប</div>
-            <div class="stat-value">{{dashboardData.users}}</div>
+            <div class="stat-value">{{ dashboardData.users }}</div>
             <span class="stat-badge badge-up"><i class="bi bi-arrow-up-short"></i> 91 នាក់ក្នុងសប្តាហ៍នេះ</span>
           </div>
         </div>
@@ -29,7 +29,7 @@
               <i class="bi bi-door-open-fill"></i>
             </div>
             <div class="stat-label">សរុបបន្ទប់</div>
-            <div class="stat-value">{{dashboardData.rooms}}</div>
+            <div class="stat-value">{{ dashboardData.rooms }}</div>
             <span class="stat-badge badge-up"><i class="bi bi-arrow-up-short"></i> 12 បន្ថែមថ្មី</span>
           </div>
         </div>
@@ -112,28 +112,26 @@
             <div id="activityFeed"></div>
           </div>
         </div>
+
         <div class="col-lg-7">
           <div class="dash-card">
             <div class="d-flex justify-content-between align-items-center mb-3">
               <div class="section-title mb-0">ការដាក់ស្នើថ្មីៗ</div>
-              <button class="btn-outline-green" onclick="showSection('results', null)">
+              <button class="btn-outline-green" @click="showSection('results', null)">
                 មើលទាំងអស់
               </button>
             </div>
-            <div style="overflow-x: auto">
-              <table class="dash-table">
-                <thead>
-                  <tr>
-                    <th>សិស្ស</th>
-                    <th>វិញ្ញាសា</th>
-                    <th>ពិន្ទុ</th>
-                    <th>កាលបរិច្ឆេទ</th>
-                    <th>ស្ថានភាព</th>
-                  </tr>
-                </thead>
-                <tbody id="recentSubmissions"></tbody>
-              </table>
-            </div>
+
+            <DataTable :headers="submissionHeaders" :items="submissionsList">
+              <template #row="{ item }">
+                <td>{{ item.user_name }}</td>
+                <td>{{ item.quiz_title }}</td>
+                <td><strong>{{ item.score }}</strong></td>
+                <td>{{ formatDate(item.submitted_at) }}</td>
+                <td>{{ item.status }}</td>
+              </template>
+            </DataTable>
+
           </div>
         </div>
       </div>
@@ -154,28 +152,53 @@
       </div>
     </div>
 
-    
+
   </div>
 </template>
 
 <script setup>
 import { onMounted, ref } from 'vue';
-import { getSummerise } from '@/api/admin.api';
+import { getSummerise, recentActivity } from '@/api/admin.api';
+import DataTable from '@/components/common/DataTable.vue';
+import { useDate } from "@/composables/useDate";
+
+const { formatDate } = useDate();
 
 const dashboardData = ref([]);
+const submissionsList = ref([]);
+
+const submissionHeaders = [
+  { key: 'student', label: 'សិស្ស' },
+  { key: 'quiz', label: 'វិញ្ញាសា' },
+  { key: 'score', label: 'ពិន្ទុ' },
+  { key: 'date', label: 'កាលបរិច្ឆេទ' },
+  { key: 'status', label: 'ស្ថានភាព' }
+];
+
+const fetchRecentSubmission = async () => {
+  try{
+    const res = await recentActivity();
+    submissionsList.value = res.data.data.logs;
+    console.log(res.data.data.logs);
+
+  }catch(error){
+    console.log(error);
+  }
+}
 
 const fetchDashboardSummary = async () => {
-  try{
+  try {
     const res = await getSummerise();
     dashboardData.value = res.data.data.data;
 
-  }catch(error){
-    console.log('Data summary not found',error);
+  } catch (error) {
+    console.log('Data summary not found', error);
   }
 }
 
 onMounted(() => {
   fetchDashboardSummary();
+  fetchRecentSubmission();
 })
 
 </script>
