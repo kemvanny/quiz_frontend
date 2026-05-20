@@ -76,13 +76,13 @@
     </div>
 </template>
 <script setup>
-import { getAllExams } from "@/api/admin.api";
 import { onMounted, ref } from "vue";
+import { getAllExams } from "@/api/admin.api";
 import { useDate } from "@/composables/useDate";
 import StatusBadge from "@/components/common/StatusBadge.vue";
 
 const { formatDate } = useDate();
-
+const exams = ref([]);
 
 const quizHeaders = [
     { label: "លេខសម្គាល់", key: "id" },
@@ -96,8 +96,6 @@ const quizHeaders = [
     { label: "សកម្មភាព", key: "actions" },
 ];
 
-const exams = ref([]);
-
 const fetchExam = async () => {
     try{
         const res = await getAllExams();
@@ -110,6 +108,5 @@ const fetchExam = async () => {
 onMounted(() => {
     fetchExam();
 })
-
 
 </script>

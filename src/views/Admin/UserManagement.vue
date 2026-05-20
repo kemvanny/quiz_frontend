@@ -90,10 +90,10 @@
                             <i class="bi bi-easel"></i> គ្រូបង្រៀន
                         </label>
 
-                        <label class="chip" :class="{ 'active': selectedRoleForCreate === 'admin' }">
+                        <!-- <label class="chip" :class="{ 'active': selectedRoleForCreate === 'admin' }">
                             <input type="radio" value="admin" v-model="selectedRoleForCreate" hidden>
                             <i class="bi bi-shield-lock"></i>អ្នកគ្រប់គ្រង
-                        </label>
+                        </label> -->
                     </div>
                 </div>
             </div>
@@ -113,10 +113,14 @@
 import { ref, computed, onMounted ,watch} from "vue";
 import { getAllUsers, createUser } from "@/api/admin.api";
 import { useDate } from "@/composables/useDate";
+import { useFormValidation } from "@/composables/useFormValidation";
 import StatusBadge from "@/components/common/StatusBadge.vue";
 
 const { formatDate } = useDate();
+const {errors , validateFirstName,validateLastName,validateEmail} = useFormValidation();
 
+const users = ref([]);
+const loading = ref(false);
 const isModalOpen = ref(false);
 const loadingSubmit = ref(false);
 
@@ -124,84 +128,8 @@ const searchQuery = ref("");
 const selectedRoleForFilter = ref("");
 const selectedStatusForFilter = ref("");
 
-const loading = ref(false);
-
-
-//create user form
 const selectedRoleForCreate = ref('student');
-const form = ref({
-    firstName: '',
-    lastName: '',
-    email: ''
-})
-
-const errors = ref({
-    firstName: '',
-    lastName: '',
-    email: ''
-})
-
-const validateField = (field) => {
-   const value = form.value[field] ? String(form.value[field]).trim() : '';
-
-    if (!value) {
-        if (field === 'firstName') errors.value.firstName = 'សូមបំពេញនាមខ្លួន!';
-        if (field === 'lastName') errors.value.lastName = 'សូមបំពេញនាមត្រកូល!';
-        if (field === 'email') errors.value.email = 'សូមបំពេញអ៊ីមែល!';
-    } else {
-        errors.value[field] = '';
-    }
-};
-
-watch(() => form.value.firstName, () => validateField('firstName'));
-watch(() => form.value.lastName, () => validateField('lastName'));
-watch(() => form.value.email, () => validateField('email'));
-
-const handleCreate = async () => {
-    validateField('firstName');
-    validateField('lastName');
-    validateField('email');
-    if (errors.value.firstName || errors.value.lastName || errors.value.email) {
-        return;
-    }
-    loadingSubmit.value = true;
-    try {
-        let roleId = 3; 
-        if (selectedRoleForCreate.value === 'teacher') roleId = 2; 
-        if (selectedRoleForCreate.value === 'admin') roleId = 1;
-
-        const payload = {
-            firstName: form.value.firstName,
-            lastName: form.value.lastName,
-            email: form.value.email,
-            role_id: roleId
-        }
-
-        const res = await createUser(payload);
-        console.log(res.data);
-
-        if (res.data.result) {
-            isModalOpen.value = false;
-
-            form.value = { firstName: '', lastName: '', email: '' };
-            errors.value = { firstName: '', lastName: '', email: '' };
-            selectedRoleForCreate.value = 'student';
-
-            await fetchUsers();
-        }
-
-    } catch (error) {
-        console.log(error);
-    } finally {
-        loadingSubmit.value = false;
-    }
-}
-
-watch(isModalOpen, (isOpen) => {
-    if (!isOpen) {
-        errors.value = { firstName: '', lastName: '', email: '' };
-    }
-});
+const form = ref({ firstName: '', lastName: '', email: ''})
 
 const userHeaders = [
     { label: "លេខសម្គាល់", key: "id" },
@@ -212,24 +140,6 @@ const userHeaders = [
     { label: "ចូលរួម", key: "date" },
     { label: "សកម្មភាព", key: "actions" },
 ];
-
-const users = ref([]);
-
-const fetchUsers = async () => {
-    loading.value = true;
-    try {
-        const res = await getAllUsers();
-        users.value = res.data.data;
-    } catch (error) {
-        console.log('can not get users');
-    } finally {
-        loading.value = false;
-    }
-}
-
-onMounted(() => {
-    fetchUsers();
-})
 
 const filteredUsers = computed(() => {
     return users.value.filter((u) => {
@@ -249,6 +159,74 @@ const filteredUsers = computed(() => {
         return matchesSearch && matchesRole && matchesStatus;
     });
 });
+
+const fetchUsers = async () => {
+    loading.value = true;
+    try {
+        const res = await getAllUsers();
+        users.value = res.data.data;
+    } catch (error) {
+        console.log('can not get users');
+    } finally {
+        loading.value = false;
+    }
+}
+
+const handleCreate = async () => {
+    validateFirstName(form.value.firstName);
+    validateLastName(form.value.lastName);
+    validateEmail(form.value.email);
+    if (errors.value.firstName || errors.value.lastName || errors.value.email) {
+        return;
+    }
+
+    loadingSubmit.value = true;
+    try {
+        let roleId = 3; 
+        if (selectedRoleForCreate.value === 'teacher') roleId = 2; 
+        if (selectedRoleForCreate.value === 'admin') roleId = 1;
+
+        const payload = {
+            firstName: form.value.firstName,
+            lastName: form.value.lastName,
+            email: form.value.email,
+            role_id: roleId
+        }
+
+        const res = await createUser(payload);
+        if (res.data?.result) {
+            isModalOpen.value = false;
+            form.value = { firstName: '', lastName: '', email: '' };
+            errors.value = { firstName: '', lastName: '', email: '' };
+            selectedRoleForCreate.value = 'student';
+
+            await fetchUsers();
+        }
+
+    } catch (error) {
+        console.log(error);
+    } finally {
+        loadingSubmit.value = false;
+    }
+}
+
+
+watch(() => form.value.firstName, (val) => validateFirstName(val));
+watch(() => form.value.lastName, (val) => validateLastName(val));
+watch(() => form.value.email, (val) => validateEmail(val));
+
+watch(isModalOpen, (isOpen) => {
+    if (!isOpen) {
+        errors.value.firstName = '';
+        errors.value.lastName = '';
+        errors.value.email = '';
+    }
+});
+
+onMounted(() => {
+    fetchUsers();
+})
+
 </script>
 
 <style>
