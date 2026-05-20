@@ -117,9 +117,9 @@
           <div class="dash-card">
             <div class="d-flex justify-content-between align-items-center mb-3">
               <div class="section-title mb-0">ការដាក់ស្នើថ្មីៗ</div>
-              <button class="btn-outline-green" @click="showSection('results', null)">
+              <router-link :to="{name: 'ResultSubmission'}" class="btn-outline-green text-decoration-none" >
                 មើលទាំងអស់
-              </button>
+              </router-link>
             </div>
 
             <DataTable :headers="submissionHeaders" :items="submissionsList">
@@ -179,7 +179,6 @@ const fetchRecentSubmission = async () => {
   try{
     const res = await recentActivity();
     submissionsList.value = res.data.data.logs;
-    console.log(res.data.data.logs);
 
   }catch(error){
     console.log(error);

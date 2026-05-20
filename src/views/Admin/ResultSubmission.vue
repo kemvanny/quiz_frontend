@@ -34,16 +34,16 @@
     </SearchFilter>
 
     <!-- ប្រើ DataTable Component -->
-    <DataTable :headers="submissionHeaders" :items="filteredSubmissions">
-      <template #row="{ item }">
-        <td>{{ item.id }}</td>
-        <td>{{ item.studentName }}</td>
-        <td>{{ item.quizTitle }}</td>
+    <DataTable :headers="submissionHeaders" :items="submissions">
+      <template #row="{ item , index}">
+        <td>{{ index + 1 }}</td>
+        <td>{{ item.user_name }}</td>
+        <td>{{ item.quiz_title }}</td>
         <td>{{ item.roomName }}</td>
         <td>{{ item.score }}</td>
         <td>{{ item.totalMarks }}</td>
         <td>{{ item.percentage }}%</td>
-        <td>{{ item.submittedAt }}</td>
+        <td>{{formatDate (item.submitted_at) }}</td>
         <td>
           <span :class="['badge', getGradeClass(item.grade)]">
             {{ item.grade }}
@@ -55,11 +55,21 @@
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
+import { ref, onMounted } from "vue";
+import { recentActivity } from "@/api/admin.api";
+import { useDate } from "@/composables/useDate";
+
+const {formatDate} = useDate();
+
+const submissions = ref([]);
+const searchQuery = ref("");
+const selectedQuiz = ref("");
+const selectedRoom = ref("");
+
 const submissionHeaders = [
   { label: "លេខសម្គាល់", key: "id" },
   { label: "សិស្ស", key: "student" },
-  { label: "កម្រងសំណួរ", key: "quiz" },
+  { label: "វិញ្ញាសា", key: "quiz" },
   { label: "បន្ទប់", key: "room" },
   { label: "ពិន្ទុ", key: "score" },
   { label: "ពិន្ទុសរុប", key: "total" },
@@ -68,29 +78,24 @@ const submissionHeaders = [
   { label: "និទ្ទេស", key: "grade" },
 ];
 
-// ទិន្នន័យ ទាញពី API
-const submissions = ref([
-  // ឧទាហរណ៍៖ { id: 'S-001', studentName: 'កក្កដា', ... }
-]);
+const fetchResultSubmission = async () => {
+  try{
+    const res = await recentActivity();
+    submissions.value = res.data.data.logs;
 
-const searchQuery = ref("");
-const selectedQuiz = ref("");
-const selectedRoom = ref("");
+  }catch(error){
+    console.log(error);
+  }
+}
 
-// Filter
-const filteredSubmissions = computed(() => {
-  return submissions.value.filter((s) => {
-    const matchSearch =
-      s.studentName.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
-      s.quizTitle.toLowerCase().includes(searchQuery.value.toLowerCase());
-    return matchSearch;
-  });
-});
-
-//  Grade
 const getGradeClass = (grade) => {
   if (grade === "A") return "bg-success";
   if (grade === "F") return "bg-danger";
   return "bg-primary";
 };
+
+onMounted(() => {
+  fetchResultSubmission();
+})
+
 </script>

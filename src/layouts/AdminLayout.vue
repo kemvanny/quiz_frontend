@@ -32,6 +32,25 @@ const adminProfile = ref({
   role: ''
 })
 
+const adminMainMenus = [
+  { name: 'ផ្ទាំងគ្រប់គ្រង', routeName: 'AdminDashboard', icon: 'bi bi-grid-1x2-fill' },
+  { name: 'គ្រប់គ្រងអ្នកប្រើប្រាស់', routeName: 'UserManagement', icon: 'bi bi-people-fill' },
+  { name: 'គ្រប់គ្រងការប្រឡង', routeName: 'QuizManagement', icon: 'bi bi-journal-check' },
+  { name: 'លទ្ធផល និងការបញ្ជូន', routeName: 'ResultSubmission', icon: 'bi bi-bar-chart-fill' }
+]
+
+const adminSystemMenus = [
+  { name: 'ការកំណត់', routeName: 'Settings', icon: 'bi bi-gear-fill' },
+  { name: 'ស្ថានភាពប្រព័ន្ធ', routeName: 'SystemHealth', icon: 'bi bi-shield-check' },
+  { name: 'ជំនួយ', routeName: 'Help', icon: 'bi bi-question-circle' }
+]
+
+
+const handleLogout = () => {
+  sessionStorage.clear()
+  router.push('/login')
+}
+
 const fetchAdminProfile = async () => {
   try {
     const res = await getProfile() 
@@ -48,26 +67,7 @@ const fetchAdminProfile = async () => {
   }
 }
 
-// 💡 ឲ្យវាដំណើរការភ្លាមពេលបើក Web មក
 onMounted(() => {
   fetchAdminProfile()
 })
-
-const adminMainMenus = [
-  { name: 'ផ្ទាំងគ្រប់គ្រង', routeName: 'AdminDashboard', icon: 'bi bi-grid-1x2-fill' },
-  { name: 'គ្រប់គ្រងអ្នកប្រើប្រាស់', routeName: 'UserManagement', icon: 'bi bi-people-fill' },
-  { name: 'គ្រប់គ្រងការប្រឡង', routeName: 'QuizManagement', icon: 'bi bi-journal-check' },
-  { name: 'លទ្ធផល និងការបញ្ជូន', routeName: 'ResultSubmission', icon: 'bi bi-bar-chart-fill' }
-]
-
-const adminSystemMenus = [
-  { name: 'ការកំណត់', routeName: 'Settings', icon: 'bi bi-gear-fill' },
-  { name: 'ស្ថានភាពប្រព័ន្ធ', routeName: 'SystemHealth', icon: 'bi bi-shield-check' },
-  { name: 'ជំនួយ', routeName: 'Help', icon: 'bi bi-question-circle' }
-]
-
-const handleLogout = () => {
-  sessionStorage.clear()
-  router.push('/login')
-}
 </script>
