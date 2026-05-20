@@ -23,8 +23,6 @@ import { useRouter } from 'vue-router'
 
 const router = useRouter()
 
-
-
 const teacherMainMenus = [
   { name: 'ផ្ទាំងគ្រប់គ្រង', routeName: 'TeacherDashboard', icon: 'bi bi-grid-1x2-fill' },
   { name: 'បង្កើតការប្រឡង', routeName: 'CreateExam', icon: 'bi bi-pencil-square' }, 

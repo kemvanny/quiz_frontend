@@ -1,5 +1,915 @@
 <template>
-    <div>
-        <h1>Quizzes</h1>
+  <div class="quiz-builder-container">
+    <div class="app-shell flex-grow-1 overflow-hidden">
+      <!-- ══ MAIN COLUMN ══ -->
+      <div class="main-col">
+
+        <!-- ══ WORKSPACE ══ -->
+        <div class="workspace">
+
+          <!-- LEFT: Question list -->
+          <div class="panel">
+            <div class="panel-head">
+              <span class="panel-lbl">Question List</span>
+              <span class="panel-count" id="qCountLabel">{{ questions.length }} Q</span>
+            </div>
+            <div class="q-nav-scroll">
+              <div v-for="(q, idx) in questions" 
+                   :key="idx" 
+                   class="q-nav-item slide-in" 
+                   :class="{ active: selectedQuestionIndex === idx }"
+                   @click="selectQuestion(idx)">
+                <span>សំណួរទី {{ getKhmerNumber(idx + 1) }}</span>
+                <span class="q-badge">{{ q.pts }}pt</span>
+              </div>
+            </div>
+            <button class="btn btn-sm m-2 fw-bold rounded-3 border-0 add-q-btn"
+              style="border:1.5px dashed rgba(16,185,129,.35)!important;background:rgba(16,185,129,.04);color:var(--em);font-size:.78rem"
+              @click="addNewQuestion">
+              <i class="fas fa-plus-circle me-1"></i> បន្ថែមសំណួរថ្មី
+            </button>
+          </div>
+
+          <!-- CENTER: Scrollable feed -->
+          <div class="feed-col" id="questionFeed">
+            
+            <!-- Compact Glass Quiz Title Header -->
+            <div class="flex-shrink-0 mb-2 p-3 position-relative overflow-hidden quiz-info-header">
+              <div class="position-absolute decoration-circle"></div>
+
+              <div class="position-relative z-1 d-flex flex-column gap-1">
+                <div class="d-flex align-items-center gap-2 mb-1">
+                  <div class="d-flex align-items-center justify-content-center rounded-circle icon-circle">
+                    <i class="fas fa-feather-alt" style="font-size: .6rem;"></i>
+                  </div>
+                  <div class="quiz-info-lbl">Quiz Info</div>
+                </div>
+
+                <input type="text" v-model="quizTitle" class="w-100 border-0 fw-bold p-0 text-dark quiz-title-input" onfocus="this.style.color='var(--em)'" onblur="this.style.color='var(--txt)'" placeholder="Enter Quiz Title...">
+                <textarea v-model="quizInstructions" class="w-100 border-0 p-0 m-0 quiz-desc-input" rows="1" placeholder="Provide optional instructions..." @input="autoGrowTextarea"></textarea>
+              </div>
+            </div>
+
+            <!-- Dynamic Question Cards -->
+            <div v-for="(q, qIdx) in questions" 
+                 :key="qIdx" 
+                 :id="`qcard-${qIdx}`"
+                 class="q-card slide-in" 
+                 :class="{ 'active-card': selectedQuestionIndex === qIdx }"
+                 @click="selectedQuestionIndex = qIdx">
+              
+              <!-- Card header -->
+              <div class="d-flex align-items-center justify-content-between px-3 py-2 border-bottom bg-light">
+                <div class="d-flex align-items-center gap-2">
+                  <div class="q-num-badge">{{ qIdx + 1 }}</div>
+                  <span class="fw-bold" style="font-size:.85rem;color:var(--txt)">សំណួរទី {{ getKhmerNumber(qIdx + 1) }}</span>
+                </div>
+                <div class="pts-pill">
+                  <label>pts</label>
+                  <input type="number" v-model.number="q.pts" min="0" class="pts-input">
+                </div>
+              </div>
+
+              <!-- Card body -->
+              <div class="p-3 d-flex flex-column gap-2">
+                <textarea v-model="q.text" class="q-field" rows="3" placeholder="Type your question here…"></textarea>
+                <div class="text-uppercase fw-bold text-muted" style="font-size:.6rem;letter-spacing:1.1px">Answers &amp; Choices</div>
+                
+                <!-- Choices grid -->
+                <div class="d-flex flex-column gap-2">
+                  <div v-for="(choice, cIdx) in q.choices" 
+                       :key="cIdx" 
+                       class="choice-row" 
+                       :class="{ 'correct-highlight': choice.isCorrect }">
+                    <div class="choice-lbl">{{ getKhmerAlphabet(cIdx) }}</div>
+                    <input type="text" v-model="choice.text" class="choice-input" placeholder="បញ្ចូលខ្លឹមសារចម្លើយ…">
+                    
+                    <div class="d-flex align-items-center gap-2 flex-shrink-0">
+                      <span class="text-muted correct-label">Correct?</span>
+                      <input class="form-check-input cr shadow-none m-0" 
+                             type="radio" 
+                             :name="`q_correct_${qIdx}`" 
+                             :checked="choice.isCorrect"
+                             @change="setCorrectChoice(qIdx, cIdx)">
+                      <button class="btn btn-sm p-1 text-secondary border-0 remove-choice-btn" 
+                              @click="removeChoice(qIdx, cIdx)">
+                        <i class="fas fa-times-circle"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Card footer -->
+              <div class="d-flex align-items-center justify-content-between px-3 pb-3">
+                <button class="btn btn-sm fw-bold rounded-3 border-0 bg-transparent text-emerald" style="color:var(--em);font-size:.76rem" @click="addChoice(qIdx)">
+                  <i class="fas fa-plus-circle me-1"></i> បន្ថែមជម្រើស
+                </button>
+                <button v-if="questions.length > 1" class="btn btn-sm btn-outline-danger rounded-3 fw-bold" style="font-size:.72rem" @click.stop="removeQuestion(qIdx)">
+                  <i class="fas fa-trash-alt me-1"></i> Remove
+                </button>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- RIGHT: Progress panel -->
+          <div class="panel">
+            <div class="panel-head">
+              <span class="panel-lbl">Quiz Progress</span>
+            </div>
+            <div class="flex-grow-1 overflow-y-auto p-3 d-flex flex-column gap-3" style="padding:16px 14px">
+              <!-- Ring -->
+              <div class="d-flex justify-content-center">
+                <div style="position:relative;width:120px;height:120px">
+                  <svg width="120" height="120" viewBox="0 0 120 120" class="svg-ring">
+                    <circle cx="60" cy="60" r="50" class="ring-bg"/>
+                    <circle cx="60" cy="60" r="50" class="ring-fill" :style="{ strokeDashoffset: circleStrokeDashoffset, stroke: progressColor }"/>
+                  </svg>
+                  <div class="position-absolute top-50 start-50 translate-middle text-center">
+                    <div class="fw-bold" :style="{ color: progressColor }" style="font-size:1.4rem;line-height:1">{{ totalPoints }}</div>
+                    <div style="font-size:.62rem;font-weight:700;color:var(--txt-mu)">/ 100 PT</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="text-center">
+                <div class="fw-bold" style="font-size:.88rem;color:var(--txt)">Quiz Progress</div>
+                <div class="text-muted" style="font-size:.7rem;line-height:1.5">Accumulated points across all questions.</div>
+              </div>
+
+              <hr class="my-1"/>
+
+              <div class="d-flex flex-column gap-2 mb-2">
+                <div class="d-flex justify-content-between align-items-center">
+                  <span style="font-size:.73rem;font-weight:600;color:var(--txt-mu)"><i class="fas fa-layer-group me-1" style="color:var(--em)"></i>Questions</span>
+                  <span class="fw-bold" style="font-size:.77rem;color:var(--txt)">{{ questions.length }}</span>
+                </div>
+                <div class="d-flex justify-content-between align-items-center">
+                  <span style="font-size:.73rem;font-weight:600;color:var(--txt-mu)"><i class="fas fa-star me-1" style="color:var(--em)"></i>Total Pts</span>
+                  <span class="fw-bold" style="font-size:.77rem;color:var(--txt)">{{ totalPoints }} / 100</span>
+                </div>
+              </div>
+              <button class="btn btn-outline-secondary btn-sm rounded-3 fw-bold w-100" @click="openPreviewModal">
+                <i class="fas fa-eye me-1"></i> Preview
+              </button>
+              <button class="btn btn-sm rounded-3 fw-bold text-white w-100 save-publish-btn" style="background:linear-gradient(135deg,var(--em),var(--em-dk));box-shadow:0 4px 14px rgba(16,185,129,.3)" @click="saveFullQuiz">
+                <i class="fas fa-paper-plane me-1"></i> Publish
+              </button>
+            </div>
+          </div>
+        </div><!-- /workspace -->
+      </div><!-- /main-col -->
+    </div><!-- /app-shell -->
+
+    <!-- ══ PUBLISH MODAL ══ -->
+    <div class="modal-overlay" v-if="showPublishModal" @click.self="showPublishModal = false">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 rounded-4 shadow-lg p-1">
+          <div class="modal-header border-0 pb-0">
+            <h5 class="modal-title fw-bold">
+              <i class="fas fa-paper-plane me-2 text-success"></i> Publish Quiz
+            </h5>
+            <button type="button" class="btn-close" @click="showPublishModal = false"></button>
+          </div>
+          <div class="modal-body pt-3">
+            <p class="text-muted small mb-3">Review your quiz details before publishing to students.</p>
+            <div class="row g-2 mb-3">
+              <div class="col-4">
+                <div class="p-3 rounded-3 text-center" style="background:var(--em-soft)">
+                  <div class="fw-bold" style="color:var(--em);font-size:1.2rem">{{ totalPoints }}/100</div>
+                  <div class="text-muted fw-bold text-uppercase mt-1" style="font-size:.65rem">Points</div>
+                </div>
+              </div>
+              <div class="col-4">
+                <div class="p-3 rounded-3 text-center" style="background:#eff6ff">
+                  <div class="fw-bold" style="color:#3b82f6;font-size:1.2rem">{{ questions.length }}</div>
+                  <div class="text-muted fw-bold text-uppercase mt-1" style="font-size:.65rem">Questions</div>
+                </div>
+              </div>
+              <div class="col-4">
+                <div class="p-3 rounded-3 text-center" style="background:#fefce8">
+                  <div class="fw-bold" style="color:#f59e0b;font-size:1.2rem">{{ progressPercent }}%</div>
+                  <div class="text-muted fw-bold text-uppercase mt-1" style="font-size:.65rem">Completion</div>
+                </div>
+              </div>
+            </div>
+            <div class="mb-4">
+              <label class="form-label small fw-bold text-muted">Overall progress</label>
+              <div class="progress rounded-pill" style="height:8px">
+                <div class="progress-bar" :style="{ width: progressPercent + '%' }" style="background:linear-gradient(90deg,var(--em),#34d399);"></div>
+              </div>
+            </div>
+            <div class="mb-4">
+              <label class="form-label small fw-bold text-muted text-uppercase" style="letter-spacing:.8px">Assign to Room</label>
+              <div class="input-group shadow-sm">
+                <select v-model="assignedRoom" class="form-select shadow-none" style="font-size:.9rem; border-color: var(--bdr);">
+                  <option value="">Select classroom…</option>
+                  <option value="Math Grade 10">Math – Grade 10</option>
+                  <option value="Science Grade 9">Science – Grade 9</option>
+                  <option value="Grade 12-A">Grade 12-A</option>
+                  <option value="Grade 11-B">Grade 11-B</option>
+                </select>
+                <button class="btn fw-bold px-3 shadow-none new-room-modal-btn" type="button" style="background: var(--em-soft); color: var(--em); border: 1px solid var(--em-mid); font-size:.9rem; transition:.2s;" onmouseover="this.style.background='#d1fae5'" onmouseout="this.style.background='var(--em-soft)'">
+                  <i class="fas fa-plus me-1"></i> New Room
+                </button>
+              </div>
+            </div>
+            <div class="p-3 rounded-3 small" style="background:var(--em-soft);color:var(--em);">
+              <i class="fas fa-info-circle me-2"></i>
+              Students will be notified immediately once published.
+            </div>
+          </div>
+          <div class="modal-footer border-0 pt-0 pb-3 px-3">
+            <button class="btn btn-light rounded-3 fw-bold px-3" @click="showPublishModal = false">Cancel</button>
+            <button class="btn text-white rounded-3 fw-bold px-4 finalize-pub-btn" style="background:linear-gradient(135deg,var(--em),var(--em-dk))" @click="finalizePublish">
+              <i class="fas fa-paper-plane me-1"></i> Publish Now
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
+
+    <!-- ══ PREVIEW MODAL (STUDENT VIEW) ══ -->
+    <div class="modal-overlay" v-if="showPreviewModal" @click.self="showPreviewModal = false">
+      <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
+        <div class="modal-content border-0 rounded-4 shadow-lg overflow-hidden" style="background: #f8fafc;">
+          
+          <!-- Top Accent Bar -->
+          <div style="height: 6px; background: linear-gradient(90deg, var(--em), var(--em-dk));"></div>
+          
+          <div class="modal-header border-0 pb-0 px-4 pt-4">
+            <h5 class="modal-title fw-bold text-dark d-flex align-items-center gap-2">
+              <i class="fas fa-eye" style="color: var(--em);"></i> Student Preview
+            </h5>
+            <button type="button" class="btn-close shadow-none" @click="showPreviewModal = false"></button>
+          </div>
+          
+          <div class="modal-body p-4" style="user-select: none; -webkit-user-select: none; max-height: 60vh; overflow-y: auto;">
+            <div class="mb-4 pb-3 border-bottom text-center">
+              <h3 class="fw-bold" style="color: var(--txt);">{{ quizTitle || 'Untitled Quiz' }}</h3>
+              <p class="text-muted small mb-1" v-if="quizInstructions">{{ quizInstructions }}</p>
+              <p class="text-muted small mb-0">This is exactly how students will see the exam.</p>
+            </div>
+
+            <div v-if="questions.length === 0" class="text-center py-5 text-muted">
+              <i class="fas fa-inbox fa-3x mb-3 opacity-50"></i>
+              <p>No questions added yet.</p>
+            </div>
+
+            <div v-else>
+              <div v-for="(q, index) in questions" :key="index" class="mb-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                  <span class="badge bg-secondary text-white rounded-pill px-3 py-2">Question {{ index + 1 }}</span>
+                  <span class="text-muted fw-bold" style="font-size: .85rem;">{{ q.pts }} Points</span>
+                </div>
+                <h5 class="fw-bold mb-3" style="color: var(--txt); line-height: 1.5;">{{ q.text || '(Empty Question)' }}</h5>
+                
+                <div class="options-container">
+                  <div v-for="(choice, cIdx) in q.choices" 
+                       :key="cIdx" 
+                       class="p-3 mb-2 bg-white rounded-3 shadow-sm border option-preview-row" 
+                       style="cursor: pointer; transition: .2s;">
+                    <div class="form-check m-0 d-flex align-items-center gap-2">
+                      <input class="form-check-input mt-0 shadow-none" type="radio" :name="`preview_q${index}`" :id="`preview_q${index}_opt${cIdx}`">
+                      <label class="form-check-label w-100" :for="`preview_q${index}_opt${cIdx}`" style="color: var(--txt); font-size: .95rem; cursor: pointer;">
+                        {{ choice.text || `Option ${getKhmerAlphabet(cIdx)}` }}
+                      </label>
+                    </div>
+                  </div>
+                </div>
+                <hr v-if="index < questions.length - 1" class="my-4" style="border-color: var(--bdr); opacity: 1;"/>
+              </div>
+            </div>
+          </div>
+          
+          <div class="modal-footer border-0 pt-0 pb-4 px-4 bg-white" style="border-top: 1px solid var(--bdr) !important;">
+            <button class="btn btn-light rounded-3 fw-bold px-4" @click="showPreviewModal = false">Exit Preview</button>
+            <button class="btn text-white rounded-3 fw-bold px-4 disabled" style="background: var(--em);">
+              Submit Exam
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
 </template>
+
+<script setup>
+import { ref, computed, nextTick } from 'vue'
+
+const quizTitle = ref('Create Quiz')
+const quizInstructions = ref('')
+const quizStatus = ref('Draft')
+const quizDuration = ref(60)
+
+// Khmer labels and alphabet mapping
+const KH = ["ក", "ខ", "គ", "ឃ", "ង", "ច"]
+const KH_N = ["១", "២", "៣", "៤", "៥", "៦", "៧", "៨", "៩", "១០"]
+
+const questions = ref([
+  {
+    text: '',
+    pts: 10,
+    choices: [
+      { text: '', isCorrect: true },
+      { text: '', isCorrect: false }
+    ]
+  }
+])
+
+const selectedQuestionIndex = ref(0)
+const showPublishModal = ref(false)
+const showPreviewModal = ref(false)
+const assignedRoom = ref('')
+
+const getKhmerNumber = (num) => {
+  return KH_N[num - 1] || num.toString()
+}
+
+const getKhmerAlphabet = (idx) => {
+  return KH[idx] || String.fromCharCode(65 + idx)
+}
+
+// Question Navigation Selection & auto scroll
+const selectQuestion = (idx) => {
+  selectedQuestionIndex.value = idx
+  const el = document.getElementById(`qcard-${idx}`)
+  if (el) {
+    el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
+}
+
+// Stats & Progress Calculations
+const totalPoints = computed(() => {
+  return questions.value.reduce((sum, q) => sum + (parseInt(q.pts) || 0), 0)
+})
+
+const progressPercent = computed(() => {
+  return Math.min(Math.round((totalPoints.value / 100) * 100), 100)
+})
+
+const circleStrokeDashoffset = computed(() => {
+  return Math.max(0, 314 - (progressPercent.value / 100) * 314)
+})
+
+const progressColor = computed(() => {
+  if (totalPoints.value === 100) return 'var(--em)'
+  if (totalPoints.value > 100) return '#ef4444'
+  return '#f59e0b'
+})
+
+// Question Card Add/Delete
+const addNewQuestion = () => {
+  questions.value.push({
+    text: '',
+    pts: 10,
+    choices: [
+      { text: '', isCorrect: true },
+      { text: '', isCorrect: false }
+    ]
+  })
+  const newIndex = questions.value.length - 1
+  selectedQuestionIndex.value = newIndex
+
+  nextTick(() => {
+    const el = document.getElementById(`qcard-${newIndex}`)
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }
+  })
+}
+
+const removeQuestion = (idx) => {
+  if (questions.value.length > 1) {
+    questions.value.splice(idx, 1)
+    if (selectedQuestionIndex.value >= questions.value.length) {
+      selectedQuestionIndex.value = questions.value.length - 1
+    }
+  }
+}
+
+// Options/Choices Add/Delete
+const addChoice = (qIdx) => {
+  const q = questions.value[qIdx]
+  if (q.choices.length < KH.length) {
+    q.choices.push({ text: '', isCorrect: false })
+  }
+}
+
+const removeChoice = (qIdx, cIdx) => {
+  const q = questions.value[qIdx]
+  if (q.choices.length > 1) {
+    q.choices.splice(cIdx, 1)
+  }
+}
+
+const setCorrectChoice = (qIdx, cIdx) => {
+  questions.value[qIdx].choices.forEach((choice, idx) => {
+    choice.isCorrect = (idx === cIdx)
+  })
+}
+
+// Modal Handlers
+const openPreviewModal = () => {
+  showPreviewModal.value = true
+}
+
+const saveFullQuiz = () => {
+  showPublishModal.value = true
+}
+
+const finalizePublish = () => {
+  alert("ជោគជ័យ! កម្រងសំណួរត្រូវបានផ្ញើទៅកាន់ថ្នាក់រៀន។")
+  showPublishModal.value = false
+}
+
+// Auto grow description textarea
+const autoGrowTextarea = (event) => {
+  const el = event.target
+  el.style.height = 'auto'
+  el.style.height = el.scrollHeight + 'px'
+}
+</script>
+
+<style scoped>
+.quiz-builder-container {
+  --em:      #10b981;
+  --em-dk:   #059669;
+  --em-soft: #ecfdf5;
+  --em-mid:  rgba(16,185,129,.25);
+  --txt:     #1e293b;
+  --txt-m:   #334155;
+  --txt-mu:  #64748b;
+  --surf:    #ffffff;
+  --bdr:     #e2e8f0;
+  --r-md:    10px;
+  --r-lg:    14px;
+  --r-xl:    20px;
+  --sh-sm:   0 2px 8px rgba(0,0,0,.04);
+  --sh-md:   0 8px 24px rgba(0,0,0,.08);
+
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  font-family: "Kantumruy Pro", "Poppins", sans-serif;
+  color: var(--txt);
+}
+
+/* ── Layout shell ── */
+.app-shell { 
+  display: flex; 
+  height: 100%; 
+  overflow: hidden; 
+}
+
+/* ── Main column ── */
+.main-col { 
+  flex: 1; 
+  min-width: 0; 
+  display: flex; 
+  flex-direction: column; 
+  height: 100%; 
+  overflow: hidden; 
+}
+
+/* ── Topbar ── */
+.topbar {
+  flex-shrink: 0;
+  height: 64px;
+  background: var(--surf);
+  border-bottom: 1px solid var(--bdr);
+  display: flex;
+  align-items: center;
+}
+
+.tb-section { 
+  display: flex; 
+  align-items: center; 
+  padding: 0 18px; 
+  border-right: 1px solid var(--bdr); 
+  gap: 12px; 
+  height: 100%;
+}
+.tb-section:last-child { 
+  border-right: none; 
+}
+.tb-section.grow { 
+  flex: 1; 
+}
+
+/* Workspace 3-col grid */
+.workspace {
+  flex: 1; 
+  min-height: 0;
+  display: flex; 
+  flex-direction: column;
+  gap: 12px;
+  padding: 12px;
+  overflow-y: auto; 
+  overflow-x: hidden;
+}
+
+@media (min-width: 992px) {
+  .workspace {
+    display: grid;
+    grid-template-columns: 220px 1fr 190px;
+    overflow: hidden;
+  }
+}
+
+@media (max-width: 991px) {
+  .panel { 
+    min-height: 250px; 
+    flex-shrink: 0; 
+    overflow: visible !important; 
+  }
+  .main-col { 
+    overflow-y: auto; 
+    overflow-x: hidden; 
+  }
+  .workspace { 
+    overflow: visible; 
+  }
+}
+
+.panel {
+  background: var(--surf);
+  border: 1px solid var(--bdr);
+  border-radius: var(--r-xl);
+  box-shadow: var(--sh-sm);
+  display: flex; 
+  flex-direction: column;
+  min-height: 0; 
+  overflow: hidden;
+}
+.panel-head {
+  flex-shrink: 0;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--bdr);
+  display: flex; 
+  align-items: center; 
+  justify-content: space-between;
+}
+.panel-lbl { 
+  font-size: .6rem; 
+  font-weight: 700; 
+  text-transform: uppercase; 
+  letter-spacing: 1.2px; 
+  color: var(--txt-mu); 
+}
+.panel-count { 
+  font-size: .62rem; 
+  font-weight: 700; 
+  color: var(--em); 
+}
+
+/* Question nav list (left panel) */
+.q-nav-scroll { 
+  flex: 1; 
+  min-height: 0; 
+  overflow-y: auto; 
+  padding: 8px; 
+  display: flex; 
+  flex-direction: column; 
+  gap: 5px; 
+}
+.q-nav-item {
+  padding: 9px 12px; 
+  border-radius: var(--r-md);
+  border: 1.5px solid var(--bdr); 
+  background: #fafafa;
+  cursor: pointer; 
+  display: flex; 
+  align-items: center; 
+  justify-content: space-between;
+  font-size: .8rem; 
+  font-weight: 600; 
+  color: var(--txt-m);
+  transition: .15s; 
+  flex-shrink: 0;
+}
+.q-nav-item:hover { 
+  border-color: var(--em-mid); 
+  background: var(--em-soft); 
+  color: var(--em); 
+}
+.q-nav-item.active { 
+  background: linear-gradient(135deg, var(--em), var(--em-dk)); 
+  border-color: transparent; 
+  color: #fff; 
+  box-shadow: 0 4px 12px rgba(16,185,129,.22); 
+}
+.q-badge { 
+  font-size: .63rem; 
+  font-weight: 700; 
+  padding: 2px 7px; 
+  border-radius: 999px; 
+  background: rgba(255,255,255,.2); 
+  color: #fff; 
+}
+.q-nav-item:not(.active) .q-badge { 
+  background: var(--em-soft); 
+  color: var(--em); 
+}
+
+/* Center feed */
+.feed-col { 
+  min-height: 0; 
+  overflow-y: auto; 
+  display: flex; 
+  flex-direction: column; 
+  gap: 12px; 
+  padding-bottom: 20px;
+}
+
+/* Question card */
+.q-card {
+  background: var(--surf);
+  border: 1.5px solid var(--bdr);
+  border-radius: var(--r-xl);
+  box-shadow: var(--sh-sm);
+  overflow: hidden; 
+  flex-shrink: 0;
+  transition: box-shadow .17s;
+  cursor: pointer;
+}
+.q-card:hover { 
+  box-shadow: var(--sh-md); 
+}
+.q-card.active-card { 
+  border-color: var(--em-mid); 
+  box-shadow: 0 0 0 3px rgba(16,185,129,.08), var(--sh-md); 
+}
+
+.q-num-badge {
+  width: 28px; 
+  height: 28px; 
+  border-radius: 8px;
+  background: linear-gradient(135deg, var(--em), var(--em-dk));
+  color: #fff; 
+  font-weight: 800; 
+  font-size: .72rem;
+  display: flex; 
+  align-items: center; 
+  justify-content: center;
+  box-shadow: 0 3px 8px rgba(16,185,129,.28);
+}
+.pts-pill { 
+  display: flex; 
+  align-items: center; 
+  gap: 6px; 
+  background: var(--em-soft); 
+  border-radius: 8px; 
+  padding: 5px 10px; 
+}
+.pts-pill label { 
+  font-size: .65rem; 
+  font-weight: 700; 
+  color: var(--em); 
+  margin: 0; 
+}
+.pts-input { 
+  width: 40px; 
+  border: none; 
+  background: #fff; 
+  border-radius: 6px; 
+  padding: 3px 5px; 
+  text-align: center; 
+  font-weight: 800; 
+  font-size: .8rem; 
+  color: var(--em); 
+  outline: none; 
+  box-shadow: 0 1px 3px rgba(0,0,0,.06); 
+}
+
+.q-field {
+  width: 100%; 
+  border: 1.5px solid var(--bdr); 
+  border-radius: var(--r-lg);
+  padding: 10px 13px; 
+  font-size: .87rem; 
+  font-weight: 500; 
+  color: var(--txt);
+  outline: none; 
+  resize: none; 
+  background: #fafbfc;
+  transition: .17s; 
+  line-height: 1.6;
+}
+.q-field:focus { 
+  border-color: var(--em); 
+  background: #fff; 
+  box-shadow: 0 0 0 3px rgba(16,185,129,.08); 
+}
+.q-field::placeholder { 
+  color: #b0bec5; 
+}
+
+/* Choice rows */
+.choice-row { 
+  display: flex; 
+  align-items: center; 
+  gap: 8px; 
+  padding: 8px 11px; 
+  border: 1.5px solid var(--bdr); 
+  border-radius: var(--r-md); 
+  background: #fafbfc; 
+  transition: .13s; 
+}
+.choice-row:hover { 
+  border-color: var(--em-mid); 
+  background: #fff; 
+}
+.choice-row.correct-highlight { 
+  border-color: var(--em); 
+  background: var(--em-soft); 
+}
+.choice-lbl { 
+  width: 28px; 
+  height: 28px; 
+  flex-shrink: 0; 
+  border-radius: 7px; 
+  background: var(--em-soft); 
+  color: var(--em); 
+  font-weight: 800; 
+  font-size: .74rem; 
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
+}
+.choice-input { 
+  flex: 1; 
+  border: none; 
+  background: transparent; 
+  font-size: .81rem; 
+  font-weight: 500; 
+  color: var(--txt); 
+  outline: none; 
+}
+.choice-input::placeholder { 
+  color: #b0bec5; 
+}
+.form-check-input.cr { 
+  width: 16px; 
+  height: 16px; 
+  cursor: pointer; 
+  border: 2px solid #cbd5e1; 
+}
+.form-check-input.cr:checked { 
+  background-color: var(--em) !important; 
+  border-color: var(--em) !important; 
+  box-shadow: 0 0 0 3px rgba(16,185,129,.14); 
+}
+
+/* Right panel progress ring */
+.svg-ring { 
+  transform: rotate(-90deg); 
+  overflow: visible; 
+}
+.ring-bg { 
+  fill: none; 
+  stroke: #f1f5f9; 
+  stroke-width: 9; 
+}
+.ring-fill { 
+  fill: none; 
+  stroke-width: 9; 
+  stroke-linecap: round; 
+  stroke-dasharray: 314; 
+  transition: stroke-dashoffset .45s ease, stroke .3s ease; 
+}
+
+/* Animations */
+@keyframes slideUp { 
+  from { opacity:0; transform:translateY(10px); } 
+  to { opacity:1; transform:translateY(0); } 
+}
+.slide-in { 
+  animation: slideUp .22s ease; 
+}
+
+/* Glass header info card */
+.quiz-info-header {
+  background: rgba(255, 255, 255, 0.6); 
+  backdrop-filter: blur(24px); 
+  -webkit-backdrop-filter: blur(24px); 
+  border-radius: var(--r-xl); 
+  border: 1px solid rgba(255, 255, 255, 0.8); 
+  box-shadow: 0 4px 15px rgba(0,0,0,.02);
+}
+
+.decoration-circle {
+  width: 100px; 
+  height: 100px; 
+  background: radial-gradient(circle, var(--em-soft) 0%, transparent 70%); 
+  top: -30px; 
+  right: -20px; 
+  z-index: 0; 
+  pointer-events: none;
+}
+
+.icon-circle {
+  width: 20px; 
+  height: 20px; 
+  background: var(--em-soft); 
+  color: var(--em);
+}
+
+.quiz-info-lbl {
+  font-size: .6rem; 
+  font-weight: 800; 
+  color: var(--em); 
+  letter-spacing: 1px; 
+  text-transform: uppercase;
+}
+
+.quiz-title-input {
+  font-size: 1.3rem; 
+  letter-spacing: -0.3px; 
+  outline: none; 
+  background: transparent; 
+  transition: color .2s;
+}
+
+.quiz-desc-input {
+  font-size: .85rem; 
+  color: #64748b; 
+  outline: none; 
+  resize: none; 
+  background: transparent; 
+  line-height: 1.4;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(15, 23, 42, 0.4);
+  backdrop-filter: blur(4px);
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.modal-dialog {
+  width: 100%;
+  max-width: 550px;
+  margin: 0;
+}
+
+.modal-dialog-scrollable {
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-content {
+  background: #ffffff;
+}
+
+.correct-label {
+  font-size:.63rem;
+  font-weight:700;
+}
+
+.remove-choice-btn {
+  font-size:.8rem;
+  transition:.13s;
+  background: transparent;
+}
+.remove-choice-btn:hover {
+  color: #ef4444 !important;
+}
+
+.option-preview-row:hover {
+  border-color: var(--em) !important;
+  background: var(--em-soft) !important;
+}
+</style>
+
+<style>
+/* Clean layout overrides when Quiz Builder is active to make it full bleed on the right of the sidebar */
+.content-body:has(.quiz-builder-container) {
+  padding: 0 !important;
+  overflow: hidden !important;
+  height: calc(100vh - 80px) !important; /* Fit perfectly below the standard shared top navbar */
+  background-color: #f4f7fe;
+}
+
+.content-body:has(.quiz-builder-container) .page-body {
+  padding: 0 !important;
+  height: 100% !important;
+}
+
+.content-body:has(.quiz-builder-container) .main-content {
+  height: 100% !important;
+}
+</style>
