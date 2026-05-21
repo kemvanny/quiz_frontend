@@ -46,8 +46,8 @@
                         <a href="#">ភ្លេចពាក្យសម្ងាត់?</a>
                     </div>
 
-                    <button type="submit" class="btn-login" :disabled="loading">
-                        <span v-if="loading">កំពុងផ្ទៀងផ្ទាត់...</span>
+                    <button type="submit" class="btn-login" :disabled="isLoading">
+                        <span v-if="isLoading"><i class="fas fa-spinner fa-spin"></i>កំពុងផ្ទៀងផ្ទាត់...</span>
                         <span v-else>ចូលគណនី</span>
                     </button>
                 </form>
@@ -65,19 +65,22 @@ import { useFormValidation } from '@/composables/useFormValidation'
 
 const router = useRouter()
 
+const isLoading = ref(false);
 const email = ref('')
 const password = ref('')
-const loading = ref(false)
 
 const { errors, validateEmail, validatePassword } = useFormValidation();
 
 const handleLogin = async () => {
+
+    if(isLoading.value) return;
+
     validateEmail(email.value);
     validatePassword(password.value);
 
     if (errors.value.email || errors.value.password) return;
-
-    loading.value = true
+    
+    isLoading.value = true;
     try {
         const data = await loginAPI(email.value, password.value);
 
@@ -104,7 +107,7 @@ const handleLogin = async () => {
     } catch (error) {
         console.error("Login Error:", error)
     } finally {
-        loading.value = false
+        isLoading.value = false
     }
 }
 </script>

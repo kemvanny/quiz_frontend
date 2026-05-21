@@ -1,38 +1,48 @@
+<script setup lang="ts">
+import router from '@/router';
+
+</script>
+
 <template>
     <div>
         <nav class="sidebar offcanvas-lg offcanvas-start" id="sidebarMenu">
             <!-- Logo -->
             <div class="d-flex align-items-center justify-content-between fw-bold fs-5 mb-4 px-1"
                 style="color:var(--em)">
-                <div class="d-flex align-items-center gap-2"><i class="fas fa-leaf"></i> Prolong</div>
+                <div class="d-flex align-items-center gap-2"><i class="bi bi-mortarboard-fill"></i> Prolong</div>
                 <button class="btn-close d-lg-none shadow-none" data-bs-dismiss="offcanvas"
                     data-bs-target="#sidebarMenu"></button>
             </div>
 
-            <!-- Nav links -->
             <div class="d-flex flex-column gap-1">
                 <router-link :to="{ name: 'TeacherDashboard' }" class="nav-item active"><i class="fas fa-th-large"></i>
                     Dashboard</router-link>
 
-                <!-- Collapsible Create Exam -->
-                <a href="#" class="nav-item justify-content-between" data-bs-toggle="collapse"
+                <router-link to="" class="nav-item justify-content-between" data-bs-toggle="collapse"
                     data-bs-target="#createMenu">
                     <span><i class="fas fa-edit"></i> Create Exam</span>
                     <i class="fas fa-chevron-down" style="font-size:.68rem;opacity:.5"></i>
-                </a>
+                </router-link>
                 <div class="collapse ps-3 d-flex flex-column gap-1" id="createMenu">
-                    <router-link :to="{ name: 'Quizzes' }" class="nav-item"><i class="fas fa-bolt"></i> Quiz</router-link>
-                    <a href="3.te-create-assignment.html" class="nav-item"><i class="fas fa-tasks"></i> Assignment</a>
-                    <a href="4.re-create-final-exam.html" class="nav-item"><i class="fas fa-graduation-cap"></i> Final
-                        Exam</a>
+                    <router-link :to="{ name: 'Quizzes' }" class="nav-item"><i class="fas fa-bolt"></i>
+                        Quiz</router-link>
+                    <router-link :to="{ name: 'Assignment' }" class="nav-item"><i class="fas fa-tasks"></i>
+                        Assignment</router-link>
+                    <router-link :to="{ name: 'FinalExam' }" class="nav-item"><i class="fas fa-graduation-cap"></i> Final
+                        Exam</router-link>
                 </div>
 
-                <a href="6.te-room-mana.html" class="nav-item"><i class="fas fa-users"></i> Room Management</a>
-                <a href="9.te-classroom-stream.html" class="nav-item"><i class="fas fa-users"></i> Classroom Stream</a>
-                <a href="5.te-student-result.html" class="nav-item"><i class="fas fa-chart-bar"></i> Student Results</a>
+                <router-link :to="{ name: 'RoomManagement' }" class="nav-item"><i class="fas fa-users"></i> Room
+                    Management</router-link>
+                <router-link :to="{  name: 'ClassStream' }" class="nav-item"><i class="fas fa-users"></i> Classroom
+                    Stream</router-link>
+                <router-link :to="{ name: 'StudentResults' }" class="nav-item"><i class="fas fa-chart-bar"></i> Student
+                    Results</router-link>
 
-                <a href="7.te-validation.html" class="nav-item"><i class="fas fa-shield-alt"></i> Validations</a>
-                <a href="8.te-profile.html" class="nav-item"><i class="fas fa-user-circle"></i> Profile</a>
+                <router-link :to="{ name: 'TeacherValidations' }" class="nav-item"><i class="fas fa-shield-alt"></i>
+                    Validations</router-link>
+                <router-link :to="{ name: 'Profile' }" class="nav-item"><i class="fas fa-user-circle"></i>
+                    Profile</router-link>
             </div>
 
             <!-- CTA -->
