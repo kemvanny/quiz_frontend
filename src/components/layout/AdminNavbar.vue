@@ -44,7 +44,7 @@ const avatarUrl = computed(() => {
   return `https://ui-avatars.com/api/?name=${formattedName}&background=3fba7f&color=fff&bold=true`
 })
 </script>
-<style>
+<style scoped>
 .topbar {
   background: var(--white);
   border-bottom: 1.5px solid var(--green-mid);

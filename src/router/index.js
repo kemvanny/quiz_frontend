@@ -20,6 +20,9 @@ import ClassStream from '@/views/teacher/ClassStream.vue'
 import StudentResults from '@/views/teacher/StudentResults.vue'
 import TeacherValidations from '@/views/teacher/TeacherValidations.vue'
 import Profile from '@/views/teacher/Profile.vue'
+import EnrolledRoom from '@/views/student/EnrolledRoom.vue'
+import AnalyticsResult from '@/views/student/AnalyticsResult.vue'
+import ProfileSetting from '@/views/student/ProfileSetting.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -37,6 +40,7 @@ const router = createRouter({
     {
       path: '/admin',
       component: AdminLayout,
+      meta: { requiresAuth: true, role: 'admin' },
       children: [
         {
           path: 'dashboard', 
@@ -86,6 +90,7 @@ const router = createRouter({
     {
       path:'/teacher',
       component:TeacherLayout,
+      meta: { requiresAuth: true, role: 'teacher' },
       children: [
       {
         path: 'dashboard',
@@ -146,17 +151,79 @@ const router = createRouter({
     {
       path: '/student',
       component: StudentLayout,
+      meta: { requiresAuth: true, role: 'student' },
       children: [
         {
           path: 'dashboard',
           name: 'StudentDashboard',
           component: StudentDashboard,
           meta: {title: 'Student Dashboard'}
+        },
+        {
+          path: 'assignment',
+          name: 'Assignment',
+          component: Assignment,
+          meta: {title: 'Assignment'}
+        },
+        {
+          path: 'enrolled-room',
+          name: 'EnrolledRoom',
+          component: EnrolledRoom,
+          meta: {title: 'EnrolledRoom'}
+        },
+        {
+          path: 'analytics-result',
+          name: 'AnalyticsResult',
+          component: AnalyticsResult,
+          meta: {title: 'AnalyticsResult'}
+        },
+        {
+          path: 'profile-setting',
+          name: 'ProfileSetting',
+          component: ProfileSetting,
+          meta: {title: 'ProfileSetting'}
         }
       ]
 
     }
   ]
-})
+});
+
+router.beforeEach((to, from) => {
+  const isLoggedIn = !!sessionStorage.getItem('user_token');
+  const userRoleId = sessionStorage.getItem('user_role'); 
+  const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
+  
+  const requiredRole = to.meta.role; 
+
+  const rolePaths = {
+    '1': 'admin',
+    '2': 'teacher',
+    '3': 'student'
+  };
+
+  console.log("Navigating to:", to.path);
+  console.log("IsLoggedIn:", isLoggedIn, "UserRoleId:", userRoleId);
+
+  const userRoleName = rolePaths[userRoleId]; 
+
+  if (requiresAuth && !isLoggedIn) {
+    return { path: '/login' };
+  }
+
+
+  if (isLoggedIn) {
+    
+    if (to.path === '/login' && userRoleName) {
+      return { path: `/${userRoleName}/dashboard` };
+    }
+
+    if (requiredRole && userRoleName !== requiredRole) {
+      return { path: `/${userRoleName}/dashboard` };
+    }
+  }
+
+  return true;
+});
 
 export default router

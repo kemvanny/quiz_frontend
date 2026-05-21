@@ -20,6 +20,8 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import AdminSidebar from '@/components/layout/AdminSidebar.vue'
+import AdminNavbar from '@/components/layout/AdminNavbar.vue'
 import { getProfile } from '@/api/auth.api'
 
 const router = useRouter()
