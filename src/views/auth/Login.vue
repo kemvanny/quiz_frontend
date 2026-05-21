@@ -127,7 +127,6 @@ const handleLogin = async () => {
     justify-content: center;
     background: #f3f7fb;
     font-family: 'Kantumruy Pro', sans-serif;
-    overflow-y: auto;
     padding: 20px;
     z-index: 9999;
 

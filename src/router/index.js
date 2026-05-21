@@ -12,7 +12,6 @@ import TeacherLayout from '@/layouts/TeacherLayout.vue'
 import TeacherDashboard from '@/views/dashboard/TeacherDashboard.vue'
 import StudentLayout from '@/layouts/StudentLayout.vue'
 import StudentDashboard from '@/views/dashboard/StudentDashboard.vue'
-import CreateExam from '@/views/teacher/CreateExam.vue'
 import Quizzes from '@/views/teacher/Quizzes.vue'
 import Assignment from '@/views/teacher/Assignment.vue'
 import FinalExam from '@/views/teacher/FinalExam.vue'
@@ -93,12 +92,6 @@ const router = createRouter({
         name: 'TeacherDashboard',
         component: TeacherDashboard,
         meta: {title: "Teacher Dashboard"}
-      },
-      {
-        path: 'create-exam',
-        name: 'CreateExam',
-        component: CreateExam,
-        meta: {title: "Create Exam"}
       },
       {
         path: 'quizzes',
