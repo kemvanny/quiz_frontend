@@ -25,6 +25,17 @@
   --white: #ffffff;
   --shadow: 0 4px 24px rgba(63, 186, 127, 0.1);
   --shadow-sm: 0 2px 10px rgba(63, 186, 127, 0.08);
+  --emerald: #10b981;
+  --emerald-soft: #ecfdf5;
+  --text-dark: #1e293b;
+  --text-muted: #64748b;
+  --border: #e2e8f0;
+  --em: #10b981; 
+  --bdr: var(--border);
+  --sh-sm: 0 4px 12px rgba(0, 0, 0, 0.03);
+  --txt: var(--text-dark);
+  --txt-mu: var(--text-muted);
+  --surf: #ffffff;
 }
 
 *,
@@ -41,16 +52,17 @@ body {
   overflow-x: hidden;
 }
 .app-layout {
-  display: flex;       
-  min-height: 100vh;     
+  display: flex;
+  height: 100vh;
   width: 100%;
-  overflow: hidden;      
+  overflow: hidden;
 }
 
 .main-wrapper {
   display: flex;
-  flex-direction: column; 
-  flex: 1;              
+  flex-direction: column;
+  flex: 1;
+  overflow: hidden;
 }
 
 .content-body {
@@ -63,56 +75,62 @@ body {
 }
 .main-content {
   margin-left: var(--sidebar-width);
-  /* min-height: 100vh; */
   padding: 0;
 }
 .input-group-custom.has-error {
-    border-color: #dc3545 !important; 
-    box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.15) !important; 
-    background-color: #fffbfb !important; 
-    animation: shake 0.4s ease-in-out;
+  border-color: #dc3545 !important;
+  box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.15) !important;
+  background-color: #fffbfb !important;
+  animation: shake 0.4s ease-in-out;
 }
 
 .input-group-custom.has-error i {
-    color: #dc3545 !important; 
+  color: #dc3545 !important;
 }
-
 
 .error-text {
-    color: #dc3545;
-    font-size: 0.82rem;
-    font-weight: 500;
-    display: flex;
-    align-items: center;
-    gap: 4px; 
-    margin-top: -8px;
-    margin-bottom: 16px;
-    text-align: left;
-    padding-left: 4px;
-    animation: fadeIn 0.3s ease; 
+  color: #dc3545;
+  font-size: 0.82rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: -8px;
+  margin-bottom: 16px;
+  text-align: left;
+  padding-left: 4px;
+  animation: fadeIn 0.3s ease;
 }
 
-
 .error-text::before {
-    content: "\f06a"; 
-    font-family: "Font Awesome 5 Free";
-    font-weight: 900;
-    font-size: 0.85rem;
+  content: "\f06a";
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+  font-size: 0.85rem;
 }
 
 @keyframes shake {
-    0%, 100% { transform: translateX(0); }
-    20%, 60% { transform: translateX(-6px); }
-    40%, 80% { transform: translateX(6px); }
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20%,
+  60% {
+    transform: translateX(-6px);
+  }
+  40%,
+  80% {
+    transform: translateX(6px);
+  }
 }
 
 @keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(-5px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

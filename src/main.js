@@ -11,8 +11,9 @@ import '@fortawesome/fontawesome-free/css/all.min.css'
 import '@fontsource/plus-jakarta-sans'
 import './assets/main.css' 
 
-import NavBar from './components/common/NavBar.vue'
-import SideBar from './components/common/SideBar.vue'
+import AdminNavbar from './components/layout/AdminNavbar.vue'
+import AdminSidebar from './components/layout/AdminSidebar.vue'
+import TeacherSidebar from './components/layout/TeacherSidebar.vue'
 import DataTable from './components/common/DataTable.vue'
 import SearchFilter from './components/common/SearchFilter.vue'
 import BaseButton from './components/common/BaseButton.vue'
@@ -21,8 +22,9 @@ import StatusBadge from './components/common/StatusBadge.vue'
 
 const app = createApp(App)
 
-app.component('Navbar',NavBar)
-app.component('SideBar',SideBar)
+app.component('AdminNavbar',AdminNavbar)
+app.component('AdminSidebar',AdminSidebar)
+app.component('TeacherSidebar',TeacherSidebar)
 app.component('DataTable',DataTable)
 app.component('SearchFilter',SearchFilter)
 app.component('BaseButton',BaseButton)

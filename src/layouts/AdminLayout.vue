@@ -1,26 +1,24 @@
 <template>
   <div class="app-layout">
-    <SideBar roleName="Admin" :mainMenus="adminMainMenus" :systemMenus="adminSystemMenus" @logout="handleLogout"/>
-     
+    <AdminSidebar roleName="Admin" :mainMenus="adminMainMenus" :systemMenus="adminSystemMenus" @logout="handleLogout" />
     <div class="main-wrapper">
-    <Navbar searchPlaceholder="ស្វែងរកអ្នកប្រើប្រាស់, វិញ្ញាសា, ​បន្ទប់..." 
-    :userName="adminProfile.fullName" 
-    :userRole="adminProfile.role"/>
+      <AdminNavbar searchPlaceholder="ស្វែងរកអ្នកប្រើប្រាស់, វិញ្ញាសា, ​បន្ទប់..." :userName="adminProfile.fullName"
+        :userRole="adminProfile.role" />
 
       <main class="content-body">
         <div class="main-content">
           <div class="page-body">
-             <router-view />
+            <router-view />
           </div>
         </div>
-       
+
       </main>
     </div>
   </div>
 
 </template>
 <script setup>
-import { ref,onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { getProfile } from '@/api/auth.api'
 
@@ -53,16 +51,16 @@ const handleLogout = () => {
 
 const fetchAdminProfile = async () => {
   try {
-    const res = await getProfile() 
+    const res = await getProfile()
 
     if (res.data && res.data.data) {
       adminProfile.value = res.data.data
     }
   } catch (error) {
     console.error("មិនអាចទាញទិន្នន័យ Profile បានទេ:", error)
-    
+
     if (error.response && error.response.status === 401) {
-       handleLogout()
+      handleLogout()
     }
   }
 }
