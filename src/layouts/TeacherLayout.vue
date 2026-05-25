@@ -1,8 +1,8 @@
 <template>
   <div class="app-layout">
-    <TeacherSidebar />
+    <TeacherSidebar/>
     <div class="main-wrapper">
-    <TeacherNavbar />
+    <TeacherNavbar/>
       <main class="content-body">
         <div class="main-content">
           <div class="page-body">
@@ -14,6 +14,6 @@
   </div>
 </template>
 <script setup>
-import TeacherSidebar from '@/components/layout/TeacherSidebar.vue';
 import TeacherNavbar from '@/components/layout/TeacherNavbar.vue';
+import TeacherSidebar from '@/components/layout/TeacherSidebar.vue';
 </script>

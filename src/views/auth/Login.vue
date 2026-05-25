@@ -37,8 +37,10 @@
 
                     <div class="input-group-custom" :class="{ 'has-error': errors.password }">
                         <i class="fas fa-lock"></i>
-                        <input type="password" v-model="password" placeholder="ពាក្យសម្ងាត់"
+                        <input :type="showPassword ? 'text' : 'password'" v-model="password" placeholder="ពាក្យសម្ងាត់"
                             @input="validatePassword(password)">
+                        <i class="fas" :class="showPassword ? 'fa-eye-slash' : 'fa-eye'" @click="togglePassword"
+                            style="cursor: pointer; margin-left: auto;"></i>
                     </div>
                     <span v-if="errors.password" class="error-text">{{ errors.password }}</span>
 
@@ -65,21 +67,26 @@ import { useFormValidation } from '@/composables/useFormValidation'
 
 const router = useRouter()
 
+const showPassword = ref(false);
 const isLoading = ref(false);
 const email = ref('')
 const password = ref('')
+
+const togglePassword = () => {
+    showPassword.value = !showPassword.value;
+};
 
 const { errors, validateEmail, validatePassword } = useFormValidation();
 
 const handleLogin = async () => {
 
-    if(isLoading.value) return;
+    if (isLoading.value) return;
 
     validateEmail(email.value);
     validatePassword(password.value);
 
     if (errors.value.email || errors.value.password) return;
-    
+
     isLoading.value = true;
     try {
         const data = await loginAPI(email.value, password.value);
@@ -99,7 +106,7 @@ const handleLogin = async () => {
                 console.log("គណនីរបស់អ្នកមិនទាន់មានសិទ្ធិ Role ក្នុងប្រព័ន្ធឡើយ!")
                 const errorMessage = error.response?.data?.message || "អ៊ីមែល ឬពាក្យសម្ងាត់មិនត្រឹមត្រូវ!";
 
-              
+
                 errors.value.email = errorMessage;
                 errors.value.password = "សូមពិនិត្យមើលពាក្យសម្ងាត់របស់អ្នកឡើងវិញ!";
             }
@@ -190,7 +197,6 @@ input:-webkit-autofill:active {
     transition-property: background-color;
 }
 
-/* Floating Back Button */
 .floating-back-btn {
     position: absolute;
     top: 25px;
@@ -228,7 +234,6 @@ input:-webkit-autofill:active {
     transform: translateX(-3px);
 }
 
-/* Main Card */
 .card-wrapper {
     width: 100%;
     max-width: 960px;
@@ -242,7 +247,6 @@ input:-webkit-autofill:active {
     box-shadow: 0 25px 60px rgba(0, 0, 0, 0.12);
 }
 
-/* LEFT PANEL */
 .left-panel {
     width: 45%;
     background: linear-gradient(135deg, #3cbfae, #2fa898);
@@ -296,7 +300,6 @@ input:-webkit-autofill:active {
     max-width: 320px;
 }
 
-/* Illustration */
 .product-img-area {
     position: absolute;
     bottom: 0;
@@ -348,6 +351,18 @@ input:-webkit-autofill:active {
     margin-bottom: 18px;
     background: #fafafa;
     transition: 0.3s;
+}
+
+.input-group-custom i.fa-eye, 
+.input-group-custom i.fa-eye-slash {
+    margin-right: 10px;
+    color: #94a3b8; 
+    transition: color 0.2s;
+}
+
+.input-group-custom i.fa-eye:hover, 
+.input-group-custom i.fa-eye-slash:hover {
+    color: #10b981; 
 }
 
 .input-group-custom:focus-within {

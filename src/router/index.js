@@ -20,9 +20,9 @@ import ClassStream from '@/views/teacher/ClassStream.vue'
 import StudentResults from '@/views/teacher/StudentResults.vue'
 import TeacherValidations from '@/views/teacher/TeacherValidations.vue'
 import Profile from '@/views/teacher/Profile.vue'
-import EnrolledRoom from '@/views/student/EnrolledRoom.vue'
 import AnalyticsResult from '@/views/student/AnalyticsResult.vue'
 import ProfileSetting from '@/views/student/ProfileSetting.vue'
+import Classroom from '@/views/student/Classroom.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -151,7 +151,7 @@ const router = createRouter({
     {
       path: '/student',
       component: StudentLayout,
-      meta: { requiresAuth: true, role: 'student' },
+      meta: { requiresAuth: true, role: 'student'},
       children: [
         {
           path: 'dashboard',
@@ -166,10 +166,10 @@ const router = createRouter({
           meta: {title: 'Assignment'}
         },
         {
-          path: 'enrolled-room',
-          name: 'EnrolledRoom',
-          component: EnrolledRoom,
-          meta: {title: 'EnrolledRoom'}
+          path: 'classroom',
+          name: 'Classroom',
+          component: Classroom,
+          meta: {title: 'Classroom'}
         },
         {
           path: 'analytics-result',
@@ -201,9 +201,6 @@ router.beforeEach((to, from) => {
     '2': 'teacher',
     '3': 'student'
   };
-
-  console.log("Navigating to:", to.path);
-  console.log("IsLoggedIn:", isLoggedIn, "UserRoleId:", userRoleId);
 
   const userRoleName = rolePaths[userRoleId]; 
 
