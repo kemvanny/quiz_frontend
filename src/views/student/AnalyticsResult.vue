@@ -1,5 +1,9 @@
 <template>
     <div>
-        <h1>Analytics</h1>
+        <h1>hi</h1>
     </div>
 </template>
+
+<script setup>
+
+</script>

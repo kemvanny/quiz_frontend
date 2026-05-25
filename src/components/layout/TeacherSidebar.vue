@@ -1,8 +1,3 @@
-<script setup lang="ts">
-import router from '@/router';
-
-</script>
-
 <template>
     <div>
         <nav class="sidebar offcanvas-lg offcanvas-start" id="sidebarMenu">

@@ -11,7 +11,8 @@ import '@fortawesome/fontawesome-free/css/all.min.css'
 import '@fontsource/plus-jakarta-sans'
 import './assets/main.css' 
 
-
+import BaseSidebar from './components/layout/common/BaseSidebar.vue'
+import BaseNavbar from './components/layout/common/BaseNavbar.vue'
 import DataTable from './components/common/DataTable.vue'
 import SearchFilter from './components/common/SearchFilter.vue'
 import BaseButton from './components/common/BaseButton.vue'
@@ -20,7 +21,8 @@ import StatusBadge from './components/common/StatusBadge.vue'
 
 const app = createApp(App)
 
-
+app.component('BaseSidebar',BaseSidebar)
+app.component('BaseNavbar',BaseNavbar)
 app.component('DataTable',DataTable)
 app.component('SearchFilter',SearchFilter)
 app.component('BaseButton',BaseButton)
