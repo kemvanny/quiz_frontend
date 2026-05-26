@@ -18,6 +18,7 @@ import SearchFilter from './components/common/SearchFilter.vue'
 import BaseButton from './components/common/BaseButton.vue'
 import BaseModal from './components/common/BaseModal.vue'
 import StatusBadge from './components/common/StatusBadge.vue'
+import TeacherNavbarExam from './components/layout/common/TeacherNavbarExam.vue'
 
 const app = createApp(App)
 
@@ -28,6 +29,7 @@ app.component('SearchFilter',SearchFilter)
 app.component('BaseButton',BaseButton)
 app.component('BaseModal',BaseModal)
 app.component('StatusBadge',StatusBadge)
+app.component('TeacherNavbarExam',TeacherNavbarExam)
 
 app.use(createPinia())
 app.use(router)

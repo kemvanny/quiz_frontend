@@ -13,7 +13,6 @@ import TeacherDashboard from '@/views/dashboard/TeacherDashboard.vue'
 import StudentLayout from '@/layouts/StudentLayout.vue'
 import StudentDashboard from '@/views/dashboard/StudentDashboard.vue'
 import Quizzes from '@/views/teacher/Quizzes.vue'
-import Assignment from '@/views/teacher/Assignment.vue'
 import FinalExam from '@/views/teacher/FinalExam.vue'
 import RoomManagement from '@/views/teacher/RoomManagement.vue'
 import ClassStream from '@/views/teacher/ClassStream.vue'
@@ -23,6 +22,8 @@ import Profile from '@/views/teacher/Profile.vue'
 import AnalyticsResult from '@/views/student/AnalyticsResult.vue'
 import ProfileSetting from '@/views/student/ProfileSetting.vue'
 import Classroom from '@/views/student/Classroom.vue'
+import Assignment from '@/views/student/Assignment.vue'
+import Assignments from '@/views/teacher/Assignments.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -105,10 +106,10 @@ const router = createRouter({
         meta: {title: "Quizzes"}
       },
       {
-        path: 'assignment',
-        name: 'Assignment',
-        component: Assignment,
-        meta: {title: "Assignment"}
+        path: 'assignments',
+        name: 'Assignments',
+        component: Assignments,
+        meta: {title: "Assignments"}
       },
       {
         path: 'final-exam',

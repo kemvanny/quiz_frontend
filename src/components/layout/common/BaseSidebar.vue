@@ -65,7 +65,7 @@ defineEmits(['logout'])
 <style>
 .sidebar {
   width: var(--sidebar-width);
-  min-height: 100vh;
+  height: 100vh;
   background: var(--white);
   border-right: 1.5px solid var(--green-mid);
   display: flex;
