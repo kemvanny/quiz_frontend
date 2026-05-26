@@ -13,7 +13,7 @@ export function useFormValidation() {
 
     const namePattern = /^[a-zA-Z Khmer\u1780-\u17F9\s]+$/
 
-    const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/
+    const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#^()_+\-=[\]{};':"\\|,.<>\/?])[A-Za-z\d@$!%*?&#^()_+\-=[\]{};':"\\|,.<>\/?]{8,}$/;
 
     const validateEmail = (value) => {
         if (!value) {
