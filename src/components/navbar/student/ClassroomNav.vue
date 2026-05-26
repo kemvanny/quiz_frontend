@@ -17,7 +17,7 @@
             <div class="d-flex align-items-center gap-3">
                 <button class="d-flex align-items-center gap-2 fw-bold"
                     style="background:linear-gradient(135deg,var(--em),var(--em-dk));color:#fff;border:none;border-radius:12px;padding:9px 20px;font-size:0.85rem;cursor:pointer;transition:.2s;box-shadow:0 4px 12px rgba(16,185,129,0.25);"
-                    onclick="openJoinModal()">
+                    @click="openJoinModal">
                     <i class="fas fa-plus"></i> Join New Room
                 </button>
                 <div style="width:1px;height:26px;background:var(--bdr);"></div>
@@ -34,3 +34,9 @@
         </div>
     </div>
 </template>
+
+<script setup>
+function openJoinModal() {
+    window.dispatchEvent(new CustomEvent('classroom:open-join-modal'));
+}
+</script>

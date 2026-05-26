@@ -23,6 +23,7 @@ import Profile from '@/views/teacher/Profile.vue'
 import AnalyticsResult from '@/views/student/AnalyticsResult.vue'
 import ProfileSetting from '@/views/student/ProfileSetting.vue'
 import Classroom from '@/views/student/Classroom.vue'
+import Assignmentt from '@/views/student/Assignment.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -162,7 +163,7 @@ const router = createRouter({
         {
           path: 'assignment',
           name: 'Assignment',
-          component: Assignment,
+          component: Assignmentt,
           meta: {title: 'Assignment'}
         },
         {
