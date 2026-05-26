@@ -1,7 +1,3 @@
-VITE_BASE_URL=http://localhost:3000/api
+VITE_BASE_URL=http://quiz_management_system.tdomain.work.gd/api
 
-បើចង់ test ត្រូវមាន login បើមិនទាន់ login អាចចូលលុប middleware ដែលដាក់លើ endpoint មួយៗសិនបាន
-Test មុន hosting ត្រូវ downlaod CORS in backend 
-Front end ត្រូវ downlaod axios
-Baseurl ទុកក្នុង env and ហៅយកទៅទុកក្នុង​ folder api 
-រាល់ endpoint ត្រូវទុកក្នុង file in api ហើយចាំ import មកប្រើក្នុង page មួយៗ
+Please change this url to ur env
