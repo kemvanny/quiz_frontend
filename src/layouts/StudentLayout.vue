@@ -3,24 +3,6 @@
     <BaseSidebar :mainMenus="studentMainMenus" />
     <div class="main-wrapper">
         <component :is="activeNavbar"/>
-
-      <!-- <BaseNavbar>
-      <template #left>
-                    <div class="welcome-meta mb-0">
-                        <h1 class="mb-0">Welcome back, Sok Vibol</h1>
-                        <p class="mb-0">Here's your real-time academic snapshot.</p>
-                    </div>
-                </template>
-                <template #right>
-                    <a href="6.st-profile.html" class="profile-pill">
-                        <div class="avatar">SV</div>
-                        <div class="user-profile-info">
-                            <span class="user-name">Sok Vibol</span>
-                            <span class="user-id">ID: 882103 · Monday, 18 May 2026</span>
-                        </div>
-                    </a>
-                </template>
-      </BaseNavbar> -->
       <main class="content-body">
         <div class="main-content">
           <div class="page-body">
