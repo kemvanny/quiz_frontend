@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="page-body">
     <!-- ══ DASHBOARD SECTION ══ -->
     <div id="section-dashboard">
       <div class="d-flex justify-content-between align-items-center mb-4">

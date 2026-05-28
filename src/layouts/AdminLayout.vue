@@ -1,26 +1,51 @@
 <template>
   <div class="app-layout">
-    <SideBar roleName="Admin" :mainMenus="adminMainMenus" :systemMenus="adminSystemMenus" @logout="handleLogout"/>
-     
+    <BaseSidebar roleName="Admin" :mainMenus="adminMainMenus" :systemMenus="adminSystemMenus" @logout="handleLogout">
+      <template #main-menus>
+        <div class="nav-section-label">មុខងារ</div>
+      </template>
+      <template #system-menus>
+        <div class="nav-section-label" style="margin-top: 12px">ប្រព័ន្ធ</div>
+      </template>
+    </BaseSidebar>
+
     <div class="main-wrapper">
-    <Navbar searchPlaceholder="ស្វែងរកអ្នកប្រើប្រាស់, វិញ្ញាសា, ​បន្ទប់..." 
-    :userName="adminProfile.fullName" 
-    :userRole="adminProfile.role"/>
+      <BaseNavbar>
+        <template #left>
+          <div class="search-wrap">
+            <i class="bi bi-search"></i>
+            <input type="text" placeholder="ស្វែងរកអ្នកប្រើប្រាស់, វិញ្ញាសា, ​បន្ទប់..." />
+          </div>
+        </template>
+        <template #right>
+          <div class="user-info">
+            <button class="notif-btn">
+              <i class="bi bi-bell"></i>
+              <span class="dot"></span>
+            </button>
+            <img :src="adminProfile.avatar" class="avatar" alt="Admin" />
+            <div>
+              <div class="user-name">{{ adminProfile.fullName }}</div>
+              <div class="user-role">{{ adminProfile.role }}</div>
+            </div>
+          </div>
+        </template>
+      </BaseNavbar>
 
       <main class="content-body">
         <div class="main-content">
           <div class="page-body">
-             <router-view />
+            <router-view />
           </div>
         </div>
-       
+
       </main>
     </div>
   </div>
 
 </template>
 <script setup>
-import { ref,onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { getProfile } from '@/api/auth.api'
 
@@ -53,16 +78,16 @@ const handleLogout = () => {
 
 const fetchAdminProfile = async () => {
   try {
-    const res = await getProfile() 
+    const res = await getProfile()
 
     if (res.data && res.data.data) {
       adminProfile.value = res.data.data
     }
   } catch (error) {
     console.error("មិនអាចទាញទិន្នន័យ Profile បានទេ:", error)
-    
+
     if (error.response && error.response.status === 401) {
-       handleLogout()
+      handleLogout()
     }
   }
 }
