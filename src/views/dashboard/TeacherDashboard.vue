@@ -354,7 +354,7 @@ const filteredStudents = computed(() => {
     !selectedMembers.value.includes(student.name)
   )
 })
-
+ 
 // Add/Remove students in Modal
 const addMember = (name) => {
   if (!selectedMembers.value.includes(name)) {
@@ -400,6 +400,7 @@ defineExpose({
 </script>
 
 <style scoped>
+
 .teacher-dashboard {
   --emerald: #10b981;
   --emerald-soft: #ecfdf5;

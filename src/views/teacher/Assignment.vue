@@ -1,456 +1,603 @@
 <template>
-    <div class="app-shell">
-        <!-- ══ MAIN COLUMN ══ -->
-        <div class="main-col">
+  <div class="workspace">
 
-            <!-- ══ TOPBAR ══ -->
-            <header class="topbar">
+    <!-- ── LEFT: FORM ── -->
+    <div class="left-col">
 
-            <!-- Page Title -->
-            <div class="tb-section grow align-items-center justify-content-start gap-2 w-100 flex-wrap py-2 py-md-0">
-                <button class="btn btn-light d-lg-none shadow-sm p-1 px-2" data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu">
-                    <i class="fas fa-bars"></i>
+      <!-- Configuration Panel -->
+      <div class="panel slide-in">
+        <div class="panel-head">
+          <span class="panel-lbl">
+            <i class="fas fa-sliders-h em"></i> Assignment Configuration
+          </span>
+        </div>
+        <div class="panel-body">
+
+          <!-- Title -->
+          <div class="field-group">
+            <label class="field-label">Assignment Title <span class="req">*</span></label>
+            <input
+              v-model="form.title"
+              type="text"
+              class="q-field"
+              placeholder="Enter assignment title..."
+            />
+          </div>
+
+          <!-- Type Chips -->
+          <div class="field-group">
+            <label class="field-label">Assignment Type</label>
+            <div class="chips">
+              <div
+                v-for="t in types"
+                :key="t.label"
+                class="tchip"
+                :class="{ sel: form.type === t.label }"
+                @click="form.type = t.label"
+              >
+                <div class="icon-box"><i :class="t.icon"></i></div>
+                <span>{{ t.label }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Select Group -->
+          <div class="select-group">
+            <div class="row-2">
+              <!-- Subject -->
+              <div class="field-group">
+                <label class="field-label">Subject</label>
+                <div class="select-wrap">
+                  <i class="fas fa-book select-ico"></i>
+                  <select v-model="form.subject" class="q-field q-select">
+                    <option value="">Select Subject</option>
+                    <option>Web Development</option>
+                    <option>Database Systems</option>
+                    <option>Networking</option>
+                    <option>Data Structures</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Deadline -->
+              <div class="field-group">
+                <label class="field-label">Submission Deadline</label>
+                <div class="select-wrap">
+                  <i class="fas fa-calendar-alt select-ico"></i>
+                  <input
+                    v-model="form.deadline"
+                    type="datetime-local"
+                    class="q-field ps-ico"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <!-- Classroom -->
+            <div class="field-group">
+              <label class="field-label">Target Classroom</label>
+              <div class="room-row">
+                <div class="select-wrap flex-1">
+                  <i class="fas fa-users select-ico"></i>
+                  <select v-model="form.room" class="q-field q-select room-sel">
+                    <option value="">Select Classroom to assign</option>
+                    <option>Grade 12-A · 32 students</option>
+                    <option>Grade 11-B · 28 students</option>
+                    <option>IT Foundation A · 40 students</option>
+                  </select>
+                </div>
+                <button class="btn-room" type="button" @click="$emit('new-room')">
+                  <i class="fas fa-plus"></i> New Room
                 </button>
-                <div class="d-flex align-items-center gap-2">
-                <h4 class="mb-0 fw-bold text-dark" style="font-size:1.1rem; line-height:1;">Create Assignment</h4>
-                </div>
+              </div>
             </div>
+          </div>
 
-            <!-- Extra settings/info -->
-            <div class="tb-section gap-3">
-                <!-- Status Dropdown -->
-                <select class="form-select form-select-sm border-0 fw-bold shadow-none cursor-pointer" style="background-color: var(--em-soft); color: var(--em); font-size:.75rem; border-radius: 8px;">
-                <option>Status: Draft</option>
-                <option>Status: Active</option>
-                </select>
-                
-                <!-- Timer -->
-                <div class="d-flex align-items-center gap-1 text-muted fw-bold" style="font-size:.75rem;">
-                <i class="fa-regular fa-clock text-warning" style="font-size:.85rem;"></i>
-                <input type="number" id="durationInput" class="form-control form-control-sm border text-dark fw-bold text-center shadow-none px-1 py-0 mx-1" value="7" min="0" style="width:45px; height:24px; font-size:.75rem; border-color:var(--bdr);" oninput="updateDuration()">
-                <span>days</span>
-                </div>
+          <!-- Instructions -->
+          <div class="field-group">
+            <label class="field-label">Instructions & Requirements</label>
+            <textarea
+              v-model="form.instructions"
+              class="q-field"
+              rows="5"
+              placeholder="Provide clear instructions for your students..."
+            ></textarea>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Upload Panel -->
+      <div class="panel slide-in" style="animation-delay:.08s">
+        <div class="panel-head">
+          <span class="panel-lbl"><i class="fas fa-cloud-upload-alt em"></i> Learning Materials</span>
+        </div>
+        <div class="panel-body">
+          <div class="upload-z" @click="$refs.fileInput.click()">
+            <div class="u-orb"><i class="fas fa-cloud-arrow-up"></i></div>
+            <div class="u-h">Drop Files Here</div>
+            <div class="u-s">Drag & drop or click to browse your computer</div>
+            <button class="btn-browse" type="button" @click.stop="$refs.fileInput.click()">
+              <i class="fas fa-folder-open"></i> Browse Files
+            </button>
+          </div>
+          <input ref="fileInput" type="file" multiple style="display:none" @change="handleFiles" />
+          <div class="file-chips">
+            <div v-for="f in files" :key="f.name" class="fchip">
+              <i class="fas fa-paperclip"></i> {{ f.name }}
             </div>
+          </div>
+        </div>
+      </div>
 
-            <!-- Saved Status -->
-            <div class="tb-section">
-                <span class="text-muted fw-bold" style="font-size:.75rem;"><i class="fas fa-check-circle text-success me-1"></i> Saved</span>
+    </div>
+
+    <!-- ── RIGHT: SUMMARY & PUBLISH ── -->
+    <div class="right-col">
+
+      <!-- Publish Card -->
+      <div class="panel publish-card slide-in" style="animation-delay:.1s">
+        <div class="pub-badge">
+          <span class="spinner-dot"></span> Ready to Publish
+        </div>
+        <h5 class="pub-title">Publish Assignment</h5>
+        <p class="pub-sub">Push it live and notify students instantly.</p>
+        <button class="btn-publish" @click="openModal">
+          <i class="fas fa-paper-plane"></i> Publish Now
+        </button>
+        <button class="btn-preview">
+          <i class="fas fa-eye"></i> Preview First
+        </button>
+      </div>
+
+      <!-- Summary -->
+      <div class="panel slide-in" style="animation-delay:.15s">
+        <div class="panel-head">
+          <span class="panel-lbl"><i class="fas fa-chart-pie em"></i> Summary</span>
+        </div>
+        <div class="panel-body">
+          <div class="sum-row">
+            <span class="sum-k"><i class="fas fa-tag em-i"></i> Type</span>
+            <span class="sbdg sb-b">{{ form.type }}</span>
+          </div>
+          <div class="sum-row">
+            <span class="sum-k"><i class="fas fa-clock em-i"></i> Duration</span>
+            <span class="sbdg sb-g">{{ form.duration }} {{ form.duration == 1 ? 'Day' : 'Days' }}</span>
+          </div>
+          <div class="sum-row">
+            <span class="sum-k"><i class="fas fa-paperclip em-i"></i> Attachments</span>
+            <span class="sbdg sb-s">{{ files.length }} {{ files.length === 1 ? 'File' : 'Files' }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Checklist -->
+      <div class="panel slide-in" style="animation-delay:.2s">
+        <div class="panel-head">
+          <span class="panel-lbl"><i class="fas fa-list-check em"></i> Setup Checklist</span>
+        </div>
+        <div class="panel-body">
+          <div class="cki">
+            <div class="ckico"><i class="fas fa-check"></i></div> Type selected
+          </div>
+          <div class="cki" :class="{ pend: !form.title }">
+            <div class="ckico"><i class="fas fa-check"></i></div> Title filled in
+          </div>
+          <div class="cki" :class="{ pend: !form.subject }">
+            <div class="ckico"><i class="fas fa-check"></i></div> Subject chosen
+          </div>
+          <div class="cki" :class="{ pend: !form.deadline }">
+            <div class="ckico"><i class="fas fa-check"></i></div> Deadline set
+          </div>
+          <div class="cki" :class="{ pend: !form.room }">
+            <div class="ckico"><i class="fas fa-check"></i></div> Classroom selected
+          </div>
+          <div class="cki" :class="{ pend: files.length === 0 }">
+            <div class="ckico"><i class="fas fa-check"></i></div> Files attached
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ── PUBLISH MODAL ── -->
+    <Teleport to="body">
+      <div v-if="showModal" class="modal-overlay" @click.self="showModal = false">
+        <div class="modal-box">
+          <div class="modal-header">
+            <h5><i class="fas fa-paper-plane em"></i> Publish Assignment</h5>
+            <button class="modal-close" @click="showModal = false">&times;</button>
+          </div>
+          <div class="modal-body">
+            <p>Are you sure you want to publish <strong>{{ form.type }}</strong> to the selected classroom?</p>
+            <div class="modal-stats">
+              <div class="mstat">
+                <div class="mstat-lbl">Classroom</div>
+                <div class="mstat-val">{{ form.room ? form.room.split('·')[0].trim() : '— Not set' }}</div>
+              </div>
+              <div class="mstat">
+                <div class="mstat-lbl">Files</div>
+                <div class="mstat-val">{{ files.length }} attached</div>
+              </div>
             </div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn-cancel" @click="showModal = false">Cancel</button>
+            <button class="btn-confirm" @click="confirmPublish">
+              <i class="fas fa-check-circle"></i> Confirm & Publish
+            </button>
+          </div>
+        </div>
+      </div>
+    </Teleport>
 
-            <!-- Actions + profile -->
-            <div class="tb-section gap-3 pe-0">
-
-                <!-- Profile Dropdown -->
-                <div class="d-flex align-items-center gap-2 p-1 pe-3 rounded-pill" style="border: 1px solid var(--bdr); background: #ffffff; cursor: pointer; transition: .2s; box-shadow: var(--sh-sm);" onmouseover="this.style.borderColor='#cbd5e1'; this.style.boxShadow='0 4px 12px rgba(0,0,0,.05)'" onmouseout="this.style.borderColor='var(--bdr)'; this.style.boxShadow='var(--sh-sm)'">
-                <img src="https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcQTs4Gaz2D9hyLPSjUFHdcLhwoP5JbyaMy3-CXKrYPU4oJnTeRW" alt="avatar" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover;"/>
-                <div class="d-flex flex-column justify-content-center" style="line-height: 1.1;">
-                    <span class="fw-bold" style="font-size: .8rem; color: var(--txt);">Hean Liza</span>
-                    <span style="font-size: .65rem; color: var(--txt-mu); font-weight: 500;">Instructor</span>
-                </div>
-                </div>
-            </div>
-            </header>
-
-            <!-- ══ WORKSPACE ══ -->
-            <div class="workspace">
-            
-            <!-- ── LEFT: FORM AREA ── -->
-            <div class="d-flex flex-column gap-3 slide-in">
-                
-                <!-- Details Panel -->
-                <div class="panel mb-0 border-0 shadow-sm" style="border-radius: 20px;">
-                <div class="panel-head bg-transparent border-bottom px-4 py-3">
-                    <div class="panel-lbl text-dark" style="font-size: .85rem;"><i class="fas fa-sliders-h" style="color:var(--em);"></i> Assignment Configuration</div>
-                </div>
-                <div class="p-4">
-                    
-                    <!-- Assignment Title -->
-                    <div class="mb-4">
-                    <label class="form-label text-muted fw-bold mb-2" style="font-size: .75rem; letter-spacing: 0.5px;">Assignment Title <span class="text-danger">*</span></label>
-                    <div class="position-relative">
-                        <input type="text" class="q-field form-control px-3 shadow-sm" id="titleInput" oninput="checkTitle()" placeholder="Enter assignment title..." style="height: 52px; border-radius: 12px; border-color: #e2e8f0; font-size: 1rem; font-weight: 600;">
-                    </div>
-                    </div>
-                    
-                    <!-- Type Chips -->
-                    <div class="mb-4">
-                    <label class="form-label text-muted fw-bold mb-3" style="font-size: .75rem; letter-spacing: 0.5px;">Assignment Type</label>
-                    <div class="d-flex flex-wrap gap-2">
-                        <div class="tchip sel" onclick="selectType(this)">
-                        <div class="icon-box"><i class="fas fa-home"></i></div>
-                        <span>Homework</span>
-                        </div>
-                        <div class="tchip" onclick="selectType(this)">
-                        <div class="icon-box"><i class="fas fa-users"></i></div>
-                        <span>Group Work</span>
-                        </div>
-                        <div class="tchip" onclick="selectType(this)">
-                        <div class="icon-box"><i class="fas fa-book-open"></i></div>
-                        <span>Research</span>
-                        </div>
-                        <div class="tchip" onclick="selectType(this)">
-                        <div class="icon-box"><i class="fas fa-desktop"></i></div>
-                        <span>Presentation</span>
-                        </div>
-                    </div>
-                    </div>
-
-                    <!-- Gray Background Group for Selects -->
-                    <div class="p-4 rounded-4 mb-4" style="background: #f8fafc; border: 1px solid #f1f5f9;">
-                    <div class="row g-4">
-                        
-                        <!-- Subject -->
-                        <div class="col-md-6">
-                        <label class="form-label text-muted fw-bold mb-2" style="font-size: .7rem;">Subject</label>
-                        <div class="position-relative">
-                            <i class="fas fa-book position-absolute" style="left: 14px; top: 50%; transform: translateY(-50%); color: #94a3b8;"></i>
-                            <select class="q-field form-select ps-5" id="subjectInput" onchange="checkSubject()" style="height: 48px; border-radius: 12px; border-color: #e2e8f0; font-weight: 600;">
-                            <option value="">Select Subject</option>
-                            <option>Web Development</option>
-                            <option>Database Systems</option>
-                            <option>Networking</option>
-                            <option>Data Structures</option>
-                            </select>
-                        </div>
-                        </div>
-
-                        <!-- Deadline -->
-                        <div class="col-md-6">
-                        <label class="form-label text-muted fw-bold mb-2" style="font-size: .7rem;">Submission Deadline</label>
-                        <div class="position-relative">
-                            <i class="fas fa-calendar-alt position-absolute" style="left: 14px; top: 50%; transform: translateY(-50%); color: #94a3b8;"></i>
-                            <input type="datetime-local" class="q-field ps-5" id="deadlineInput" onchange="checkDeadline()" style="height: 48px; border-radius: 12px; border-color: #e2e8f0; font-weight: 600;">
-                        </div>
-                        </div>
-
-                        <!-- Classroom -->
-                        <div class="col-md-12">
-                        <label class="form-label text-muted fw-bold mb-2" style="font-size: .7rem;">Target Classroom</label>
-                        <div class="d-flex shadow-sm" style="border-radius: 12px;">
-                            <div class="position-relative flex-grow-1">
-                            <i class="fas fa-users position-absolute" style="left: 14px; top: 50%; transform: translateY(-50%); color: #94a3b8; z-index: 5;"></i>
-                            <select class="q-field form-select ps-5 shadow-none m-0" id="roomInput" onchange="checkRoom()" style="height: 48px; border-radius: 12px 0 0 12px; border-color: #e2e8f0; font-weight: 600; border-right: none;">
-                                <option value="">Select Classroom to assign</option>
-                                <option>Grade 12-A · 32 students</option>
-                                <option>Grade 11-B · 28 students</option>
-                                <option>IT Foundation A · 40 students</option>
-                            </select>
-                            </div>
-                            <button class="btn fw-bold px-4 shadow-none m-0" type="button" style="background: var(--em-soft); color: var(--em); border: 1.5px solid var(--em-mid); font-size:.85rem; transition:.2s; border-radius: 0 12px 12px 0; z-index: 1;" onmouseover="this.style.background='#d1fae5'" onmouseout="this.style.background='var(--em-soft)'" onclick="alert('Open New Classroom Modal')">
-                            <i class="fas fa-plus me-1"></i> New Room
-                            </button>
-                        </div>
-                        </div>
-
-                    </div>
-                    </div>
-
-                    <!-- Instructions -->
-                    <div>
-                    <label class="form-label text-muted fw-bold mb-2" style="font-size: .75rem; letter-spacing: 0.5px;">Instructions & Requirements</label>
-                    <textarea class="q-field p-3" rows="5" placeholder="Provide clear instructions for your students. Include learning objectives, submission guidelines, format requirements, and grading criteria..." style="border-radius: 16px; border-color: #e2e8f0; line-height: 1.6;"></textarea>
-                    </div>
-                </div>
-                </div>
-
-                <!-- Upload Panel -->
-                <div class="panel">
-                <div class="panel-head">
-                    <div class="panel-lbl"><i class="fas fa-cloud-upload-alt" style="color:var(--em);font-size:.9rem;"></i> Learning Materials</div>
-                </div>
-                <div class="p-4">
-                    <div class="upload-z" onclick="document.getElementById('fileInput').click()">
-                    <div class="u-orb"><i class="fas fa-cloud-arrow-up"></i></div>
-                    <div class="u-h">Drop Files Here</div>
-                    <div class="u-s">Drag & drop or click to browse your computer</div>
-                    <button class="btn btn-dark btn-sm rounded-3 fw-bold px-4 py-2" onclick="event.stopPropagation(); document.getElementById('fileInput').click()">
-                        <i class="fas fa-folder-open me-2"></i> Browse Files
-                    </button>
-                    </div>
-                    <input type="file" id="fileInput" multiple style="display:none" onchange="handleFiles(this)">
-                    <div class="file-chips" id="fileChips"></div>
-                </div>
-                </div>
-            </div>
-
-            <!-- ── RIGHT: SUMMARY & PUBLISH ── -->
-            <div class="d-flex flex-column gap-3 slide-in" style="animation-delay: .1s;">
-                
-                <!-- Action Card -->
-                <div class="panel p-4 border-0 position-relative overflow-hidden" style="box-shadow: 0 10px 30px rgba(16,185,129,.08); border-radius: 20px; background: #ffffff;">
-                <!-- Decorative Background Accent -->
-                <div class="position-absolute" style="top:-50px; right:-50px; width:120px; height:120px; background: radial-gradient(circle, var(--em-soft) 0%, transparent 70%); border-radius:50%;"></div>
-                
-                <div class="text-center mb-4 mt-1 position-relative z-1">
-                    <div class="d-inline-flex align-items-center gap-2 mb-3 px-3 py-1 rounded-pill" style="background: var(--em-soft); color: var(--em); font-size: .7rem; font-weight: 700; border: 1px solid rgba(16,185,129,.2);">
-                    <span class="spinner-grow spinner-grow-sm" style="width:6px;height:6px;" role="status"></span> Ready to Publish
-                    </div>
-                    <h5 class="fw-bold mb-1 text-dark" style="letter-spacing: -0.5px;">Publish Assignment</h5>
-                    <p class="text-muted" style="font-size: .75rem; line-height: 1.4;">Push it live and notify students instantly.</p>
-                </div>
-                
-                <div class="d-flex flex-column gap-2 position-relative z-1">
-                    <button class="btn w-100 rounded-3 fw-bold text-white py-2 shadow-sm" style="background: linear-gradient(135deg,var(--em),var(--em-dk)); transition: .2s; border: none;" onclick="openPublishModal()" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 15px rgba(16,185,129,.3)';" onmouseout="this.style.transform='none'; this.style.boxShadow='0 2px 4px rgba(0,0,0,.05)';">
-                    <i class="fas fa-paper-plane me-2"></i> Publish Now
-                    </button>
-                    <button class="btn w-100 rounded-3 fw-bold py-2" style="background: #f8fafc; color: var(--txt-m); border: 1px solid #e2e8f0; transition: .2s;" onmouseover="this.style.background='#f1f5f9'" onmouseout="this.style.background='#f8fafc'">
-                    <i class="fas fa-eye me-2" style="color: #94a3b8;"></i> Preview First
-                    </button>
-                </div>
-                </div>
-
-                <!-- Summary -->
-                <div class="panel border-0 shadow-sm" style="border-radius: 20px;">
-                <div class="panel-head bg-transparent border-bottom px-4 py-3">
-                    <div class="panel-lbl text-dark" style="font-size: .85rem;"><i class="fas fa-chart-pie" style="color:var(--em);"></i> Summary</div>
-                </div>
-                <div class="p-4">
-                    <div class="sum-row">
-                    <div class="sum-k"><i class="fas fa-tag"></i> Type</div>
-                    <span class="sbdg sb-b" id="sumType">Homework</span>
-                    </div>
-                    <div class="sum-row">
-                    <div class="sum-k"><i class="fas fa-clock"></i> Duration</div>
-                    <span class="sbdg sb-g" id="sumDuration">7 Days</span>
-                    </div>
-                    <div class="sum-row">
-                    <div class="sum-k"><i class="fas fa-paperclip"></i> Attachments</div>
-                    <span class="sbdg sb-s" id="sumFiles">0 Files</span>
-                    </div>
-                </div>
-                </div>
-
-                <!-- Checklist -->
-                <div class="panel border-0 shadow-sm" style="border-radius: 20px;">
-                <div class="panel-head bg-transparent border-bottom px-4 py-3">
-                    <div class="panel-lbl text-dark" style="font-size: .85rem;"><i class="fas fa-list-check" style="color:var(--em);"></i> Setup Checklist</div>
-                </div>
-                <div class="p-4">
-                    <div class="cki"><div class="ckico"><i class="fas fa-check"></i></div> Type selected</div>
-                    <div class="cki pend" id="ck-title"><div class="ckico"><i class="fas fa-check"></i></div> Title filled in</div>
-                    <div class="cki pend" id="ck-subject"><div class="ckico"><i class="fas fa-check"></i></div> Subject chosen</div>
-                    <div class="cki pend" id="ck-deadline"><div class="ckico"><i class="fas fa-check"></i></div> Deadline set</div>
-                    <div class="cki pend" id="ck-room"><div class="ckico"><i class="fas fa-check"></i></div> Classroom selected</div>
-                    <div class="cki pend" id="ck-files"><div class="ckico"><i class="fas fa-check"></i></div> Files attached</div>
-                </div>
-                </div>
-
-            </div>
-            </div><!-- /workspace -->
-        </div><!-- /main-col -->
-    </div><!-- /app-shell -->
+  </div>
 </template>
 
-  <style>
-    /* ── Design tokens ── */
-    :root {
-      --em:      #10b981;
-      --em-dk:   #059669;
-      --em-soft: #ecfdf5;
-      --em-mid:  rgba(16,185,129,.25);
-      --txt:     #1e293b;
-      --txt-m:   #334155;
-      --txt-mu:  #64748b;
-      --surf:    #ffffff;
-      --bdr:     #e2e8f0;
-      --r-md:    10px;
-      --r-lg:    14px;
-      --r-xl:    20px;
-      --sh-sm:   0 2px 8px rgba(0,0,0,.04);
-      --sh-md:   0 8px 24px rgba(0,0,0,.08);
-    }
+<script setup>
+import { ref, reactive } from 'vue'
 
-    /* ── Base ── */
-    body {
-      font-family: "Kantumruy Pro", "Poppins", sans-serif;
-      background: #f4f7fe;
-      background-image:
-        radial-gradient(at 0% 0%,   hsla(158,76%,76%,.55) 0, transparent 50%),
-        radial-gradient(at 100% 100%, hsla(209,43%,80%,.55) 0, transparent 50%);
-      height: 100vh;
-      overflow: hidden;
-    }
+const showModal = ref(false)
+const files = ref([])
 
-    /* ── Layout shell ── */
-    .app-shell { display: flex; height: 100vh; overflow: hidden; }
+const form = reactive({
+  title: '',
+  type: 'Homework',
+  subject: '',
+  deadline: '',
+  room: '',
+  instructions: '',
+  duration: 7,
+})
 
-    /* ── Sidebar ── */
-    .sidebar {
-      width: 240px;
-      flex-shrink: 0;
-      background: var(--surf);
-      border-right: 1px solid var(--bdr);
-      display: flex;
-      flex-direction: column;
-      padding: 20px 14px;
-      overflow-y: auto;
-    }
+const types = [
+  { label: 'Homework',     icon: 'fas fa-home' },
+  { label: 'Group Work',   icon: 'fas fa-users' },
+  { label: 'Research',     icon: 'fas fa-book-open' },
+  { label: 'Presentation', icon: 'fas fa-desktop' },
+]
 
-    .nav-item {
-      display: flex; align-items: center; gap: 10px;
-      padding: 9px 12px;
-      border-radius: var(--r-md);
-      text-decoration: none;
-      color: var(--txt-mu);
-      font-size: .83rem; font-weight: 500;
-      transition: .17s;
-    }
-    .nav-item i { width: 16px; text-align: center; font-size: .8rem; }
-    .nav-item.active { background: var(--em-soft); color: var(--em); font-weight: 700; }
-    .nav-item:hover:not(.active) { background: #f8fafc; color: var(--txt); }
+function handleFiles(e) {
+  files.value = Array.from(e.target.files)
+}
 
-    .sidebar-cta {
-      border: 2px dashed var(--em-mid);
-      border-radius: var(--r-lg);
-      background: var(--em-soft);
-      cursor: pointer;
-      transition: .2s;
-    }
-    .sidebar-cta:hover { background: #d1fae5; }
+function openModal() {
+  showModal.value = true
+}
 
-    /* ── Main column ── */
-    .main-col { flex: 1; min-width: 0; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+function confirmPublish() {
+  showModal.value = false
+  alert('Assignment successfully published!')
+}
+</script>
 
-    /* ── Topbar ── */
-    .topbar {
-      flex-shrink: 0;
-      min-height: 64px;
-      background: rgba(255,255,255,0.85);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--bdr);
-      display: flex;
-      align-items: stretch;
-      flex-wrap: wrap;
-      padding: 0 24px;
-      z-index: 100;
-    }
+<style scoped>
+/* ── Tokens ── */
+:root {
+  --em:      #10b981;
+  --em-dk:   #059669;
+  --em-soft: #ecfdf5;
+  --em-mid:  rgba(16,185,129,.25);
+  --txt:     #1e293b;
+  --txt-m:   #334155;
+  --txt-mu:  #64748b;
+  --bdr:     #e2e8f0;
+  --r-md:    10px;
+  --r-lg:    14px;
+  --r-xl:    20px;
+}
 
-    .tb-section { display: flex; align-items: center; padding: 0 18px; gap: 12px; }
-    .tb-section:first-child { padding-left: 0; }
-    .tb-section:last-child { padding-right: 0; }
-    .tb-section.grow { flex: 1; }
+/* ── Workspace grid ── */
+.workspace {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 16px 24px;
+  overflow-y: auto;
+  min-height: 0;
+  font-family: "Kantumruy Pro", "Poppins", sans-serif;
+}
+@media (min-width: 992px) {
+  .workspace {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    align-items: start;
+  }
+}
 
-    /* ── Workspace 2-col grid ── */
-    .workspace {
-      flex: 1; min-height: 0;
-      display: flex; flex-direction: column;
-      gap: 16px;
-      padding: 16px 24px;
-      overflow-y: auto; overflow-x: hidden;
-    }
-    @media (min-width: 992px) {
-      .workspace {
-        display: grid;
-        grid-template-columns: 1fr 340px;
-        overflow-y: auto; overflow-x: hidden;
-      }
-    }
+.left-col,
+.right-col {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
 
-    .panel {
-      background: var(--surf);
-      border: 1px solid var(--bdr);
-      border-radius: var(--r-xl);
-      box-shadow: var(--sh-sm);
-      display: flex; flex-direction: column;
-      overflow: hidden;
-      margin-bottom: 16px;
-    }
-    .panel-head {
-      padding: 14px 18px;
-      border-bottom: 1px solid var(--bdr);
-      display: flex; align-items: center; justify-content: space-between;
-      background: #fafbfc;
-    }
-    .panel-lbl   { font-size: .75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--txt-mu); display: flex; align-items: center; gap: 8px;}
-    
-    /* ── Form Elements (matching quiz fields) ── */
-    .q-field {
-      width: 100%; border: 1.5px solid var(--bdr); border-radius: var(--r-lg);
-      padding: 10px 14px; font-size: .87rem; font-weight: 500; color: var(--txt);
-      outline: none; font-family: inherit; background: #fafbfc;
-      transition: .17s; line-height: 1.6;
-    }
-    .q-field:focus { border-color: var(--em); background: #fff; box-shadow: 0 0 0 3px rgba(16,185,129,.08); }
-    .q-field::placeholder { color: #b0bec5; }
-    
-    .form-label { font-size: .7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--txt-mu); margin-bottom: 6px; }
+/* ── Panel ── */
+.panel {
+  background: #fff;
+  border: 1px solid var(--bdr);
+  border-radius: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,.04);
+  overflow: hidden;
+  
+  
+}
+.panel-head {
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--bdr);
+  background: #fafbfc;
+}
+.panel-lbl {
+  font-size: .75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--txt-mu);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.panel-body { padding: 20px; display: flex; flex-direction: column; gap: 18px;}
 
-    /* type chips */
-    .tchip {
-      background: #ffffff; border: 1.5px solid var(--bdr); border-radius: 14px;
-      cursor: pointer; transition: all .2s ease;
-      color: var(--txt-mu); font-weight: 600; font-size: .8rem;
-      display: inline-flex; align-items: center; padding: 6px 14px 6px 6px;
-    }
-    .tchip:hover { border-color: #cbd5e1; box-shadow: 0 4px 12px rgba(0,0,0,.03); transform: translateY(-1px); }
-    .tchip.sel { border-color: var(--em); background: var(--em-soft); color: var(--em-dk); box-shadow: 0 4px 16px rgba(16,185,129,.15); }
-    .tchip .icon-box {
-      width: 28px; height: 28px; border-radius: 8px; background: #f1f5f9;
-      display: flex; align-items: center; justify-content: center; color: #94a3b8; transition: .2s; margin-right: 6px;
-    }
-    .tchip.sel .icon-box { background: var(--em); color: white; }
+/* ── Fields ── */
+.field-group { display: flex; flex-direction: column; gap: 6px; }
+.field-label {
+  font-size: .7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  color: var(--txt-mu);
+}
+.req { color: #ef4444; }
 
-    /* upload */
-    .upload-z {
-      border:2px dashed var(--bdr); border-radius:16px; padding:32px 20px;
-      text-align:center; background: #fafbfc;
-      cursor:pointer; transition:.25s;
-    }
-    .upload-z:hover { border-color:var(--em-mid); background:var(--em-soft); }
-    .u-orb {
-      width:56px; height:56px; border-radius:16px;
-      background:linear-gradient(135deg,var(--em),var(--em-dk)); color:#fff; font-size:1.3rem;
-      display:flex; align-items:center; justify-content:center; margin:0 auto 12px;
-      box-shadow:0 10px 24px rgba(16,185,129,.24); transition:.25s;
-    }
-    .upload-z:hover .u-orb { transform:translateY(-3px) scale(1.04); }
-    .u-h { font-size:.9rem; font-weight:800; color:var(--txt); margin-bottom:4px; }
-    .u-s { font-size:.75rem; color:var(--txt-mu); margin-bottom:14px; }
-    
-    .file-chips { display:flex; flex-wrap:wrap; gap:8px; margin-top:14px; }
-    .fchip {
-      display:inline-flex; align-items:center; gap:6px;
-      background:var(--em-soft); border:1px solid var(--em-mid);
-      border-radius:10px; padding:6px 12px;
-      font-size:.75rem; font-weight:600; color:var(--em-dk);
-    }
+.q-field {
+  width: 100%;
+  border: 1.5px solid var(--bdr);
+  border-radius: var(--r-lg);
+  padding: 10px 14px;
+  font-size: .87rem;
+  font-weight: 500;
+  color: var(--txt);
+  outline: none;
+  font-family: inherit;
+  background: #fafbfc;
+  transition: .17s;
+  line-height: 1.6;
+  box-sizing: border-box;
+}
+.q-field:focus {
+  border-color: #10b981;
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(16,185,129,.08);
+}
 
-    /* ── Checklist ── */
-    .cki {
-      display:flex; align-items:center; gap:10px;
-      font-size:.8rem; color:var(--txt-m); font-weight: 500;
-      padding:10px 0; border-bottom:1px solid #f1f5f9;
-    }
-    .cki:last-child { border-bottom:none; }
-    .cki .ckico {
-      width:22px; height:22px; border-radius:6px;
-      background:var(--em-soft); color:var(--em);
-      display:flex; align-items:center; justify-content:center;
-      font-size:.65rem; flex-shrink:0;
-    }
-    .cki.pend .ckico { background:#f1f5f9; color:#cbd5e1; }
-    .cki.pend { color: var(--txt-mu); }
+/* ── Select wrapper ── */
+.select-group {
+  background: #f8fafc;
+  border: 1px solid #f1f5f9;
+  border-radius: 16px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+@media (max-width: 600px) { .row-2 { grid-template-columns: 1fr; } }
 
-    /* ── Summary ── */
-    .sum-row {
-      display:flex; align-items:center; justify-content:space-between;
-      padding:10px 0; border-bottom:1px solid #f1f5f9;
-    }
-    .sum-row:last-child { border-bottom:none; padding-bottom:0; }
-    .sum-k { display:flex; align-items:center; gap:8px; font-size:.75rem; color:var(--txt-mu); font-weight: 600; }
-    .sum-k i { color:var(--em); font-size:.7rem; width:14px; text-align: center; }
-    .sbdg { font-size:.7rem; font-weight:700; padding:3px 10px; border-radius:999px; }
-    .sb-g { background:#dcfce7; color:#16a34a; }
-    .sb-a { background:#fef9c3; color:#a16207; }
-    .sb-s { background:#f1f5f9; color:#475569; }
-    .sb-b { background:#dbeafe; color:#1d4ed8; }
+.select-wrap { position: relative; }
+.select-ico {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #94a3b8;
+  pointer-events: none;
+  z-index: 1;
+}
+.q-select { padding-left: 42px !important; }
+.ps-ico   { padding-left: 42px !important; }
 
-    /* ── Animations ── */
-    @keyframes slideUp { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
-    .slide-in { animation: slideUp .22s ease; }
+/* ── Classroom row ── */
+.room-row { display: flex; }
+.flex-1   { flex: 1; min-width: 0; }
+.room-sel { border-radius: 12px 0 0 12px !important; border-right: none !important; }
+.btn-room {
+  background: #ecfdf5;
+  color: #059669;
+  border: 1.5px solid rgba(16,185,129,.25);
+  border-left: none;
+  border-radius: 0 12px 12px 0;
+  padding: 0 18px;
+  font-weight: 700;
+  font-size: .82rem;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: .2s;
+  font-family: inherit;
+}
+.btn-room:hover { background: #d1fae5; }
 
-    /* ── Scrollbar ── */
-    ::-webkit-scrollbar       { width: 6px; height: 6px; }
-    ::-webkit-scrollbar-track { background: transparent; }
-    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 999px; }
-  </style>
+/* ── Type chips ── */
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.tchip {
+  background: #fff;
+  border: 1.5px solid var(--bdr);
+  border-radius: 14px;
+  cursor: pointer;
+  transition: all .2s;
+  color: var(--txt-mu);
+  font-weight: 600;
+  font-size: .8rem;
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 14px 6px 6px;
+}
+.tchip:hover { border-color: #cbd5e1; transform: translateY(-1px); }
+.tchip.sel { border-color: #10b981; background: #ecfdf5; color: #059669; box-shadow: 0 4px 16px rgba(16,185,129,.15); }
+.icon-box {
+  width: 28px; height: 28px; border-radius: 8px;
+  background: #f1f5f9;
+  display: flex; align-items: center; justify-content: center;
+  color: #94a3b8; transition: .2s; margin-right: 6px;
+}
+.tchip.sel .icon-box { background: #10b981; color: #fff; }
+
+/* ── Upload ── */
+.upload-z {
+  border: 2px dashed var(--bdr);
+  border-radius: 16px;
+  padding: 32px 20px;
+  text-align: center;
+  background: #fafbfc;
+  cursor: pointer;
+  transition: .25s;
+}
+.upload-z:hover { border-color: rgba(16,185,129,.25); background: #ecfdf5; }
+.u-orb {
+  width: 56px; height: 56px; border-radius: 16px;
+  background: linear-gradient(135deg,#10b981,#059669);
+  color: #fff; font-size: 1.3rem;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 12px;
+  box-shadow: 0 10px 24px rgba(16,185,129,.24); transition: .25s;
+}
+.upload-z:hover .u-orb { transform: translateY(-3px) scale(1.04); }
+.u-h { font-size: .9rem; font-weight: 800; color: var(--txt); margin-bottom: 4px; }
+.u-s { font-size: .75rem; color: var(--txt-mu); margin-bottom: 14px; }
+.btn-browse {
+  background: #1e293b; color: #fff;
+  border: none; border-radius: 8px;
+  padding: 8px 20px; font-weight: 700;
+  font-size: .8rem; cursor: pointer;
+  font-family: inherit;
+}
+
+.file-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.fchip {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: #ecfdf5; border: 1px solid rgba(16,185,129,.25);
+  border-radius: 10px; padding: 6px 12px;
+  font-size: .75rem; font-weight: 600; color: #059669;
+}
+
+/* ── Publish card ── */
+.publish-card {
+  padding: 24px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 0 10px 30px rgba(16,185,129,.08);
+}
+.pub-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: #ecfdf5; color: #10b981;
+  font-size: .7rem; font-weight: 700;
+  border: 1px solid rgba(16,185,129,.2);
+  border-radius: 999px; padding: 4px 12px;
+  margin-bottom: 12px;
+}
+.spinner-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: #10b981;
+  animation: pulse 1.2s ease-in-out infinite;
+}
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
+.pub-title { font-size: 1rem; font-weight: 800; color: var(--txt); margin: 0 0 4px; }
+.pub-sub   { font-size: .75rem; color: var(--txt-mu); margin: 0 0 16px; }
+.btn-publish {
+  width: 100%; border: none; border-radius: 10px;
+  padding: 10px; font-weight: 700; font-size: .87rem;
+  background: linear-gradient(135deg,#10b981,#059669); color: #fff;
+  cursor: pointer; margin-bottom: 8px; transition: .2s;
+  font-family: inherit;
+}
+.btn-publish:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(16,185,129,.3); }
+.btn-preview {
+  width: 100%; border: 1px solid #e2e8f0; border-radius: 10px;
+  padding: 10px; font-weight: 700; font-size: .87rem;
+  background: #f8fafc; color: var(--txt-m);
+  cursor: pointer; transition: .2s; font-family: inherit;
+}
+.btn-preview:hover { background: #f1f5f9; }
+
+/* ── Summary ── */
+.sum-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 0; border-bottom: 1px solid #f1f5f9;
+}
+.sum-row:last-child { border-bottom: none; padding-bottom: 0; }
+.sum-k { display: flex; align-items: center; gap: 8px; font-size: .75rem; color: var(--txt-mu); font-weight: 600; }
+.em-i  { color: #10b981; font-size: .7rem; width: 14px; text-align: center; }
+.sbdg  { font-size: .7rem; font-weight: 700; padding: 3px 10px; border-radius: 999px; }
+.sb-g  { background: #dcfce7; color: #16a34a; }
+.sb-a  { background: #fef9c3; color: #a16207; }
+.sb-s  { background: #f1f5f9; color: #475569; }
+.sb-b  { background: #dbeafe; color: #1d4ed8; }
+
+/* ── Checklist ── */
+.cki {
+  display: flex; align-items: center; gap: 10px;
+  font-size: .8rem; color: var(--txt-m); font-weight: 500;
+  padding: 10px 0; border-bottom: 1px solid #f1f5f9;
+}
+.cki:last-child { border-bottom: none; }
+.ckico {
+  width: 22px; height: 22px; border-radius: 6px;
+  background: #ecfdf5; color: #10b981;
+  display: flex; align-items: center; justify-content: center;
+  font-size: .65rem; flex-shrink: 0;
+}
+.cki.pend .ckico { background: #f1f5f9; color: #cbd5e1; }
+.cki.pend         { color: var(--txt-mu); }
+
+/* ── Modal ── */
+.modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,.35); backdrop-filter: blur(4px);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 1000;
+}
+.modal-box {
+  background: #fff; border-radius: 20px;
+  box-shadow: 0 20px 60px rgba(0,0,0,.15);
+  width: 420px; max-width: 95vw;
+  overflow: hidden;
+}
+.modal-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 20px 24px 0;
+}
+.modal-header h5 {
+  font-size: 1rem; font-weight: 800; color: var(--txt);
+  display: flex; align-items: center; gap: 8px; margin: 0;
+}
+.modal-close {
+  background: none; border: none; font-size: 1.4rem;
+  color: #94a3b8; cursor: pointer; line-height: 1;
+}
+.modal-body { padding: 16px 24px; text-align: center; font-size: .87rem; color: var(--txt-m); }
+.modal-stats { display: flex; justify-content: center; gap: 12px; margin-top: 16px; }
+.mstat { background: #f8fafc; border-radius: 12px; padding: 12px 20px; min-width: 110px; }
+.mstat-lbl { font-size: .65rem; font-weight: 700; text-transform: uppercase; color: var(--txt-mu); }
+.mstat-val { font-size: .85rem; font-weight: 700; color: var(--txt); margin-top: 4px; }
+.modal-footer { display: flex; justify-content: flex-end; gap: 10px; padding: 0 24px 20px; }
+.btn-cancel {
+  background: #f1f5f9; border: none; border-radius: 10px;
+  padding: 9px 18px; font-weight: 700; font-size: .85rem;
+  cursor: pointer; font-family: inherit;
+}
+.btn-confirm {
+  background: linear-gradient(135deg,#10b981,#059669);
+  color: #fff; border: none; border-radius: 10px;
+  padding: 9px 20px; font-weight: 700; font-size: .85rem;
+  cursor: pointer; font-family: inherit;
+}
+
+/* ── Utility ── */
+.em { color: #10b981; }
+@keyframes slideUp { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+.slide-in { animation: slideUp .22s ease both; }
+</style>
