@@ -1,6 +1,6 @@
 <template>
   <div class="app-layout">
-    <BaseSidebar roleName="Admin" :mainMenus="adminMainMenus" :systemMenus="adminSystemMenus" @logout="handleLogout">
+    <BaseSidebar roleName="Admin" :userProfile="adminProfile" :mainMenus="adminMainMenus" :systemMenus="adminSystemMenus" @logout="handleLogout">
       <template #main-menus>
         <div class="nav-section-label">មុខងារ</div>
       </template>
@@ -96,3 +96,11 @@ onMounted(() => {
   fetchAdminProfile()
 })
 </script>
+
+<style scoped>
+.user-role {
+  font-size: 12px;
+  color: var(--text-muted);
+  text-transform: uppercase; 
+}
+</style>
