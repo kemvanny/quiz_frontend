@@ -1,4 +1,3 @@
-//សម្រាប់ Manage Users, View All Quizzes
 import api from './axiosInstance';
 
 export const getAllUsers = () => api.get('/admin/getAllUsers');
