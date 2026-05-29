@@ -28,5 +28,5 @@ export const getMyResults = () => {
 
 //Get Profile
 export const getStudentProfile = () => {
-    return api.get('/student/profile');
+    return api.get('/user/profile');
 };
