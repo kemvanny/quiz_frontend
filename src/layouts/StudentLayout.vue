@@ -2,7 +2,7 @@
   <div class="app-layout">
     <BaseSidebar :mainMenus="studentMainMenus" />
     <div class="main-wrapper">
-        <component :is="activeNavbar"/>
+      <component :is="activeNavbar" />
       <main class="content-body">
         <div class="main-content">
           <div class="page-body">
@@ -17,11 +17,11 @@
 <script setup>
 import { computed } from "vue";
 import { useRoute } from "vue-router";
-import DashboardNav from "@/components/navbar/student/DashboardNav.vue";
-import ClassroomNav from "@/components/navbar/student/ClassroomNav.vue";
-import AnalyticsResultNav from "@/components/navbar/student/AnalyticsResultNav.vue";
-import ProfilesettingNav from "@/components/navbar/student/ProfilesettingNav.vue";
-import AssignmentNav from "@/components/navbar/student/AssignmentNav.vue";
+import DashboardNav from "@/components/layout/navbar/student/DashboardNav.vue";
+import ClassroomNav from "@/components/layout/navbar/student/ClassroomNav.vue";
+import AnalyticsResultNav from "@/components/layout/navbar/student/AnalyticsResultNav.vue";
+import ProfilesettingNav from "@/components/layout/navbar/student/ProfilesettingNav.vue";
+import AssignmentNav from "@/components/layout/navbar/student/AssignmentNav.vue";
 
 const route = useRoute();
 

@@ -1,13 +1,10 @@
 <template>
   <div class="teacher-dashboard">
-    <!-- Header/Greeting --> 
     <div class="row g-4">
-      <!-- Left Column -->
       <div class="col-12 col-lg-8">
-        <!-- Stats Row -->
         <div class="row g-3 mb-4">
           <div class="col-12 col-md-4" v-for="stat in stats" :key="stat.title">
-            <div class="stat-card d-flex align-items-center gap-3" 
+            <div class="stat-card d-flex flex-column align-items-center text-center justify-content-center gap-2" 
                  @mouseover="stat.hover = true" 
                  @mouseleave="stat.hover = false"
                  :style="stat.hover ? { transform: 'translateY(-2px)', borderColor: 'var(--emerald)' } : {}">
@@ -16,9 +13,9 @@
               </div>
               <div>
                 <div class="stat-title">{{ stat.title }}</div>
-                <div class="d-flex align-items-baseline gap-2">
-                  <div class="fw-bold stat-value">{{ stat.value }}</div>
-                  <span :class="stat.trendClass" class="small fw-bold" style="font-size: 0.75rem;">
+                <div class="d-flex align-items-baseline justify-content-center gap-2 mt-1">
+                  <div class="stat-value">{{ stat.value }}</div>
+                  <span :class="stat.trendClass" class="small trend-text" style="font-size: 0.78rem;">
                     <i :class="stat.trendIcon" v-if="stat.trendIcon"></i> {{ stat.trendText }}
                   </span>
                 </div>
@@ -27,9 +24,8 @@
           </div>
         </div>
 
-        <!-- Quick Action -->
         <div class="custom-card">
-          <h5 class="fw-bold mb-4 text-dark">សកម្មភាពរហ័ស (Quick Actions)</h5>
+          <h5 class="section-title mb-3">សកម្មភាពរហ័ស (Quick Actions)</h5>
           <div class="d-flex flex-wrap gap-3">
             <button class="btn-emerald" @click="goToCreateExam">
               <i class="fas fa-plus me-2"></i> Create Quiz
@@ -43,20 +39,19 @@
           </div>
         </div>
 
-        <!-- Performance Analytics -->
         <div class="custom-card">
-          <div class="d-flex justify-content-between align-items-center mb-4">
-            <h5 class="fw-bold mb-0 text-dark">ទិដ្ឋភាពទូទៅនៃលទ្ធផលថ្នាក់រៀន (Class Performance Overview)</h5>
-            <select class="form-select form-select-sm w-auto border-0 shadow-sm rounded-pill px-3" style="font-size: 0.8rem; background-color: white;">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="section-title mb-0">ទិដ្ឋភាពទូទៅនៃលទ្ធផលថ្នាក់រៀន (Class Performance Overview)</h5>
+            <select class="form-select form-select-sm w-auto border border-secondary shadow-sm rounded-pill px-3" style="font-size: 0.85rem; background-color: white; font-weight: 600;">
               <option>៧ ថ្ងៃចុងក្រោយ</option>
               <option>ខែនេះ</option>
             </select>
           </div>
           <div class="row align-items-center">
             <div class="col-md-4 text-center border-end py-3">
-              <h2 class="display-4 fw-bold text-dark mb-0">៨២%</h2>
-              <p class="text-muted small fw-medium mb-1">Average Class Score</p>
-              <span class="badge bg-success bg-opacity-10 text-success rounded-pill px-2 py-1"><i class="fas fa-arrow-up me-1"></i> 4% vs last week</span>
+              <h2 class="fw-bold text-dark mb-0" style="font-size: 2.5rem; color: #1e293b !important;">៨២%</h2>
+              <p class="text-dark small mb-1" style="font-size: 0.85rem; font-weight: 600;">Average Class Score</p>
+              <span class="badge bg-success bg-opacity-10 text-success rounded-pill px-3 py-1.5" style="font-size: 0.75rem; font-weight: 700;"><i class="fas fa-arrow-up me-1"></i> 4% vs last week</span>
             </div>
             <div class="col-md-8 px-4">
               <div class="bar-chart-container">
@@ -71,11 +66,10 @@
           </div>
         </div>
 
-        <!-- Recent Submissions -->
         <div class="custom-card">
-          <div class="d-flex justify-content-between align-items-center mb-4">
-            <h5 class="fw-bold mb-0 text-dark">ការដាក់ស្នើថ្មីៗ (Recent Submissions)</h5>
-            <router-link to="/teacher/student-results" class="text-success small fw-bold text-decoration-none">មើលទាំងអស់</router-link>
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="section-title mb-0">ការដាក់ស្នើថ្មីៗ (Recent Submissions)</h5>
+            <router-link to="/teacher/student-results" class="text-success small text-decoration-none" style="font-size: 0.88rem; font-weight: 700;">មើលទាំងអស់</router-link>
           </div>
           
           <div class="submission-list">
@@ -83,8 +77,8 @@
               <div class="d-flex align-items-center gap-3">
                 <img :src="sub.avatar" class="avatar-sm" alt="avatar">
                 <div>
-                  <h6 class="mb-0 fw-bold text-dark" style="font-size: 0.9rem;">{{ sub.student }}</h6>
-                  <small class="text-muted" style="font-size: 0.75rem;">{{ sub.type }}: {{ sub.title }} • {{ sub.time }}</small>
+                  <h6 class="mb-0 text-dark student-name" style="font-size: 0.95rem;">{{ sub.student }}</h6>
+                  <small class="text-muted text-details" style="font-size: 0.78rem;">{{ sub.type }} : {{ sub.title }} • {{ sub.time }}</small>
                 </div>
               </div>
               <div class="score-badge" :class="sub.score >= 80 ? 'score-high' : 'score-mid'">{{ sub.score }} / 100</div>
@@ -93,107 +87,95 @@
         </div>
       </div>
 
-      <!-- Right Column -->
       <div class="col-12 col-lg-4">
-        <!-- Assessment Rooms -->
         <div class="custom-card">
-          <h5 class="fw-bold mb-4 text-dark">Assessment Rooms</h5>
+          <h5 class="section-title mb-3">Assessment Rooms</h5>
           <div class="room-list">
             <div class="room-item d-flex justify-content-between align-items-center" v-for="room in rooms" :key="room.name">
               <div>
-                <p class="mb-0 fw-bold small text-dark">{{ room.name }}</p>
-                <small class="text-muted">{{ room.count }} Students Joined</small>
+                <p class="mb-0 text-dark room-name" style="font-size: 0.9rem;">{{ room.name }}</p>
+                <small class="text-muted" style="font-size: 0.78rem; font-weight: 600;">{{ room.count }} Students Joined</small>
               </div>
-              <router-link to="/teacher/room-management" class="text-success fw-bold text-decoration-none small">Manage</router-link>
+              <router-link to="/teacher/room-management" class="text-success text-decoration-none small" style="font-size: 0.85rem; font-weight: 700;">Manage</router-link>
             </div>
           </div>
-          <button class="btn border-dashed mt-2" @click="openRoomModal">
+          <button class="btn border-dashed mt-2 py-3" style="font-size: 0.95rem;">
             <i class="fas fa-plus me-2"></i> បង្កើតបន្ទប់ថ្មី
           </button>
         </div>
 
-        <!-- Expiring Soon -->
         <div class="custom-card">
-          <h5 class="fw-bold mb-4 text-dark">Expiring Soon</h5>
+          <h5 class="section-title mb-3">Expiring Soon</h5>
           <div class="d-flex align-items-center gap-2 mb-3" v-for="(item, idx) in expiringItems" :key="idx">
             <div class="rounded-circle" :class="item.bgClass" style="width:8px; height:8px; flex-shrink: 0;"></div>
             <div>
-              <p class="mb-0 fw-bold small text-dark">{{ item.title }}</p>
-              <small :class="item.textClass" class="fw-medium">{{ item.timeText }}</small>
+              <p class="mb-0 text-dark room-name" style="font-size: 0.9rem;">{{ item.title }}</p>
+              <small :class="item.textClass" style="font-size: 0.78rem; font-weight: 700;">{{ item.timeText }}</small>
             </div>
           </div>
         </div>
 
-        <!-- Secure Mode Status -->
-        <div class="custom-card text-center" style="background: var(--emerald-soft);">
-          <h6 class="text-success fw-bold mb-2">Secure Mode Active</h6>
-          <p class="text-muted small mb-4">Tab-switching and screenshot protections are enabled system-wide.</p>
-          <router-link to="/teacher/teacher-validations" class="btn btn-white w-100 border border-2 rounded-4 py-2 small fw-bold bg-white text-success text-decoration-none d-block">Security Settings</router-link>
+        <div class="custom-card text-center p-4" style="background: var(--emerald-soft);">
+          <h6 class="text-success mb-2" style="font-size: 1rem; font-weight: 700;">Secure Mode Active</h6>
+          <p class="text-muted small mb-4" style="font-size: 0.78rem; line-height: 1.4; font-weight: 600;">Tab-switching and screenshot protections are enabled system-wide.</p>
+          <router-link to="/teacher/teacher-validations" class="btn btn-white w-100 border border-2 rounded-4 py-2.5 small bg-white text-success text-decoration-none d-block" style="font-size: 0.88rem; font-weight: 700;">Security Settings</router-link>
         </div>
       </div>
     </div>
 
-    <!-- Enhanced Modal for Creating a New Room -->
     <div class="modal-overlay" v-if="showModal" @click.self="closeModal">
       <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content border-0 rounded-5 overflow-hidden shadow-lg" style="background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(10px);">
-          <!-- Modal Header with Emerald Accent -->
-          <div class="modal-header border-0 p-4 pb-2">
+        <div class="modal-content border-0 rounded-4 overflow-hidden shadow-lg" style="background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(10px);">
+          <div class="modal-header border-0 p-4 pb-1">
             <div>
-              <h5 class="modal-title fw-bold text-dark mb-1">បង្កើតបន្ទប់ថ្មី</h5>
-              <p class="text-muted small mb-0">Create a new space for your class assessments.</p>
+              <h5 class="modal-title text-dark mb-1" style="font-weight: 700;">បង្កើតបន្ទប់ថ្មី</h5>
+              <p class="text-muted small mb-0" style="font-size: 0.78rem; font-weight: 600;">Create a new space for your class assessments.</p>
             </div>
-            <button type="button" class="btn-close shadow-none" @click="closeModal" aria-label="Close"></button>
+            <button type="button" class="btn-close shadow-none" @click="closeModal" aria-label="Close" style="font-size: 0.9rem;"></button>
           </div>
 
           <div class="modal-body p-4">
-            <!-- Room Name Input Group -->
-            <div class="mb-4">
-              <label class="form-label fw-600 small text-dark opacity-75">ឈ្មោះបន្ទប់ (ROOM NAME)</label>
-              <div class="input-group border-2 rounded-4 overflow-hidden" style="border: 1px solid var(--border); background: #f8fafc;">
+            <div class="mb-3">
+              <label class="form-label small text-dark opacity-75" style="font-size: 0.78rem; font-weight: 600;">ឈ្មោះបន្ទប់ (ROOM NAME)</label>
+              <div class="input-group border-2 rounded-3 overflow-hidden" style="border: 1px solid var(--border); background: #f8fafc;">
                 <span class="input-group-text bg-transparent border-0 pe-0">
                   <i class="fas fa-door-open text-muted small"></i>
                 </span>
-                <input type="text" v-model="newRoomName" class="form-control border-0 bg-transparent py-3 shadow-none" placeholder="e.g. Grade 12-A / Mobile App Dev">
+                <input type="text" v-model="newRoomName" class="form-control border-0 bg-transparent py-3 shadow-none" style="font-size: 0.95rem; font-weight: 600;" placeholder="e.g. Grade 12-A / Mobile App Dev">
               </div>
             </div>
 
-            <!-- Student Invitation Group -->
             <div class="mb-2 position-relative">
-              <label class="form-label fw-600 small text-dark opacity-75">អញ្ជើញសិស្ស (INVITE STUDENTS)</label>
-              <div class="p-2 rounded-4 border-2 transition-all" style="background: #f8fafc; border: 1px solid var(--border); min-height: 100px;">
-                <!-- Chips Container -->
-                <div id="chip-container" class="d-flex flex-wrap gap-2 mb-2">
-                  <div v-for="(member, idx) in selectedMembers" :key="member" class="badge bg-success d-flex align-items-center gap-2 py-2 px-3 rounded-3 fw-normal" style="background-color: var(--emerald) !important;">
+              <label class="form-label small text-dark opacity-75" style="font-size: 0.78rem; font-weight: 600;">អញ្ជើញសិស្ស (INVITE STUDENTS)</label>
+              <div class="p-2 rounded-3 border-2 transition-all" style="background: #f8fafc; border: 1px solid var(--border); min-height: 100px;">
+                <div id="chip-container" class="d-flex flex-wrap gap-1 mb-2">
+                  <div v-for="(member, idx) in selectedMembers" :key="member" class="badge bg-success d-flex align-items-center gap-2 py-2 px-3 rounded-2" style="background-color: var(--emerald) !important; font-size: 0.78rem; font-weight: 600;">
                     {{ member }} 
                     <i class="fas fa-times cursor-pointer" @click="removeMember(idx)" style="cursor:pointer; font-size: 0.7rem;"></i>
                   </div>
                 </div>
                 
-                <!-- Input field -->
                 <div class="d-flex align-items-center">
-                  <i class="fas fa-search text-muted mx-2 small"></i>
-                  <input type="text" v-model="studentSearchQuery" @keydown="handleSearchKeypress" class="form-control border-0 bg-transparent shadow-none p-1" style="font-size: 0.9rem;" placeholder="Search name or email...">
+                  <i class="fas fa-search text-muted mx-2 small" style="font-size: 0.85rem;"></i>
+                  <input type="text" v-model="studentSearchQuery" @keydown="handleSearchKeypress" class="form-control border-0 bg-transparent shadow-none p-1" style="font-size: 0.88rem; font-weight: 600;" placeholder="Search name or email...">
                 </div>
               </div>
 
-              <!-- Smart Results Dropdown -->
-              <div v-if="filteredStudents.length" class="list-group shadow-sm mt-1 border-0 rounded-3 overflow-auto" style="z-index: 1050; display: block; max-height: 180px; position: absolute; width: 100%; background: white; border: 1px solid var(--border) !important;">
-                <button type="button" v-for="student in filteredStudents" :key="student.email" class="list-group-item list-group-item-action border-0 py-2 px-3 text-start" style="font-size: 0.85rem;" @click="addMember(student.name)">
-                  <div class="fw-bold text-dark">{{ student.name }}</div>
-                  <div class="text-muted small" style="font-size: 0.75rem;">{{ student.email }}</div>
+              <div v-if="filteredStudents.length" class="list-group shadow-sm mt-1 border-0 rounded-3 overflow-auto" style="z-index: 1050; display: block; max-height: 150px; position: absolute; width: 100%; background: white; border: 1px solid var(--border) !important;">
+                <button type="button" v-for="student in filteredStudents" :key="student.email" class="list-group-item list-group-item-action border-0 py-2 px-3 text-start" style="font-size: 0.88rem;" @click="addMember(student.name)">
+                  <div class="text-dark" style="font-weight: 600;">{{ student.name }}</div>
+                  <div class="text-muted small" style="font-size: 0.78rem; font-weight: 600;">{{ student.email }}</div>
                 </button>
               </div>
             </div>
-            <p class="text-muted" style="font-size: 0.65rem;"><i class="fas fa-info-circle me-1"></i> Students must be registered by the admin to appear in search results.</p>
+            <p class="text-muted" style="font-size: 0.68rem; font-weight: 600;"><i class="fas fa-info-circle me-1"></i> Students must be registered by the admin to appear in search results.</p>
           </div>
 
-          <!-- Modal Footer -->
           <div class="modal-footer border-0 p-4 pt-0">
-            <button class="btn btn-emerald w-100 py-3 rounded-4 fw-bold shadow-sm" @click="saveRoom">
+            <button class="btn btn-emerald w-100 py-3 rounded-3 shadow-sm" style="font-size: 0.95rem;" @click="saveRoom">
               <i class="fas fa-check-circle me-2"></i> បង្កើត និងអញ្ជើញសិស្ស
             </button>
-            <button class="btn btn-link w-100 text-muted text-decoration-none small text-center" @click="closeModal">បោះបង់</button>
+            <button class="btn btn-link w-100 text-muted text-decoration-none small text-center mt-1" style="font-size: 0.85rem; font-weight: 600;" @click="closeModal">បោះបង់</button>
           </div>
         </div>
       </div>
@@ -207,15 +189,13 @@ import { useRouter } from 'vue-router'
 
 const router = useRouter()
 
-// Quick Actions routes mapping
 const goToCreateExam = () => router.push({ name: 'CreateExam' })
 const goToAssignment = () => router.push({ name: 'Assignment' })
 const goToFinalExam = () => router.push({ name: 'FinalExam' })
 
-// Reactive statistics
 const stats = ref([
   {
-    title: 'សិស្សសរុប (Total Students)',
+    title: 'សិស្សសរុប',
     value: '1,284',
     icon: 'fas fa-users',
     bg: '#ecfdf5',
@@ -226,7 +206,7 @@ const stats = ref([
     hover: false
   },
   {
-    title: 'បន្ទប់សរុប (Total Rooms)',
+    title: 'បន្ទប់សរុប',
     value: '8',
     icon: 'fas fa-door-open',
     bg: '#f3e8ff',
@@ -237,7 +217,7 @@ const stats = ref([
     hover: false
   },
   {
-    title: 'អត្រាបញ្ចប់ (Completion Rate)',
+    title: 'អត្រាបញ្ចប់',
     value: '94%',
     icon: 'fas fa-tasks',
     bg: '#fff7ed',
@@ -249,7 +229,6 @@ const stats = ref([
   }
 ])
 
-// Performance graph data
 const performanceData = ref([
   { label: 'Mon', fill: '60%' },
   { label: 'Tue', fill: '45%' },
@@ -259,7 +238,6 @@ const performanceData = ref([
   { label: 'Sat', fill: '75%' }
 ])
 
-// Recent submissions list
 const submissions = ref([
   {
     id: 1,
@@ -290,16 +268,12 @@ const submissions = ref([
   }
 ])
 
-// Assessment Rooms list
 const rooms = ref([
   { name: 'Grade 12-A', count: 32 },
   { name: 'Grade 11-B', count: 28 },
   { name: 'Grade 11-C', count: 23 }
-
-
 ])
 
-// Expiring tasks
 const expiringItems = ref([
   {
     title: 'Midterm - PHP',
@@ -315,13 +289,11 @@ const expiringItems = ref([
   }
 ])
 
-// Room Creation Modal state
 const showModal = ref(false)
 const newRoomName = ref('')
 const studentSearchQuery = ref('')
 const selectedMembers = ref([])
 
-// Mock registered student database
 const mockStudents = [
   { name: 'Sok Vibol', email: 'sok.vibol@school.edu' },
   { name: 'Chan Rithy', email: 'chan.rithy@school.edu' },
@@ -333,7 +305,6 @@ const mockStudents = [
   { name: 'Chey Oudom', email: 'chey.oudom@school.edu' }
 ]
 
-// Modal functions
 const openRoomModal = () => {
   newRoomName.value = ''
   studentSearchQuery.value = ''
@@ -345,7 +316,6 @@ const closeModal = () => {
   showModal.value = false
 }
 
-// Student search dropdown filter
 const filteredStudents = computed(() => {
   const query = studentSearchQuery.value.trim().toLowerCase()
   if (!query) return []
@@ -355,7 +325,6 @@ const filteredStudents = computed(() => {
   )
 })
  
-// Add/Remove students in Modal
 const addMember = (name) => {
   if (!selectedMembers.value.includes(name)) {
     selectedMembers.value.push(name)
@@ -377,7 +346,6 @@ const handleSearchKeypress = (e) => {
   }
 }
 
-// Save room creation
 const saveRoom = () => {
   const roomName = newRoomName.value.trim()
   if (!roomName) {
@@ -400,47 +368,71 @@ defineExpose({
 </script>
 
 <style scoped>
-
 .teacher-dashboard {
   --emerald: #10b981;
   --emerald-soft: #ecfdf5;
-  --text-dark: #1e293b;
-  --text-muted: #64748b;
-  --border: #e2e8f0;
+  --text-dark: #1e293b; 
+  --text-muted: #475569; /* ប្តូរពណ៌ឲ្យងងឹតជាងមុនដើម្បីងាយស្រួលមើល */
+  --border: #cbd5e1; /* ធ្វើឲ្យបន្ទាត់ border ច្បាស់ជាងមុន */
   --sh-sm: 0 4px 12px rgba(0,0,0,0.03);
+  font-family: 'Kantumruy Pro', 'Inter', sans-serif !important;
 }
 
-/* Custom Card Layouts */
+/* កំណត់អក្សរទូទៅឲ្យមានកម្រាស់ដិតច្បាស់ល្មម (Font weight 550) */
+.teacher-dashboard,
+.teacher-dashboard div,
+.teacher-dashboard p,
+.teacher-dashboard span,
+.teacher-dashboard small {
+  font-family: 'Kantumruy Pro', 'Inter', sans-serif !important;
+  font-weight: 550 !important; 
+}
+
+/* បង្កើនភាពធាត់ខ្លាំងសម្រាប់ចំណងជើងកាតនីមួយៗ */
+.section-title {
+  font-size: 1.05rem;
+  font-weight: 700 !important; 
+  color: var(--text-dark) !important; 
+}
+
 .custom-card { 
-  background: rgba(255, 255, 255, 0.7); 
+  background: rgba(255, 255, 255, 0.85); 
   backdrop-filter: blur(10px); 
-  border-radius: 24px; 
-  border: 1px solid white; 
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.03); 
-  padding: 25px; 
-  margin-bottom: 25px; 
+  border-radius: 18px; 
+  border: 1.5px solid var(--border); 
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.04); 
+  padding: 24px; /* បង្កើនទំហំប្រអប់ឲ្យធំជាងមុន */
+  margin-bottom: 24px; 
 }
 
 .stat-card { 
   background: white; 
-  padding: 25px; 
-  border-radius: 24px; 
-  border: 1px solid var(--border); 
+  padding: 24px; /* ពង្រីកទំហំកាតស្ថិតិ */
+  border-radius: 18px; 
+  border: 1.5px solid var(--border); 
   height: 100%; 
   transition: all 0.2s ease-in-out;
 }
 
 .icon-box {
-  width: 52px; 
-  height: 52px; 
-  font-size: 1.4rem; 
-  border-radius: 14px; 
+  width: 48px; 
+  height: 48px; 
+  font-size: 1.3rem; 
+  border-radius: 12px; 
   flex-shrink: 0;
 }
 
+/* រក្សាទុកកម្រាស់សម្រាប់ Icon មិនឲ្យបែករូប */
+.icon-box i,
+button i,
+span i,
+.stat-card i {
+  font-weight: 900 !important; 
+}
+
 .stat-title {
-  font-size: 0.75rem; 
-  font-weight: 700; 
+  font-size: 0.8rem; 
+  font-weight: 700 !important; 
   color: var(--text-muted); 
   text-transform: uppercase; 
   letter-spacing: 0.5px;
@@ -448,18 +440,24 @@ defineExpose({
 
 .stat-value {
   font-size: 1.5rem; 
-  color: var(--text-dark); 
+  font-weight: 800 !important; /* ធ្វើឲ្យលេខលទ្ធផលធាត់ដិតច្បាស់ខ្លាំង */
+  color: var(--text-dark) !important; 
   line-height: 1.2;
 }
 
-/* Buttons */
+.trend-text {
+  font-weight: 700 !important;
+}
+
+/* ពង្រីកទំហំប៊ូតុង និងអក្សរលើប៊ូតុង */
 .btn-emerald { 
   background: var(--emerald); 
   color: white; 
   border: none; 
-  border-radius: 14px; 
+  border-radius: 12px; 
   padding: 12px 24px; 
-  font-weight: 600; 
+  font-weight: 700 !important; 
+  font-size: 0.92rem; 
   transition: 0.3s; 
 }
 .btn-emerald:hover {
@@ -469,10 +467,11 @@ defineExpose({
 .btn-emerald-outline { 
   background: transparent; 
   color: var(--emerald); 
-  border: 1.5px solid var(--emerald); 
-  border-radius: 14px; 
+  border: 2px solid var(--emerald); 
+  border-radius: 12px; 
   padding: 12px 24px; 
-  font-weight: 600; 
+  font-weight: 700 !important; 
+  font-size: 0.92rem; 
   transition: 0.3s;
 }
 .btn-emerald-outline:hover {
@@ -483,23 +482,23 @@ defineExpose({
   border: 2px dashed var(--emerald) !important; 
   color: var(--emerald); 
   background: transparent; 
-  border-radius: 18px; 
+  border-radius: 14px; 
   width: 100%; 
-  padding: 15px; 
-  font-weight: 600; 
+  padding: 14px; 
+  font-weight: 700 !important; 
+  font-size: 0.92rem; 
   transition: .2s; 
 }
 .border-dashed:hover { 
   background: var(--emerald-soft); 
 }
 
-/* Assessment Room Items */
 .room-item { 
   background: white; 
-  padding: 18px; 
-  border-radius: 18px; 
-  border: 1px solid var(--border); 
+  padding: 16px; 
+  border-radius: 14px; 
   margin-bottom: 12px; 
+  border: 1px solid var(--border);
   transition: .2s; 
 }
 .room-item:hover { 
@@ -508,7 +507,15 @@ defineExpose({
   border-color: var(--emerald); 
 }
 
-/* Recent Submissions */
+.student-name,
+.room-name {
+  font-weight: 700 !important; /* ធ្វើឲ្យឈ្មោះសិស្ស និងបន្ទប់ដិតច្បាស់ */
+}
+
+.text-details {
+  font-weight: 600 !important;
+}
+
 .submission-item { 
   display: flex; 
   align-items: center; 
@@ -521,18 +528,18 @@ defineExpose({
 }
 
 .avatar-sm { 
-  width: 36px; 
-  height: 36px; 
+  width: 38px; 
+  height: 38px; 
   border-radius: 50%; 
   object-fit: cover; 
   border: 1px solid var(--border); 
 }
 
 .score-badge { 
-  padding: 4px 10px; 
+  padding: 5px 12px; 
   border-radius: 20px; 
-  font-size: 0.75rem; 
-  font-weight: 700; 
+  font-size: 0.78rem; 
+  font-weight: 800 !important;
 }
 .score-high { 
   background: #dcfce7; 
@@ -543,25 +550,24 @@ defineExpose({
   color: #854d0e; 
 }
 
-/* Chart Styles */
 .bar-chart-container { 
   display: flex; 
   align-items: flex-end; 
-  gap: 12px; 
-  height: 120px; 
-  padding-top: 20px; 
+  gap: 10px; 
+  height: 115px; 
+  padding-top: 10px; 
 }
 .bar-wrapper { 
   flex: 1; 
   display: flex; 
   flex-direction: column; 
   align-items: center; 
-  gap: 8px; 
+  gap: 6px; 
 }
 .bar { 
   width: 100%; 
   background: var(--emerald-soft); 
-  border-radius: 6px 6px 0 0; 
+  border-radius: 4px 4px 0 0; 
   position: relative; 
   overflow: hidden; 
 }
@@ -571,16 +577,15 @@ defineExpose({
   left: 0; 
   right: 0; 
   background: var(--emerald); 
-  border-radius: 6px 6px 0 0; 
+  border-radius: 4px 4px 0 0; 
   transition: height 1s cubic-bezier(0.1, 0.76, 0.55, 0.94); 
 }
 .bar-label { 
-  font-size: 0.7rem; 
+  font-size: 0.72rem; 
   color: var(--text-muted); 
-  font-weight: 600; 
+  font-weight: 700 !important;
 }
 
-/* Modal Overlay Styling for custom clean overlay rendering */
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -593,17 +598,14 @@ defineExpose({
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 20px;
+  padding: 16px;
 }
 .modal-dialog {
   width: 100%;
-  max-width: 500px;
+  max-width: 480px; 
   margin: 0;
 }
 .cursor-pointer {
   cursor: pointer;
-}
-.fw-600 {
-  font-weight: 600;
 }
 </style>

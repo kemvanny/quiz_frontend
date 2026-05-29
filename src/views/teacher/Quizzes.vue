@@ -13,9 +13,10 @@
               <span class="panel-lbl">Question List</span>
               <span class="panel-count" id="qCountLabel">{{ questions.length }} Q</span>
             </div>
-            <div class="q-nav-scroll">
+            <div class="q-nav-scroll" ref="qNavScrollRef">
               <div v-for="(q, idx) in questions" 
-                   :key="idx" 
+                   :key="idx"
+                   :id="`qnav-${idx}`"
                    class="q-nav-item slide-in" 
                    :class="{ active: selectedQuestionIndex === idx }"
                    @click="selectQuestion(idx)">
@@ -299,6 +300,8 @@
 <script setup>
 import { ref, computed, nextTick } from 'vue'
 
+const qNavScrollRef = ref(null)
+
 const quizTitle = ref('Create Quiz')
 const quizInstructions = ref('')
 const quizStatus = ref('Draft')
@@ -335,9 +338,15 @@ const getKhmerAlphabet = (idx) => {
 // Question Navigation Selection & auto scroll
 const selectQuestion = (idx) => {
   selectedQuestionIndex.value = idx
-  const el = document.getElementById(`qcard-${idx}`)
-  if (el) {
-    el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  // Scroll center feed to the selected card
+  const card = document.getElementById(`qcard-${idx}`)
+  if (card) {
+    card.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
+  // Scroll left nav to keep the active item visible
+  const navItem = document.getElementById(`qnav-${idx}`)
+  if (navItem && qNavScrollRef.value) {
+    navItem.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
   }
 }
 
@@ -374,9 +383,17 @@ const addNewQuestion = () => {
   selectedQuestionIndex.value = newIndex
 
   nextTick(() => {
-    const el = document.getElementById(`qcard-${newIndex}`)
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    // Scroll the center feed to the new question card
+    const card = document.getElementById(`qcard-${newIndex}`)
+    if (card) {
+      card.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }
+    // Scroll the left Question List panel to the bottom so the new item is visible
+    if (qNavScrollRef.value) {
+      qNavScrollRef.value.scrollTo({
+        top: qNavScrollRef.value.scrollHeight,
+        behavior: 'smooth'
+      })
     }
   })
 }
