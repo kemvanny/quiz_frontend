@@ -162,7 +162,7 @@ defineEmits(["close"]);
   box-shadow: 0 10px 20px rgba(63, 186, 127, 0.2);
 }
 
-/* responsive */
+/* glass responsive */
 @media (max-width: 600px) {
   .glass-grid {
     grid-template-columns: 1fr;
@@ -171,5 +171,25 @@ defineEmits(["close"]);
   .glass-field.full {
     grid-column: auto;
   }
+}
+
+/* Animations */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.25s ease;
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
+.zoom-enter-active,
+.zoom-leave-active {
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.zoom-enter-from,
+.zoom-leave-to {
+  opacity: 0;
+  transform: scale(0.95);
 }
 </style>
