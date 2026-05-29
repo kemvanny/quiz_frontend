@@ -103,7 +103,7 @@ const router = createRouter({
         path: 'quizzes',
         name: 'Quizzes',
         component: Quizzes,
-        meta: {title: "Quizzes"}
+        meta: {title: "Quizzes", customHeader: true, fullscreen: true}
       },
       {
         path: 'assignments',
