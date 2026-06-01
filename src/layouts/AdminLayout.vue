@@ -67,7 +67,6 @@ const adminMainMenus = [
 const adminSystemMenus = [
   { name: 'ការកំណត់', routeName: 'Settings', icon: 'bi bi-gear-fill' },
   { name: 'ស្ថានភាពប្រព័ន្ធ', routeName: 'SystemHealth', icon: 'bi bi-shield-check' },
-  { name: 'ជំនួយ', routeName: 'Help', icon: 'bi bi-question-circle' }
 ]
 
 
