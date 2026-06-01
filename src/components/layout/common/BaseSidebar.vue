@@ -8,7 +8,7 @@
     </div>
 
     <template v-if="mainMenus && mainMenus.length">
-      <div class="nav-section-label">មុខងារ</div>
+      <slot name="main-menus"></slot>
       <nav class="nav flex-column">
         <router-link 
           v-for="item in mainMenus" 
@@ -22,7 +22,7 @@
     </template>
 
     <template v-if="systemMenus && systemMenus.length">
-      <div class="nav-section-label" style="margin-top: 12px">ប្រព័ន្ធ</div>
+      <slot name="system-menus"></slot>
       <nav class="nav flex-column">
         <router-link 
           v-for="item in systemMenus" 
@@ -61,10 +61,11 @@ defineProps({
 
 defineEmits(['logout'])
 </script>
+
 <style>
 .sidebar {
   width: var(--sidebar-width);
-  min-height: 100vh;
+  height: 100vh;
   background: var(--white);
   border-right: 1.5px solid var(--green-mid);
   display: flex;
