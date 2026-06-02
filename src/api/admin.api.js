@@ -7,3 +7,5 @@ export const updateStatus = (id, data) => api.put(`/admin/users/status/${id}`, d
 export const getSummerise = () => api.get('/admin/dashboard/overview');
 export const recentActivity = () => api.get('admin/dashboard/activity');
 export const getAllExams = () => api.get('admin/quizzes');
+export const getDashboardData = () => api.get('/admin/dashboard/total');
+export const getSubmissionMonthly = () => api.get('/admin/submissions/monthly');

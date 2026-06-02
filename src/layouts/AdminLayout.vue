@@ -23,9 +23,9 @@
               <i class="bi bi-bell"></i>
               <span class="dot"></span>
             </button>
-            <img :src="adminProfile.avatar" class="avatar" alt="Admin" />
+            <img :src="`${imgBaseUrl}${adminProfile.avatar}`" class="avatar" alt="Admin" />
             <div>
-              <div class="user-name">{{ adminProfile.fullName }}</div>
+              <div class="user-name">{{ adminProfile.firstName }} {{ adminProfile.lastName }}</div>
               <div class="user-role">{{ adminProfile.role }}</div>
             </div>
           </div>
@@ -50,6 +50,8 @@ import { useRouter } from 'vue-router'
 import { getProfile } from '@/api/auth.api'
 
 const router = useRouter()
+
+const imgBaseUrl = import.meta.env.VITE_BASE_URL_FOR_IMAGE;
 
 const adminProfile = ref({
   fullName: '',

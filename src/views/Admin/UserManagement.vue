@@ -4,7 +4,7 @@
         <div class="d-flex justify-content-between align-items-center mb-4">
             <div>
                 <div class="page-title">គ្រប់គ្រងអ្នកប្រើប្រាស់</div>
-                <div class="page-subtitle">គ្រប់គ្រងគណនីគ្រូបង្រៀន សិស្ស និង admin</div>
+                <div class="page-subtitle">គ្រប់គ្រងគណនីគ្រូបង្រៀន និង​ សិស្ស</div>
             </div>
             <BaseButton @click="isModalOpen = true">
                 <i class="bi bi-person-plus-fill me-1"></i>បង្កើតគណនីអ្នកប្រើប្រាស់
@@ -19,7 +19,6 @@
                         <option value="">តួនាទីទាំងអស់</option>
                         <option value="teacher">គ្រូបង្រៀន</option>
                         <option value="student">សិស្ស</option>
-                        <option value="admin">អ្នកគ្រប់គ្រង</option>
                     </select>
                 </div>
             </template>

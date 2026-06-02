@@ -38,9 +38,9 @@
     <div class="sidebar-footer">
       <div class="profile-card">
         <div class="profile-info">
-          <img :src="userProfile.avatar" alt="Profile" class="profile-img" />
+          <img :src="`${imgBaseUrl}${userProfile.avatar}`" alt="Profile" class="profile-img" />
           <div class="profile-text">
-            <span class="profile-name">{{userProfile.fullName}}</span>
+            <span class="profile-name">{{userProfile.firstName}} {{userProfile.lastName}}</span>
             <span class="profile-role">{{ userProfile.role }}</span>
           </div>
         </div>
@@ -54,6 +54,8 @@
 </template>
 
 <script setup>
+const imgBaseUrl = import.meta.env.VITE_BASE_URL_FOR_IMAGE;
+
 defineProps({
   roleName: {
     type: String,
