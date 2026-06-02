@@ -65,7 +65,7 @@
 
 <script setup>
 import { ref } from 'vue';
-import CreateRoomModal from '@/components/common/CreateRoomModal.vue';
+
 
 const isOpen = ref(false);
 const isCreateRoomOpen = ref(false);

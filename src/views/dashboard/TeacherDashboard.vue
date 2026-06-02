@@ -152,7 +152,6 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import CreateRoomModal from '@/components/common/CreateRoomModal.vue';
 import { getMyRooms } from '@/api/teacher.api';
 
 const isCreateRoomOpen = ref(false);
