@@ -43,7 +43,7 @@
 <script setup>
 import { ref, reactive } from 'vue';
 import { createRoom } from '@/api/teacher.api';
-import BaseModal from './BaseModal.vue';
+import BaseModal from '../common/BaseModal.vue'
 
 defineProps({
   isOpen: { type: Boolean, required: true }

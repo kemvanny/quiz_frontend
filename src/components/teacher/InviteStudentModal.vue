@@ -84,7 +84,7 @@
 import { ref, watch } from 'vue';
 import { useToast } from 'vue-toastification';
 import { getRoomInvitations, inviteStudent } from '@/api/teacher.api';
-import BaseModal from './BaseModal.vue';
+import BaseModal from '../common/BaseModal.vue';
 
 const props = defineProps({
   isOpen: { type: Boolean, required: true },
