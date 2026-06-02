@@ -19,8 +19,9 @@
               <i class="bi bi-people-fill"></i>
             </div>
             <div class="stat-label">អ្នកប្រើប្រាស់សរុប</div>
-            <div class="stat-value">{{ dashboardData.users }}</div>
-            <span class="stat-badge badge-up"><i class="bi bi-arrow-up-short"></i> 91 នាក់ក្នុងសប្តាហ៍នេះ</span>
+            <div class="stat-value">{{ dashboardTotal?.total_users?.count }}</div>
+            <span class="stat-badge badge-up"><i class="bi bi-arrow-up-short"></i> {{
+              dashboardTotal?.total_users?.this_week_count }} នាក់ក្នុងសប្តាហ៍នេះ</span>
           </div>
         </div>
         <div class="col-md-3 col-sm-6">
@@ -29,8 +30,9 @@
               <i class="bi bi-door-open-fill"></i>
             </div>
             <div class="stat-label">សរុបបន្ទប់</div>
-            <div class="stat-value">{{ dashboardData.rooms }}</div>
-            <span class="stat-badge badge-up"><i class="bi bi-arrow-up-short"></i> 12 បន្ថែមថ្មី</span>
+            <div class="stat-value">{{ dashboardTotal?.total_rooms?.count }}</div>
+            <span class="stat-badge badge-up"><i class="bi bi-arrow-up-short"></i>{{
+              dashboardTotal?.total_rooms?.new_count }} បន្ថែមថ្មី</span>
           </div>
         </div>
         <div class="col-md-3 col-sm-6">
@@ -39,8 +41,9 @@
               <i class="bi bi-journal-check"></i>
             </div>
             <div class="stat-label">វិញ្ញាសាសរុប</div>
-            <div class="stat-value">{{ dashboardData.quizzes }}</div>
-            <span class="stat-badge badge-up"><i class="bi bi-arrow-up-short"></i> 121 កំពុងដំណើរការ</span>
+            <div class="stat-value"> {{ dashboardTotal?.total_exams?.count }}</div>
+            <span class="stat-badge badge-up"><i class="bi bi-arrow-up-short"></i>
+              {{ dashboardTotal?.total_exams?.active_count }} កំពុងដំណើរការ</span>
           </div>
         </div>
         <div class="col-md-3 col-sm-6">
@@ -49,57 +52,67 @@
               <i class="bi bi-send-check-fill"></i>
             </div>
             <div class="stat-label">ការដាក់ស្នើ</div>
-            <div class="stat-value">{{ dashboardData.submissions }}%</div>
-            <span class="stat-badge badge-down"><i class="bi bi-arrow-down-short"></i> 1% ធ្លាក់ចុះ</span>
+            <div class="stat-value">{{ dashboardTotal?.submissions?.count }}%</div>
+            <span class="stat-badge badge-down"><i class="bi bi-arrow-down-short"></i>
+              {{ dashboardTotal?.submissions?.change_percent }}% ធ្លាក់ចុះ</span>
           </div>
         </div>
       </div>
 
       <!-- CHART + PROMO -->
       <div class="row g-3 mb-4">
-        <div class="col-lg-8">
+        <div class="col-lg-12">
           <div class="dash-card">
             <div class="d-flex justify-content-between align-items-center mb-3">
               <div>
-                <div class="section-title mb-0">ការបញ្ជូនចម្លើយប្រចាំខែ</div>
+                <div class="section-title mb-0">{{ monthlyData?.title || 'ការបញ្ជូនចម្លើយប្រចាំខែ' }}</div>
                 <div style="
-                        font-size: 28px;
-                        font-weight: 800;
-                        letter-spacing: -1px;
-                        color: var(--text-main);
-                      ">
-                  15,000
+            font-size: 28px;
+            font-weight: 800;
+            letter-spacing: -1px;
+            color: var(--text-main);
+          ">
+                  {{ monthlyData?.total_attempts?.toLocaleString() || 0 }}
                   <span style="
-                          font-size: 13px;
-                          color: var(--text-muted);
-                          font-weight: 600;
-                        ">ដងនៃការចូលរួមធ្វើវិញ្ញាសា</span>
+              font-size: 13px;
+              color: var(--text-muted);
+              font-weight: 600;
+            ">ដងនៃការចូលរួមធ្វើវិញ្ញាសា</span>
                 </div>
               </div>
+
               <select class="form-select" style="width: 120px; font-size: 12px">
-                <option>2024</option>
-                <option>2023</option>
+                <option>{{ monthlyData?.year || 2026 }}</option>
               </select>
             </div>
-            <div class="bar-chart" id="barChart"></div>
-            <div style="
-                    display: flex;
-                    justify-content: space-around;
-                    margin-top: 6px;
-                  " id="barLabels"></div>
-          </div>
-        </div>
-        <div class="col-lg-4">
-          <div class="promo-banner h-100 d-flex flex-column justify-content-between">
-            <div>
-              <div class="badge-new">មុខងារថ្មី</div>
-              <h5>មុខងារបង្កើតវិញ្ញាសាដោយស្វ័យប្រវត្តិ<br />តាមរយៈ AI បានមកដល់ហើយ!</h5>
-              <p>
-                បង្កើតវិញ្ញាសាដោយស្វ័យប្រវត្តិតាមប្រធានបទផ្សេងៗក្នុងរយៈពេលត្រឹមតែប៉ុន្មានវិនាទី។
-                ជួយសន្សំសំចៃពេលវេលារបស់អ្នក
-              </p>
+
+            <div class="bar-chart" id="barChart"
+              style="display: flex; align-items: flex-end; justify-content: space-between; height: 200px; padding-top: 20px;">
+              <div v-for="(item, index) in monthlyData?.months" :key="index" class="chart-bar-item"
+                style="display: flex; flex-direction: column; align-items: center; flex: 1; margin: 0 4px; height: 100%; justify-content: flex-end;">
+                <div class="main-bar" :style="{
+                  height: calculateBarHeight(item.count),
+                  width: '100%',
+                  backgroundColor: '#10b981',
+                  borderRadius: '4px 4px 0 0',
+                  position: 'relative',
+                  transition: 'height 0.3s ease'
+                }" :title="`${item.month}: ${item.count} ដង`">
+                  <span v-if="item.count > 0"
+                    style="position: absolute; top: -18px; left: 50%; transform: translateX(-50%); font-size: 10px; font-weight: bold; color: var(--text-main);">
+                    {{ item.count }}
+                  </span>
+                </div>
+              </div>
             </div>
-            <button class="btn-promo">ស្វែងយល់ឥឡូវនេះ →</button>
+
+            <div style="display: flex; justify-content: space-around; margin-top: 6px;" id="barLabels">
+              <div v-for="(item, index) in monthlyData?.months" :key="index"
+                style="font-size: 11px; color: var(--text-muted); text-align: center; flex: 1;">
+                {{ item.month }}
+              </div>
+            </div>
+
           </div>
         </div>
       </div>
@@ -109,7 +122,26 @@
         <div class="col-lg-5">
           <div class="dash-card">
             <div class="section-title">សកម្មភាពថ្មីៗ</div>
-            <div id="activityFeed"></div>
+
+            <div id="activityFeed">
+              <div v-for="(activity, index) in recentActivitiesList" :key="index" class="activity-item">
+                <div class="activity-icon" :style="{
+                  backgroundColor: getActivityStyle(activity.message).bg,
+                  color: getActivityStyle(activity.message).color
+                }">
+                  <i class="bi" :class="getActivityStyle(activity.message).icon"></i>
+                </div>
+                <div>
+                  <div class="activity-text">{{ activity.message }}</div>
+                  <div class="activity-time">{{ formatDate(activity.created_at) }}</div>
+                </div>
+              </div>
+
+              <div v-if="!recentActivitiesList" class="text-center text-muted py-3" style="font-size: 13px;">
+                មិនទាន់មានសកម្មភាពថ្មីៗនៅឡើយទេ
+              </div>
+            </div>
+
           </div>
         </div>
 
@@ -117,12 +149,12 @@
           <div class="dash-card">
             <div class="d-flex justify-content-between align-items-center mb-3">
               <div class="section-title mb-0">ការដាក់ស្នើថ្មីៗ</div>
-              <router-link :to="{name: 'ResultSubmission'}" class="btn-outline-green text-decoration-none" >
+              <router-link :to="{ name: 'ResultSubmission' }" class="btn-outline-green text-decoration-none">
                 មើលទាំងអស់
               </router-link>
             </div>
 
-            <DataTable :headers="submissionHeaders" :items="submissionsList">
+            <DataTable :headers="submissionHeaders" :items="submissionList">
               <template #row="{ item }">
                 <td>{{ item.user_name }}</td>
                 <td>{{ item.quiz_title }}</td>
@@ -158,14 +190,15 @@
 
 <script setup>
 import { onMounted, ref } from 'vue';
-import { getSummerise, recentActivity } from '@/api/admin.api';
+import { recentActivity, getDashboardData, getSubmissionMonthly } from '@/api/admin.api';
 import DataTable from '@/components/common/DataTable.vue';
 import { useDate } from "@/composables/useDate";
 
 const { formatDate } = useDate();
 
-const dashboardData = ref([]);
-const submissionsList = ref([]);
+const recentActivitiesList = ref([]);
+const dashboardTotal = ref([]);
+const submissionList = ref([]);
 
 const submissionHeaders = [
   { key: 'student', label: 'សិស្ស' },
@@ -175,29 +208,102 @@ const submissionHeaders = [
   { key: 'status', label: 'ស្ថានភាព' }
 ];
 
-const fetchRecentSubmission = async () => {
-  try{
-    const res = await recentActivity();
-    submissionsList.value = res.data.data.logs;
+const monthlyData = ref({
+  title: "Monthly Submissions",
+  year: 2026,
+  total_attempts: 0,
+  months: []
+});
 
-  }catch(error){
+const getActivityStyle = (message) => {
+  const msg = message ? message.toLowerCase() : '';
+
+  if (msg.includes('joined') || msg.includes('ចូលរួម')) {
+    return {
+      icon: 'bi-person-plus-fill',
+      bg: '#e8f8f0',
+      color: '#10b981'
+    };
+  }
+
+  if (msg.includes('room') || msg.includes('បន្ទប់')) {
+    return {
+      icon: 'bi-door-open-fill',
+      bg: '#e8f0fd',
+      color: '#3b7ef0'
+    };
+  }
+
+  if (msg.includes('quiz') || msg.includes('exam') || msg.includes('វិញ្ញាសា')) {
+    return {
+      icon: 'bi-journal-check',
+      bg: '#fff8e0',
+      color: '#c89a00'
+    };
+  }
+
+  if (msg.includes('deactivated') || msg.includes('delete') || msg.includes('បិទ')) {
+    return {
+      icon: 'bi-person-dash-fill',
+      bg: '#fce8e8',
+      color: '#e05c5c'
+    };
+  }
+
+  return {
+    icon: 'bi-bell-fill',
+    bg: '#f3f4f6',
+    color: '#6b7280'
+  };
+};
+
+const fetchRecentActivity = async () => {
+  try {
+    const res = await recentActivity();
+
+    recentActivitiesList.value = res.data.data.logs.activities;
+
+  } catch (error) {
     console.log(error);
   }
 }
 
-const fetchDashboardSummary = async () => {
+const fetchDashboardTotal = async () => {
   try {
-    const res = await getSummerise();
-    dashboardData.value = res.data.data.data;
-
+    const res = await getDashboardData();
+    dashboardTotal.value = res.data.data;
   } catch (error) {
-    console.log('Data summary not found', error);
+    console.log('Failed to fetch dashboard total', error);
   }
 }
 
+const fetchMonthlySubmissions = async () => {
+  try {
+    const res = await getSubmissionMonthly();
+    if (res.data && res.data.result) {
+      monthlyData.value = res.data.data;
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const calculateBarHeight = (count) => {
+  if (!count || count === 0) return '4px';
+
+
+  const maxCount = Math.max(...monthlyData.value.months.map(m => m.count), 0);
+
+  if (maxCount === 0) return '4px';
+
+  const percentage = (count / maxCount) * 100;
+  return `${Math.max(percentage, 5)}%`;
+};
+
 onMounted(() => {
-  fetchDashboardSummary();
-  fetchRecentSubmission();
+  fetchRecentActivity();
+  fetchDashboardTotal();
+  fetchMonthlySubmissions();
 })
 
 </script>
