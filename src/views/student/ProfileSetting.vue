@@ -1,272 +1,617 @@
 <template>
-  <div>
-    <div class="workspace">
-      <div class="profile-hero mb-5">
-        <div class="d-flex align-items-center gap-4">
-          <img
-            src="https://ui-avatars.com/api/?name=Sok+Vibol&background=random"
-            class="hero-avatar"
-          />
-          <div>
-            <h2 class="fw-bold mb-2" style="color: var(--txt); font-size: 2rem">
-              Sok Vibol
-            </h2>
-            <p
-              class="mb-4 d-flex align-items-center"
-              style="color: var(--txt-mu); font-weight: 600; font-size: 0.95rem"
-            >
-              <i
-                class="fas fa-user-graduate me-2 text-success"
-                style="font-size: 1.2rem"
-              ></i>
-              High School Student (Grade 12)
-            </p>
-            <div class="d-flex gap-3">
-              <span class="hero-badge"
-                ><i class="fas fa-check-circle text-success fs-6"></i> 34 Exams
-                Taken</span
-              >
-              <span class="hero-badge"
-                ><i class="fas fa-door-open text-primary fs-6"></i> 6 Enrolled
-                Rooms</span
-              >
-            </div>
-          </div>
-        </div>
-        <div>
-          <button
-            class="btn btn-light border fw-bold rounded-pill px-4 py-2 text-muted shadow-sm hover-shadow"
+  <div v-if="studentStore.loading">Loading...</div>
+
+  <div v-else-if="studentStore.error">
+    {{ studentStore.error }}
+  </div>
+  <div class="layout" v-else-if="studentStore.profile">
+    <!-- LEFT PANEL -->
+    <div class="left-card">
+      <div class="avatar-wrapper">
+        <div class="avatar-placeholder">វ</div>
+        <button class="btn-upload" title="Upload photo">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            stroke-width="2"
           >
-            <i class="fas fa-camera me-2"></i> Update Photo
-          </button>
-        </div>
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M12 12V4m0 0L8 8m4-4l4 4"
+            />
+          </svg>
+        </button>
+        <button class="btn-delete-avatar" title="Delete photo">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M1 7h22M8 7V5a2 2 0 012-2h4a2 2 0 012 2v2"
+            />
+          </svg>
+        </button>
       </div>
 
-      <div class="row g-5">
-        <div class="col-lg-3">
-          <div class="settings-nav">
-            <a href="#" class="settings-nav-item active"
-              ><i class="fas fa-user fs-6 w-20px"></i> Personal Info</a
+      <div class="user-name">{{ studentStore.profile.fullName }}</div>
+      <div class="user-email">{{ studentStore.profile.email }}</div>
+      <div class="badge">{{ studentStore.profile.role }}</div>
+
+      <div class="action-buttons">
+        <button class="btn btn-outline">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+            />
+          </svg>
+          កែប្រែព័ត៌មាន
+        </button>
+
+        <button class="btn btn-purple">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+            />
+          </svg>
+          ផ្លាស់ប្តូរលេខសម្ងាត់
+        </button>
+
+        <button class="btn btn-green">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+            />
+          </svg>
+          ផ្លាស់អ៊ីមែល
+        </button>
+
+        <button class="btn btn-danger">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M1 7h22M8 7V5a2 2 0 012-2h4a2 2 0 012 2v2"
+            />
+          </svg>
+          លុបគណនី
+        </button>
+      </div>
+    </div>
+
+    <!-- RIGHT PANEL -->
+    <div class="right-card">
+      <h2>ព័ត៌មានរបស់ខ្ញុំ</h2>
+
+      <div class="info-grid">
+        <div class="info-item">
+          <div class="info-label">
+            <svg
+              class="icon-green"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="2"
             >
-            <a href="#" class="settings-nav-item"
-              ><i class="fas fa-lock fs-6 w-20px"></i> Security</a
-            >
-            <a href="#" class="settings-nav-item"
-              ><i class="fas fa-bell fs-6 w-20px"></i> Notifications</a
-            >
-            <hr class="my-3 border-secondary opacity-10" />
-            <a href="#" class="settings-nav-item text-danger"
-              ><i class="fas fa-sign-out-alt fs-6 w-20px"></i> Sign Out</a
-            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+              />
+            </svg>
+            នាមត្រកូល
           </div>
+          <div class="info-value">{{ studentStore.profile.fullName }}</div>
         </div>
 
-        <div class="col-lg-9">
-          <div class="settings-card">
-            <h4 class="fw-bold mb-5" style="color: var(--txt)">
-              Personal Information
-            </h4>
-            <form>
-              <div class="row g-4 mb-4">
-                <div class="col-md-6">
-                  <div class="input-group-premium">
-                    <label>First Name</label>
-                    <input type="text" value="Sok" />
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <div class="input-group-premium">
-                    <label>Last Name</label>
-                    <input type="text" value="Vibol" />
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <div class="input-group-premium">
-                    <label>Email Address</label>
-                    <input type="email" value="vibol.sok@student.edu" />
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <div class="input-group-premium">
-                    <label>Phone Number</label>
-                    <input type="tel" value="+855 12 345 678" />
-                  </div>
-                </div>
-                <div class="col-md-12 mt-4">
-                  <div class="input-group-premium">
-                    <label>Student ID (Non-editable)</label>
-                    <input type="text" value="STU-882103" disabled />
-                  </div>
-                </div>
-              </div>
-              <div class="d-flex justify-content-end mt-5 pt-4 border-top">
-                <button type="button" class="btn btn-save">Save Changes</button>
-              </div>
-            </form>
+        <div class="info-item">
+          <div class="info-label">
+            <svg
+              class="icon-green"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+              />
+            </svg>
+            នាមខ្លួន
           </div>
+          <div class="info-value">តា</div>
+        </div>
+
+        <div class="info-item">
+          <div class="info-label">
+            <svg
+              class="icon-green"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498A1 1 0 0121 15.72V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
+              />
+            </svg>
+            អាសយដ្ឋានអ៊ីមែល
+          </div>
+          <div class="info-value">{{ studentStore.profile.email }}</div>
+        </div>
+
+        <div class="info-item">
+          <div class="info-label">
+            <svg
+              class="icon-green"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+              />
+            </svg>
+            តួនាទី
+          </div>
+          <div class="info-value">{{ studentStore.profile.role }}</div>
+        </div>
+
+        <div class="info-item">
+          <div class="info-label">
+            <svg
+              class="icon-green"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
+              />
+            </svg>
+            ស្ថានភាពគណនី
+          </div>
+          <span class="status-badge">សកម្ម</span>
         </div>
       </div>
     </div>
   </div>
 </template>
-<script setup></script>
+<script setup>
+import { useStudentStore } from "@/stores/student";
+import { onMounted } from "vue";
+const studentStore = useStudentStore();
+onMounted(async () => {
+  await studentStore.getProfile();
+  console.log("student profile:", studentStore.profile);
+});
+</script>
 
 <style scoped>
-.workspace {
-  flex: 1;
-  overflow-y: auto;
-  padding: 2.5rem 3rem;
+.layout {
+  --bg: #f0f4f8;
+  --card: #ffffff;
+  --border: #e2e8f0;
+  --text-primary: #1a202c;
+  --text-secondary: #718096;
+  --green: #38a169;
+  --green-light: #f0fff4;
+  --green-border: #c6f6d5;
+  --blue-light: #ebf4ff;
+  --blue-border: #bee3f8;
+  --blue: #3182ce;
+  --orange: #dd6b20;
+  --orange-bg: #fffaf0;
+  --red: #e53e3e;
+  --purple-light: #faf5ff;
+  --purple-border: #e9d8fd;
+  --shadow: 0 2px 6px rgba(15, 23, 42, 0.12);
+  --shadow-md: 0 12px 26px rgba(15, 23, 42, 0.14);
+  width: 100%;
+  min-height: calc(100vh - 150px);
+  display: grid;
+  grid-template-columns: 290px 650px;
+  gap: 16px;
+  align-items: center;
+  align-content: center;
+  justify-content: center;
+  justify-items: stretch;
+  max-width: none;
+  margin: 0;
+  padding: 24px;
   background: transparent;
 }
 
-/* Hero */
-.profile-hero {
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(16px);
-  border: 1px solid var(--bdr);
-  border-radius: 24px;
-  padding: 40px;
-  box-shadow: var(--sh-md);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  transition: 0.3s;
-}
-.profile-hero:hover {
-  box-shadow: var(--sh-hover);
-  transform: translateY(-2px);
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
-.hero-avatar {
-  width: 110px;
-  height: 110px;
-  border-radius: 24px;
-  object-fit: cover;
-  border: 4px solid #fff;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-  transition: 0.3s;
+.page-header {
+  margin-bottom: 28px;
 }
-.profile-hero:hover .hero-avatar {
-  transform: scale(1.05) rotate(2deg);
-}
-
-.hero-badge {
-  background: #fff;
-  border: 1px solid var(--bdr);
-  padding: 8px 16px;
-  border-radius: 12px;
-  font-size: 0.8rem;
+.page-header h1 {
+  font-size: 1.75rem;
   font-weight: 700;
-  color: var(--txt-m);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  box-shadow: var(--sh-sm);
+  color: var(--text-primary);
+  letter-spacing: -0.01em;
+}
+.page-header p {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin-top: 4px;
+  font-style: italic;
 }
 
-/* Settings Nav */
-.settings-nav {
-  background: rgba(255, 255, 255, 0.9);
-  backdrop-filter: blur(12px);
-  border-radius: 20px;
-  border: 1px solid var(--bdr);
-  padding: 16px;
+/* LEFT CARD */
+.left-card {
+  background: var(--card);
+  border-radius: 18px;
+  box-shadow: var(--shadow);
+  min-height: 500px;
+  padding: 28px 24px 24px;
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  box-shadow: var(--sh-sm);
+  align-items: center;
+  justify-content: center;
 }
-.settings-nav-item {
+
+.avatar-wrapper {
+  position: relative;
+  margin-bottom: 16px;
+}
+.avatar-wrapper img {
+  width: 96px;
+  height: 96px;
+  object-fit: cover;
+  border: 4px solid #dbe7f7;
+  display: block;
+}
+.avatar-placeholder {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  background: #568bd0;
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 14px 16px;
-  color: var(--txt-m);
-  font-weight: 600;
-  font-size: 0.9rem;
-  border-radius: 12px;
-  transition: 0.2s;
+  justify-content: center;
+  font-size: 2.25rem;
+  color: white;
+  font-weight: 700;
+  border: 4px solid #dbe7f7;
 }
-.settings-nav-item:hover {
-  background: #f8fafc;
-  color: var(--txt);
-  transform: translateX(4px);
+.btn-upload {
+  position: absolute;
+  bottom: 0;
+  left: -5px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1.5px solid #d8e0ea;
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: var(--shadow);
+  transition: box-shadow 0.2s;
 }
-.settings-nav-item.active {
-  background: var(--em-soft);
-  color: var(--em-dk);
-  border-left: 4px solid var(--em);
-  border-top-left-radius: 4px;
-  border-bottom-left-radius: 4px;
+.btn-upload:hover {
+  box-shadow: var(--shadow-md);
+}
+.btn-upload svg {
+  width: 14px;
+  height: 14px;
+  color: #475569;
 }
 
-/* Form Cards */
-.settings-card {
-  background: rgba(255, 255, 255, 0.9);
-  backdrop-filter: blur(16px);
-  border-radius: 24px;
-  border: 1px solid var(--bdr);
-  padding: 40px;
-  box-shadow: var(--sh-md);
+.btn-delete-avatar {
+  position: absolute;
+  bottom: 0;
+  right: -5px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1.5px solid #fed7d7;
+  background: #fff5f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: var(--shadow);
+  transition: background 0.2s;
+}
+.btn-delete-avatar:hover {
+  background: #fed7d7;
+}
+.btn-delete-avatar svg {
+  width: 14px;
+  height: 14px;
+  color: var(--red);
 }
 
-.input-group-premium {
+.user-name {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  line-height: 1.2;
+  margin-bottom: 6px;
+}
+.user-email {
+  font-size: 0.88rem;
+  color: #697392;
+  margin-bottom: 10px;
+}
+.badge {
+  background: #ebf4ff;
+  color: var(--blue);
+  border: 1px solid var(--blue-border);
+  border-radius: 20px;
+  padding: 3px 13px;
+  font-size: 0.78rem;
+  font-weight: 500;
+  margin-bottom: 22px;
+}
+
+.action-buttons {
+  width: 100%;
   display: flex;
   flex-direction: column;
   gap: 10px;
-  position: relative;
 }
-.input-group-premium label {
-  font-size: 0.75rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  color: var(--txt-mu);
-  letter-spacing: 0.5px;
-  transition: 0.3s;
-}
-.input-group-premium input {
+
+.btn {
   width: 100%;
-  padding: 14px 18px;
-  border: 2px solid var(--bdr);
-  background: #f8fafc;
-  border-radius: 14px;
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: var(--txt);
-  transition: all 0.3s ease;
-}
-
-.input-group-premium input:focus {
-  background: #fff;
-  border-color: var(--em);
-  outline: none;
-  box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1);
-}
-.input-group-premium input:focus + label {
-  color: var(--em);
-}
-
-.input-group-premium input:disabled {
-  background: #f1f5f9;
-  color: var(--txt-mu);
-  cursor: not-allowed;
-  border-color: transparent;
-}
-
-.btn-save {
-  background: linear-gradient(135deg, var(--em), var(--em-dk));
-  border: none;
-  padding: 14px 32px;
-  border-radius: 14px;
+  min-height: 44px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-size: 0.88rem;
   font-weight: 700;
-  font-size: 0.95rem;
-  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
-  transition: 0.3s;
-  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: none;
+  transition: all 0.2s;
 }
-.btn-save:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
-  color: white;
+.btn svg {
+  width: 16px;
+  height: 16px;
+  flex: 0 0 auto;
+}
+
+.btn-outline {
+  background: transparent;
+  border: 1.5px solid #1f2937;
+  color: var(--text-primary);
+}
+.btn-outline:hover {
+  background: #f7fafc;
+}
+
+.btn-purple {
+  background: var(--purple-light);
+  border: 1.5px solid var(--purple-border);
+  color: #6b46c1;
+}
+.btn-purple:hover {
+  background: #e9d8fd;
+}
+
+.btn-green {
+  background: var(--green-light);
+  border: 1.5px solid var(--green-border);
+  color: var(--green);
+}
+.btn-green:hover {
+  background: #c6f6d5;
+}
+
+.btn-danger {
+  background: transparent;
+  border: none;
+  color: var(--red);
+  margin-top: 8px;
+}
+.btn-danger:hover {
+  text-decoration: underline;
+}
+
+/* RIGHT CARD */
+.right-card {
+  background: var(--card);
+  border-radius: 18px;
+  box-shadow: var(--shadow);
+  min-height: 500px;
+  padding: 28px 30px 32px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.right-card h2 {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  line-height: 1.25;
+  margin-bottom: 20px;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.info-item {
+  min-height: 78px;
+  background: #fcfcfd;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 14px 18px;
+  transition: box-shadow 0.2s;
+}
+.info-item:hover {
+  box-shadow: var(--shadow);
+}
+
+.info-label {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  line-height: 1.35;
+  margin-bottom: 6px;
+}
+.info-label svg {
+  width: 15px;
+  height: 15px;
+  flex: 0 0 auto;
+}
+
+.icon-green {
+  color: var(--green);
+}
+.icon-blue {
+  color: var(--blue);
+}
+
+.info-value {
+  font-size: 0.98rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.status-badge {
+  display: inline-block;
+  background: var(--green-light);
+  color: var(--green);
+  border: 1px solid var(--green-border);
+  border-radius: 20px;
+  padding: 2px 14px;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+@media (min-width: 1280px) {
+  .layout {
+    grid-template-columns: 300px 660px;
+  }
+}
+
+@media (max-width: 1100px) {
+  .layout {
+    grid-template-columns: 1fr;
+    max-width: 560px;
+    min-height: auto;
+    margin: 0 auto;
+    padding: 16px 0 32px;
+  }
+
+  .left-card,
+  .right-card {
+    min-height: auto;
+  }
+}
+
+@media (max-width: 768px) {
+  .layout {
+    padding: 0 0 32px;
+    gap: 18px;
+  }
+
+  .left-card,
+  .right-card {
+    border-radius: 18px;
+    padding: 28px 20px;
+  }
+
+  .avatar-placeholder,
+  .avatar-wrapper img {
+    width: 104px;
+    height: 104px;
+  }
+
+  .user-name {
+    font-size: 1.35rem;
+  }
+
+  .user-email,
+  .btn,
+  .info-label {
+    font-size: 1rem;
+  }
+
+  .right-card h2 {
+    font-size: 1.3rem;
+  }
+
+  .info-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .info-item {
+    min-height: 90px;
+    padding: 18px;
+  }
+
+  .info-value {
+    font-size: 1.05rem;
+  }
 }
 </style>
