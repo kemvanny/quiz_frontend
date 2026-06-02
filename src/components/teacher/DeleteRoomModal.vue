@@ -37,7 +37,6 @@
 <script setup>
 import { ref } from 'vue';
 import { deleteRoomApi } from '@/api/teacher.api';
-import BaseModal from '../common/BaseModal.vue';
 
 const props = defineProps({
   isOpen: {
