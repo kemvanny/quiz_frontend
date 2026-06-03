@@ -46,7 +46,6 @@
 <script setup>
 import { ref, reactive, watch } from 'vue';
 import { updateRoom } from '@/api/teacher.api';
-import BaseModal from './BaseModal.vue';
 
 const props = defineProps({
   isOpen: {

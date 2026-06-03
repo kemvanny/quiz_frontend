@@ -53,6 +53,8 @@ const router = useRouter()
 
 const imgBaseUrl = import.meta.env.VITE_BASE_URL_FOR_IMAGE;
 
+const isLogoutModalOpen = ref(false);
+
 const adminProfile = ref({
   fullName: '',
   email: '',
@@ -73,6 +75,7 @@ const adminSystemMenus = [
 
 
 const handleLogout = () => {
+  isLogoutModalOpen.value = false;
   sessionStorage.clear()
   router.push('/login')
 }
