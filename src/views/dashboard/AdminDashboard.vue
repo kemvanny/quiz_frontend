@@ -19,16 +19,9 @@
               <i class="bi bi-people-fill"></i>
             </div>
             <div class="stat-label">អ្នកប្រើប្រាស់សរុប</div>
-            <div class="stat-value">
-              {{ dashboardTotal?.total_users?.count }}
-            </div>
-            <span class="stat-badge badge-up"
-              ><i class="bi bi-arrow-up-short"></i>
-              {{
-                dashboardTotal?.total_users?.this_week_count
-              }}
-              នាក់ក្នុងសប្តាហ៍នេះ</span
-            >
+            <div class="stat-value">{{ dashboardTotal?.total_users?.count }}</div>
+            <span class="stat-badge badge-up"><i class="bi bi-arrow-up-short"></i> {{
+              dashboardTotal?.total_users?.this_week_count }} នាក់ក្នុងសប្តាហ៍នេះ</span>
           </div>
         </div>
         <div class="col-md-3 col-sm-6">
@@ -37,13 +30,9 @@
               <i class="bi bi-door-open-fill"></i>
             </div>
             <div class="stat-label">សរុបបន្ទប់</div>
-            <div class="stat-value">
-              {{ dashboardTotal?.total_rooms?.count }}
-            </div>
-            <span class="stat-badge badge-up"
-              ><i class="bi bi-arrow-up-short"></i
-              >{{ dashboardTotal?.total_rooms?.new_count }} បន្ថែមថ្មី</span
-            >
+            <div class="stat-value">{{ dashboardTotal?.total_rooms?.count }}</div>
+            <span class="stat-badge badge-up"><i class="bi bi-arrow-up-short"></i>{{
+              dashboardTotal?.total_rooms?.new_count }} បន្ថែមថ្មី</span>
           </div>
         </div>
         <div class="col-md-3 col-sm-6">
@@ -52,16 +41,9 @@
               <i class="bi bi-journal-check"></i>
             </div>
             <div class="stat-label">វិញ្ញាសាសរុប</div>
-            <div class="stat-value">
-              {{ dashboardTotal?.total_exams?.count }}
-            </div>
-            <span class="stat-badge badge-up"
-              ><i class="bi bi-arrow-up-short"></i>
-              {{
-                dashboardTotal?.total_exams?.active_count
-              }}
-              កំពុងដំណើរការ</span
-            >
+            <div class="stat-value"> {{ dashboardTotal?.total_exams?.count }}</div>
+            <span class="stat-badge badge-up"><i class="bi bi-arrow-up-short"></i>
+              {{ dashboardTotal?.total_exams?.active_count }} កំពុងដំណើរការ</span>
           </div>
         </div>
         <div class="col-md-3 col-sm-6">
@@ -70,13 +52,9 @@
               <i class="bi bi-send-check-fill"></i>
             </div>
             <div class="stat-label">ការដាក់ស្នើ</div>
-            <div class="stat-value">
-              {{ dashboardTotal?.submissions?.count }}%
-            </div>
-            <span class="stat-badge badge-down"
-              ><i class="bi bi-arrow-down-short"></i>
-              {{ dashboardTotal?.submissions?.change_percent }}% ធ្លាក់ចុះ</span
-            >
+            <div class="stat-value">{{ dashboardTotal?.submissions?.count }}%</div>
+            <span class="stat-badge badge-down"><i class="bi bi-arrow-down-short"></i>
+              {{ dashboardTotal?.submissions?.change_percent }}% ធ្លាក់ចុះ</span>
           </div>
         </div>
       </div>
@@ -87,24 +65,19 @@
           <div class="dash-card">
             <div class="d-flex justify-content-between align-items-center mb-3">
               <div>
-                <div class="section-title mb-0">ការបញ្ជូនចម្លើយប្រចាំខែ</div>
-                <div
-                  style="
-                    font-size: 28px;
-                    font-weight: 800;
-                    letter-spacing: -1px;
-                    color: var(--text-main);
-                  "
-                >
+                <div class="section-title mb-0">{{ monthlyData?.title || 'ការបញ្ជូនចម្លើយប្រចាំខែ' }}</div>
+                <div style="
+            font-size: 28px;
+            font-weight: 800;
+            letter-spacing: -1px;
+            color: var(--text-main);
+          ">
                   {{ monthlyData?.total_attempts?.toLocaleString() || 0 }}
-                  <span
-                    style="
-                      font-size: 13px;
-                      color: var(--text-muted);
-                      font-weight: 600;
-                    "
-                    >ដងនៃការចូលរួមធ្វើវិញ្ញាសា</span
-                  >
+                  <span style="
+              font-size: 13px;
+              color: var(--text-muted);
+              font-weight: 600;
+            ">ដងនៃការចូលរួមធ្វើវិញ្ញាសា</span>
                 </div>
               </div>
 
@@ -113,82 +86,33 @@
               </select>
             </div>
 
-            <div
-              class="bar-chart"
-              id="barChart"
-              style="
-                display: flex;
-                align-items: flex-end;
-                justify-content: space-between;
-                height: 200px;
-                padding-top: 20px;
-              "
-            >
-              <div
-                v-for="(item, index) in monthlyData?.months"
-                :key="index"
-                class="chart-bar-item"
-                style="
-                  display: flex;
-                  flex-direction: column;
-                  align-items: center;
-                  flex: 1;
-                  margin: 0 4px;
-                  height: 100%;
-                  justify-content: flex-end;
-                "
-              >
-                <div
-                  class="main-bar"
-                  :style="{
-                    height: calculateBarHeight(item.count),
-                    width: '100%',
-                    backgroundColor: '#10b981',
-                    borderRadius: '4px 4px 0 0',
-                    position: 'relative',
-                    transition: 'height 0.3s ease',
-                  }"
-                  :title="`${item.month}: ${item.count} ដង`"
-                >
-                  <span
-                    v-if="item.count > 0"
-                    style="
-                      position: absolute;
-                      top: -18px;
-                      left: 50%;
-                      transform: translateX(-50%);
-                      font-size: 10px;
-                      font-weight: bold;
-                      color: var(--text-main);
-                    "
-                  >
+            <div class="bar-chart" id="barChart"
+              style="display: flex; align-items: flex-end; justify-content: space-between; height: 200px; padding-top: 20px;">
+              <div v-for="(item, index) in monthlyData?.months" :key="index" class="chart-bar-item"
+                style="display: flex; flex-direction: column; align-items: center; flex: 1; margin: 0 4px; height: 100%; justify-content: flex-end;">
+                <div class="main-bar" :style="{
+                  height: calculateBarHeight(item.count),
+                  width: '100%',
+                  backgroundColor: '#10b981',
+                  borderRadius: '4px 4px 0 0',
+                  position: 'relative',
+                  transition: 'height 0.3s ease'
+                }" :title="`${item.month}: ${item.count} ដង`">
+                  <span v-if="item.count > 0"
+                    style="position: absolute; top: -18px; left: 50%; transform: translateX(-50%); font-size: 10px; font-weight: bold; color: var(--text-main);">
                     {{ item.count }}
                   </span>
                 </div>
               </div>
             </div>
 
-            <div
-              style="
-                display: flex;
-                justify-content: space-around;
-                margin-top: 6px;
-              "
-              id="barLabels"
-            >
-              <div
-                v-for="(item, index) in monthlyData?.months"
-                :key="index"
-                style="
-                  font-size: 11px;
-                  color: var(--text-muted);
-                  text-align: center;
-                  flex: 1;
-                "
-              >
+            <div style="display: flex; justify-content: space-around; margin-top: 6px;" id="barLabels">
+              <div v-for="(item, index) in monthlyData?.months" :key="index"
+                style="font-size: 11px; color: var(--text-muted); text-align: center; flex: 1;">
                 {{ item.month }}
               </div>
             </div>
+
           </div>
         </div>
       </div>
@@ -200,39 +124,24 @@
             <div class="section-title">សកម្មភាពថ្មីៗ</div>
 
             <div id="activityFeed">
-              <div
-                v-for="(activity, index) in recentActivitiesList"
-                :key="index"
-                class="activity-item"
-              >
-                <div
-                  class="activity-icon"
-                  :style="{
-                    backgroundColor: getActivityStyle(activity.message).bg,
-                    color: getActivityStyle(activity.message).color,
-                  }"
-                >
-                  <i
-                    class="bi"
-                    :class="getActivityStyle(activity.message).icon"
-                  ></i>
+              <div v-for="(activity, index) in recentActivitiesList" :key="index" class="activity-item">
+                <div class="activity-icon" :style="{
+                  backgroundColor: getActivityStyle(activity.message).bg,
+                  color: getActivityStyle(activity.message).color
+                }">
+                  <i class="bi" :class="getActivityStyle(activity.message).icon"></i>
                 </div>
                 <div>
                   <div class="activity-text">{{ activity.message }}</div>
-                  <div class="activity-time">
-                    {{ formatDate(activity.created_at) }}
-                  </div>
+                  <div class="activity-time">{{ formatDate(activity.created_at) }}</div>
                 </div>
               </div>
 
-              <div
-                v-if="!recentActivitiesList"
-                class="text-center text-muted py-3"
-                style="font-size: 13px"
-              >
+              <div v-if="!recentActivitiesList" class="text-center text-muted py-3" style="font-size: 13px;">
                 មិនទាន់មានសកម្មភាពថ្មីៗនៅឡើយទេ
               </div>
             </div>
+
           </div>
         </div>
 
@@ -240,10 +149,7 @@
           <div class="dash-card">
             <div class="d-flex justify-content-between align-items-center mb-3">
               <div class="section-title mb-0">ការដាក់ស្នើថ្មីៗ</div>
-              <router-link
-                :to="{ name: 'ResultSubmission' }"
-                class="btn-outline-green text-decoration-none"
-              >
+              <router-link :to="{ name: 'ResultSubmission' }" class="btn-outline-green text-decoration-none">
                 មើលទាំងអស់
               </router-link>
             </div>
@@ -252,13 +158,12 @@
               <template #row="{ item }">
                 <td>{{ item.user_name }}</td>
                 <td>{{ item.quiz_title }}</td>
-                <td>
-                  <strong>{{ item.score }}</strong>
-                </td>
+                <td><strong>{{ item.score }}</strong></td>
                 <td>{{ formatDate(item.submitted_at) }}</td>
                 <td>{{ item.status }}</td>
               </template>
             </DataTable>
+
           </div>
         </div>
       </div>
@@ -266,190 +171,89 @@
       <!-- SYSTEM HEALTH -->
       <div class="row g-3 mt-0">
         <div class="col-12 mt-3">
-          <div class="dash-card system-health-card">
-      <div class="section-title mb-4 d-flex align-items-center gap-2">
-        <i class="bi bi-cpu text-success"></i> ទិដ្ឋភាពទូទៅនៃស្ថានភាពប្រព័ន្ធ
-      </div>
-      
-      <div v-if="isLoading" class="text-center py-5 text-muted">
-        <div class="spinner-border spinner-border-sm text-success me-2" role="status"></div>
-        <span>កំពុងទាញទិន្នន័យស្ថានភាពប្រព័ន្ធ...</span>
-      </div>
-
-      <div v-else class="row align-items-center">
-        <div class="col-md-6 d-flex justify-content-around py-3 border-end border-light">
-          <div v-for="(h, index) in healthBars" :key="index" class="text-center position-relative circular-box">
-            <div class="circular-progress-wrapper mb-2">
-              <div class="progress-circle" :style="{
-                background: `conic-gradient(${getBarColor(h.label, h.value)} ${h.value * 3.6}deg, #f1f5f9 0deg)`
-              }">
-                <div class="progress-inner">
-                  <span class="fs-5 fw-extrabold text-dark">{{ h.value }}%</span>
-                </div>
-              </div>
-            </div>
-            <div class="health-label fw-bold text-secondary" style="font-size: 13px;">{{ translateLabel(h.label) }}</div>
-          </div>
-        </div>
-
-        <div class="col-md-6 ps-md-4" >
-          <div class="row g-3">
-            <div v-for="(c, index) in statsCards" :key="index" class="col-6">
-              <div class="modern-stat-box p-3 d-flex align-items-center gap-3" >
-                <div class="icon-avatar d-flex align-items-center justify-content-center">
-                  <i :class="['bi', getIcon(c.label)]"></i>
-                </div>
-                <div >
-                  <div class="stat-box-label text-muted small fw-bold">{{ translateLabel(c.label) }}</div>
-                  <div class="stat-box-value fs-4 fw-black text-dark">{{ c.value }}</div>
-                </div>
+          <div class="dash-card">
+            <div class="section-title">ទិដ្ឋភាពទូទៅនៃស្ថានភាពប្រព័ន្ធ</div>
+            <div class="row">
+              <div class="col-md-6" id="healthBars"></div>
+              <div class="col-md-6">
+                <div class="row g-2" id="healthStats"></div>
               </div>
             </div>
           </div>
         </div>
+      </div>
+    </div>
 
-      </div>
-    </div>
-        </div>
-      </div>
-    </div>
+
   </div>
 </template>
 
 <script setup>
-import { onMounted, ref } from "vue";
-import {recentActivity,getDashboardData,getSubmissionMonthly} from "@/api/admin.api";
-import DataTable from "@/components/common/DataTable.vue";
+import { onMounted, ref } from 'vue';
+import { recentActivity, getDashboardData, getSubmissionMonthly } from '@/api/admin.api';
+import DataTable from '@/components/common/DataTable.vue';
 import { useDate } from "@/composables/useDate";
-import { getSystemHealth } from "@/api/admin.api";
 
 const { formatDate } = useDate();
 
 const recentActivitiesList = ref([]);
 const dashboardTotal = ref([]);
 const submissionList = ref([]);
-const isLoading = ref(false);
-
-const healthBars = ref([]);
-const statsCards = ref([]);
-
-const getBarColor = (label, value) => {
-  if (label.toLowerCase().includes("storage")) {
-    if (value > 85) return "#dc3545";
-    if (value > 60) return "#ffc107";
-  }
-  return "var(--green-primary, #3fba7f)";
-};
 
 const submissionHeaders = [
-  { key: "student", label: "សិស្ស" },
-  { key: "quiz", label: "វិញ្ញាសា" },
-  { key: "score", label: "ពិន្ទុ" },
-  { key: "date", label: "កាលបរិច្ឆេទ" },
-  { key: "status", label: "ស្ថានភាព" },
+  { key: 'student', label: 'សិស្ស' },
+  { key: 'quiz', label: 'វិញ្ញាសា' },
+  { key: 'score', label: 'ពិន្ទុ' },
+  { key: 'date', label: 'កាលបរិច្ឆេទ' },
+  { key: 'status', label: 'ស្ថានភាព' }
 ];
 
 const monthlyData = ref({
+  title: "Monthly Submissions",
   year: 2026,
   total_attempts: 0,
-  months: [],
+  months: []
 });
 
-const getIcon = (label) => {
-  const text = label.toLowerCase();
-  if (text.includes("user")) return "bi-people-fill";
-  if (text.includes("exam")) return "bi-journal-check";
-  if (text.includes("submission")) return "bi-file-earmark-arrow-up-fill";
-  return "bi-activity";
-};
-
-const translateLabel = (label) => {
-  if (!label) return '';
-  
-  const translations = {
-    'user activity': 'សកម្មភាពអ្នកប្រើប្រាស់',
-    'storage used': 'ទំហំផ្ទុកទិន្នន័យដែលបានប្រើ',
-    'exam activity': 'សកម្មភាពវិញ្ញាសា',
-    'total submissions': 'ការដាក់ស្នើសរុប'
-  };
-
-  const key = label.toLowerCase().trim();
-  
-  return translations[key] || label;
-};
-
-const fetchHealthData = async () => {
-  try {
-    isLoading.value = true;
-    const res = await getSystemHealth();
-    
-    if (res.data && res.data.result) {
-      const metrics = res.data.data.data.metrics || [];
-      
-      healthBars.value = metrics.filter(m => {
-        const label = m.label ? m.label.toLowerCase() : '';
-        return label.includes('storage') || label.includes('user');
-      });
-      
-      statsCards.value = metrics.filter(m => {
-        const label = m.label ? m.label.toLowerCase() : '';
-        return label.includes('exam') || label.includes('submission');
-      });
-    }
-  } catch (error) {
-    console.error("មិនអាចទាញទិន្នន័យពី API ស្ថានភាពប្រព័ន្ធបានទេ:", error);
-  } finally {
-    isLoading.value = false;
-  }
-};
-
 const getActivityStyle = (message) => {
-  const msg = message ? message.toLowerCase() : "";
+  const msg = message ? message.toLowerCase() : '';
 
-  if (msg.includes("joined") || msg.includes("ចូលរួម")) {
+  if (msg.includes('joined') || msg.includes('ចូលរួម')) {
     return {
-      icon: "bi-person-plus-fill",
-      bg: "#e8f8f0",
-      color: "#10b981",
+      icon: 'bi-person-plus-fill',
+      bg: '#e8f8f0',
+      color: '#10b981'
     };
   }
 
-  if (msg.includes("room") || msg.includes("បន្ទប់")) {
+  if (msg.includes('room') || msg.includes('បន្ទប់')) {
     return {
-      icon: "bi-door-open-fill",
-      bg: "#e8f0fd",
-      color: "#3b7ef0",
+      icon: 'bi-door-open-fill',
+      bg: '#e8f0fd',
+      color: '#3b7ef0'
     };
   }
 
-  if (
-    msg.includes("quiz") ||
-    msg.includes("exam") ||
-    msg.includes("វិញ្ញាសា")
-  ) {
+  if (msg.includes('quiz') || msg.includes('exam') || msg.includes('វិញ្ញាសា')) {
     return {
-      icon: "bi-journal-check",
-      bg: "#fff8e0",
-      color: "#c89a00",
+      icon: 'bi-journal-check',
+      bg: '#fff8e0',
+      color: '#c89a00'
     };
   }
 
-  if (
-    msg.includes("deactivated") ||
-    msg.includes("delete") ||
-    msg.includes("បិទ")
-  ) {
+  if (msg.includes('deactivated') || msg.includes('delete') || msg.includes('បិទ')) {
     return {
-      icon: "bi-person-dash-fill",
-      bg: "#fce8e8",
-      color: "#e05c5c",
+      icon: 'bi-person-dash-fill',
+      bg: '#fce8e8',
+      color: '#e05c5c'
     };
   }
 
   return {
-    icon: "bi-bell-fill",
-    bg: "#f3f4f6",
-    color: "#6b7280",
+    icon: 'bi-bell-fill',
+    bg: '#f3f4f6',
+    color: '#6b7280'
   };
 };
 
@@ -458,19 +262,20 @@ const fetchRecentActivity = async () => {
     const res = await recentActivity();
 
     recentActivitiesList.value = res.data.data.logs.activities;
+
   } catch (error) {
     console.log(error);
   }
-};
+}
 
 const fetchDashboardTotal = async () => {
   try {
     const res = await getDashboardData();
     dashboardTotal.value = res.data.data;
   } catch (error) {
-    console.log("Failed to fetch dashboard total", error);
+    console.log('Failed to fetch dashboard total', error);
   }
-};
+}
 
 const fetchMonthlySubmissions = async () => {
   try {
@@ -484,11 +289,12 @@ const fetchMonthlySubmissions = async () => {
 };
 
 const calculateBarHeight = (count) => {
-  if (!count || count === 0) return "4px";
+  if (!count || count === 0) return '4px';
 
-  const maxCount = Math.max(...monthlyData.value.months.map((m) => m.count), 0);
 
-  if (maxCount === 0) return "4px";
+  const maxCount = Math.max(...monthlyData.value.months.map(m => m.count), 0);
+
+  if (maxCount === 0) return '4px';
 
   const percentage = (count / maxCount) * 100;
   return `${Math.max(percentage, 5)}%`;
@@ -498,8 +304,8 @@ onMounted(() => {
   fetchRecentActivity();
   fetchDashboardTotal();
   fetchMonthlySubmissions();
-  fetchHealthData();
-});
+})
+
 </script>
 
 <style>
@@ -524,7 +330,9 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   gap: 6px;
-  transition: transform 0.18s, box-shadow 0.18s;
+  transition:
+    transform 0.18s,
+    box-shadow 0.18s;
   border: 1.5px solid transparent;
 }
 
@@ -796,12 +604,10 @@ onMounted(() => {
 
 /* ── PROMO BANNER ── */
 .promo-banner {
-  background: linear-gradient(
-    135deg,
-    var(--green-primary) 0%,
-    #1aad8d 60%,
-    #00c67a 100%
-  );
+  background: linear-gradient(135deg,
+      var(--green-primary) 0%,
+      #1aad8d 60%,
+      #00c67a 100%);
   border-radius: var(--card-radius);
   padding: 28px 24px;
   color: #fff;
@@ -936,7 +742,9 @@ onMounted(() => {
   padding: 8px 18px;
   border-radius: 10px;
   cursor: pointer;
-  transition: background 0.15s, transform 0.12s;
+  transition:
+    background 0.15s,
+    transform 0.12s;
 }
 
 .btn-green:hover {
@@ -1064,6 +872,7 @@ onMounted(() => {
   }
 }
 
+/* SMALL MODERN MODAL  */
 
 .modern-modal {
   position: fixed;
@@ -1307,7 +1116,8 @@ onMounted(() => {
   box-shadow: 0 0 0 3px rgba(63, 186, 127, 0.15);
 }
 
- .role-chips {
+/* ROLE CHIPS */
+.role-chips {
   display: flex;
   gap: 8px;
   flex-wrap: wrap;
@@ -1337,6 +1147,7 @@ onMounted(() => {
   color: #2a9d6a;
 }
 
+/* FOOTER */
 .glass-footer {
   padding: 14px 20px;
   border-top: 1px solid #eef6f1;
@@ -1365,61 +1176,6 @@ onMounted(() => {
   box-shadow: 0 10px 20px rgba(63, 186, 127, 0.2);
 }
 
-.system-health-card {
-  background: #ffffff;
-  border-radius: 16px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
-  padding: 24px;
-}
-
-.progress-circle {
-  width: 90px;
-  height: 90px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto;
-  transition: all 0.3s ease;
-}
-
-.progress-inner {
-  width: 74px;
-  height: 74px;
-  background: white;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);
-}
-
-.modern-stat-box {
-  background: var(--green-light);
-  border: 1px solid #f1f5f9;
-  border-radius: 12px;
-  transition: transform 0.2s;
-}
-
-.modern-stat-box:hover {
-  transform: translateY(-2px);
-}
-
-.icon-avatar {
-  width: 45px;
-  height: 45px;
-  border-radius: 10px;
-  background: #e8f8f0;
-  color: #10b981;
-  font-size: 20px;
-}
-
-.fw-black {
-  font-weight: 800;
-}
-.fw-extrabold {
-  font-weight: 700;
-}
 /* responsive */
 @media (max-width: 600px) {
   .glass-grid {

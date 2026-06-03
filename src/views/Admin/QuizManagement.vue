@@ -17,27 +17,27 @@
               font-weight: 800;
               color: var(--green-primary);
             ">
-                        {{ examDashboardData?.total_exams }}
+                        2,221
                     </div>
                     <div style="font-size: 12px; color: var(--text-muted); font-weight: 600">
-                        វិញ្ញាសាសរុប
+                        កម្រងសំណួរសរុប
                     </div>
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="dash-card text-center">
                     <div style="font-size: 28px; font-weight: 800; color: #f07a3b">
-                        {{ examDashboardData?.total_questions }}
+                        43
                     </div>
                     <div style="font-size: 12px; color: var(--text-muted); font-weight: 600">
-                        សំណួរសរុប
+                        សេចក្តីព្រាង
                     </div>
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="dash-card text-center">
                     <div style="font-size: 28px; font-weight: 800; color: var(--green-dark)">
-                        {{ examDashboardData?.pending_exams }}
+                        121
                     </div>
                     <div style="font-size: 12px; color: var(--text-muted); font-weight: 600">
                         កំពុងដំណើរការ
@@ -47,7 +47,7 @@
             <div class="col-md-3">
                 <div class="dash-card text-center">
                     <div style="font-size: 28px; font-weight: 800; color: #e05c5c">
-                        {{ examDashboardData?.finished_exams }}
+                        2,057
                     </div>
                     <div style="font-size: 12px; color: var(--text-muted); font-weight: 600">
                         បានបញ្ចប់
@@ -77,13 +77,12 @@
 </template>
 <script setup>
 import { onMounted, ref } from "vue";
-import { getAllExams ,getDashboardExamData} from "@/api/admin.api";
+import { getAllExams } from "@/api/admin.api";
 import { useDate } from "@/composables/useDate";
 import StatusBadge from "@/components/common/StatusBadge.vue";
 
 const { formatDate } = useDate();
 const exams = ref([]);
-const examDashboardData = ref();
 
 const isLoading = ref(false);
 
@@ -111,18 +110,8 @@ const fetchExam = async () => {
     }
 }
 
-const fetchExamDashboardData = async () => {
-    try {
-        const res = await getDashboardExamData();
-        examDashboardData.value = res.data.data;
-    } catch (error) {
-        console.log(error);
-    }
-}
-
 onMounted(() => {
     fetchExam();
-    fetchExamDashboardData();
 })
 
 </script>

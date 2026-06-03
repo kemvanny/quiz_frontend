@@ -35,12 +35,10 @@
           </div>
         </div>
 
-        <button class="logout-btn" @click.prevent="isLogoutModalOpen = true" title="ចាកចេញ">
+        <button class="logout-btn" @click.prevent="$emit('logout')" title="ចាកចេញ">
           <i class="bi bi-box-arrow-right"></i>
         </button>
-
-        <LogoutModal :show="isLogoutModalOpen" @close="isLogoutModalOpen = false"
-          @confirm="() => { isLogoutModalOpen = false; $emit('logout'); }" />
+        <LogoutModal :show="isLogoutModalOpen" @close="isLogoutModalOpen = false" @confirm="handleLogout" />
 
       </div>
     </div>
@@ -48,12 +46,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
-import { useRouter } from 'vue-router';
-
-const router = useRouter();
 const imgBaseUrl = import.meta.env.VITE_BASE_URL_FOR_IMAGE;
-const isLogoutModalOpen = ref(false);
 
 defineProps({
   roleName: {
@@ -75,7 +68,6 @@ defineProps({
 })
 
 defineEmits(['logout'])
-
 
 </script>
 
