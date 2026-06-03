@@ -1,6 +1,12 @@
-@font-face {
+/* @font-face {
   font-family: "Poppins";
   src: url("./fonts/Poppins-Regular.ttf") format("truetype");
+  font-weight: 400;
+} */
+
+@font-face {
+  font-family: "Inter";
+  src: url("https://fonts.gstatic.com/s/inter/v13/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfAZ9hiA.woff2") format("woff2");
   font-weight: 400;
 }
 
@@ -129,6 +135,9 @@ a {
   font-family: "Font Awesome 5 Free";
   font-weight: 900;
   font-size: 0.85rem;
+}
+.custom-toast-container {
+  z-index: 999999 !important; 
 }
 
 @keyframes shake {

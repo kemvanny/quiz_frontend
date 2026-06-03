@@ -60,13 +60,13 @@
             <template #row="{ item, index }">
                 <td>{{ index + 1 }}</td>
                 <td>{{ item.title }}</td>
-                <td>{{ item.room }}</td>
+                <td>{{ item.room_name }}</td>
                 <td>{{ item.teacher_name }}</td>
                 <td>
                     <StatusBadge :type="item.status"/>
                 </td>
-                <td>{{ item.submissions }}</td>
-                <td>{{ item.averageScore }}</td>
+                <td>{{ item.submissions_count }}</td>
+                <td>{{ item.average_score }}</td>
                 <td>{{formatDate( item.created_at )}}</td>
                 <td>
                     <button class="btn btn-sm bi bi-eye text-success"></button>

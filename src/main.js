@@ -1,5 +1,6 @@
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
+import Toast from "vue-toastification";
 
 import App from './App.vue'
 import router from './router'
@@ -10,6 +11,7 @@ import 'bootstrap-icons/font/bootstrap-icons.css'
 import '@fortawesome/fontawesome-free/css/all.min.css'
 import '@fontsource/plus-jakarta-sans'
 import './assets/main.css' 
+import "vue-toastification/dist/index.css";
 
 import BaseSidebar from './components/layout/common/BaseSidebar.vue'
 import BaseNavbar from './components/layout/common/BaseNavbar.vue'
@@ -19,6 +21,7 @@ import BaseButton from './components/common/BaseButton.vue'
 import BaseModal from './components/common/BaseModal.vue'
 import StatusBadge from './components/common/StatusBadge.vue'
 import TeacherNavbarExam from './components/layout/common/TeacherNavbarExam.vue'
+import CreateRoomModal from '@/components/teacher/CreateRoomModal.vue'
 
 const app = createApp(App)
 
@@ -30,8 +33,12 @@ app.component('BaseButton',BaseButton)
 app.component('BaseModal',BaseModal)
 app.component('StatusBadge',StatusBadge)
 app.component('TeacherNavbarExam',TeacherNavbarExam)
+app.component('CreateRoomModal',CreateRoomModal)
 
 app.use(createPinia())
+app.use(Toast, {
+  containerClassName: "custom-toast-container",
+});
 app.use(router)
 
 app.mount('#app')

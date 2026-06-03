@@ -6,7 +6,6 @@ import QuizManagement from '@/views/admin/QuizManagement.vue'
 import ResultSubmission from '@/views/admin/ResultSubmission.vue'
 import Setting from '@/views/admin/Setting.vue'
 import SystemHealth from '@/views/admin/SystemHealth.vue'
-import Help from '@/views/admin/Help.vue'
 import Login from '@/views/auth/Login.vue'
 import TeacherLayout from '@/layouts/TeacherLayout.vue'
 import TeacherDashboard from '@/views/dashboard/TeacherDashboard.vue'
@@ -79,12 +78,6 @@ const router = createRouter({
           component: SystemHealth,
           meta : {title: "System Health"}
         },
-        {
-          path: 'help',
-          name: 'Help',
-          component: Help,
-          meta : {title: "Help"}
-        }
 
       ]
     },
@@ -103,7 +96,7 @@ const router = createRouter({
         path: 'quizzes',
         name: 'Quizzes',
         component: Quizzes,
-        meta: {title: "Quizzes"}
+        meta: {title: "Quizzes", customHeader: true, fullscreen: true}
       },
       {
         path: 'assignments',
