@@ -64,8 +64,10 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { loginAPI } from '@/api/auth.api'
 import { useFormValidation } from '@/composables/useFormValidation'
+import { useToast } from 'vue-toastification'
 
 const router = useRouter()
+const toast = useToast()
 
 const showPassword = ref(false);
 const isLoading = ref(false);
@@ -97,22 +99,28 @@ const handleLogin = async () => {
             const roleId = data.data.role_id
 
             if (roleId === 1) {
+                toast.success("ស្វាគមន៍លោក Admin! ចូលប្រើប្រាស់បានជោគជ័យ។");
                 router.push('/admin/dashboard')
             } else if (roleId === 2) {
+                toast.success("ស្វាគមន៍លោកគ្រូ/អ្នកគ្រូ! ចូលប្រើប្រាស់បានជោគជ័យ។");
                 router.push('/teacher/dashboard')
             } else if (roleId === 3) {
+                toast.success("ស្វាគមន៍ប្អូនៗសិស្សានុសិស្ស! ចូលប្រើប្រាស់បានជោគជ័យ។");
                 router.push('/student/dashboard')
             } else {
-                console.log("គណនីរបស់អ្នកមិនទាន់មានសិទ្ធិ Role ក្នុងប្រព័ន្ធឡើយ!")
-                const errorMessage = error.response?.data?.message || "អ៊ីមែល ឬពាក្យសម្ងាត់មិនត្រឹមត្រូវ!";
-
-
-                errors.value.email = errorMessage;
-                errors.value.password = "សូមពិនិត្យមើលពាក្យសម្ងាត់របស់អ្នកឡើងវិញ!";
+               toast.warning("គណនីរបស់អ្នកមិនទាន់មានសិទ្ធិ Role ក្នុងប្រព័ន្ធឡើយ!");
+                errors.value.email = "គណនីគ្មានសិទ្ធិចូលប្រើប្រាស់!";
             }
         }
     } catch (error) {
         console.error("Login Error:", error)
+        let errorMessage = "មិនអាចចូលគណនីបានទេ! សូមព្យាយាមម្តងទៀត។";
+        if (error.response && error.response.data) {
+            errorMessage = error.response.data.message || errorMessage;
+        }
+
+       
+        toast.error(errorMessage);
     } finally {
         isLoading.value = false
     }

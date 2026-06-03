@@ -15,3 +15,6 @@ export const recentActivity = () => api.get('/admin/dashboard/activity');
 export const getAllExams = () => api.get('/admin/quizzes');
 export const getDashboardData = () => api.get('/admin/dashboard/total');
 export const getSubmissionMonthly = () => api.get('/admin/submissions/monthly');
+export const getSystemHealth = () => api.get('/admin/dashboard/health');
+export const getDashboardExamData = () => api.get('/admin/examDashboard');
+export const getSearchUsers = (query) => api.get(`/admin/users?search=${query}`);

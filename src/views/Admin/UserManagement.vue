@@ -36,8 +36,8 @@
             </template>
         </SearchFilter>
         <!-- Table Component -->
-        <DataTable :headers="userHeaders" :items="filteredUsers" :is-loading="isLoading" :current-page="currentPage" :limit="limit"
-            :total="totalRecords" @update:page="changePage">
+        <DataTable :headers="userHeaders" :items="filteredUsers" :is-loading="isLoading" :current-page="currentPage"
+            :limit="limit" :total="totalRecords" @update:page="changePage">
             <template #row="{ item }">
                 <td>{{ item.user_code }}</td>
                 <td>{{ item.fullName }}</td>
@@ -92,11 +92,6 @@
                             <input type="radio" value="teacher" v-model="selectedRoleForCreate" hidden>
                             <i class="bi bi-easel"></i> គ្រូបង្រៀន
                         </label>
-
-                        <!-- <label class="chip" :class="{ 'active': selectedRoleForCreate === 'admin' }">
-                            <input type="radio" value="admin" v-model="selectedRoleForCreate" hidden>
-                            <i class="bi bi-shield-lock"></i>អ្នកគ្រប់គ្រង
-                        </label> -->
                     </div>
                 </div>
             </div>
@@ -118,9 +113,11 @@ import { getAllUsers, createUser } from "@/api/admin.api";
 import { useDate } from "@/composables/useDate";
 import { useFormValidation } from "@/composables/useFormValidation";
 import StatusBadge from "@/components/common/StatusBadge.vue";
+import { useToast } from "vue-toastification";
 
-const { formatDate } = useDate();
 const { errors, validateFirstName, validateLastName, validateEmail } = useFormValidation();
+const toast = useToast();
+const { formatDate } = useDate();
 
 const users = ref([]);
 const isLoading = ref(false);
@@ -130,6 +127,11 @@ const loadingSubmit = ref(false);
 const searchQuery = ref("");
 const selectedRoleForFilter = ref("");
 const selectedStatusForFilter = ref("");
+
+const currentPage = ref(1);
+const limit = ref(10);
+const totalRecords = ref(0);
+const usersList = ref([]);
 
 const selectedRoleForCreate = ref('student');
 const form = ref({ firstName: '', lastName: '', email: '' })
@@ -144,14 +146,9 @@ const userHeaders = [
     { label: "សកម្មភាព", key: "actions" },
 ];
 
-const currentPage = ref(1);
-const limit = ref(10);
-const totalRecords = ref(0); 
-const usersList = ref([]);
-
 const changePage = async (newPage) => {
     currentPage.value = newPage;
-    await fetchUsers(); 
+    await fetchUsers();
 };
 
 const filteredUsers = computed(() => {
@@ -165,7 +162,7 @@ const filteredUsers = computed(() => {
         const filterRole = selectedRoleForFilter.value.toLowerCase();
         const matchesRole = selectedRoleForFilter.value === "" || roleText === filterRole;
 
-        const statusText = u.status ? u.status.toLowerCase() : "active"; // បើគ្មាន status ឱ្យ default 'active'
+        const statusText = u.status ? u.status.toLowerCase() : "active";
         const filterStatus = selectedStatusForFilter.value.toLowerCase();
         const matchesStatus = selectedStatusForFilter.value === "" || statusText === filterStatus;
 
@@ -179,12 +176,12 @@ const fetchUsers = async () => {
         const res = await getAllUsers();
         users.value = res.data.data;
 
-        totalRecords.value = 6; 
+        totalRecords.value = 6;
         usersList.value = [/* ដាក់ទិន្នន័យតេស្ត ៦ នាក់ */];
     } catch (error) {
         console.log('can not get users');
     } finally {
-       isLoading.value = false;
+        isLoading.value = false;
     }
 }
 
@@ -220,9 +217,21 @@ const handleCreate = async () => {
 
             await fetchUsers();
         }
+        toast.success("បង្កើតគណនីអ្នកប្រើប្រាស់បានជោគជ័យ!", {
+            toastClassName: "custom-toast-success"
+        });
 
     } catch (error) {
         console.log(error);
+       
+        let backendMessage = "មិនអាចភ្ជាប់ទៅកាន់ម៉ាស៊ីនមេបានទេ!";
+
+        if (error.response?.status === 500 || error.response?.status === 409) {
+        errors.value.email = "អ៊ីមែលនេះត្រូវបានប្រើប្រាស់រួចរាល់ហើយ! សូមប្តូរថ្មី។";
+    } else {
+        backendMessage = "មិនអាចភ្ជាប់ទៅកាន់ម៉ាស៊ីនមេបានទេ!";
+    }
+        toast.error("ការបង្កើតគណនីបានបរាជ័យ! សូមព្យាយាមម្តងទៀត។");
     } finally {
         loadingSubmit.value = false;
     }
