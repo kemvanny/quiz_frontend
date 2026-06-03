@@ -36,7 +36,8 @@
             </template>
         </SearchFilter>
         <!-- Table Component -->
-        <DataTable :headers="userHeaders" :items="filteredUsers">
+        <DataTable :headers="userHeaders" :items="filteredUsers" :is-loading="isLoading" :current-page="currentPage" :limit="limit"
+            :total="totalRecords" @update:page="changePage">
             <template #row="{ item }">
                 <td>{{ item.user_code }}</td>
                 <td>{{ item.fullName }}</td>
@@ -49,8 +50,11 @@
                 <td>
                     <button class="btn btn-sm bi bi-eye text-success"></button>
                 </td>
+
             </template>
         </DataTable>
+
+
         <!-- BaseModal -->
         <BaseModal :is-open="isModalOpen" title="បង្កើតគណនី" subtitle="បន្ថែមអ្នកប្រើប្រាស់ទៅក្នុងប្រព័ន្ធរបស់អ្នក"
             tag="អ្នកប្រើប្រាស់ថ្មី" width="600px" @close="isModalOpen = false">
@@ -109,17 +113,17 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted ,watch} from "vue";
+import { ref, computed, onMounted, watch } from "vue";
 import { getAllUsers, createUser } from "@/api/admin.api";
 import { useDate } from "@/composables/useDate";
 import { useFormValidation } from "@/composables/useFormValidation";
 import StatusBadge from "@/components/common/StatusBadge.vue";
 
 const { formatDate } = useDate();
-const {errors , validateFirstName,validateLastName,validateEmail} = useFormValidation();
+const { errors, validateFirstName, validateLastName, validateEmail } = useFormValidation();
 
 const users = ref([]);
-const loading = ref(false);
+const isLoading = ref(false);
 const isModalOpen = ref(false);
 const loadingSubmit = ref(false);
 
@@ -128,7 +132,7 @@ const selectedRoleForFilter = ref("");
 const selectedStatusForFilter = ref("");
 
 const selectedRoleForCreate = ref('student');
-const form = ref({ firstName: '', lastName: '', email: ''})
+const form = ref({ firstName: '', lastName: '', email: '' })
 
 const userHeaders = [
     { label: "លេខសម្គាល់", key: "id" },
@@ -139,6 +143,16 @@ const userHeaders = [
     { label: "ចូលរួម", key: "date" },
     { label: "សកម្មភាព", key: "actions" },
 ];
+
+const currentPage = ref(1);
+const limit = ref(10);
+const totalRecords = ref(0); 
+const usersList = ref([]);
+
+const changePage = async (newPage) => {
+    currentPage.value = newPage;
+    await fetchUsers(); 
+};
 
 const filteredUsers = computed(() => {
     return users.value.filter((u) => {
@@ -160,14 +174,17 @@ const filteredUsers = computed(() => {
 });
 
 const fetchUsers = async () => {
-    loading.value = true;
+    isLoading.value = true;
     try {
         const res = await getAllUsers();
         users.value = res.data.data;
+
+        totalRecords.value = 6; 
+        usersList.value = [/* ដាក់ទិន្នន័យតេស្ត ៦ នាក់ */];
     } catch (error) {
         console.log('can not get users');
     } finally {
-        loading.value = false;
+       isLoading.value = false;
     }
 }
 
@@ -181,8 +198,8 @@ const handleCreate = async () => {
 
     loadingSubmit.value = true;
     try {
-        let roleId = 3; 
-        if (selectedRoleForCreate.value === 'teacher') roleId = 2; 
+        let roleId = 3;
+        if (selectedRoleForCreate.value === 'teacher') roleId = 2;
         if (selectedRoleForCreate.value === 'admin') roleId = 1;
 
         const payload = {
@@ -192,7 +209,9 @@ const handleCreate = async () => {
             role_id: roleId
         }
 
-        const res = await createUser(payload);
+        const token = sessionStorage.getItem('token');
+
+        const res = await createUser(payload, token);
         if (res.data?.result) {
             isModalOpen.value = false;
             form.value = { firstName: '', lastName: '', email: '' };
@@ -229,7 +248,6 @@ onMounted(() => {
 </script>
 
 <style>
-
 .input-error {
     border-color: #dc3545 !important;
     box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25) !important;
