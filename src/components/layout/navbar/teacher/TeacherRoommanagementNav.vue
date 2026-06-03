@@ -54,7 +54,7 @@
 
 <script setup>
 import { ref } from 'vue';
-import CreateRoomModal from '@/components/common/CreateRoomModal.vue';
+
 const isCreateRoomOpen = ref(false);
 const emit = defineEmits(['room-created']);
 

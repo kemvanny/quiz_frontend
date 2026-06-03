@@ -10,12 +10,7 @@
     <template v-if="mainMenus && mainMenus.length">
       <slot name="main-menus"></slot>
       <nav class="nav flex-column">
-        <router-link 
-          v-for="item in mainMenus" 
-          :key="item.name" 
-          class="nav-link" 
-          :to="{ name: item.routeName }"
-        >
+        <router-link v-for="item in mainMenus" :key="item.name" class="nav-link" :to="{ name: item.routeName }">
           <i :class="item.icon"></i> {{ item.name }}
         </router-link>
       </nav>
@@ -24,30 +19,43 @@
     <template v-if="systemMenus && systemMenus.length">
       <slot name="system-menus"></slot>
       <nav class="nav flex-column">
-        <router-link 
-          v-for="item in systemMenus" 
-          :key="item.name" 
-          class="nav-link" 
-          :to="{ name: item.routeName }"
-        >
+        <router-link v-for="item in systemMenus" :key="item.name" class="nav-link" :to="{ name: item.routeName }">
           <i :class="item.icon"></i> {{ item.name }}
         </router-link>
       </nav>
     </template>
 
     <div class="sidebar-footer">
-      <a class="nav-link" href="#" @click.prevent="$emit('logout')">
-        <i class="bi bi-box-arrow-left"></i> ចាកចេញ
-      </a>
+      <div class="profile-card">
+        <div class="profile-info">
+          <img :src="`${imgBaseUrl}${userProfile.avatar}`" alt="Profile" class="profile-img" />
+          <div class="profile-text">
+            <span class="profile-name">{{ userProfile.firstName }} {{ userProfile.lastName }}</span>
+            <span class="profile-role">{{ userProfile.role }}</span>
+          </div>
+        </div>
+
+        <button class="logout-btn" @click.prevent="$emit('logout')" title="ចាកចេញ">
+          <i class="bi bi-box-arrow-right"></i>
+        </button>
+        <LogoutModal :show="isLogoutModalOpen" @close="isLogoutModalOpen = false" @confirm="handleLogout" />
+
+      </div>
     </div>
   </aside>
 </template>
 
 <script setup>
+const imgBaseUrl = import.meta.env.VITE_BASE_URL_FOR_IMAGE;
+
 defineProps({
   roleName: {
     type: String,
-    default: 'User'
+    default: 'ADMIN'
+  },
+  userProfile: {
+    type: Object,
+    default: () => ({ fullName: '', avatar: '', role: '' })
   },
   mainMenus: {
     type: Array,
@@ -60,6 +68,7 @@ defineProps({
 })
 
 defineEmits(['logout'])
+
 </script>
 
 <style>
@@ -166,16 +175,77 @@ defineEmits(['logout'])
 
 .sidebar-footer {
   margin-top: auto;
-  padding: 14px 10px 0;
-  border-top: 1.5px solid var(--green-mid);
+  padding: 20px 16px;
 }
 
-.sidebar-footer .nav-link {
+.profile-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #f4fbf7;
+  padding: 14px 16px;
+  border-radius: 16px;
+  border: 1px solid rgba(63, 186, 127, 0.15);
+}
+
+.profile-info {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.profile-img {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: #ddd;
+}
+
+.profile-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.profile-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--green-dark, #1e4635);
+  line-height: 1.2;
+}
+
+.profile-role {
+  font-size: 9px;
+  font-weight: 700;
+  color: var(--text-muted, #888);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.logout-btn {
+  background: #ffffff;
+  border: 1px solid rgba(63, 186, 127, 0.2);
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   color: #e05c5c;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
 }
 
-.sidebar-footer .nav-link:hover {
+.logout-btn:hover {
   background: #fff0f0;
   color: #c0392b;
+  border-color: #f5c2c2;
+  transform: translateY(-1px);
+}
+
+.logout-btn i {
+  font-size: 18px;
 }
 </style>

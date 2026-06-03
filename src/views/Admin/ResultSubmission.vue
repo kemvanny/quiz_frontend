@@ -34,7 +34,7 @@
     </SearchFilter>
 
     <!-- ប្រើ DataTable Component -->
-    <DataTable :headers="submissionHeaders" :items="submissions">
+    <DataTable :headers="submissionHeaders" :items="submissions" :is-loading="isLoading">
       <template #row="{ item , index}">
         <td>{{ index + 1 }}</td>
         <td>{{ item.user_name }}</td>
@@ -65,6 +65,7 @@ const submissions = ref([]);
 const searchQuery = ref("");
 const selectedQuiz = ref("");
 const selectedRoom = ref("");
+const isLoading = ref(false);
 
 const submissionHeaders = [
   { label: "លេខសម្គាល់", key: "id" },
@@ -79,12 +80,15 @@ const submissionHeaders = [
 ];
 
 const fetchResultSubmission = async () => {
+  isLoading.value = true;
   try{
     const res = await recentActivity();
     submissions.value = res.data.data.logs;
 
   }catch(error){
     console.log(error);
+  }finally{
+    isLoading.value = false;
   }
 }
 
