@@ -52,11 +52,11 @@
           
           <button 
             class="btn btn-sm invite-student-btn d-flex align-items-center gap-1"
-            @click.stop="handleInviteStudent(room)"
-          >
+            @click.stop="handleInviteStudent(room)">
             <i class="fas fa-user-plus"></i> Invite
           </button>
         </div>
+
       </div>
     </div>
 
@@ -79,6 +79,7 @@
       @close="closeDeleteModal" 
       @deleted="fetchRooms" 
     />
+
     <InviteStudentModal 
     :is-open="isInviteOpen" 
     :room-data="selectedRoom" 
@@ -89,6 +90,7 @@
 </template>
 
 <script setup>
+
 import { ref, computed, onMounted } from 'vue'
 import { getMyRooms } from '@/api/teacher.api'
 
