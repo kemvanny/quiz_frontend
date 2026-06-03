@@ -94,10 +94,9 @@
 import { ref, computed, onMounted } from 'vue'
 import { getMyRooms } from '@/api/teacher.api'
 
-import CreateRoomModal from '@/components/common/CreateRoomModal.vue'
-import UpdateRoomModal from '@/components/common/UpdateRoomModal.vue'
-import DeleteRoomModal from '@/components/common/DeleteRoomModal.vue'
-import InviteStudentModal from '@/components/common/InviteStudentModal.vue';
+import UpdateRoomModal from '@/components/teacher/UpdateRoomModal.vue'
+import DeleteRoomModal from '@/components/teacher/DeleteRoomModal.vue'
+import InviteStudentModal from '@/components/teacher/InviteStudentModal.vue';
 
 const searchQuery = ref('')
 const rooms = ref([])

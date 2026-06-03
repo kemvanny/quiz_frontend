@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 // src/stores/auth.js
 import { defineStore } from 'pinia';
 import { ref, computed } from 'vue';
@@ -55,3 +56,6 @@ export const useAuthStore = defineStore('auth', () => {
     fetchUserProfile,
   };
 });
+=======
+import { defineStore } from "pinia";
+>>>>>>> 55b0be6b9180578486ab99888354bf205274b603

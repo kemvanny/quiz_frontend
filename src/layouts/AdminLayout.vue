@@ -1,6 +1,6 @@
 <template>
   <div class="app-layout">
-    <BaseSidebar roleName="Admin" :mainMenus="adminMainMenus" :systemMenus="adminSystemMenus" @logout="handleLogout">
+    <BaseSidebar roleName="Admin" :userProfile="adminProfile" :mainMenus="adminMainMenus" :systemMenus="adminSystemMenus" @logout="handleLogout">
       <template #main-menus>
         <div class="nav-section-label">មុខងារ</div>
       </template>
@@ -23,9 +23,9 @@
               <i class="bi bi-bell"></i>
               <span class="dot"></span>
             </button>
-            <img :src="adminProfile.avatar" class="avatar" alt="Admin" />
+            <img :src="`${imgBaseUrl}${adminProfile.avatar}`" class="avatar" alt="Admin" />
             <div>
-              <div class="user-name">{{ adminProfile.fullName }}</div>
+              <div class="user-name">{{ adminProfile.firstName }} {{ adminProfile.lastName }}</div>
               <div class="user-role">{{ adminProfile.role }}</div>
             </div>
           </div>
@@ -51,6 +51,10 @@ import { getProfile } from '@/api/auth.api'
 
 const router = useRouter()
 
+const imgBaseUrl = import.meta.env.VITE_BASE_URL_FOR_IMAGE;
+
+const isLogoutModalOpen = ref(false);
+
 const adminProfile = ref({
   fullName: '',
   email: '',
@@ -67,11 +71,11 @@ const adminMainMenus = [
 const adminSystemMenus = [
   { name: 'ការកំណត់', routeName: 'Settings', icon: 'bi bi-gear-fill' },
   { name: 'ស្ថានភាពប្រព័ន្ធ', routeName: 'SystemHealth', icon: 'bi bi-shield-check' },
-  { name: 'ជំនួយ', routeName: 'Help', icon: 'bi bi-question-circle' }
 ]
 
 
 const handleLogout = () => {
+  isLogoutModalOpen.value = false;
   sessionStorage.clear()
   router.push('/login')
 }
@@ -96,3 +100,11 @@ onMounted(() => {
   fetchAdminProfile()
 })
 </script>
+
+<style scoped>
+.user-role {
+  font-size: 12px;
+  color: var(--text-muted);
+  text-transform: uppercase; 
+}
+</style>

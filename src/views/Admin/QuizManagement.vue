@@ -56,18 +56,18 @@
             </div>
         </div>
 
-        <DataTable :headers="quizHeaders" :items="exams">
+        <DataTable :headers="quizHeaders" :items="exams" :is-loading="isLoading" >
             <template #row="{ item, index }">
                 <td>{{ index + 1 }}</td>
                 <td>{{ item.title }}</td>
-                <td>{{ item.room }}</td>
+                <td>{{ item.room_name }}</td>
                 <td>{{ item.teacher_name }}</td>
                 <td>
-                    <StatusBadge :type="item.status"/>
+                    <StatusBadge :type="item.status" />
                 </td>
-                <td>{{ item.submissions }}</td>
-                <td>{{ item.averageScore }}</td>
-                <td>{{formatDate( item.created_at )}}</td>
+                <td>{{ item.submissions_count }}</td>
+                <td>{{ item.average_score }}</td>
+                <td>{{ formatDate(item.created_at) }}</td>
                 <td>
                     <button class="btn btn-sm bi bi-eye text-success"></button>
                 </td>
@@ -84,6 +84,8 @@ import StatusBadge from "@/components/common/StatusBadge.vue";
 const { formatDate } = useDate();
 const exams = ref([]);
 
+const isLoading = ref(false);
+
 const quizHeaders = [
     { label: "លេខសម្គាល់", key: "id" },
     { label: "ចំណងជើង", key: "title" },
@@ -97,11 +99,14 @@ const quizHeaders = [
 ];
 
 const fetchExam = async () => {
-    try{
+    isLoading.value = true;
+    try {
         const res = await getAllExams();
         exams.value = res.data.data;
-    }catch(error){
+    } catch (error) {
         console.log(error);
+    } finally {
+        isLoading.value = false;
     }
 }
 
