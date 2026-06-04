@@ -256,7 +256,9 @@
                   <strong>{{ item.score }}</strong>
                 </td>
                 <td>{{ formatDate(item.submitted_at) }}</td>
-                <td>{{ item.status }}</td>
+                <td>
+                  <StatusBadge :type="item.status"/>
+                </td>
               </template>
             </DataTable>
           </div>
@@ -318,10 +320,10 @@
 
 <script setup>
 import { onMounted, ref } from "vue";
-import {recentActivity,getDashboardData,getSubmissionMonthly} from "@/api/admin.api";
+import {recentActivity,getDashboardData,getSubmissionMonthly,getAllSubmissions,getSystemHealth} from "@/api/admin.api";
 import DataTable from "@/components/common/DataTable.vue";
 import { useDate } from "@/composables/useDate";
-import { getSystemHealth } from "@/api/admin.api";
+import StatusBadge from "@/components/common/StatusBadge.vue";
 
 const { formatDate } = useDate();
 
@@ -369,7 +371,7 @@ const translateLabel = (label) => {
   const translations = {
     'user activity': 'សកម្មភាពអ្នកប្រើប្រាស់',
     'storage used': 'ទំហំផ្ទុកទិន្នន័យដែលបានប្រើ',
-    'exam activity': 'សកម្មភាពវិញ្ញាសា',
+    'exam activity': 'សកម្មភាពប្រឡង',
     'total submissions': 'ការដាក់ស្នើសរុប'
   };
 
@@ -494,11 +496,23 @@ const calculateBarHeight = (count) => {
   return `${Math.max(percentage, 5)}%`;
 };
 
+const fetchAllSubmissions = async () => {
+  try {
+    const res = await getAllSubmissions();
+    submissionList.value = res.data.data.submissions;
+    console.log("Recent Submissions:", submissionList.value);
+}catch(error){
+
+}
+
+}
+
 onMounted(() => {
   fetchRecentActivity();
   fetchDashboardTotal();
   fetchMonthlySubmissions();
   fetchHealthData();
+  fetchAllSubmissions();
 });
 </script>
 

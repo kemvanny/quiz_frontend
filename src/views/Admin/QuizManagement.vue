@@ -60,13 +60,13 @@
             <template #row="{ item, index }">
                 <td>{{ index + 1 }}</td>
                 <td>{{ item.title }}</td>
-                <td>{{ item.room_name }}</td>
+                <!-- <td>{{ item.room_name }}</td> -->
                 <td>{{ item.teacher_name }}</td>
                 <td>
                     <StatusBadge :type="item.status" />
                 </td>
-                <td>{{ item.submissions_count }}</td>
-                <td>{{ item.average_score }}</td>
+                <!-- <td>{{ item.submissions_count }}</td> -->
+                <!-- <td>{{ item.average_score }}</td> -->
                 <td>{{ formatDate(item.created_at) }}</td>
                 <td>
                     <button class="btn btn-sm bi bi-eye text-success"></button>
@@ -90,11 +90,11 @@ const isLoading = ref(false);
 const quizHeaders = [
     { label: "លេខសម្គាល់", key: "id" },
     { label: "ចំណងជើង", key: "title" },
-    { label: "បន្ទប់", key: "room" },
+    // { label: "បន្ទប់", key: "room" },
     { label: "គ្រូបង្រៀន", key: "teacher" },
     { label: "ស្ថានភាព", key: "status" },
-    { label: "ការដាក់បញ្ជូន", key: "submissions" },
-    { label: "ពិន្ទុមធ្យម", key: "averageScore" },
+    // { label: "ការដាក់បញ្ជូន", key: "submissions" },
+    // { label: "ពិន្ទុមធ្យម", key: "averageScore" },
     { label: "ថ្ងៃបង្កើត", key: "createdAt" },
     { label: "សកម្មភាព", key: "actions" },
 ];

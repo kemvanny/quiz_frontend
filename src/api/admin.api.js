@@ -18,3 +18,5 @@ export const getSubmissionMonthly = () => api.get('/admin/submissions/monthly');
 export const getSystemHealth = () => api.get('/admin/dashboard/health');
 export const getDashboardExamData = () => api.get('/admin/examDashboard');
 export const getSearchUsers = (query) => api.get(`/admin/users?search=${query}`);
+export const getAllSubmissions = () => api.get('/admin/dashboard/recentSubmissions');
+export const ChangeStatusUser = (id, status) => api.put(`/admin/changeUserStatus/${id}`, { status });
