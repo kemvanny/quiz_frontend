@@ -55,13 +55,9 @@
 </template>
 
 <script setup>
-<<<<<<< HEAD
 import { ref, onMounted } from 'vue';
-import CreateRoomModal from '@/components/common/CreateRoomModal.vue';
+import CreateRoomModal from '@/components/teacher/CreateRoomModal.vue';
 import { useAuthStore } from '@/stores/auth'; 
-=======
-import { ref } from 'vue';
->>>>>>> 55b0be6b9180578486ab99888354bf205274b603
 
 const isCreateRoomOpen = ref(false);
 const emit = defineEmits(['room-created']);
