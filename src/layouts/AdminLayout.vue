@@ -17,7 +17,7 @@
               <i class="bi bi-search"></i>
               <input 
                 type="text" 
-                placeholder="ស្វែងរកអ្នកប្រើប្រាស់, វិញ្ញាសា, បន្ទប់..." 
+                placeholder="ស្វែងរកអ្នកប្រើប្រាស់..." 
                 v-model="searchQuery"
                 @focus="isDropdownOpen = true"
               />
@@ -36,7 +36,7 @@
                   class="result-item"
                 >
                   <img 
-                    :src="user.avatar === 'default.png' ? '/default-avatar.png' : `${imgBaseUrl}${user.avatar}`" 
+                    :src="user.avatar === 'default.png' ? defaultImage : `${imgBaseUrl}${user.avatar}`" 
                     class="user-avatar-sm" 
                     alt="avatar" 
                   />
@@ -82,6 +82,7 @@ import { ref, onMounted ,onUnmounted,watch} from 'vue'
 import { useRouter } from 'vue-router'
 import { getProfile } from '@/api/auth.api'
 import { getSearchUsers } from '@/api/admin.api'
+import defaultImage from '../assets/images/default.png';
 
 const router = useRouter()
 
