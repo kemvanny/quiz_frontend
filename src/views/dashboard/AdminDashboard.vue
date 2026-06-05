@@ -153,6 +153,7 @@
                 {{ item.month }}
               </div>
             </div>
+
           </div>
         </div>
       </div>
@@ -171,9 +172,7 @@
                 </div>
                 <div>
                   <div class="activity-text">{{ activity.message }}</div>
-                  <div class="activity-time">
-                    {{ formatDate(activity.created_at) }}
-                  </div>
+                  <div class="activity-time">{{ formatDate(activity.created_at) }}</div>
                 </div>
               </div>
 
@@ -206,15 +205,14 @@
               <template #row="{ item }">
                 <td>{{ item.user_name }}</td>
                 <td>{{ item.quiz_title }}</td>
-                <td>
-                  <strong>{{ item.score }}</strong>
-                </td>
+                <td><strong>{{ item.score }}</strong></td>
                 <td>{{ formatDate(item.submitted_at) }}</td>
                 <td>
                   <StatusBadge :type="item.status" />
                 </td>
               </template>
             </DataTable>
+
           </div>
         </div>
       </div>
@@ -271,6 +269,8 @@
         </div>
       </div>
     </div>
+
+
   </div>
 </template>
 
@@ -316,17 +316,18 @@ const getBarColor = (label, value) => {
 };
 
 const submissionHeaders = [
-  { key: "student", label: "សិស្ស" },
-  { key: "quiz", label: "វិញ្ញាសា" },
-  { key: "score", label: "ពិន្ទុ" },
-  { key: "date", label: "កាលបរិច្ឆេទ" },
-  { key: "status", label: "ស្ថានភាព" },
+  { key: 'student', label: 'សិស្ស' },
+  { key: 'quiz', label: 'វិញ្ញាសា' },
+  { key: 'score', label: 'ពិន្ទុ' },
+  { key: 'date', label: 'កាលបរិច្ឆេទ' },
+  { key: 'status', label: 'ស្ថានភាព' }
 ];
 
 const monthlyData = ref({
+  title: "Monthly Submissions",
   year: 2026,
   total_attempts: 0,
-  months: [],
+  months: []
 });
 
 const getIcon = (label) => {
@@ -378,52 +379,44 @@ const fetchHealthData = async () => {
 };
 
 const getActivityStyle = (message) => {
-  const msg = message ? message.toLowerCase() : "";
+  const msg = message ? message.toLowerCase() : '';
 
-  if (msg.includes("joined") || msg.includes("ចូលរួម")) {
+  if (msg.includes('joined') || msg.includes('ចូលរួម')) {
     return {
-      icon: "bi-person-plus-fill",
-      bg: "#e8f8f0",
-      color: "#10b981",
+      icon: 'bi-person-plus-fill',
+      bg: '#e8f8f0',
+      color: '#10b981'
     };
   }
 
-  if (msg.includes("room") || msg.includes("បន្ទប់")) {
+  if (msg.includes('room') || msg.includes('បន្ទប់')) {
     return {
-      icon: "bi-door-open-fill",
-      bg: "#e8f0fd",
-      color: "#3b7ef0",
+      icon: 'bi-door-open-fill',
+      bg: '#e8f0fd',
+      color: '#3b7ef0'
     };
   }
 
-  if (
-    msg.includes("quiz") ||
-    msg.includes("exam") ||
-    msg.includes("វិញ្ញាសា")
-  ) {
+  if (msg.includes('quiz') || msg.includes('exam') || msg.includes('វិញ្ញាសា')) {
     return {
-      icon: "bi-journal-check",
-      bg: "#fff8e0",
-      color: "#c89a00",
+      icon: 'bi-journal-check',
+      bg: '#fff8e0',
+      color: '#c89a00'
     };
   }
 
-  if (
-    msg.includes("deactivated") ||
-    msg.includes("delete") ||
-    msg.includes("បិទ")
-  ) {
+  if (msg.includes('deactivated') || msg.includes('delete') || msg.includes('បិទ')) {
     return {
-      icon: "bi-person-dash-fill",
-      bg: "#fce8e8",
-      color: "#e05c5c",
+      icon: 'bi-person-dash-fill',
+      bg: '#fce8e8',
+      color: '#e05c5c'
     };
   }
 
   return {
-    icon: "bi-bell-fill",
-    bg: "#f3f4f6",
-    color: "#6b7280",
+    icon: 'bi-bell-fill',
+    bg: '#f3f4f6',
+    color: '#6b7280'
   };
 };
 
@@ -445,16 +438,16 @@ const fetchRecentActivity = async () => {
   } catch (error) {
     console.log(error);
   }
-};
+}
 
 const fetchDashboardTotal = async () => {
   try {
     const res = await getDashboardData();
     dashboardTotal.value = res.data.data;
   } catch (error) {
-    console.log("Failed to fetch dashboard total", error);
+    console.log('Failed to fetch dashboard total', error);
   }
-};
+}
 
 const fetchMonthlySubmissions = async () => {
   try {
@@ -468,11 +461,12 @@ const fetchMonthlySubmissions = async () => {
 };
 
 const calculateBarHeight = (count) => {
-  if (!count || count === 0) return "4px";
+  if (!count || count === 0) return '4px';
 
-  const maxCount = Math.max(...monthlyData.value.months.map((m) => m.count), 0);
 
-  if (maxCount === 0) return "4px";
+  const maxCount = Math.max(...monthlyData.value.months.map(m => m.count), 0);
+
+  if (maxCount === 0) return '4px';
 
   const percentage = (count / maxCount) * 100;
   return `${Math.max(percentage, 5)}%`;
@@ -530,7 +524,9 @@ onMounted(() => {
   display: flex;
   flex-direction: column;
   gap: 6px;
-  transition: transform 0.18s, box-shadow 0.18s;
+  transition:
+    transform 0.18s,
+    box-shadow 0.18s;
   border: 1.5px solid transparent;
 }
 
@@ -940,7 +936,9 @@ onMounted(() => {
   padding: 8px 18px;
   border-radius: 10px;
   cursor: pointer;
-  transition: background 0.15s, transform 0.12s;
+  transition:
+    background 0.15s,
+    transform 0.12s;
 }
 
 .btn-green:hover {
@@ -1068,6 +1066,7 @@ onMounted(() => {
   }
 }
 
+/* SMALL MODERN MODAL  */
 
 .modern-modal {
   position: fixed;
@@ -1341,6 +1340,7 @@ onMounted(() => {
   color: #2a9d6a;
 }
 
+/* FOOTER */
 .glass-footer {
   padding: 14px 20px;
   border-top: 1px solid #eef6f1;
