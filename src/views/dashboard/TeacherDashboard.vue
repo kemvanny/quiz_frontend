@@ -213,7 +213,7 @@
     :is-open="isCreateRoomOpen" 
     @close="isCreateRoomOpen = false" 
     @created="onRoomCreated" 
-  />
+  />  
 </template>
 
 <script setup>
