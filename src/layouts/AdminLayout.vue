@@ -12,9 +12,42 @@
     <div class="main-wrapper">
       <BaseNavbar>
         <template #left>
-          <div class="search-wrap">
-            <i class="bi bi-search"></i>
-            <input type="text" placeholder="ស្វែងរកអ្នកប្រើប្រាស់, វិញ្ញាសា, ​បន្ទប់..." />
+          <div class="search-wrapper">
+            <div class="search-wrap">
+              <i class="bi bi-search"></i>
+              <input 
+                type="text" 
+                placeholder="ស្វែងរកអ្នកប្រើប្រាស់..." 
+                v-model="searchQuery"
+                @focus="isDropdownOpen = true"
+              />
+              <span v-if="isLoading" class="spinner-border spinner-border-sm text-success search-spinner"></span>
+            </div>
+
+            <div v-if="isDropdownOpen && searchQuery.trim() !== ''" class="search-dropdown-result">
+              <div v-if="isLoading" class="dropdown-status">កំពុងស្វែងរក...</div>
+              <div v-else-if="usersList.length === 0" class="dropdown-status">មិនមានទិន្នន័យឡើយ 🔍</div>
+              
+              <ul v-else class="result-list">
+                <li 
+                  v-for="user in usersList" 
+                  :key="user.id" 
+                  @click="handleSelectUser(user)"
+                  class="result-item"
+                >
+                  <img 
+                    :src="user.avatar === 'default.png' ? defaultImage : `${imgBaseUrl}${user.avatar}`" 
+                    class="user-avatar-sm" 
+                    alt="avatar" 
+                  />
+                  <div class="user-info-meta">
+                    <span class="user-name-text">{{ user.fullName }}</span>
+                    <span class="user-sub-text">{{ user.user_code }} • {{ user.email }}</span>
+                  </div>
+                  <span :class="['role-tag', user.role]">{{ user.role }}</span>
+                </li>
+              </ul>
+            </div>
           </div>
         </template>
         <template #right>
@@ -48,6 +81,8 @@
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { getProfile } from '@/api/auth.api'
+import { getSearchUsers } from '@/api/admin.api'
+import defaultImage from '../assets/images/default.png';
 
 const router = useRouter()
 
