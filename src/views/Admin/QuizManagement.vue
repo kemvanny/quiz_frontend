@@ -56,17 +56,14 @@
             </div>
         </div>
 
-        <DataTable :headers="quizHeaders" :items="exams" :is-loading="isLoading" >
+        <DataTable :headers="quizHeaders" :items="exams" :is-loading="isLoading" :current-page="currentPage" :limit="limit" :total="totalRecords" @update:page="changePage">
             <template #row="{ item, index }">
-                <td>{{ index + 1 }}</td>
+                <td>{{ (currentPage - 1) * limit + index + 1 }}</td>
                 <td>{{ item.title }}</td>
-                <!-- <td>{{ item.room_name }}</td> -->
                 <td>{{ item.teacher_name }}</td>
                 <td>
                     <StatusBadge :type="item.status" />
                 </td>
-                <!-- <td>{{ item.submissions_count }}</td> -->
-                <!-- <td>{{ item.average_score }}</td> -->
                 <td>{{ formatDate(item.created_at) }}</td>
                 <td>
                     <button class="btn btn-sm bi bi-eye text-success"></button>
@@ -82,30 +79,45 @@ import { useDate } from "@/composables/useDate";
 import StatusBadge from "@/components/common/StatusBadge.vue";
 
 const { formatDate } = useDate();
+
 const exams = ref([]);
 const examDashboardData = ref();
+const currentPage = ref(1);
+const limit = ref(10);
+const totalRecords = ref(0);
 
 const isLoading = ref(false);
 
 const quizHeaders = [
     { label: "លេខសម្គាល់", key: "id" },
     { label: "ចំណងជើង", key: "title" },
-    // { label: "បន្ទប់", key: "room" },
     { label: "គ្រូបង្រៀន", key: "teacher" },
     { label: "ស្ថានភាព", key: "status" },
-    // { label: "ការដាក់បញ្ជូន", key: "submissions" },
-    // { label: "ពិន្ទុមធ្យម", key: "averageScore" },
     { label: "ថ្ងៃបង្កើត", key: "createdAt" },
     { label: "សកម្មភាព", key: "actions" },
 ];
 
+const changePage = async (newPage) => {
+    currentPage.value = newPage;
+    await fetchExam();
+};
+
 const fetchExam = async () => {
     isLoading.value = true;
     try {
-        const res = await getAllExams();
-        exams.value = res.data.data;
+        const res = await getAllExams({
+            page: currentPage.value,
+            limit: limit.value
+        });
+        if(res.data && res.data.data){
+            const rawExams = res.data.data.quizzes || [];
+            exams.value = rawExams.sort((a,b) => new Date(b.created_at) - new Date(a.created_at));
+            totalRecords.value = res.data.data.total || 0;
+            currentPage.value = res.data.data.page || 1;
+            limit.value = res.data.data.limit || 10;
+        }
     } catch (error) {
-        console.log(error);
+        console.log('Cannot get quizzes',error);
     } finally {
         isLoading.value = false;
     }
@@ -116,7 +128,7 @@ const fetchExamDashboardData = async () => {
         const res = await getDashboardExamData();
         examDashboardData.value = res.data.data;
     } catch (error) {
-        console.log(error);
+        console.log('Cannot get exam dashboard data',error);
     }
 }
 

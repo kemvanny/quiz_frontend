@@ -143,7 +143,7 @@ const selectedStatusForFilter = ref("");
 const currentPage = ref(1);
 const limit = ref(10);
 const totalRecords = ref(0);
-const usersList = ref([]);
+
 
 const selectedRoleForCreate = ref('student');
 const form = ref({ firstName: '', lastName: '', email: '' })
@@ -190,16 +190,22 @@ const filteredUsers = computed(() => {
 const fetchUsers = async () => {
     isLoading.value = true;
     try {
-        const res = await getAllUsers();
+        const res = await getAllUsers({
+            page: currentPage.value,
+            limit: limit.value
+        });
+        
         if (res.data && res.data.data) {
-            const rawUsers = res.data.data;
+            const rawUsers = res.data.data.users || [];
+            
             users.value = rawUsers.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
 
+            totalRecords.value = res.data.data.total || 0;     
+            currentPage.value = res.data.data.page || 1;      
+            limit.value = res.data.data.limit || 10;           
         }
-        totalRecords.value = 6;
-        usersList.value = [/* ដាក់ទិន្នន័យតេស្ត ៦ នាក់ */];
     } catch (error) {
-        console.log('can not get users');
+        console.error('Cannot get users:', error);
     } finally {
         isLoading.value = false;
     }

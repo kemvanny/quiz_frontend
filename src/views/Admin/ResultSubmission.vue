@@ -34,7 +34,7 @@
       </template>
     </SearchFilter>
 
-    <DataTable :headers="submissionHeaders" :items="filteredSubmissions" :is-loading="isLoading">
+    <DataTable :headers="submissionHeaders" :items="filteredSubmissions" :is-loading="isLoading" :current-page="currentPage" :limit="limit" :total="totalRecords" @update:page="changePage">
       <template #row="{ item, index }">
         <td>{{ index + 1 }}</td>
         <td>{{ item.display_student_name }}</td>
@@ -61,6 +61,16 @@ import { useDate } from "@/composables/useDate";
 
 const { formatDate } = useDate();
 
+const submissions = ref([]);
+const searchQuery = ref("");
+const selectedQuiz = ref("");
+const selectedRoom = ref("");
+const isLoading = ref(false);
+
+const currentPage = ref(1);
+const limit = ref(10);
+const totalRecords = ref(0);
+
 const submissionHeaders = [
   { label: "លេខសម្គាល់", key: "id" },
   { label: "សិស្ស", key: "student" },
@@ -73,11 +83,6 @@ const submissionHeaders = [
   { label: "និទ្ទេស", key: "grade" },
 ];
 
-const submissions = ref([]);
-const searchQuery = ref("");
-const selectedQuiz = ref("");
-const selectedRoom = ref("");
-const isLoading = ref(false);
 
 // Data Filtering
 const uniqueQuizzes = computed(() => {
@@ -126,30 +131,45 @@ const getGradeClass = (grade) => {
 const fetchResultSubmission = async () => {
   isLoading.value = true;
   try {
-    const res = await getAllSubmissions();
-    const rawSubmissions = res.data.data.submissions || [];
-
-    submissions.value = rawSubmissions.map(item => {
-      const currentScore = Number(item.score);
-      const maxScore = 10;
-      const percentage = (currentScore / maxScore) * 100;
-
-      return {
-        ...item,
-        display_student_name: item.student?.name || item.user_name || "មិនស្គាល់ឈ្មោះ",
-        display_quiz_title: item.exam?.title || item.quiz_title || "មិនស្គាល់វិញ្ញាសា",
-        display_room: item.room_name || item.room || "បន្ទប់ទី ១",
-        display_score: currentScore.toFixed(2),
-        display_total_marks: maxScore.toFixed(2),
-        computed_percentage: percentage.toFixed(0) + '%',
-        computed_grade: calculateGrade(currentScore, maxScore)
-      };
+    const res = await getAllSubmissions({
+      page: currentPage.value,
+      limit: limit.value
     });
+
+    if (res.data && res.data.result) {
+      const rawSubmissions = res.data.data.submissions || [];
+
+      submissions.value = rawSubmissions.map(item => {
+        const currentScore = Number(item.score);
+        const maxScore = 10;
+        const percentage = (currentScore / maxScore) * 100;
+
+        return {
+          ...item,
+          display_student_name: item.student?.name || item.user_name || "មិនស្គាល់ឈ្មោះ",
+          display_quiz_title: item.exam?.title || item.quiz_title || "មិនស្គាល់វិញ្ញាសា",
+          display_room: item.room_name || item.room || "បន្ទប់ទី ១",
+          display_score: currentScore.toFixed(2),
+          display_total_marks: maxScore.toFixed(2),
+          computed_percentage: percentage.toFixed(0) + '%',
+          computed_grade: calculateGrade(currentScore, maxScore)
+        };
+      });
+
+      totalRecords.value = res.data.data.total || 0;
+      currentPage.value = res.data.data.page || 1;
+      limit.value = res.data.data.limit || 10;
+    }
   } catch (error) {
     console.error("Error fetching submissions:", error);
   } finally {
     isLoading.value = false;
   }
+};
+
+const changePage = async (newPage) => {
+    currentPage.value = newPage;
+    await fetchResultSubmission();
 };
 
 const exportToCSV = () => {
