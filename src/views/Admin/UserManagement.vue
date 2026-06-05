@@ -162,10 +162,6 @@ const userHeaders = [
     { label: "សកម្មភាព", key: "actions" },
 ];
 
-const currentPage = ref(1);
-const limit = ref(10);
-const totalRecords = ref(0); 
-const usersList = ref([]);
 
 const changePage = async (newPage) => {
     currentPage.value = newPage;
