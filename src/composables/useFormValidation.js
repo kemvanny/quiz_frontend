@@ -9,7 +9,7 @@ export function useFormValidation() {
         role: ''
     })
 
-    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
+    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{3,}$/
 
     const namePattern = /^[a-zA-Z Khmer\u1780-\u17F9\s]+$/
 
@@ -36,20 +36,32 @@ export function useFormValidation() {
     }
 
     const validateFirstName = (value) => {
-        if (!value || value.trim() === '') {
+        const trimmedValue = value ? value.trim() : '';
+
+        if (trimmedValue === '') {
             errors.value.firstName = 'សូមបញ្ចូលនាមខ្លួន!'
-        } else if (!namePattern.test(value)) {
-            errors.value.firstName = 'នាមខ្លួនអាចវាយបានតែអក្សរ (ខ្មែរ/អង់គ្លេស) ប៉ុណ្ណោះ ហាមប្រើសញ្ញាពិសេសផ្សេងៗ!'
+        } else if (trimmedValue.length < 2) {
+            errors.value.firstName = 'នាមខ្លួនត្រូវមានយ៉ាងហោចណាស់ ២ តួអក្សរឡើងទៅ!'
+        } else if (trimmedValue.length > 50) {
+            errors.value.firstName = 'នាមខ្លួនមិនអាចវែងជាង ៥០ តួអក្សរឡើយ!'
+        } else if (!namePattern.test(trimmedValue)) {
+            errors.value.firstName = 'នាមខ្លួនមិនអាចមានលេខ ឬសញ្ញាពិសេសឡើយ អនុញ្ញាតតែអក្សរខ្មែរ ឬ អង់គ្លេស)!'
         } else {
             errors.value.firstName = ''
         }
     }
 
-    const validateLastName = (value) => {
-        if (!value || value.trim() === '') {
+   const validateLastName = (value) => {
+        const trimmedValue = value ? value.trim() : '';
+
+        if (trimmedValue === '') {
             errors.value.lastName = 'សូមបញ្ចូលនាមត្រកូល!'
-        } else if (!namePattern.test(value)) {
-            errors.value.lastName = 'នាមត្រកូលអាចវាយបានតែអក្សរ (ខ្មែរ/អង់គ្លេស) ប៉ុណ្ណោះ ហាមប្រើសញ្ញាពិសេសផ្សេងៗ!'
+        } else if (trimmedValue.length < 2) {
+            errors.value.lastName = 'នាមត្រកូលត្រូវមានយ៉ាងហោចណាស់ ២ តួអក្សរឡើងទៅ!'
+        } else if (trimmedValue.length > 50) {
+            errors.value.lastName = 'នាមត្រកូលមិនអាចវែងជាង ៥០ តួអក្សរឡើយ!'
+        } else if (!namePattern.test(trimmedValue)) {
+            errors.value.lastName = 'នាមត្រកូលមិនអាចមានលេខ ឬសញ្ញាពិសេសឡើយ អនុញ្ញាតតែអក្សរខ្មែរ ឬ អង់គ្លេស)!'
         } else {
             errors.value.lastName = ''
         }
