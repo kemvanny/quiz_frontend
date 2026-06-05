@@ -4,13 +4,24 @@
     <div class="profile-hero mb-4">
       <div class="d-flex flex-column flex-md-row align-items-center align-items-md-start gap-4 text-center text-md-start">
         <div class="position-relative">
-          <img :src="profileData.avatarUrl || 'https://ui-avatars.com/api/?name=' + profileData.firstName + '+' + profileData.lastName + '&background=random'" class="hero-avatar" id="profileImagePreview">
-          <div class="hero-edit-btn shadow-sm" @click="triggerFileInput"><i class="fas fa-camera"></i></div>
-          <input type="file" id="profileImageUpload" style="display: none;" accept="image/*" @change="handleAvatarUpload">
+          <img 
+            :src="profileData.avatarUrl" 
+            class="hero-avatar" 
+            id="profileImagePreview" 
+            @error="handleImageError"
+          />
+          <div class="hero-edit-btn shadow-sm" @click="triggerFileInput">
+            <i class="fas fa-camera"></i>
+          </div>
+          <input ref="fileInput" type="file" hidden accept="image/*" @change="handleAvatarUpload" />
         </div>
         <div>
-          <h2 class="fw-bold mb-1" style="color: var(--txt); letter-spacing: -0.5px;">{{ profileData.firstName }} {{ profileData.lastName }}</h2>
-          <p class="mb-3" style="color: var(--txt-mu); font-weight: 500; font-size: 0.9rem;"><i class="fas fa-chalkboard-teacher me-2 text-primary"></i>Instructor</p>
+          <h2 class="fw-bold mb-1" style="color: var(--txt); letter-spacing: -0.5px;">
+            {{ profileData.firstName }} {{ profileData.lastName }}
+          </h2>
+          <p class="mb-3" style="color: var(--txt-mu); font-weight: 500; font-size: 0.9rem;">
+            <i class="fas fa-chalkboard-teacher me-2 text-primary"></i>Instructor
+          </p>
           <div class="d-flex flex-wrap justify-content-center justify-content-md-start gap-2">
             <span class="hero-badge"><i class="fas fa-star text-warning"></i> 4.9 Rating</span>
             <span class="hero-badge"><i class="fas fa-users text-primary"></i> 1,284 Students</span>
@@ -19,8 +30,8 @@
         </div>
       </div>
       
-      <div v-if="profileData.avatarUrl" class="w-100 w-md-auto d-flex justify-content-center mt-3 mt-md-0">
-        <button class="btn btn-outline-danger fw-bold rounded-pill px-4" style="border-width: 2px;" @click="handleDeleteAvatar" :disabled="loadingAvatar">
+      <div v-if="profileData.avatarUrl && !profileData.avatarUrl.includes('ui-avatars.com')" class="w-100 w-md-auto d-flex justify-content-center mt-3 mt-md-0">
+        <button class="btn btn-outline-danger fw-bold rounded-pill px-4" style="border-width: 2px;" @click="openDeleteModal" :disabled="loadingAvatar">
           <i class="fas fa-spinner fa-spin me-2" v-if="loadingAvatar"></i>
           <i class="fas fa-trash-alt me-2" v-else></i> លុបរូបភាព
         </button>
@@ -30,17 +41,16 @@
     <div class="row g-4">
       <div class="col-lg-3">
         <div class="settings-nav">
-            <a href="javascript:void(0)" :class="['settings-nav-item', currentTab === 'general' ? 'active' : '']" @click="currentTab = 'general'"><i class="fas fa-user"></i> General Info</a>
-            <a href="javascript:void(0)" :class="['settings-nav-item', currentTab === 'security' ? 'active' : '']" @click="currentTab = 'security'"><i class="fas fa-lock"></i> Security & Password</a>
-            <a href="javascript:void(0)" :class="['settings-nav-item', currentTab === 'notifications' ? 'active' : '']" @click="currentTab = 'notifications'"><i class="fas fa-bell"></i> Notifications</a>
-            <a href="javascript:void(0)" :class="['settings-nav-item', currentTab === 'sessions' ? 'active' : '']" @click="currentTab = 'sessions'"><i class="fas fa-shield-alt"></i> Active Sessions</a>
-            <hr class="my-2 border-secondary opacity-10">
-            <a href="javascript:void(0)" class="settings-nav-item text-danger" @click="handleSignOut"><i class="fas fa-sign-out-alt"></i> Sign Out</a>
+          <a href="javascript:void(0)" :class="['settings-nav-item', currentTab === 'general' ? 'active' : '']" @click="currentTab = 'general'"><i class="fas fa-user"></i> General Info</a>
+          <a href="javascript:void(0)" :class="['settings-nav-item', currentTab === 'security' ? 'active' : '']" @click="currentTab = 'security'"><i class="fas fa-lock"></i> Security & Password</a>
+          <a href="javascript:void(0)" :class="['settings-nav-item', currentTab === 'notifications' ? 'active' : '']" @click="currentTab = 'notifications'"><i class="fas fa-bell"></i> Notifications</a>
+          <a href="javascript:void(0)" :class="['settings-nav-item', currentTab === 'sessions' ? 'active' : '']" @click="currentTab = 'sessions'"><i class="fas fa-shield-alt"></i> Active Sessions</a>
+          <hr class="my-2 border-secondary opacity-10">
+          <a href="javascript:void(0)" class="settings-nav-item text-danger" @click="openLogoutModal"><i class="fas fa-sign-out-alt"></i> Sign Out</a>
         </div>
       </div>
 
       <div class="col-lg-9">
-        
         <div v-if="currentTab === 'general'" id="tab-general" class="settings-tab-content">
           <div class="settings-card">
             <h5 class="fw-bold mb-4" style="color: var(--txt);">Personal Information</h5>
@@ -48,7 +58,7 @@
             <div v-if="loadingData" class="text-center py-4">
               <div class="spinner-border text-success spinner-border-sm" role="status"></div>
             </div>
-
+            
             <form v-else @submit.prevent="handleSaveProfile">
               <div class="row g-4">
                 <div class="col-md-6">
@@ -124,50 +134,61 @@
             </form>
           </div>
         </div>
-
-        <div v-if="currentTab === 'notifications'" id="tab-notifications" class="settings-tab-content">
-          <div class="settings-card">
-            <h5 class="fw-bold mb-4" style="color: var(--txt);">Notification Preferences</h5>
-            
-            <div class="d-flex justify-content-between align-items-center mb-3 pb-3 border-bottom">
-              <div>
-                <h6 class="fw-bold mb-1" style="color: var(--txt);">Email Notifications</h6>
-                <p class="mb-0 text-muted" style="font-size: 0.8rem;">Receive daily summaries of class activity.</p>
-              </div>
-              <div class="form-check form-switch custom-switch">
-                <input class="form-check-input" type="checkbox" checked>
-              </div>
-            </div>
-
-            <div class="d-flex justify-content-between align-items-center mb-3 pb-3 border-bottom">
-              <div>
-                <h6 class="fw-bold mb-1" style="color: var(--txt);">Exam Submissions</h6>
-                <p class="mb-0 text-muted" style="font-size: 0.8rem;">Get notified instantly when a student submits an exam.</p>
-              </div>
-              <div class="form-check form-switch custom-switch">
-                <input class="form-check-input" type="checkbox" checked>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div v-if="currentTab === 'sessions'" id="tab-sessions" class="settings-tab-content">
-          <div class="settings-card">
-            <h5 class="fw-bold mb-4" style="color: var(--txt);">Active Sessions</h5>
-            <div class="d-flex align-items-center gap-3 mb-3 pb-3 border-bottom">
-              <div class="rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; background: var(--em-soft); color: var(--em); font-size: 1.2rem;">
-                <i class="fas fa-desktop"></i>
-              </div>
-              <div class="flex-grow-1">
-                <h6 class="fw-bold mb-0 text-dark" style="font-size: 0.9rem;">Windows 11 • Chrome</h6>
-                <p class="mb-0 text-muted" style="font-size: 0.75rem;">Phnom Penh, Cambodia — <span class="text-success fw-bold">Active now</span></p>
-              </div>
-            </div>
-          </div>
-        </div>
-
       </div>
     </div>
+
+<BaseModal :isOpen="isDeleteModalOpen" @close="isDeleteModalOpen = false" width="350px">
+      <div class="p-2 text-center" style="font-family: inherit;">
+        
+        <h5 class="fw-bold text-dark mb-2" style="font-size: 1.1rem; letter-spacing: -0.3px;">
+          លុបរូបភាពប្រវត្តិរូប?
+        </h5>
+        <p class="text-muted mb-4 px-1" style="font-size: 0.88rem; line-height: 1.4;">
+          តើអ្នកពិតជាចង់លុបរូបភាពបច្ចុប្បន្ននេះមែនទេ? សកម្មភាពនេះមិនអាចទាញត្រឡប់មកវិញបានឡើយ។
+        </p>
+        
+        <div class="d-flex gap-2 w-100">
+          <button class="btn fw-bold flex-fill border-0 transition-all" 
+                  style="border-radius: 10px; font-size: 0.88rem; padding: 10px; color: #475569; background: #f1f5f9;"
+                  @click="isDeleteModalOpen = false">
+            បោះបង់
+          </button>
+          <button class="btn btn-danger fw-bold flex-fill border-0 transition-all" 
+                  style="border-radius: 10px; font-size: 0.88rem; padding: 10px; background: #dc2626;"
+                  @click="confirmDeleteAvatar" 
+                  :disabled="loadingAvatar">
+            <span v-if="loadingAvatar" class="spinner-border spinner-border-sm me-1"></span>
+            លុបចេញ
+          </button>
+        </div>
+      </div>
+    </BaseModal>
+
+    <BaseModal :isOpen="isLogoutModalOpen" @close="isLogoutModalOpen = false" width="350px">
+      <div class="p-2 text-center" style="font-family: inherit;">
+        
+        <h5 class="fw-bold text-dark mb-2" style="font-size: 1.1rem; letter-spacing: -0.3px;">
+          ចាកចេញពីប្រព័ន្ធ?
+        </h5>
+        <p class="text-muted mb-4 px-1" style="font-size: 0.88rem; line-height: 1.4;">
+          តើអ្នកពិតជាចង់បញ្ចប់ការងារ និងចាកចេញពីគណនីបច្ចុប្បន្ននេះមែនទេ?
+        </p>
+        
+        <div class="d-flex gap-2 w-100">
+          <button class="btn fw-bold flex-fill border-0 transition-all" 
+                  style="border-radius: 10px; font-size: 0.88rem; padding: 10px; color: #475569; background: #f1f5f9;"
+                  @click="isLogoutModalOpen = false">
+            បោះបង់
+          </button>
+          <button class="btn btn-danger fw-bold flex-fill border-0 text-white transition-all" 
+                  style="border-radius: 10px; font-size: 0.88rem; padding: 10px; background: #dc2626;"
+                  @click="confirmSignOut">
+            ចាកចេញ
+          </button>
+        </div>
+      </div>
+    </BaseModal>
+
   </div>
 </template>
 
@@ -175,19 +196,22 @@
 import { ref, reactive, onMounted } from 'vue';
 import { useToast } from 'vue-toastification';
 import { getProfile, updateProfile, updateAvatar, deleteAvatar } from '@/api/teacher.api';
-
+import { logout } from '@/api/auth.api';
+import BaseModal from '@/components/common/BaseModal.vue'; 
+import { useAuthStore } from '@/stores/auth';
 const toast = useToast();
+const authStore = useAuthStore(); 
+
 const currentTab = ref('general');
 const loadingData = ref(false);
 const updatingProfile = ref(false);
 const loadingAvatar = ref(false);
 
-const credentials = {
-  email: sessionStorage.getItem('user_email') || sessionStorage.getItem('email'), 
-  password: sessionStorage.getItem('user_password') || sessionStorage.getItem('password')
-};
+const fileInput = ref(null);
+const localUploadedUrl = ref(''); 
 
-console.log("Credentials លោតមកក្នុង Profile:", credentials);
+const isDeleteModalOpen = ref(false);
+const isLogoutModalOpen = ref(false);
 
 const profileData = reactive({
   firstName: '',
@@ -198,67 +222,109 @@ const profileData = reactive({
   avatarUrl: ''
 });
 
+const toastConfig = {
+  position: "bottom-right",
+  timeout: 3000,
+  closeOnClick: true,
+  pauseOnHover: true
+};
+
+// ================= FETCH PROFILE =================
 const fetchUserProfile = async () => {
-  if (!credentials.email || !credentials.password) {
-    console.warn("រកមិនឃើញព័ត៌មាន Email ឬ Password នៅក្នុង Session ឡើយ។");
-    toast.warning("សូមបំពេញព័ត៌មានគណនីឱ្យបានពេញលេញ ដើម្បីកែប្រែប្រវត្តិរូប។");
-    return; 
-  }
+  if (loadingData.value) return;
 
   try {
     loadingData.value = true;
-    const res = await getProfile(credentials);
-    const user = res.data?.data || res.data;
-    
+    const res = await getProfile();
+    const responseData = res.data;
+
+    if (responseData?.result === false) {
+      toast.error(responseData?.msg || 'សូមចូលប្រើប្រាស់ប្រព័ន្ធជាមុនសិន!', toastConfig);
+      return;
+    }
+
+    const user = responseData?.data || responseData;
+
     if (user) {
       profileData.firstName = user.firstName || '';
       profileData.lastName = user.lastName || '';
-      profileData.email = user.email || credentials.email;
+      profileData.email = user.email || '';
       profileData.phone = user.phone || '';
       profileData.address = user.address || '';
-      profileData.avatarUrl = user.avatar || user.avatarUrl || ''; 
+
+      if (localUploadedUrl.value) {
+        profileData.avatarUrl = localUploadedUrl.value;
+      } 
+      else if (user.avatar && user.avatar !== 'default.png') {
+        if (user.avatar.startsWith('http')) {
+          profileData.avatarUrl = user.avatar;
+        } else {
+          const url = new URL(import.meta.env.VITE_BASE_URL);
+          const serverOrigin = url.origin; 
+          const cleanAvatarPath = user.avatar.startsWith('/') ? user.avatar.slice(1) : user.avatar;
+          profileData.avatarUrl = `${serverOrigin}/${cleanAvatarPath}`;
+        }
+      } else {
+        profileData.avatarUrl = `https://ui-avatars.com/api/?name=${profileData.firstName}+${profileData.lastName}&background=random`;
+      }
     }
   } catch (err) {
     console.error("Fetch profile error:", err);
-    toast.error("មិនអាចទាញយកព័ត៌មានប្រវត្តិរូបបានទេ");
+    toast.error('មិនអាចទាញយកទិន្នន័យប្រវត្តិរូបបានទេ!', toastConfig);
   } finally {
     loadingData.value = false;
   }
+};
+
+// ================= HANDLE IMAGE ERROR =================
+const handleImageError = () => {
+  profileData.avatarUrl = `https://ui-avatars.com/api/?name=${profileData.firstName}+${profileData.lastName}&background=random`;
 };
 
 onMounted(() => {
   fetchUserProfile();
 });
 
+// ================= UPDATE PROFILE =================
 const handleSaveProfile = async () => {
   try {
     updatingProfile.value = true;
-    
+
     const payload = {
       firstName: profileData.firstName.trim(),
       lastName: profileData.lastName.trim(),
-      phone: profileData.phone.trim(),
-      address: profileData.address.trim()
+      phone: profileData.phone ? profileData.phone.trim() : null,
+      address: profileData.address ? profileData.address.trim() : null
     };
-    
+
     await updateProfile(payload);
-    toast.success("រក្សាទុកការកែប្រែជោគជ័យ");
+    toast.success('រក្សាទុកព័ត៌មានផ្ទាល់ខ្លួនជោគជ័យ', toastConfig);
+    
     await fetchUserProfile();
+    await authStore.fetchUserProfile(true); 
   } catch (err) {
-    console.error("Update profile error:", err);
-    toast.error("ការរក្សាទុកទិន្នន័យបានបរាជ័យ");
+    console.error(err);
+    toast.error('ការកែប្រែព័ត៌មានបានបរាជ័យ!', toastConfig);
   } finally {
     updatingProfile.value = false;
   }
 };
 
+// ================= OPEN FILE INPUT =================
 const triggerFileInput = () => {
-  document.getElementById('profileImageUpload').click();
+  if (fileInput.value) {
+    fileInput.value.click();
+  }
 };
 
+// ================= UPLOAD AVATAR =================
 const handleAvatarUpload = async (event) => {
   const file = event.target.files[0];
   if (!file) return;
+
+  const previewUrl = URL.createObjectURL(file);
+  localUploadedUrl.value = previewUrl;
+  profileData.avatarUrl = previewUrl;
 
   const formData = new FormData();
   formData.append('avatar', file);
@@ -266,36 +332,59 @@ const handleAvatarUpload = async (event) => {
   try {
     loadingAvatar.value = true;
     await updateAvatar(formData);
-    toast.success("បានផ្លាស់ប្តូររូបភាពប្រវត្តិរូបជោគជ័យ");
+    toast.success('ផ្លាស់ប្តូររូបភាពប្រវត្តិរូបជោគជ័យ', toastConfig);
+    
     await fetchUserProfile();
+    await authStore.fetchUserProfile(true); 
   } catch (err) {
-    console.error("Upload avatar error:", err);
-    toast.error("មិនអាចផ្ទុករូបភាពឡើងបានទេ");
+    console.error(err);
+    toast.error('ការបង្ហោះរូបភាពបានបរាជ័យ!', toastConfig);
   } finally {
     loadingAvatar.value = false;
   }
 };
 
-const handleDeleteAvatar = async () => {
-  if (!confirm("តើអ្នកពិតជាចង់លុបរូបភាពប្រវត្តិរូបនេះមែនទេ?")) return;
-  
+// =================  CONTROL DELETE MODAL =================
+const openDeleteModal = () => {
+  isDeleteModalOpen.value = true;
+};
+
+const confirmDeleteAvatar = async () => {
+  isDeleteModalOpen.value = false; 
   try {
     loadingAvatar.value = true;
-    await deleteAvatar(credentials);
-    profileData.avatarUrl = '';
-    toast.success("បានលុបរូបភាពប្រវត្តិរូបរួចរាល់");
+    await deleteAvatar();
+    localUploadedUrl.value = ''; 
+    toast.success('លុបរូបភាពប្រវត្តិរូបជោគជ័យ', toastConfig);
+    
     await fetchUserProfile();
+    await authStore.fetchUserProfile(true); 
   } catch (err) {
-    console.error("Delete avatar error:", err);
-    toast.error("ប្រតិបត្តិការលុបរូបភាពបានបរាជ័យ");
+    console.error(err);
+    toast.error('ការលុបរូបភាពបានបរាជ័យ!', toastConfig);
   } finally {
     loadingAvatar.value = false;
   }
 };
 
-const handleSignOut = () => {
-  sessionStorage.clear();
-  window.location.href = '/login';
+// ================= CONTROL LOGOUT MODAL =================
+const openLogoutModal = () => {
+  isLogoutModalOpen.value = true;
+};
+
+const confirmSignOut = async () => {
+  isLogoutModalOpen.value = false; 
+  try {
+    await logout(); 
+  } catch (err) {
+    console.error("Logout API Error:", err);
+  } finally {
+    sessionStorage.clear();
+    toast.success('ចាកចេញពីប្រព័ន្ធបានជោគជ័យ!', toastConfig);
+    setTimeout(() => {
+      window.location.href = '/login';
+    }, 1500);
+  }
 };
 </script>
 <style scoped>
