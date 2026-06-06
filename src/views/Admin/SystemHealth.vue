@@ -2,7 +2,7 @@
   <div class="health-viewport">
     <header class="health-page-header">
       <div class="header-main-info">
-        <h1>ស្ថានភាពប្រព័ន្ធ (System Health)</h1>
+        <h1>ស្ថានភាពប្រព័ន្ធ </h1>
         <p>ពិនិត្យមើលទិន្នន័យបច្ចេកទេស និងស្ថានភាពម៉ាស៊ីនមេជាក់ស្តែងរបស់ Pralong</p>
       </div>
       <button class="btn-refresh" @click="fetchSystemHealth">
@@ -30,7 +30,7 @@
       
       <div class="metric-glass-card">
         <div class="metric-card-header">
-          <span class="metric-title">បេក្ខជនកំពុងអនឡាញ (Active)</span>
+          <span class="metric-title">បេក្ខជនកំពុងអនឡាញ </span>
           <div class="metric-icon icon-green">
             <i class="bi bi-people-fill"></i>
           </div>
@@ -43,7 +43,7 @@
 
       <div class="metric-glass-card">
         <div class="metric-card-header">
-          <span class="metric-title">ទំហំផ្ទុកទិន្នន័យ (Database)</span>
+          <span class="metric-title">ទំហំផ្ទុកទិន្នន័យ </span>
           <div class="metric-icon icon-blue">
             <i class="bi bi-database-fill"></i>
           </div>
@@ -56,7 +56,7 @@
 
       <div class="metric-glass-card">
         <div class="metric-card-header">
-          <span class="metric-title">វិញ្ញាសាជំពាក់ (Pending)</span>
+          <span class="metric-title">វិញ្ញាសាជំពាក់ </span>
           <div class="metric-icon icon-amber">
             <i class="bi bi-clock-history"></i>
           </div>
@@ -80,7 +80,7 @@
         <div class="icon-wrapper">
           <i class="bi bi-check-all"></i>
         </div>
-        <p>មិនមានកំណត់ត្រាខុសប្រក្រតី ឬការគាំងប្រព័ន្ធ (Crash) ឡើយក្នុងខែនេះ</p>
+        <p>មិនមានកំណត់ត្រាខុសប្រក្រតី ឬការគាំងប្រព័ន្ធ  ឡើយក្នុងខែនេះ</p>
       </div>
     </section>
   </div>
@@ -89,7 +89,6 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 
-// បង្កើត State សម្រាប់ទទួលទិន្នន័យតាមទម្រង់ JSON API របស់អ្នក
 const healthData = ref({
   database_size_mb: "0.00",
   active_users: 0,
@@ -97,9 +96,7 @@ const healthData = ref({
   status: "healthy"
 })
 
-// មុខងារសម្រាប់ទាញទិន្នន័យ (模擬 API Fetching)
 const fetchSystemHealth = () => {
-  // ឧទាហរណ៍៖ ទិន្នន័យបានមកពី JSON API របស់អ្នក
   const response = {
     "result": true,
     "data": {

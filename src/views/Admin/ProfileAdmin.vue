@@ -3,13 +3,15 @@
     <header class="settings-page-header">
       <div class="header-content">
         <h1>ការកំណត់ប្រព័ន្ធ</h1>
-        <p>គ្រប់គ្រងការកំណត់រួម របៀបរៀបចំវិញ្ញាសា និងប្រព័ន្ធសុវត្ថិភាពនៃការប្រឡង</p>
+        <p>
+          គ្រប់គ្រងការកំណត់រួម របៀបរៀបចំវិញ្ញាសា និងប្រព័ន្ធសុវត្ថិភាពនៃការប្រឡង
+        </p>
       </div>
     </header>
 
     <nav class="settings-pill-tabs">
-      <button 
-        v-for="tab in tabs" 
+      <button
+        v-for="tab in tabs"
         :key="tab.id"
         :class="['pill-tab-btn', { active: activeTab === tab.id }]"
         @click="activeTab = tab.id"
@@ -20,9 +22,11 @@
     </nav>
 
     <main class="settings-content-wrapper">
-      
       <transition name="fade-slide" mode="out-in">
-        <section v-if="activeTab === 'general'" class="settings-card glass-cardPane">
+        <section
+          v-if="activeTab === 'general'"
+          class="settings-card glass-cardPane"
+        >
           <div class="card-section-header">
             <div class="section-icon">
               <i class="bi bi-sliders"></i>
@@ -38,14 +42,23 @@
               <div class="form-group-compact">
                 <label>រយៈពេលប្រឡងលំនាំដើម</label>
                 <div class="input-with-unit">
-                  <input type="number" v-model="settings.defaultDuration" min="1" />
+                  <input
+                    type="number"
+                    v-model="settings.defaultDuration"
+                    min="1"
+                  />
                   <span class="unit">នាទី</span>
                 </div>
               </div>
               <div class="form-group-compact">
                 <label>ភាគរយពិន្ទុសម្រាប់ជាប់</label>
                 <div class="input-with-unit">
-                  <input type="number" v-model="settings.passingScore" min="0" max="100" />
+                  <input
+                    type="number"
+                    v-model="settings.passingScore"
+                    min="0"
+                    max="100"
+                  />
                   <span class="unit">%</span>
                 </div>
               </div>
@@ -56,28 +69,46 @@
             <div class="switch-list-compact">
               <label class="switch-row-item">
                 <div class="switch-row-text">
-                  <span class="title">ចៃដន្យលំដាប់សំណួរ (Shuffle Questions)</span>
-                  <p class="desc">ប្តូរលំដាប់សំណួរស្វ័យប្រវត្តសម្រាប់បេក្ខជនម្នាក់ៗដើម្បីការពារការលួចចម្លើយ</p>
+                  <span class="title"
+                    >ចៃដន្យលំដាប់សំណួរ (Shuffle Questions)</span
+                  >
+                  <p class="desc">
+                    ប្តូរលំដាប់សំណួរស្វ័យប្រវត្តសម្រាប់បេក្ខជនម្នាក់ៗដើម្បីការពារការលួចចម្លើយ
+                  </p>
                 </div>
                 <div class="switch-wrapper">
-                  <input type="checkbox" v-model="settings.shuffleQuestions" class="ios-switch-modern" />
+                  <input
+                    type="checkbox"
+                    v-model="settings.shuffleQuestions"
+                    class="ios-switch-modern"
+                  />
                 </div>
               </label>
 
               <label class="switch-row-item">
                 <div class="switch-row-text">
                   <span class="title">បង្ហាញលទ្ធផលភ្លាមៗ</span>
-                  <p class="desc">អនុញ្ញាតឱ្យសិស្សមើលពិន្ទុ និងចម្លើយត្រូវ/ខុស ភ្លាមៗក្រោយពេលប្រឡងរួច</p>
+                  <p class="desc">
+                    អនុញ្ញាតឱ្យសិស្សមើលពិន្ទុ និងចម្លើយត្រូវ/ខុស
+                    ភ្លាមៗក្រោយពេលប្រឡងរួច
+                  </p>
                 </div>
                 <div class="switch-wrapper">
-                  <input type="checkbox" v-model="settings.showResultImmediately" class="ios-switch-modern" />
+                  <input
+                    type="checkbox"
+                    v-model="settings.showResultImmediately"
+                    class="ios-switch-modern"
+                  />
                 </div>
               </label>
             </div>
           </div>
         </section>
 
-        <section v-else-if="activeTab === 'security'" class="settings-card glass-cardPane">
+        <section
+          v-else-if="activeTab === 'security'"
+          class="settings-card glass-cardPane"
+        >
           <div class="card-section-header header-red">
             <div class="section-icon">
               <i class="bi bi-shield-lock"></i>
@@ -92,35 +123,60 @@
             <div class="switch-list-compact">
               <label class="switch-row-item">
                 <div class="switch-row-text">
-                  <span class="title">ការការពារការចាកចេញពីផ្ទាំងប្រឡង (Tab Switching Protection)</span>
-                  <p class="desc">ព្រមាន ឬចាក់សោវិញ្ញាសាស្វ័យប្រវត្ត បើសិស្សលួចបើក Tab ផ្សេង ឬចាកចេញពីកម្មវិធី</p>
+                  <span class="title"
+                    >ការការពារការចាកចេញពីផ្ទាំងប្រឡង (Tab Switching
+                    Protection)</span
+                  >
+                  <p class="desc">
+                    ព្រមាន ឬចាក់សោវិញ្ញាសាស្វ័យប្រវត្ត បើសិស្សលួចបើក Tab ផ្សេង
+                    ឬចាកចេញពីកម្មវិធី
+                  </p>
                 </div>
                 <div class="switch-wrapper">
-                  <input type="checkbox" v-model="settings.antiCheating" class="ios-switch-modern" />
+                  <input
+                    type="checkbox"
+                    v-model="settings.antiCheating"
+                    class="ios-switch-modern"
+                  />
                 </div>
               </label>
 
               <label class="switch-row-item">
                 <div class="switch-row-text">
-                  <span class="title">បិទមុខងារចម្លង (Disable Copy-Paste & Right Click)</span>
-                  <p class="desc">មិនអនុញ្ញាតឱ្យសិស្សចុច Copy សំណួរ ឬចុចស្តាំដើម្បីស្វែងរកចម្លើយលើ Google ឡើយ</p>
+                  <span class="title"
+                    >បិទមុខងារចម្លង (Disable Copy-Paste & Right Click)</span
+                  >
+                  <p class="desc">
+                    មិនអនុញ្ញាតឱ្យសិស្សចុច Copy សំណួរ
+                    ឬចុចស្តាំដើម្បីស្វែងរកចម្លើយលើ Google ឡើយ
+                  </p>
                 </div>
                 <div class="switch-wrapper">
-                  <input type="checkbox" v-model="settings.disableCopyPaste" class="ios-switch-modern" />
+                  <input
+                    type="checkbox"
+                    v-model="settings.disableCopyPaste"
+                    class="ios-switch-modern"
+                  />
                 </div>
               </label>
             </div>
           </div>
         </section>
 
-        <section v-else-if="activeTab === 'notifications'" class="settings-card glass-cardPane">
+        <section
+          v-else-if="activeTab === 'notifications'"
+          class="settings-card glass-cardPane"
+        >
           <div class="card-section-header header-blue">
             <div class="section-icon">
               <i class="bi bi-bell"></i>
             </div>
             <div class="section-title-group">
               <h3>ប្រព័ន្ធប្រកាសដំណឹង</h3>
-              <p>គ្រប់គ្រងការផ្ញើសារដំណឹងស្វ័យប្រវត្តទៅកាន់សិស្ស និងលោកគ្រូអ្នកគ្រូ</p>
+              <p>
+                គ្រប់គ្រងការផ្ញើសារដំណឹងស្វ័យប្រវត្តទៅកាន់សិស្ស
+                និងលោកគ្រូអ្នកគ្រូ
+              </p>
             </div>
           </div>
 
@@ -129,20 +185,33 @@
               <label class="switch-row-item">
                 <div class="switch-row-text">
                   <span class="title">ផ្ញើលទ្ធផលទៅអ៊ីមែលរបស់សិស្ស</span>
-                  <p class="desc">ផ្ញើរបាយការណ៍ពិន្ទុលម្អិតទៅកាន់អ៊ីមែលរបស់បេក្ខជនបន្ទាប់ពីការប្រឡងត្រូវបានបញ្ចប់</p>
+                  <p class="desc">
+                    ផ្ញើរបាយការណ៍ពិន្ទុលម្អិតទៅកាន់អ៊ីមែលរបស់បេក្ខជនបន្ទាប់ពីការប្រឡងត្រូវបានបញ្ចប់
+                  </p>
                 </div>
                 <div class="switch-wrapper">
-                  <input type="checkbox" v-model="settings.emailNotification" class="ios-switch-modern" />
+                  <input
+                    type="checkbox"
+                    v-model="settings.emailNotification"
+                    class="ios-switch-modern"
+                  />
                 </div>
               </label>
 
               <label class="switch-row-item">
                 <div class="switch-row-text">
                   <span class="title">ជូនដំណឹងទៅកាន់គ្រូ (Teacher Alerts)</span>
-                  <p class="desc">ផ្ញើសារដំណឹងទៅកាន់គ្រូគ្រប់គ្រងថ្នាក់ នៅពេលមានសិស្សបញ្ជូន (Submit) កិច្ចការប្រឡង</p>
+                  <p class="desc">
+                    ផ្ញើសារដំណឹងទៅកាន់គ្រូគ្រប់គ្រងថ្នាក់ នៅពេលមានសិស្សបញ្ជូន
+                    (Submit) កិច្ចការប្រឡង
+                  </p>
                 </div>
                 <div class="switch-wrapper">
-                  <input type="checkbox" v-model="settings.teacherAlert" class="ios-switch-modern" />
+                  <input
+                    type="checkbox"
+                    v-model="settings.teacherAlert"
+                    class="ios-switch-modern"
+                  />
                 </div>
               </label>
             </div>
@@ -161,15 +230,15 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref } from "vue";
 
-const activeTab = ref('general')
+const activeTab = ref("general");
 
 const tabs = [
-  { id: 'general', name: 'ការកំណត់ទូទៅ', icon: 'bi bi-sliders' },
-  { id: 'security', name: 'សុវត្ថិភាព & បទបញ្ជា', icon: 'bi bi-shield-lock' },
-  { id: 'notifications', name: 'ការប្រកាសដំណឹង', icon: 'bi bi-bell' }
-]
+  { id: "general", name: "ការកំណត់ទូទៅ", icon: "bi bi-sliders" },
+  { id: "security", name: "សុវត្ថិភាព & បទបញ្ជា", icon: "bi bi-shield-lock" },
+  { id: "notifications", name: "ការប្រកាសដំណឹង", icon: "bi bi-bell" },
+];
 
 // រក្សាទុកទិន្នន័យ settings ទាំងអស់
 const settings = ref({
@@ -180,24 +249,21 @@ const settings = ref({
   antiCheating: true,
   disableCopyPaste: true,
   emailNotification: false,
-  teacherAlert: true
-})
+  teacherAlert: true,
+});
 
 const saveSettings = () => {
-
-  console.log('Saved Settings:', settings.value)
-}
+  console.log("Saved Settings:", settings.value);
+};
 </script>
 
 <style scoped>
-
 .settings-viewport {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
   gap: 24px;
 }
-
 
 .settings-page-header {
   padding-bottom: 8px;
@@ -225,7 +291,7 @@ const saveSettings = () => {
   background-color: #f1f3f5;
   border-radius: 100px;
   width: fit-content;
-  box-shadow: inset 0 2px 5px rgba(0,0,0,0.03);
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.03);
 }
 
 .pill-tab-btn {
@@ -254,7 +320,7 @@ const saveSettings = () => {
 .pill-tab-btn.active {
   background-color: #ffffff;
   color: var(--green-dark, #1e4635);
-  box-shadow: 0 4px 10px rgba(0,0,0,0.06);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
 }
 
 .settings-content-wrapper {
@@ -494,10 +560,12 @@ const saveSettings = () => {
   box-shadow: 0 10px 30px rgba(63, 186, 127, 0.3);
 }
 
-.fade-slide-enter-active, .fade-slide-leave-active {
+.fade-slide-enter-active,
+.fade-slide-leave-active {
   transition: all 0.4s cubic-bezier(0.3, 1, 0.6, 1);
 }
-.fade-slide-enter-from, .fade-slide-leave-to {
+.fade-slide-enter-from,
+.fade-slide-leave-to {
   opacity: 0;
   transform: translateY(10px);
 }
