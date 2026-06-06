@@ -136,6 +136,9 @@ a {
   font-weight: 900;
   font-size: 0.85rem;
 }
+.custom-toast-container {
+  z-index: 999999 !important; 
+}
 
 @keyframes shake {
 

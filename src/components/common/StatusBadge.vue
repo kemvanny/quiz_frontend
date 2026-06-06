@@ -47,6 +47,6 @@ const badgeConfig = computed(() => {
 
 .role-admin { background-color: #ffe6e6; color: #ff4d4d; }
 .role-teacher { background-color: #e6f0ff; color: #3385ff; }
-.role-student { background-color: #f0f0f0; color: #666666; }
+.role-student { background-color: #e6f7ed; color: #2e7d32; }
 .badge-default { background-color: #eeeeee; color: #333333; }
 </style>

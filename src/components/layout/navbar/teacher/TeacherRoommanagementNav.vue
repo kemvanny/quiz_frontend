@@ -19,6 +19,7 @@
             </div>
             <div class="d-flex align-items-center gap-3 flex-shrink-0">
                 <button class="btn btn-sm text-white fw-bold d-flex align-items-center gap-2 shadow-sm"
+                    @click="isCreateRoomOpen = true"
                     style="background: linear-gradient(135deg, var(--em), var(--em-dk)); border: none; border-radius: 10px; padding: 8px 18px; transition: .2s;"
                     onmouseover="this.style.transform='translateY(-1px)'; this.style.boxShadow='0 4px 12px rgba(16,185,129,.3)';"
                     onmouseout="this.style.transform='none'; this.style.boxShadow='var(--sh-sm)';">
@@ -38,9 +39,28 @@
                         <span class="fw-bold" style="font-size: .85rem; color: var(--txt);">Hean Liza</span>
                         <span style="font-size: .65rem; color: var(--txt-mu); font-weight: 600;">Instructor</span>
                     </div>
-                    <i class="fas fa-chevron-down ms-1 text-muted d-none d-sm-block" style="font-size: 0.7rem;"></i>
+                    <i class="fas fa-chevron-down ms-1 text-muted d-none d-sm-block" style="font-size: 0.7 flex;"></i>
                 </div>
             </div>
         </div>
     </div>
+
+    <CreateRoomModal 
+        :is-open="isCreateRoomOpen" 
+        @close="isCreateRoomOpen = false" 
+        @created="onRoomCreated" 
+    />
 </template>
+
+<script setup>
+import { ref } from 'vue';
+import CreateRoomModal from '@/components/common/CreateRoomModal.vue';
+const isCreateRoomOpen = ref(false);
+const emit = defineEmits(['room-created']);
+
+const onRoomCreated = (roomData) => {
+    isCreateRoomOpen.value = false;
+    console.log("Room created successfully from topbar:", roomData);
+    emit('room-created', roomData);
+};
+</script>

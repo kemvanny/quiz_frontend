@@ -88,18 +88,36 @@
       </div>
 
       <div class="col-12 col-lg-4">
-        <div class="custom-card">
+        <div class="custom-card d-flex flex-column" style="min-height: 380px;">
           <h5 class="section-title mb-3">Assessment Rooms</h5>
-          <div class="room-list">
-            <div class="room-item d-flex justify-content-between align-items-center" v-for="room in rooms" :key="room.name">
+          
+          <div v-if="loadingRooms" class="text-center py-4 flex-grow-1 d-flex align-items-center justify-content-center">
+            <div class="spinner-border text-success spinner-border-sm" role="status"></div>
+          </div>
+
+          <div v-else-if="backendRooms.length === 0" class="text-center py-4 flex-grow-1 d-flex align-items-center justify-content-center text-muted small">
+            មិនទាន់មានបន្ទប់សិក្សានៅឡើយទេ។
+          </div>
+
+          <div v-else class="room-list flex-grow-1">
+            <div class="room-item d-flex justify-content-between align-items-center" v-for="room in backendRooms.slice(0, 3)" :key="room.id">
               <div>
-                <p class="mb-0 text-dark room-name" style="font-size: 0.9rem;">{{ room.name }}</p>
-                <small class="text-muted" style="font-size: 0.78rem; font-weight: 600;">{{ room.count }} Students Joined</small>
+                <p class="mb-0 text-dark room-name" style="font-size: 0.9rem;">{{ room.name || room.room_name }}</p>
+                <small class="text-muted" style="font-size: 0.78rem; font-weight: 600;">{{ room.student_count || room.count || 0 }} Students Joined</small>
               </div>
               <router-link to="/teacher/room-management" class="text-success text-decoration-none small" style="font-size: 0.85rem; font-weight: 700;">Manage</router-link>
             </div>
           </div>
-          <button class="btn border-dashed mt-2 py-3" style="font-size: 0.95rem;">
+
+          <router-link 
+            to="/teacher/room-management" 
+            class="text-center small text-decoration-none fw-bold text-success py-2 border-top border-light-subtle d-block style-all-rooms-link" 
+            style="font-size: 0.85rem;"
+          >
+            មើលបន្ទប់ទាំងអស់ (See All Rooms) <i class="fas fa-arrow-right ms-1" style="font-size: 0.75rem;"></i>
+          </router-link>
+
+          <button class="btn border-dashed mt-3 py-3" style="font-size: 0.95rem;" @click="isCreateRoomOpen = true">
             <i class="fas fa-plus me-2"></i> បង្កើតបន្ទប់ថ្មី
           </button>
         </div>
@@ -122,70 +140,48 @@
         </div>
       </div>
     </div>
-
-    <div class="modal-overlay" v-if="showModal" @click.self="closeModal">
-      <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content border-0 rounded-4 overflow-hidden shadow-lg" style="background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(10px);">
-          <div class="modal-header border-0 p-4 pb-1">
-            <div>
-              <h5 class="modal-title text-dark mb-1" style="font-weight: 700;">បង្កើតបន្ទប់ថ្មី</h5>
-              <p class="text-muted small mb-0" style="font-size: 0.78rem; font-weight: 600;">Create a new space for your class assessments.</p>
-            </div>
-            <button type="button" class="btn-close shadow-none" @click="closeModal" aria-label="Close" style="font-size: 0.9rem;"></button>
-          </div>
-
-          <div class="modal-body p-4">
-            <div class="mb-3">
-              <label class="form-label small text-dark opacity-75" style="font-size: 0.78rem; font-weight: 600;">ឈ្មោះបន្ទប់ (ROOM NAME)</label>
-              <div class="input-group border-2 rounded-3 overflow-hidden" style="border: 1px solid var(--border); background: #f8fafc;">
-                <span class="input-group-text bg-transparent border-0 pe-0">
-                  <i class="fas fa-door-open text-muted small"></i>
-                </span>
-                <input type="text" v-model="newRoomName" class="form-control border-0 bg-transparent py-3 shadow-none" style="font-size: 0.95rem; font-weight: 600;" placeholder="e.g. Grade 12-A / Mobile App Dev">
-              </div>
-            </div>
-
-            <div class="mb-2 position-relative">
-              <label class="form-label small text-dark opacity-75" style="font-size: 0.78rem; font-weight: 600;">អញ្ជើញសិស្ស (INVITE STUDENTS)</label>
-              <div class="p-2 rounded-3 border-2 transition-all" style="background: #f8fafc; border: 1px solid var(--border); min-height: 100px;">
-                <div id="chip-container" class="d-flex flex-wrap gap-1 mb-2">
-                  <div v-for="(member, idx) in selectedMembers" :key="member" class="badge bg-success d-flex align-items-center gap-2 py-2 px-3 rounded-2" style="background-color: var(--emerald) !important; font-size: 0.78rem; font-weight: 600;">
-                    {{ member }} 
-                    <i class="fas fa-times cursor-pointer" @click="removeMember(idx)" style="cursor:pointer; font-size: 0.7rem;"></i>
-                  </div>
-                </div>
-                
-                <div class="d-flex align-items-center">
-                  <i class="fas fa-search text-muted mx-2 small" style="font-size: 0.85rem;"></i>
-                  <input type="text" v-model="studentSearchQuery" @keydown="handleSearchKeypress" class="form-control border-0 bg-transparent shadow-none p-1" style="font-size: 0.88rem; font-weight: 600;" placeholder="Search name or email...">
-                </div>
-              </div>
-
-              <div v-if="filteredStudents.length" class="list-group shadow-sm mt-1 border-0 rounded-3 overflow-auto" style="z-index: 1050; display: block; max-height: 150px; position: absolute; width: 100%; background: white; border: 1px solid var(--border) !important;">
-                <button type="button" v-for="student in filteredStudents" :key="student.email" class="list-group-item list-group-item-action border-0 py-2 px-3 text-start" style="font-size: 0.88rem;" @click="addMember(student.name)">
-                  <div class="text-dark" style="font-weight: 600;">{{ student.name }}</div>
-                  <div class="text-muted small" style="font-size: 0.78rem; font-weight: 600;">{{ student.email }}</div>
-                </button>
-              </div>
-            </div>
-            <p class="text-muted" style="font-size: 0.68rem; font-weight: 600;"><i class="fas fa-info-circle me-1"></i> Students must be registered by the admin to appear in search results.</p>
-          </div>
-
-          <div class="modal-footer border-0 p-4 pt-0">
-            <button class="btn btn-emerald w-100 py-3 rounded-3 shadow-sm" style="font-size: 0.95rem;" @click="saveRoom">
-              <i class="fas fa-check-circle me-2"></i> បង្កើត និងអញ្ជើញសិស្ស
-            </button>
-            <button class="btn btn-link w-100 text-muted text-decoration-none small text-center mt-1" style="font-size: 0.85rem; font-weight: 600;" @click="closeModal">បោះបង់</button>
-          </div>
-        </div>
-      </div>
-    </div>
   </div>
+
+  <CreateRoomModal 
+    :is-open="isCreateRoomOpen" 
+    @close="isCreateRoomOpen = false" 
+    @created="onRoomCreated" 
+  />
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import CreateRoomModal from '@/components/common/CreateRoomModal.vue';
+import { getMyRooms } from '@/api/teacher.api';
+
+const isCreateRoomOpen = ref(false);
+const backendRooms = ref([]);
+const loadingRooms = ref(false);
+
+const fetchBackendRooms = async () => {
+  try {
+    loadingRooms.value = true;
+        const res = await getMyRooms();
+    
+    backendRooms.value = res.data?.data || res.data || [];
+  } catch (err) {
+    console.error("Error fetching dashboard rooms:", err);
+  } finally {
+    loadingRooms.value = false;
+  }
+};
+
+// ហៅដំណើរការទាញយកទិន្នន័យភ្លាមៗពេល Component ត្រូវបានបើកដំណើរការ
+onMounted(() => {
+  fetchBackendRooms();
+});
+
+const onRoomCreated = async () => {
+    isCreateRoomOpen.value = false;
+    // ទាញយកទិន្នន័យបន្ទប់រៀនឡើងវិញភ្លាមៗក្រោយពេលគ្រូបង្កើតបន្ទប់ថ្មីជោគជ័យ
+    await fetchBackendRooms(); 
+};
 
 const router = useRouter()
 
@@ -268,12 +264,6 @@ const submissions = ref([
   }
 ])
 
-const rooms = ref([
-  { name: 'Grade 12-A', count: 32 },
-  { name: 'Grade 11-B', count: 28 },
-  { name: 'Grade 11-C', count: 23 }
-])
-
 const expiringItems = ref([
   {
     title: 'Midterm - PHP',
@@ -288,83 +278,6 @@ const expiringItems = ref([
     textClass: 'text-danger'
   }
 ])
-
-const showModal = ref(false)
-const newRoomName = ref('')
-const studentSearchQuery = ref('')
-const selectedMembers = ref([])
-
-const mockStudents = [
-  { name: 'Sok Vibol', email: 'sok.vibol@school.edu' },
-  { name: 'Chan Rithy', email: 'chan.rithy@school.edu' },
-  { name: 'Mao Sophea', email: 'mao.sophea@school.edu' },
-  { name: 'Keo Pich', email: 'keo.pich@school.edu' },
-  { name: 'Nguon Setha', email: 'nguon.setha@school.edu' },
-  { name: 'Heng Dara', email: 'heng.dara@school.edu' },
-  { name: 'Lim Sokha', email: 'lim.sokha@school.edu' },
-  { name: 'Chey Oudom', email: 'chey.oudom@school.edu' }
-]
-
-const openRoomModal = () => {
-  newRoomName.value = ''
-  studentSearchQuery.value = ''
-  selectedMembers.value = []
-  showModal.value = true
-}
-
-const closeModal = () => {
-  showModal.value = false
-}
-
-const filteredStudents = computed(() => {
-  const query = studentSearchQuery.value.trim().toLowerCase()
-  if (!query) return []
-  return mockStudents.filter(student => 
-    (student.name.toLowerCase().includes(query) || student.email.toLowerCase().includes(query)) &&
-    !selectedMembers.value.includes(student.name)
-  )
-})
- 
-const addMember = (name) => {
-  if (!selectedMembers.value.includes(name)) {
-    selectedMembers.value.push(name)
-  }
-  studentSearchQuery.value = ''
-}
-
-const removeMember = (index) => {
-  selectedMembers.value.splice(index, 1)
-}
-
-const handleSearchKeypress = (e) => {
-  if (e.key === 'Enter') {
-    e.preventDefault()
-    const name = studentSearchQuery.value.trim()
-    if (name) {
-      addMember(name)
-    }
-  }
-}
-
-const saveRoom = () => {
-  const roomName = newRoomName.value.trim()
-  if (!roomName) {
-    alert('Please enter a Room Name!')
-    return
-  }
-
-  rooms.value.push({
-    name: roomName,
-    count: selectedMembers.value.length
-  })
-
-  alert(`បន្ទប់ "${roomName}" ត្រូវបានបង្កើតឡើងដោយជោគជ័យ ជាមួយសិស្សចំនួន ${selectedMembers.value.length} នាក់!`)
-  closeModal()
-}
-
-defineExpose({
-  openRoomModal
-})
 </script>
 
 <style scoped>
@@ -372,13 +285,12 @@ defineExpose({
   --emerald: #10b981;
   --emerald-soft: #ecfdf5;
   --text-dark: #1e293b; 
-  --text-muted: #475569; /* ប្តូរពណ៌ឲ្យងងឹតជាងមុនដើម្បីងាយស្រួលមើល */
-  --border: #cbd5e1; /* ធ្វើឲ្យបន្ទាត់ border ច្បាស់ជាងមុន */
+  --text-muted: #475569; 
+  --border: #cbd5e1; 
   --sh-sm: 0 4px 12px rgba(0,0,0,0.03);
   font-family: 'Kantumruy Pro', 'Inter', sans-serif !important;
 }
 
-/* កំណត់អក្សរទូទៅឲ្យមានកម្រាស់ដិតច្បាស់ល្មម (Font weight 550) */
 .teacher-dashboard,
 .teacher-dashboard div,
 .teacher-dashboard p,
@@ -428,6 +340,13 @@ button i,
 span i,
 .stat-card i {
   font-weight: 900 !important; 
+}
+
+.style-all-rooms-link {
+  transition: color 0.2s ease;
+}
+.style-all-rooms-link:hover {
+  color: #059669 !important;
 }
 
 .stat-title {
