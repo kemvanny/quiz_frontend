@@ -6,3 +6,4 @@ export const loginAPI = async (email, password) => {
 }
 
 export const getProfile = () => api.get('/user/profile');
+export const logout = () => api.post('/auth/logout');

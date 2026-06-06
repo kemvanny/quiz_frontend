@@ -1,13 +1,10 @@
 <template>
   <div class="quiz-builder-container">
     <div class="app-shell flex-grow-1 overflow-hidden">
-      <!-- ══ MAIN COLUMN ══ -->
       <div class="main-col">
 
-        <!-- ══ WORKSPACE ══ -->
         <div class="workspace">
 
-          <!-- LEFT: Question list -->
           <div class="panel">
             <div class="panel-head">
               <span class="panel-lbl">Question List</span>
@@ -31,10 +28,8 @@
             </button>
           </div>
 
-          <!-- CENTER: Scrollable feed -->
           <div class="feed-col" id="questionFeed">
             
-            <!-- Compact Glass Quiz Title Header -->
             <div class="flex-shrink-0 mb-2 p-3 position-relative overflow-hidden quiz-info-header">
               <div class="position-absolute decoration-circle"></div>
 
@@ -51,7 +46,6 @@
               </div>
             </div>
 
-            <!-- Dynamic Question Cards -->
             <div v-for="(q, qIdx) in questions" 
                  :key="qIdx" 
                  :id="`qcard-${qIdx}`"
@@ -59,7 +53,6 @@
                  :class="{ 'active-card': selectedQuestionIndex === qIdx }"
                  @click="selectedQuestionIndex = qIdx">
               
-              <!-- Card header -->
               <div class="d-flex align-items-center justify-content-between px-3 py-2 border-bottom bg-light">
                 <div class="d-flex align-items-center gap-2">
                   <div class="q-num-badge">{{ qIdx + 1 }}</div>
@@ -71,12 +64,10 @@
                 </div>
               </div>
 
-              <!-- Card body -->
               <div class="p-3 d-flex flex-column gap-2">
                 <textarea v-model="q.text" class="q-field" rows="3" placeholder="Type your question here…"></textarea>
                 <div class="text-uppercase fw-bold text-muted" style="font-size:.6rem;letter-spacing:1.1px">Answers &amp; Choices</div>
                 
-                <!-- Choices grid -->
                 <div class="d-flex flex-column gap-2">
                   <div v-for="(choice, cIdx) in q.choices" 
                        :key="cIdx" 
@@ -101,7 +92,6 @@
                 </div>
               </div>
 
-              <!-- Card footer -->
               <div class="d-flex align-items-center justify-content-between px-3 pb-3">
                 <button class="btn btn-sm fw-bold rounded-3 border-0 bg-transparent text-emerald" style="color:var(--em);font-size:.76rem" @click="addChoice(qIdx)">
                   <i class="fas fa-plus-circle me-1"></i> បន្ថែមជម្រើស
@@ -114,13 +104,11 @@
 
           </div>
 
-          <!-- RIGHT: Progress panel -->
           <div class="panel">
             <div class="panel-head">
               <span class="panel-lbl">Quiz Progress</span>
             </div>
             <div class="flex-grow-1 overflow-y-auto p-3 d-flex flex-column gap-3" style="padding:16px 14px">
-              <!-- Ring -->
               <div class="d-flex justify-content-center">
                 <div style="position:relative;width:120px;height:120px">
                   <svg width="120" height="120" viewBox="0 0 120 120" class="svg-ring">
@@ -159,12 +147,7 @@
               </button>
             </div>
           </div>
-        </div><!-- /workspace -->
-      </div><!-- /main-col -->
-    </div><!-- /app-shell -->
-
-    <!-- ══ PUBLISH MODAL ══ -->
-    <div class="modal-overlay" v-if="showPublishModal" @click.self="showPublishModal = false">
+        </div></div></div><div class="modal-overlay" v-if="showPublishModal" @click.self="showPublishModal = false">
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content border-0 rounded-4 shadow-lg p-1">
           <div class="modal-header border-0 pb-0">
@@ -231,12 +214,10 @@
       </div>
     </div>
 
-    <!-- ══ PREVIEW MODAL (STUDENT VIEW) ══ -->
     <div class="modal-overlay" v-if="showPreviewModal" @click.self="showPreviewModal = false">
       <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
         <div class="modal-content border-0 rounded-4 shadow-lg overflow-hidden" style="background: #f8fafc;">
           
-          <!-- Top Accent Bar -->
           <div style="height: 6px; background: linear-gradient(90deg, var(--em), var(--em-dk));"></div>
           
           <div class="modal-header border-0 pb-0 px-4 pt-4">
@@ -298,19 +279,30 @@
 </template>
 
 <script setup>
-import { ref, computed, nextTick } from 'vue'
+import { ref, computed, nextTick, onMounted } from 'vue'
+import { useToast } from 'vue-toastification'
+import { createExam, createQuestion } from '@/api/exam.api'
 
+// UI and Navigation States
 const qNavScrollRef = ref(null)
+const toast = useToast()
+const isSubmitting = ref(false)
+const showPublishModal = ref(false)
+const showPreviewModal = ref(false)
+const selectedQuestionIndex = ref(0)
+const assignedRoom = ref('')
 
+// Quiz Meta States
 const quizTitle = ref('Create Quiz')
 const quizInstructions = ref('')
 const quizStatus = ref('Draft')
 const quizDuration = ref(60)
 
-// Khmer labels and alphabet mapping
+// Khmer Labels & Mappings
 const KH = ["ក", "ខ", "គ", "ឃ", "ង", "ច"]
 const KH_N = ["១", "២", "៣", "៤", "៥", "៦", "៧", "៨", "៩", "១០"]
 
+// Questions Local Reactive Array
 const questions = ref([
   {
     text: '',
@@ -322,33 +314,9 @@ const questions = ref([
   }
 ])
 
-const selectedQuestionIndex = ref(0)
-const showPublishModal = ref(false)
-const showPreviewModal = ref(false)
-const assignedRoom = ref('')
-
-const getKhmerNumber = (num) => {
-  return KH_N[num - 1] || num.toString()
-}
-
-const getKhmerAlphabet = (idx) => {
-  return KH[idx] || String.fromCharCode(65 + idx)
-}
-
-// Question Navigation Selection & auto scroll
-const selectQuestion = (idx) => {
-  selectedQuestionIndex.value = idx
-  // Scroll center feed to the selected card
-  const card = document.getElementById(`qcard-${idx}`)
-  if (card) {
-    card.scrollIntoView({ behavior: 'smooth', block: 'start' })
-  }
-  // Scroll left nav to keep the active item visible
-  const navItem = document.getElementById(`qnav-${idx}`)
-  if (navItem && qNavScrollRef.value) {
-    navItem.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
-  }
-}
+// Khmer Label Getters
+const getKhmerNumber = (num) => KH_N[num - 1] || num.toString()
+const getKhmerAlphabet = (idx) => KH[idx] || String.fromCharCode(65 + idx)
 
 // Stats & Progress Calculations
 const totalPoints = computed(() => {
@@ -369,7 +337,20 @@ const progressColor = computed(() => {
   return '#f59e0b'
 })
 
-// Question Card Add/Delete
+// Question Selection and Auto-Scroll
+const selectQuestion = (idx) => {
+  selectedQuestionIndex.value = idx
+  const card = document.getElementById(`qcard-${idx}`)
+  if (card) {
+    card.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
+  const navItem = document.getElementById(`qnav-${idx}`)
+  if (navItem && qNavScrollRef.value) {
+    navItem.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
+  }
+}
+
+// Question Card Add/Delete Handlers
 const addNewQuestion = () => {
   questions.value.push({
     text: '',
@@ -383,12 +364,8 @@ const addNewQuestion = () => {
   selectedQuestionIndex.value = newIndex
 
   nextTick(() => {
-    // Scroll the center feed to the new question card
     const card = document.getElementById(`qcard-${newIndex}`)
-    if (card) {
-      card.scrollIntoView({ behavior: 'smooth', block: 'start' })
-    }
-    // Scroll the left Question List panel to the bottom so the new item is visible
+    if (card) card.scrollIntoView({ behavior: 'smooth', block: 'start' })
     if (qNavScrollRef.value) {
       qNavScrollRef.value.scrollTo({
         top: qNavScrollRef.value.scrollHeight,
@@ -407,7 +384,7 @@ const removeQuestion = (idx) => {
   }
 }
 
-// Options/Choices Add/Delete
+// Answer Choices Configurations
 const addChoice = (qIdx) => {
   const q = questions.value[qIdx]
   if (q.choices.length < KH.length) {
@@ -417,9 +394,7 @@ const addChoice = (qIdx) => {
 
 const removeChoice = (qIdx, cIdx) => {
   const q = questions.value[qIdx]
-  if (q.choices.length > 1) {
-    q.choices.splice(cIdx, 1)
-  }
+  if (q.choices.length > 1) q.choices.splice(cIdx, 1)
 }
 
 const setCorrectChoice = (qIdx, cIdx) => {
@@ -428,27 +403,79 @@ const setCorrectChoice = (qIdx, cIdx) => {
   })
 }
 
-// Modal Handlers
-const openPreviewModal = () => {
-  showPreviewModal.value = true
-}
+// Modal Toggle Controllers
+const openPreviewModal = () => { showPreviewModal.value = true }
+const saveFullQuiz = () => { showPublishModal.value = true }
 
-const saveFullQuiz = () => {
-  showPublishModal.value = true
-}
-
-const finalizePublish = () => {
-  alert("ជោគជ័យ! កម្រងសំណួរត្រូវបានផ្ញើទៅកាន់ថ្នាក់រៀន។")
-  showPublishModal.value = false
-}
-
-// Auto grow description textarea
+// Auto Grow Textarea Layout Height
 const autoGrowTextarea = (event) => {
   const el = event.target
   el.style.height = 'auto'
   el.style.height = el.scrollHeight + 'px'
 }
+
+// =========================================================
+//  BACKEND API INTEGRATION: SUBMIT EXAM & QUESTIONS
+// =========================================================
+const finalizePublish = async () => {
+  try {
+    isSubmitting.value = true
+
+    // STEP 1: Create the Exam Container payload
+    const examPayload = {
+      title: quizTitle.value.trim() || 'Untitled Quiz',
+      type: 'quiz',
+      duration: parseInt(quizDuration.value) || 60,
+      total_points: totalPoints.value,
+      status: 'active', 
+      start_time: new Date().toISOString().slice(0, 19).replace('T', ' '),
+      end_time: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().slice(0, 19).replace('T', ' ')
+    }
+
+    const examRes = await createExam(examPayload)
+    const responseData = examRes.data
+    
+    // Extract generated exam primary key ID
+    const generatedExamId = responseData.id || responseData.data?.id
+
+    if (!generatedExamId) {
+      throw new Error("Failed to receive Exam ID from server.")
+    }
+
+    // STEP 2: Loop and send each question mapped with generatedExamId
+    for (const q of questions.value) {
+      const optionsArray = q.choices.map(c => c.text)
+      const correctOption = q.choices.find(c => c.isCorrect)?.text || ''
+
+      const questionPayload = {
+        exam_id: generatedExamId,
+        question: q.text || 'Empty Question Description',
+        question_type: 'multiple_choice',
+        options: optionsArray,
+        correct_answer: [correctOption], 
+        points: parseInt(q.pts) || 10
+      }
+
+      await createQuestion(questionPayload)
+    }
+
+    // SUCCESS Cleanup and Alerts
+    toast.success("កម្រងសំណួរ និងវិញ្ញាសាទាំងអស់ត្រូវបានដាក់ផ្សាយជោគជ័យ!", { position: "bottom-right" })
+    showPublishModal.value = false
+
+  } catch (err) {
+    console.error("Publishing chain crashed:", err)
+    toast.error("ការដាក់ផ្សាយវិញ្ញាសាបានបរាជ័យ!", { position: "bottom-right" })
+  } finally {
+    isSubmitting.value = false
+  }
+}
 </script>
+
+
+
+
+
 
 <style scoped>
 .quiz-builder-container {
@@ -491,31 +518,6 @@ const autoGrowTextarea = (event) => {
   flex-direction: column; 
   height: 100%; 
   overflow: hidden; 
-}
-
-/* ── Topbar ── */
-.topbar {
-  flex-shrink: 0;
-  height: 64px;
-  background: var(--surf);
-  border-bottom: 1px solid var(--bdr);
-  display: flex;
-  align-items: center;
-}
-
-.tb-section { 
-  display: flex; 
-  align-items: center; 
-  padding: 0 18px; 
-  border-right: 1px solid var(--bdr); 
-  gap: 12px; 
-  height: 100%;
-}
-.tb-section:last-child { 
-  border-right: none; 
-}
-.tb-section.grow { 
-  flex: 1; 
 }
 
 /* Workspace 3-col grid */
@@ -913,11 +915,10 @@ const autoGrowTextarea = (event) => {
 </style>
 
 <style>
-/* Clean layout overrides when Quiz Builder is active to make it full bleed on the right of the sidebar */
 .content-body:has(.quiz-builder-container) {
   padding: 0 !important;
   overflow: hidden !important;
-  height: calc(100vh - 80px) !important; /* Fit perfectly below the standard shared top navbar */
+  height: calc(100vh - 80px) !important;
   background-color: #f4f7fe;
 }
 

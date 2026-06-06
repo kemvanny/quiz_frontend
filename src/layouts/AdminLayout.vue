@@ -78,7 +78,7 @@
 
 </template>
 <script setup>
-import { ref, onMounted ,onUnmounted,watch} from 'vue'
+import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { getProfile } from '@/api/auth.api'
 import { getSearchUsers } from '@/api/admin.api'
@@ -88,18 +88,13 @@ const router = useRouter()
 
 const imgBaseUrl = import.meta.env.VITE_BASE_URL_FOR_IMAGE;
 
+const isLogoutModalOpen = ref(false);
 
 const adminProfile = ref({
   fullName: '',
   email: '',
   role: ''
 })
-
-const usersList = ref([]);
-const isLoading = ref(false);
-const searchQuery = ref('');
-const isDropdownOpen = ref(false);
-let searchTimeout = null
 
 const adminMainMenus = [
   { name: 'ផ្ទាំងគ្រប់គ្រង', routeName: 'AdminDashboard', icon: 'bi bi-grid-1x2-fill' },
@@ -113,64 +108,11 @@ const adminSystemMenus = [
   { name: 'ស្ថានភាពប្រព័ន្ធ', routeName: 'SystemHealth', icon: 'bi bi-shield-check' },
 ]
 
+
 const handleLogout = () => {
-  sessionStorage.clear();    
-  router.push('/login');  
-};
-
-const fetchSearchResults = async (search = '') => {
-  if (!search) {
-    usersList.value = []
-    return
-  }
-  isLoading.value = true
-  try {
-    const response = await getSearchUsers(search)
-    
-   
-    console.log("លទ្ធផលពី Backend:", response.data)
-
-    
-    if (response.data) {
-      
-      if (response.data.data) {
-        usersList.value = response.data.data
-      } 
-      
-      else if (Array.isArray(response.data)) {
-        usersList.value = response.data
-      }
-    }
-  } catch (error) {
-    console.error("ការស្វែងរកមានបញ្ហា:", error)
-  } finally {
-    isLoading.value = false
-  }
-}
-
-watch(searchQuery, (newQuery) => {
-  clearTimeout(searchTimeout)
-  
-  if (newQuery.trim() === '') {
-    usersList.value = []
-    return
-  }
-  
-  searchTimeout = setTimeout(() => {
-    fetchSearchResults(newQuery.trim())
-  }, 400)
-})
-
-const handleSelectUser = (user) => {
-  searchQuery.value = user.fullName
-  isDropdownOpen.value = false
-}
-
-const handleClickOutside = (event) => {
-  const wrapper = document.querySelector('.search-wrapper')
-  if (wrapper && !wrapper.contains(event.target)) {
-    isDropdownOpen.value = false
-  }
+  isLogoutModalOpen.value = false;
+  sessionStorage.clear()
+  router.push('/login')
 }
 
 const fetchAdminProfile = async () => {
@@ -191,11 +133,6 @@ const fetchAdminProfile = async () => {
 
 onMounted(() => {
   fetchAdminProfile()
-  document.addEventListener('click', handleClickOutside) 
-})
-
-onUnmounted(() => {
-  document.removeEventListener('click', handleClickOutside)
 })
 </script>
 
@@ -204,111 +141,5 @@ onUnmounted(() => {
   font-size: 12px;
   color: var(--text-muted);
   text-transform: uppercase; 
-}
-.search-wrapper {
-  position: relative;
-  width: 320px; 
-}
-
-.search-dropdown-result {
-  position: absolute;
-  top: calc(100% + 8px); 
-  left: 0;
-  width: 100%;
-  background: #ffffff;
-  border-radius: 12px; 
-  
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 
-              0 8px 16px -6px rgba(0, 0, 0, 0.05),
-              0 0 1px 0 rgba(0, 0, 0, 0.1);
-              
-  border: 1px solid rgba(0, 0, 0, 0.04);
-  max-height: 280px; 
-  overflow-y: auto;
-  z-index: 9999; 
-}
-
-.dropdown-status {
-  padding: 16px;
-  text-align: center;
-  color: #718096;
-  font-size: 13px;
-  font-family: 'Kantumruy Pro', 'Hanuman', sans-serif; 
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-}
-
-
-.result-list {
-  list-style: none;
-  padding: 6px; 
-  margin: 0;
-}
-
-.result-item {
-  display: flex;
-  align-items: center;
-  padding: 10px 12px;
-  cursor: pointer;
-  border-radius: 8px; 
-  transition: all 0.2s ease;
-}
-
-.result-item:hover {
-  background-color: #f0fdf4; 
-}
-
-
-.user-avatar-sm {
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  object-fit: cover;
-  margin-right: 12px;
-  border: 1px solid #edf2f7;
-}
-
-.user-info-meta {
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1;
-}
-
-.user-name-text {
-  font-size: 13px;
-  font-weight: 500;
-  color: #2d3748;
-  line-height: 1.4;
-}
-
-.user-sub-text {
-  font-size: 11px;
-  color: #a0aec0;
-}
-
-
-.role-tag {
-  font-size: 10px;
-  font-weight: 600;
-  padding: 2px 8px;
-  border-radius: 99px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-.role-tag.admin { background: #fee2e2; color: #ef4444; }
-.role-tag.teacher { background: #dbeafe; color: #3b82f6; }
-.role-tag.student { background: #dcfce7; color: #22c55e; }
-
-.search-dropdown-result::-webkit-scrollbar {
-  width: 6px;
-}
-.search-dropdown-result::-webkit-scrollbar-track {
-  background: transparent;
-}
-.search-dropdown-result::-webkit-scrollbar-thumb {
-  background: #cbd5e0;
-  border-radius: 99px;
 }
 </style>
