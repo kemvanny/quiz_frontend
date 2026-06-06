@@ -19,9 +19,14 @@
               <i class="bi bi-people-fill"></i>
             </div>
             <div class="stat-label">អ្នកប្រើប្រាស់សរុប</div>
-            <div class="stat-value">{{ dashboardTotal?.total_users?.count }}</div>
-            <span class="stat-badge badge-up"><i class="bi bi-arrow-up-short"></i> {{
-              dashboardTotal?.total_users?.this_week_count }} នាក់ក្នុងសប្តាហ៍នេះ</span>
+            <div class="stat-value">
+              {{ dashboardTotal?.total_users?.count }}
+            </div>
+            <span class="stat-badge badge-up"><i class="bi bi-arrow-up-short"></i>
+              {{
+                dashboardTotal?.total_users?.this_week_count
+              }}
+              នាក់ក្នុងសប្តាហ៍នេះ</span>
           </div>
         </div>
         <div class="col-md-3 col-sm-6">
@@ -30,7 +35,9 @@
               <i class="bi bi-door-open-fill"></i>
             </div>
             <div class="stat-label">សរុបបន្ទប់</div>
-            <div class="stat-value">{{ dashboardTotal?.total_rooms?.count }}</div>
+            <div class="stat-value">
+              {{ dashboardTotal?.total_rooms?.count }}
+            </div>
             <span class="stat-badge badge-up"><i class="bi bi-arrow-up-short"></i>{{
               dashboardTotal?.total_rooms?.new_count }} បន្ថែមថ្មី</span>
           </div>
@@ -41,9 +48,14 @@
               <i class="bi bi-journal-check"></i>
             </div>
             <div class="stat-label">វិញ្ញាសាសរុប</div>
-            <div class="stat-value"> {{ dashboardTotal?.total_exams?.count }}</div>
+            <div class="stat-value">
+              {{ dashboardTotal?.total_exams?.count }}
+            </div>
             <span class="stat-badge badge-up"><i class="bi bi-arrow-up-short"></i>
-              {{ dashboardTotal?.total_exams?.active_count }} កំពុងដំណើរការ</span>
+              {{
+                dashboardTotal?.total_exams?.active_count
+              }}
+              កំពុងដំណើរការ</span>
           </div>
         </div>
         <div class="col-md-3 col-sm-6">
@@ -52,7 +64,9 @@
               <i class="bi bi-send-check-fill"></i>
             </div>
             <div class="stat-label">ការដាក់ស្នើ</div>
-            <div class="stat-value">{{ dashboardTotal?.submissions?.count }}%</div>
+            <div class="stat-value">
+              {{ dashboardTotal?.submissions?.count }}%
+            </div>
             <span class="stat-badge badge-down"><i class="bi bi-arrow-down-short"></i>
               {{ dashboardTotal?.submissions?.change_percent }}% ធ្លាក់ចុះ</span>
           </div>
@@ -67,17 +81,17 @@
               <div>
                 <div class="section-title mb-0">{{ monthlyData?.title || 'ការបញ្ជូនចម្លើយប្រចាំខែ' }}</div>
                 <div style="
-            font-size: 28px;
-            font-weight: 800;
-            letter-spacing: -1px;
-            color: var(--text-main);
-          ">
+                    font-size: 28px;
+                    font-weight: 800;
+                    letter-spacing: -1px;
+                    color: var(--text-main);
+                  ">
                   {{ monthlyData?.total_attempts?.toLocaleString() || 0 }}
                   <span style="
-              font-size: 13px;
-              color: var(--text-muted);
-              font-weight: 600;
-            ">ដងនៃការចូលរួមធ្វើវិញ្ញាសា</span>
+                      font-size: 13px;
+                      color: var(--text-muted);
+                      font-weight: 600;
+                    ">ដងនៃការចូលរួមធ្វើវិញ្ញាសា</span>
                 </div>
               </div>
 
@@ -86,29 +100,56 @@
               </select>
             </div>
 
-            <div class="bar-chart" id="barChart"
-              style="display: flex; align-items: flex-end; justify-content: space-between; height: 200px; padding-top: 20px;">
-              <div v-for="(item, index) in monthlyData?.months" :key="index" class="chart-bar-item"
-                style="display: flex; flex-direction: column; align-items: center; flex: 1; margin: 0 4px; height: 100%; justify-content: flex-end;">
+            <div class="bar-chart" id="barChart" style="
+                display: flex;
+                align-items: flex-end;
+                justify-content: space-between;
+                height: 200px;
+                padding-top: 20px;
+              ">
+              <div v-for="(item, index) in monthlyData?.months" :key="index" class="chart-bar-item" style="
+                  display: flex;
+                  flex-direction: column;
+                  align-items: center;
+                  flex: 1;
+                  margin: 0 4px;
+                  height: 100%;
+                  justify-content: flex-end;
+                ">
                 <div class="main-bar" :style="{
                   height: calculateBarHeight(item.count),
                   width: '100%',
                   backgroundColor: '#10b981',
                   borderRadius: '4px 4px 0 0',
                   position: 'relative',
-                  transition: 'height 0.3s ease'
+                  transition: 'height 0.3s ease',
                 }" :title="`${item.month}: ${item.count} ដង`">
-                  <span v-if="item.count > 0"
-                    style="position: absolute; top: -18px; left: 50%; transform: translateX(-50%); font-size: 10px; font-weight: bold; color: var(--text-main);">
+                  <span v-if="item.count > 0" style="
+                      position: absolute;
+                      top: -18px;
+                      left: 50%;
+                      transform: translateX(-50%);
+                      font-size: 10px;
+                      font-weight: bold;
+                      color: var(--text-main);
+                    ">
                     {{ item.count }}
                   </span>
                 </div>
               </div>
             </div>
 
-            <div style="display: flex; justify-content: space-around; margin-top: 6px;" id="barLabels">
-              <div v-for="(item, index) in monthlyData?.months" :key="index"
-                style="font-size: 11px; color: var(--text-muted); text-align: center; flex: 1;">
+            <div style="
+                display: flex;
+                justify-content: space-around;
+                margin-top: 6px;
+              " id="barLabels">
+              <div v-for="(item, index) in monthlyData?.months" :key="index" style="
+                  font-size: 11px;
+                  color: var(--text-muted);
+                  text-align: center;
+                  flex: 1;
+                ">
                 {{ item.month }}
               </div>
             </div>
@@ -120,15 +161,13 @@
       <!-- ACTIVITY + RECENT SUBMISSIONS -->
       <div class="row g-3">
         <div class="col-lg-5">
-          <div class="dash-card">
+          <div class="dash-card d-flex flex-column h-100">
             <div class="section-title">សកម្មភាពថ្មីៗ</div>
 
-            <div id="activityFeed">
+            <div id="activityFeed" class="flex-grow-1">
               <div v-for="(activity, index) in recentActivitiesList" :key="index" class="activity-item">
-                <div class="activity-icon" :style="{
-                  backgroundColor: getActivityStyle(activity.message).bg,
-                  color: getActivityStyle(activity.message).color
-                }">
+                <div class="activity-icon"
+                  :style="{ backgroundColor: getActivityStyle(activity.message).bg, color: getActivityStyle(activity.message).color }">
                   <i class="bi" :class="getActivityStyle(activity.message).icon"></i>
                 </div>
                 <div>
@@ -137,9 +176,15 @@
                 </div>
               </div>
 
-              <div v-if="!recentActivitiesList" class="text-center text-muted py-3" style="font-size: 13px;">
+              <div v-if="!recentActivitiesList || recentActivitiesList.length === 0" class="text-center text-muted py-4"
+                style="font-size: 13px">
                 មិនទាន់មានសកម្មភាពថ្មីៗនៅឡើយទេ
               </div>
+            </div>
+
+            <div class="mt-3 pt-2 ">
+              <BasePagination v-if="totalRecords > 0" :current-page="currentPage" :limit="limit" :total="totalRecords"
+                @update:page="changePage" />
             </div>
 
           </div>
@@ -154,13 +199,17 @@
               </router-link>
             </div>
 
-            <DataTable :headers="submissionHeaders" :items="submissionList">
+            <DataTable :headers="submissionHeaders" :items="submissionList" :is-loading="isLoading"
+              :current-page="currentPageExam" :limit="limitExam" :total="totalRecordsExam"
+              @update:page="changePageExam">
               <template #row="{ item }">
                 <td>{{ item.user_name }}</td>
                 <td>{{ item.quiz_title }}</td>
                 <td><strong>{{ item.score }}</strong></td>
                 <td>{{ formatDate(item.submitted_at) }}</td>
-                <td>{{ item.status }}</td>
+                <td>
+                  <StatusBadge :type="item.status" />
+                </td>
               </template>
             </DataTable>
 
@@ -171,13 +220,50 @@
       <!-- SYSTEM HEALTH -->
       <div class="row g-3 mt-0">
         <div class="col-12 mt-3">
-          <div class="dash-card">
-            <div class="section-title">ទិដ្ឋភាពទូទៅនៃស្ថានភាពប្រព័ន្ធ</div>
-            <div class="row">
-              <div class="col-md-6" id="healthBars"></div>
-              <div class="col-md-6">
-                <div class="row g-2" id="healthStats"></div>
+          <div class="dash-card system-health-card">
+            <div class="section-title mb-4 d-flex align-items-center gap-2">
+              <i class="bi bi-cpu text-success"></i> ទិដ្ឋភាពទូទៅនៃស្ថានភាពប្រព័ន្ធ
+            </div>
+
+            <div v-if="isLoading" class="text-center py-5 text-muted">
+              <div class="spinner-border spinner-border-sm text-success me-2" role="status"></div>
+              <span>កំពុងទាញទិន្នន័យស្ថានភាពប្រព័ន្ធ...</span>
+            </div>
+
+            <div v-else class="row align-items-center">
+              <div class="col-md-6 d-flex justify-content-around py-3 border-end border-light">
+                <div v-for="(h, index) in healthBars" :key="index" class="text-center position-relative circular-box">
+                  <div class="circular-progress-wrapper mb-2">
+                    <div class="progress-circle" :style="{
+                      background: `conic-gradient(${getBarColor(h.label, h.value)} ${h.value * 3.6}deg, #f1f5f9 0deg)`
+                    }">
+                      <div class="progress-inner">
+                        <span class="fs-5 fw-extrabold text-dark">{{ h.value }}%</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="health-label fw-bold text-secondary" style="font-size: 13px;">{{ translateLabel(h.label)
+                    }}
+                  </div>
+                </div>
               </div>
+
+              <div class="col-md-6 ps-md-4">
+                <div class="row g-3">
+                  <div v-for="(c, index) in statsCards" :key="index" class="col-6">
+                    <div class="modern-stat-box p-3 d-flex align-items-center gap-3">
+                      <div class="icon-avatar d-flex align-items-center justify-content-center">
+                        <i :class="['bi', getIcon(c.label)]"></i>
+                      </div>
+                      <div>
+                        <div class="stat-box-label text-muted small fw-bold">{{ translateLabel(c.label) }}</div>
+                        <div class="stat-box-value fs-4 fw-black text-dark">{{ c.value }}</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
             </div>
           </div>
         </div>
@@ -189,16 +275,45 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue';
-import { recentActivity, getDashboardData, getSubmissionMonthly } from '@/api/admin.api';
-import DataTable from '@/components/common/DataTable.vue';
+import { onMounted, ref } from "vue";
+import { recentActivity, getDashboardData, getSubmissionMonthly, getAllSubmissions, getSystemHealth } from "@/api/admin.api";
+import DataTable from "@/components/common/DataTable.vue";
 import { useDate } from "@/composables/useDate";
+import StatusBadge from "@/components/common/StatusBadge.vue";
 
 const { formatDate } = useDate();
 
-const recentActivitiesList = ref([]);
 const dashboardTotal = ref([]);
 const submissionList = ref([]);
+const isLoading = ref(false);
+
+const currentPage = ref(1);
+const limit = ref(7);
+const totalRecords = ref(0);
+const recentActivitiesList = ref([]);
+const currentPageExam = ref(1);
+const limitExam = ref(7);
+const totalRecordsExam = ref(0);
+
+const healthBars = ref([]);
+const statsCards = ref([]);
+
+const changePage = async (newPage) => {
+  currentPage.value = newPage;
+  await fetchRecentActivity();
+};
+const changePageExam = async (newPage) => {
+  currentPageExam.value = newPage;
+  await fetchResultSubmission();
+};
+
+const getBarColor = (label, value) => {
+  if (label.toLowerCase().includes("storage")) {
+    if (value > 85) return "#dc3545";
+    if (value > 60) return "#ffc107";
+  }
+  return "var(--green-primary, #3fba7f)";
+};
 
 const submissionHeaders = [
   { key: 'student', label: 'សិស្ស' },
@@ -214,6 +329,54 @@ const monthlyData = ref({
   total_attempts: 0,
   months: []
 });
+
+const getIcon = (label) => {
+  const text = label.toLowerCase();
+  if (text.includes("user")) return "bi-people-fill";
+  if (text.includes("exam")) return "bi-journal-check";
+  if (text.includes("submission")) return "bi-file-earmark-arrow-up-fill";
+  return "bi-activity";
+};
+
+const translateLabel = (label) => {
+  if (!label) return '';
+
+  const translations = {
+    'user activity': 'សកម្មភាពអ្នកប្រើប្រាស់',
+    'storage used': 'ទំហំផ្ទុកទិន្នន័យដែលបានប្រើ',
+    'exam activity': 'សកម្មភាពប្រឡង',
+    'total submissions': 'ការដាក់ស្នើសរុប'
+  };
+
+  const key = label.toLowerCase().trim();
+
+  return translations[key] || label;
+};
+
+const fetchHealthData = async () => {
+  try {
+    isLoading.value = true;
+    const res = await getSystemHealth();
+
+    if (res.data && res.data.result) {
+      const metrics = res.data.data.data.metrics || [];
+
+      healthBars.value = metrics.filter(m => {
+        const label = m.label ? m.label.toLowerCase() : '';
+        return label.includes('storage') || label.includes('user');
+      });
+
+      statsCards.value = metrics.filter(m => {
+        const label = m.label ? m.label.toLowerCase() : '';
+        return label.includes('exam') || label.includes('submission');
+      });
+    }
+  } catch (error) {
+    console.error("មិនអាចទាញទិន្នន័យពី API ស្ថានភាពប្រព័ន្ធបានទេ:", error);
+  } finally {
+    isLoading.value = false;
+  }
+};
 
 const getActivityStyle = (message) => {
   const msg = message ? message.toLowerCase() : '';
@@ -259,10 +422,19 @@ const getActivityStyle = (message) => {
 
 const fetchRecentActivity = async () => {
   try {
-    const res = await recentActivity();
+    const res = await recentActivity({
+      page: currentPage.value,
+      limit: limit.value
+    });
 
-    recentActivitiesList.value = res.data.data.logs.activities;
+    if (res.data && res.data.result) {
+      recentActivitiesList.value = res.data.data.activities || [];
 
+      totalRecords.value = res.data.data.total || 0;
+
+      currentPage.value = res.data.data.page || 1;
+      limit.value = res.data.data.limit || 10;
+    }
   } catch (error) {
     console.log(error);
   }
@@ -300,12 +472,34 @@ const calculateBarHeight = (count) => {
   return `${Math.max(percentage, 5)}%`;
 };
 
+const fetchAllSubmissions = async () => {
+  try {
+    const res = await getAllSubmissions({
+      page: currentPageExam.value,
+      limit: limitExam.value
+    });
+   if (res.data && res.data.result) {
+      submissionList.value = res.data.data.submissions || [];
+      
+      totalRecordsExam.value = res.data.data.total || 0;
+      currentPageExam.value = res.data.data.page || 1;
+      limitExam.value = res.data.data.limit || 10;
+      
+      console.log("Recent Submissions:", submissionList.value);
+    }
+  } catch (error) {
+    console.error("Error fetching all submissions:", error);
+  }
+
+}
+
 onMounted(() => {
   fetchRecentActivity();
   fetchDashboardTotal();
   fetchMonthlySubmissions();
-})
-
+  fetchHealthData();
+  fetchAllSubmissions();
+});
 </script>
 
 <style>
@@ -1116,7 +1310,6 @@ onMounted(() => {
   box-shadow: 0 0 0 3px rgba(63, 186, 127, 0.15);
 }
 
-/* ROLE CHIPS */
 .role-chips {
   display: flex;
   gap: 8px;
@@ -1174,6 +1367,63 @@ onMounted(() => {
   color: #fff;
   font-weight: 800;
   box-shadow: 0 10px 20px rgba(63, 186, 127, 0.2);
+}
+
+.system-health-card {
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+  padding: 24px;
+}
+
+.progress-circle {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  transition: all 0.3s ease;
+}
+
+.progress-inner {
+  width: 74px;
+  height: 74px;
+  background: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.modern-stat-box {
+  background: var(--green-light);
+  border: 1px solid #f1f5f9;
+  border-radius: 12px;
+  transition: transform 0.2s;
+}
+
+.modern-stat-box:hover {
+  transform: translateY(-2px);
+}
+
+.icon-avatar {
+  width: 45px;
+  height: 45px;
+  border-radius: 10px;
+  background: #e8f8f0;
+  color: #10b981;
+  font-size: 20px;
+}
+
+.fw-black {
+  font-weight: 800;
+}
+
+.fw-extrabold {
+  font-weight: 700;
 }
 
 /* responsive */

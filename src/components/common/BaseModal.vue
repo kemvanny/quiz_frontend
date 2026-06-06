@@ -8,8 +8,8 @@
       >
         <Transition name="zoom">
           <div v-if="isOpen" class="glass-box" :style="{ maxWidth: width }">
-            <!-- HEADER -->
-            <div class="glass-header">
+            
+            <div v-if="title !== 'Modal Title' || subtitle || tag || $slots.header" class="glass-header">
               <slot name="header">
                 <div>
                   <div v-if="tag" class="glass-tag">{{ tag }}</div>
@@ -22,12 +22,14 @@
               </button>
             </div>
 
-            <!-- BODY -->
+            <button v-else class="glass-close-minimal" @click="$emit('close')">
+              <i class="fas fa-times"></i>
+            </button>
+
             <div class="glass-body">
               <slot></slot>
             </div>
 
-            <!-- FOOTER -->
             <div v-if="$slots.footer" class="glass-footer">
               <slot name="footer"></slot>
             </div>
@@ -41,7 +43,7 @@
 <script setup>
 defineProps({
   isOpen: { type: Boolean, required: true },
-  title: { type: String, default: "Modal Title" },
+  title: { type: String, default: "Modal Title" }, // បើមិនបោះ title មក វានឹងដឹងខ្លួនលាក់ Header
   subtitle: { type: String, default: "" },
   tag: { type: String, default: "" },
   width: { type: String, default: "500px" },
@@ -57,7 +59,7 @@ defineEmits(["close"]);
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(15, 23, 42, 0.45);
+  background: rgba(15, 23, 42, 0.4); /* បន្ថយពណ៌ងងឹតឱ្យមើលទៅស្រាលភ្នែក */
   backdrop-filter: blur(8px);
   display: flex;
   align-items: center;
@@ -67,11 +69,12 @@ defineEmits(["close"]);
 
 .glass-box {
   width: 100%;
-  max-width: 520px;
-  background: rgba(255, 255, 255, 0.92);
-  border-radius: 20px;
-  box-shadow: 0 25px 70px rgba(0, 0, 0, 0.18);
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 24px; /* បង្កើនភាពមូលស្អាតបែប Modern */
+  box-shadow: 0 25px 70px rgba(15, 23, 42, 0.12); /* ស្រមោលបែបស្រាល Soft Shadow */
   overflow: hidden;
+  position: relative;
+  transition: all 0.3s ease;
 }
 
 .glass-header {
@@ -102,35 +105,45 @@ defineEmits(["close"]);
   opacity: 0.9;
 }
 
-/* ROLE CHIPS */
-.role-chips {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-.chip {
-  padding: 8px 12px;
-  border-radius: 999px;
-  border: 1.5px solid #dbe7e0;
-  font-size: 12px;
-  font-weight: 700;
+.glass-close {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 1.2rem;
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  background: #fff;
+  opacity: 0.8;
   transition: 0.2s;
 }
-
-.chip i {
-  font-size: 14px;
+.glass-close:hover {
+  opacity: 1;
 }
 
-.chip.active {
-  background: #e8f8f0;
-  border-color: #3fba7f;
-  color: #2a9d6a;
+/* 💡 ប៊ូតុងខ្វែងខ្នាតតូចសម្រាប់ម៉ូដគ្មាន Header */
+.glass-close-minimal {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: #f1f5f9;
+  border: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  z-index: 10;
+}
+.glass-close-minimal:hover {
+  background: #e2e8f0;
+  color: #1e293b;
+}
+
+.glass-body {
+  padding: 24px; /* បន្ថែមគម្លាតខាងក្នុងឱ្យមើលទៅ Clean */
 }
 
 /* FOOTER */
@@ -140,37 +153,6 @@ defineEmits(["close"]);
   display: flex;
   justify-content: flex-end;
   gap: 10px;
-}
-
-.btn-cancel {
-  height: 44px;
-  padding: 0 18px;
-  border-radius: 12px;
-  border: 1.5px solid var(--green-mid);
-  background: white;
-  font-weight: 700;
-}
-
-.btn-create {
-  height: 42px;
-  padding: 0 18px;
-  border-radius: 10px;
-  border: none;
-  background: linear-gradient(135deg, #3fba7f, #00c67a);
-  color: #fff;
-  font-weight: 800;
-  box-shadow: 0 10px 20px rgba(63, 186, 127, 0.2);
-}
-
-/* glass responsive */
-@media (max-width: 600px) {
-  .glass-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .glass-field.full {
-    grid-column: auto;
-  }
 }
 
 /* Animations */

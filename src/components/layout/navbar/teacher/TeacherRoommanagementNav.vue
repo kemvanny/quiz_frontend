@@ -32,11 +32,13 @@
                 <div class="d-flex align-items-center gap-2"
                     style="cursor: pointer; padding: 4px; border-radius: 12px; transition: .2s;"
                     onmouseover="this.style.background='var(--bg)';" onmouseout="this.style.background='transparent';">
-                    <img src="https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcQTs4Gaz2D9hyLPSjUFHdcLhwoP5JbyaMy3-CXKrYPU4oJnTeRW"
+                    
+                    <img :src="authStore.avatarUrl"
                         alt="avatar"
                         style="width: 36px; height: 36px; border-radius: 50%; object-fit: cover; border: 2px solid var(--em-soft);" />
+                    
                     <div class="d-none d-sm-flex flex-column justify-content-center" style="line-height: 1.1;">
-                        <span class="fw-bold" style="font-size: .85rem; color: var(--txt);">Hean Liza</span>
+                        <span class="fw-bold" style="font-size: .85rem; color: var(--txt);">{{ authStore.fullName }}</span>
                         <span style="font-size: .65rem; color: var(--txt-mu); font-weight: 600;">Instructor</span>
                     </div>
                     <i class="fas fa-chevron-down ms-1 text-muted d-none d-sm-block" style="font-size: 0.7 flex;"></i>
@@ -53,14 +55,33 @@
 </template>
 
 <script setup>
+<<<<<<< HEAD
 import { ref } from 'vue';
 import CreateRoomModal from '@/components/common/CreateRoomModal.vue';
 const isCreateRoomOpen = ref(false);
 const emit = defineEmits(['room-created']);
 
+=======
+import { ref, onMounted } from 'vue';
+import CreateRoomModal from '@/components/teacher/CreateRoomModal.vue';
+import { useAuthStore } from '@/stores/auth'; 
+
+const isCreateRoomOpen = ref(false);
+const emit = defineEmits(['room-created']);
+
+const authStore = useAuthStore();
+
+>>>>>>> 3a96a95c4c6dd9ac66352b8587649d00222e9455
 const onRoomCreated = (roomData) => {
     isCreateRoomOpen.value = false;
     console.log("Room created successfully from topbar:", roomData);
     emit('room-created', roomData);
 };
+<<<<<<< HEAD
+=======
+
+onMounted(() => {
+  authStore.fetchUserProfile();
+});
+>>>>>>> 3a96a95c4c6dd9ac66352b8587649d00222e9455
 </script>

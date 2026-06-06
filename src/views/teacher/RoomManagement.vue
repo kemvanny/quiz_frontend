@@ -52,11 +52,11 @@
           
           <button 
             class="btn btn-sm invite-student-btn d-flex align-items-center gap-1"
-            @click.stop="handleInviteStudent(room)"
-          >
+            @click.stop="handleInviteStudent(room)">
             <i class="fas fa-user-plus"></i> Invite
           </button>
         </div>
+
       </div>
     </div>
 
@@ -79,6 +79,7 @@
       @close="closeDeleteModal" 
       @deleted="fetchRooms" 
     />
+
     <InviteStudentModal 
     :is-open="isInviteOpen" 
     :room-data="selectedRoom" 
@@ -89,13 +90,13 @@
 </template>
 
 <script setup>
+
 import { ref, computed, onMounted } from 'vue'
 import { getMyRooms } from '@/api/teacher.api'
 
-import CreateRoomModal from '@/components/common/CreateRoomModal.vue'
-import UpdateRoomModal from '@/components/common/UpdateRoomModal.vue'
-import DeleteRoomModal from '@/components/common/DeleteRoomModal.vue'
-import InviteStudentModal from '@/components/common/InviteStudentModal.vue';
+import UpdateRoomModal from '@/components/teacher/UpdateRoomModal.vue'
+import DeleteRoomModal from '@/components/teacher/DeleteRoomModal.vue'
+import InviteStudentModal from '@/components/teacher/InviteStudentModal.vue';
 
 const searchQuery = ref('')
 const rooms = ref([])

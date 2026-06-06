@@ -2,6 +2,7 @@
   <div class="teacher-dashboard">
     <div class="row g-4">
       <div class="col-12 col-lg-8">
+        <!-- Stats Cards -->
         <div class="row g-3 mb-4">
           <div class="col-12 col-md-4" v-for="stat in stats" :key="stat.title">
             <div class="stat-card d-flex flex-column align-items-center text-center justify-content-center gap-2" 
@@ -24,7 +25,8 @@
           </div>
         </div>
 
-        <div class="custom-card">
+        <!-- Quick Actions -->
+        <div class="custom-card mb-4">
           <h5 class="section-title mb-3">សកម្មភាពរហ័ស (Quick Actions)</h5>
           <div class="d-flex flex-wrap gap-3">
             <button class="btn-emerald" @click="goToCreateExam">
@@ -39,7 +41,67 @@
           </div>
         </div>
 
-        <div class="custom-card">
+        <!-- ========================================================= -->
+        <!-- 💡 ផ្នែកថ្មី៖ វិញ្ញាសារបស់ខ្ញុំ (MY QUIZZES LIST FROM BACKEND) -->
+        <!-- ========================================================= -->
+        <div class="custom-card mb-4">
+          <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="section-title mb-0">វិញ្ញាសារបស់ខ្ញុំ (My Quizzes)</h5>
+            <span class="badge bg-success bg-opacity-10 text-success rounded-pill px-3" style="font-size: 0.75rem; font-weight: 700;">
+              សរុប៖ {{ examList.length }} វិញ្ញាសា
+            </span>
+          </div>
+
+          <!-- 1. បង្ហាញពេលកំពុងទាញទិន្នន័យ (Loading State) -->
+          <div v-if="isLoading" class="text-center py-4">
+            <div class="spinner-border text-success spinner-border-sm" role="status"></div>
+            <p class="text-muted small mt-2 mb-0">កំពុងទាញយកទិន្នន័យវិញ្ញាសា...</p>
+          </div>
+
+          <!-- 2. បង្ហាញពេលអត់ទាន់មានវិញ្ញាសាសោះ (Empty State) -->
+          <div v-else-if="examList.length === 0" class="text-center py-4 text-muted small">
+            <i class="fas fa-folder-open fa-2x mb-2 opacity-50"></i>
+            <p class="mb-0">មិនទាន់មានវិញ្ញាសាណាមួយត្រូវបានបង្កើតឡើយ។</p>
+          </div>
+
+          <!-- 3. បង្ហាញបញ្ជីកាតវិញ្ញាសា (Data Grid Grid) -->
+          <div v-else class="row g-3">
+            <div class="col-12 col-md-6" v-for="exam in examList" :key="exam.id">
+              <div class="p-3 rounded-3 border bg-white h-100 d-flex flex-column" style="transition: 0.2s; border-color: var(--bdr) !important;">
+                
+                <!-- Status & Time Border -->
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                  <span class="badge rounded-pill px-2.5 py-1" style="font-size: 0.7rem; font-weight: 700;"
+                        :class="exam.status === 'active' ? 'bg-success bg-opacity-10 text-success' : 'bg-warning bg-opacity-10 text-warning'">
+                    {{ exam.status === 'active' ? 'Active' : 'Draft' }}
+                  </span>
+                  <span class="text-muted small" style="font-size: 0.78rem; font-weight: 600;">
+                    <i class="far fa-clock me-1"></i>{{ exam.duration }} នាទី
+                  </span>
+                </div>
+
+                <!-- Title -->
+                <h6 class="fw-bold text-dark mb-1 text-truncate" style="font-size: 0.92rem;">{{ exam.title }}</h6>
+                <div class="text-muted small mb-3" style="font-size: 0.75rem;">Type: <span class="text-uppercase fw-bold">{{ exam.type }}</span></div>
+                
+                <!-- Points and Actions -->
+                <div class="d-flex justify-content-between align-items-center mt-auto pt-2 border-top border-light">
+                  <span class="fw-bold text-success" style="font-size: 0.82rem;">ពិន្ទុ៖ {{ exam.total_points }}pt</span>
+                  
+                  <div class="d-flex gap-1">
+                    <button class="btn btn-sm btn-light text-primary py-1 px-2 rounded-2" style="font-size: 0.75rem;"><i class="fas fa-edit"></i></button>
+                    <button class="btn btn-sm btn-light text-danger py-1 px-2 rounded-2" style="font-size: 0.75rem;"><i class="fas fa-trash-alt"></i></button>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- ========================================================= -->
+
+        <!-- Class Performance Overview -->
+        <div class="custom-card mb-4">
           <div class="d-flex justify-content-between align-items-center mb-3">
             <h5 class="section-title mb-0">ទិដ្ឋភាពទូទៅនៃលទ្ធផលថ្នាក់រៀន (Class Performance Overview)</h5>
             <select class="form-select form-select-sm w-auto border border-secondary shadow-sm rounded-pill px-3" style="font-size: 0.85rem; background-color: white; font-weight: 600;">
@@ -66,6 +128,7 @@
           </div>
         </div>
 
+        <!-- Recent Submissions -->
         <div class="custom-card">
           <div class="d-flex justify-content-between align-items-center mb-3">
             <h5 class="section-title mb-0">ការដាក់ស្នើថ្មីៗ (Recent Submissions)</h5>
@@ -87,6 +150,7 @@
         </div>
       </div>
 
+      <!-- Right Sidebar (Rooms, Expiring, Security) -->
       <div class="col-12 col-lg-4">
         <div class="custom-card d-flex flex-column" style="min-height: 380px;">
           <h5 class="section-title mb-3">Assessment Rooms</h5>
@@ -122,6 +186,7 @@
           </button>
         </div>
 
+        <!-- Expiring Soon -->
         <div class="custom-card">
           <h5 class="section-title mb-3">Expiring Soon</h5>
           <div class="d-flex align-items-center gap-2 mb-3" v-for="(item, idx) in expiringItems" :key="idx">
@@ -133,6 +198,7 @@
           </div>
         </div>
 
+        <!-- Security Guard Info Box -->
         <div class="custom-card text-center p-4" style="background: var(--emerald-soft);">
           <h6 class="text-success mb-2" style="font-size: 1rem; font-weight: 700;">Secure Mode Active</h6>
           <p class="text-muted small mb-4" style="font-size: 0.78rem; line-height: 1.4; font-weight: 600;">Tab-switching and screenshot protections are enabled system-wide.</p>
@@ -142,27 +208,33 @@
     </div>
   </div>
 
+  <!-- Create Room Modal Dialog component -->
   <CreateRoomModal 
     :is-open="isCreateRoomOpen" 
     @close="isCreateRoomOpen = false" 
     @created="onRoomCreated" 
-  />
+  />  
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue' 
 import { useRouter } from 'vue-router'
-import CreateRoomModal from '@/components/common/CreateRoomModal.vue';
+import { useToast } from 'vue-toastification' 
 import { getMyRooms } from '@/api/teacher.api';
+import { getExams } from '@/api/exam.api'
 
 const isCreateRoomOpen = ref(false);
 const backendRooms = ref([]);
 const loadingRooms = ref(false);
 
+const examList = ref([])      
+const isLoading = ref(false)   
+const toast = useToast() 
+
 const fetchBackendRooms = async () => {
   try {
     loadingRooms.value = true;
-        const res = await getMyRooms();
+    const res = await getMyRooms();
     
     backendRooms.value = res.data?.data || res.data || [];
   } catch (err) {
@@ -172,14 +244,28 @@ const fetchBackendRooms = async () => {
   }
 };
 
-// ហៅដំណើរការទាញយកទិន្នន័យភ្លាមៗពេល Component ត្រូវបានបើកដំណើរការ
+const fetchAllExams = async () => {
+  try {
+    isLoading.value = true
+    const res = await getExams()
+    
+    examList.value = res.data.data || res.data
+    console.log("Loaded exams successfully:", examList.value)
+  } catch (err) {
+    console.error("Failed to fetch exams:", err)
+    toast.error("មិនអាចទាញយកបញ្ជីវិញ្ញាសាបានទេ!")
+  } finally {
+    isLoading.value = false
+  }
+}
+
 onMounted(() => {
   fetchBackendRooms();
+  fetchAllExams()
 });
 
 const onRoomCreated = async () => {
     isCreateRoomOpen.value = false;
-    // ទាញយកទិន្នន័យបន្ទប់រៀនឡើងវិញភ្លាមៗក្រោយពេលគ្រូបង្កើតបន្ទប់ថ្មីជោគជ័យ
     await fetchBackendRooms(); 
 };
 
@@ -189,7 +275,7 @@ const goToCreateExam = () => router.push({ name: 'CreateExam' })
 const goToAssignment = () => router.push({ name: 'Assignment' })
 const goToFinalExam = () => router.push({ name: 'FinalExam' })
 
-const stats = ref([
+const stats = computed(() => [
   {
     title: 'សិស្សសរុប',
     value: '1,284',
@@ -203,7 +289,7 @@ const stats = ref([
   },
   {
     title: 'បន្ទប់សរុប',
-    value: '8',
+    value: backendRooms.value.length.toString(), 
     icon: 'fas fa-door-open',
     bg: '#f3e8ff',
     color: '#9333ea',
@@ -213,8 +299,8 @@ const stats = ref([
     hover: false
   },
   {
-    title: 'អត្រាបញ្ចប់',
-    value: '94%',
+    title: 'វិញ្ញាសាសរុប', 
+    value: examList.value.length.toString(), 
     icon: 'fas fa-tasks',
     bg: '#fff7ed',
     color: '#f59e0b',

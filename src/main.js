@@ -21,6 +21,9 @@ import BaseButton from './components/common/BaseButton.vue'
 import BaseModal from './components/common/BaseModal.vue'
 import StatusBadge from './components/common/StatusBadge.vue'
 import TeacherNavbarExam from './components/layout/common/TeacherNavbarExam.vue'
+import CreateRoomModal from '@/components/teacher/CreateRoomModal.vue'
+import BasePagination from '@/components/common/BasePagination.vue'
+import LogoutModal from '@/components/common/LogoutModal.vue'
 
 const app = createApp(App)
 
@@ -32,6 +35,9 @@ app.component('BaseButton',BaseButton)
 app.component('BaseModal',BaseModal)
 app.component('StatusBadge',StatusBadge)
 app.component('TeacherNavbarExam',TeacherNavbarExam)
+app.component('CreateRoomModal',CreateRoomModal)
+app.component('BasePagination',BasePagination)
+app.component('LogoutModal',LogoutModal)
 
 app.use(createPinia())
 app.use(Toast, {

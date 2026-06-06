@@ -31,13 +31,13 @@
                 <form @submit.prevent="handleLogin">
                     <div class="input-group-custom" :class="{ 'has-error': errors.email }">
                         <i class="fas fa-envelope"></i>
-                        <input type="email" v-model="email" placeholder="អ៊ីមែល" @input="validateEmail(email)">
+                        <input type="email" v-model.trim="email" placeholder="អ៊ីមែល" @input="validateEmail(email)">
                     </div>
                     <span v-if="errors.email" class="error-text">{{ errors.email }}</span>
 
                     <div class="input-group-custom" :class="{ 'has-error': errors.password }">
                         <i class="fas fa-lock"></i>
-                        <input :type="showPassword ? 'text' : 'password'" v-model="password" placeholder="ពាក្យសម្ងាត់"
+                        <input :type="showPassword ? 'text' : 'password'" v-model.trim="password" placeholder="ពាក្យសម្ងាត់"
                             @input="validatePassword(password)">
                         <i class="fas" :class="showPassword ? 'fa-eye-slash' : 'fa-eye'" @click="togglePassword"
                             style="cursor: pointer; margin-left: auto;"></i>
