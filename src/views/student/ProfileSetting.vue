@@ -1,250 +1,131 @@
 <template>
-  <div class="layout" v-if="studentStore.profile">
-    <!-- LEFT PANEL -->
+  <div class="layout" v-if="authStore.profile">
     <div class="left-card">
       <div class="avatar-wrapper">
-        <!-- <img
-          :src="
-            studentStore.profile.avatar || 'https://i.pravatar.cc/160?img=32'
-          "
-          alt="Profile photo"
-          class="avatar-image"
-        /> -->
-        <img :src="avatarUrl" alt="Profile photo" class="avatar-image" />
-        <input
-          ref="avatarInput"
-          type="file"
-          accept="image/*"
-          hidden
-          @change="uploadAvatar"
-        />
+        <img :src="`${imgBaseUrl}${authStore?.profile.avatar}`" alt="Profile photo" class="avatar-image" />
+        <input ref="avatarInput" type="file" accept="image/*" hidden @change="uploadAvatar" />
 
-        <button
-          class="btn-upload"
-          title="Upload photo"
-          @click="avatarInput.click()"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            stroke-width="2"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M12 12V4m0 0L8 8m4-4l4 4"
-            />
+        <button class="btn-upload" title="Upload photo" @click="avatarInput.click()">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+            stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M12 12V4m0 0L8 8m4-4l4 4" />
           </svg>
         </button>
-        <!-- <button class="btn-delete-avatar" title="Delete photo"> -->
-        <button
-          class="btn-delete-avatar"
-          title="Delete photo"
-          :disabled="avatarDeleting || !studentStore.profile.avatar"
-          @click="deleteAvatar"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            stroke-width="2"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M1 7h22M8 7V5a2 2 0 012-2h4a2 2 0 012 2v2"
-            />
+
+        <button class="btn-delete-avatar" title="Delete photo" :disabled="avatarDeleting || !authStore.profile.avatar"
+          @click="deleteAvatar">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+            stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M1 7h22M8 7V5a2 2 0 012-2h4a2 2 0 012 2v2" />
           </svg>
         </button>
       </div>
 
       <div class="user-name">
-        {{ studentStore.profile.firstName }} {{ studentStore.profile.lastName }}
+        {{ authStore.profile.firstName }} {{ authStore.profile.lastName }}
       </div>
-      <div class="user-email">{{ studentStore.profile.email }}</div>
-      <div class="badge">{{ studentStore.profile.role }}</div>
+      <div class="user-email">{{ authStore.profile.email }}</div>
+      <div class="badge">{{ authStore.profile.role }}</div>
 
       <div class="action-buttons">
-        <!-- <button class="btn btn-outline"> -->
         <button class="btn btn-outline" @click="openEditModal">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            stroke-width="2"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-            />
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+            stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
           </svg>
           កែប្រែព័ត៌មាន
         </button>
 
-        <!-- <button class="btn btn-purple"> -->
         <button class="btn btn-purple" @click="openPasswordModal">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            stroke-width="2"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
-            />
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+            stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
           </svg>
           ផ្លាស់ប្តូរលេខសម្ងាត់
         </button>
 
         <button class="btn btn-green">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            stroke-width="2"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-            />
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+            stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
           </svg>
           ផ្លាស់អ៊ីមែល
         </button>
 
-        <!-- <button class="btn btn-danger"> -->
         <button class="btn btn-danger" @click="openDeleteAccountModal">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            stroke-width="2"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M1 7h22M8 7V5a2 2 0 012-2h4a2 2 0 012 2v2"
-            />
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+            stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M1 7h22M8 7V5a2 2 0 012-2h4a2 2 0 012 2v2" />
           </svg>
           លុបគណនី
         </button>
       </div>
     </div>
 
-    <!-- RIGHT PANEL -->
     <div class="right-card">
       <h2>ព័ត៌មានរបស់ខ្ញុំ</h2>
 
       <div class="info-grid">
         <div class="info-item">
           <div class="info-label">
-            <svg
-              class="icon-green"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              stroke-width="2"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-              />
+            <svg class="icon-green" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
             </svg>
             នាមត្រកូល
           </div>
-          <div class="info-value">{{ studentStore.profile.firstName }}</div>
+          <div class="info-value">{{ authStore.profile.firstName }}</div>
         </div>
 
         <div class="info-item">
           <div class="info-label">
-            <svg
-              class="icon-green"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              stroke-width="2"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-              />
+            <svg class="icon-green" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
             </svg>
             នាមខ្លួន
           </div>
-          <div class="info-value">{{ studentStore.profile.lastName }}</div>
+          <div class="info-value">{{ authStore.profile.lastName }}</div>
         </div>
 
         <div class="info-item">
           <div class="info-label">
-            <svg
-              class="icon-green"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              stroke-width="2"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-              />
+            <svg class="icon-green" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
             </svg>
             អាសយដ្ឋាន
           </div>
-          <div class="info-value">{{ studentStore.profile.address }}</div>
+          <div class="info-value">{{ authStore.profile.address }}</div>
         </div>
 
         <div class="info-item">
           <div class="info-label">
-            <svg
-              class="icon-green"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              stroke-width="2"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498A1 1 0 0121 15.72V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
-              />
+            <svg class="icon-green" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498A1 1 0 0121 15.72V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
             </svg>
             លេខទូរស័ព្ទ
           </div>
-          <div class="info-value">{{ studentStore.profile.phone }}</div>
+          <div class="info-value">{{ authStore.profile.phone }}</div>
         </div>
 
         <div class="info-item">
           <div class="info-label">
-            <svg
-              class="icon-green"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              stroke-width="2"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
-              />
+            <svg class="icon-green" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
             </svg>
             ស្ថានភាពគណនី
           </div>
@@ -254,12 +135,7 @@
     </div>
 
     <!-- modal for edit profile -->
-    <BaseModal
-      :is-open="isEditModalOpen"
-      title="កែប្រែព័ត៌មាន"
-      width="500px"
-      @close="closeEditModal"
-    >
+    <BaseModal :is-open="isEditModalOpen" title="កែប្រែព័ត៌មាន" width="500px" @close="closeEditModal">
       <div class="profile-form">
         <div class="profile-field">
           <label>នាមខ្លួន</label>
@@ -292,33 +168,17 @@
     </BaseModal>
 
     <!-- modal for change password -->
-    <BaseModal
-      :is-open="isPasswordModalOpen"
-      title="ផ្លាស់ប្តូរលេខសម្ងាត់"
-      width="500px"
-      @close="closePasswordModal"
-    >
+    <BaseModal :is-open="isPasswordModalOpen" title="ផ្លាស់ប្តូរលេខសម្ងាត់" width="500px" @close="closePasswordModal">
       <div class="profile-field">
         <label>លេខសម្ងាត់ចាស់</label>
 
         <div class="password-input">
-          <input
-            v-model="passwordForm.oldPassword"
-            :type="showPassword.oldPassword ? 'text' : 'password'"
-            :class="{ 'input-error': oldPasswordError }"
-            @input="oldPasswordError = ''"
-          />
+          <input v-model="passwordForm.oldPassword" :type="showPassword.oldPassword ? 'text' : 'password'"
+            :class="{ 'input-error': oldPasswordError }" @input="oldPasswordError = ''" />
 
-          <button
-            type="button"
-            class="password-eye"
-            @click="togglePassword('oldPassword')"
-          >
-            <i
-              :class="
-                showPassword.oldPassword ? 'bi bi-eye-slash' : 'bi bi-eye'
-              "
-            ></i>
+          <button type="button" class="password-eye" @click="togglePassword('oldPassword')">
+            <i :class="showPassword.oldPassword ? 'bi bi-eye-slash' : 'bi bi-eye'
+              "></i>
           </button>
         </div>
 
@@ -331,23 +191,12 @@
         <label>លេខសម្ងាត់ថ្មី</label>
 
         <div class="password-input">
-          <input
-            v-model="passwordForm.newPassword"
-            :type="showPassword.newPassword ? 'text' : 'password'"
-            :class="{ 'input-error': newPasswordError }"
-            @input="newPasswordError = ''"
-          />
+          <input v-model="passwordForm.newPassword" :type="showPassword.newPassword ? 'text' : 'password'"
+            :class="{ 'input-error': newPasswordError }" @input="newPasswordError = ''" />
 
-          <button
-            type="button"
-            class="password-eye"
-            @click="togglePassword('newPassword')"
-          >
-            <i
-              :class="
-                showPassword.newPassword ? 'bi bi-eye-slash' : 'bi bi-eye'
-              "
-            ></i>
+          <button type="button" class="password-eye" @click="togglePassword('newPassword')">
+            <i :class="showPassword.newPassword ? 'bi bi-eye-slash' : 'bi bi-eye'
+              "></i>
           </button>
         </div>
 
@@ -360,23 +209,12 @@
         <label>បញ្ជាក់លេខសម្ងាត់ថ្មី</label>
 
         <div class="password-input">
-          <input
-            v-model="passwordForm.confirmPassword"
-            :type="showPassword.confirmPassword ? 'text' : 'password'"
-            :class="{ 'input-error': confirmPasswordError }"
-            @input="confirmPasswordError = ''"
-          />
+          <input v-model="passwordForm.confirmPassword" :type="showPassword.confirmPassword ? 'text' : 'password'"
+            :class="{ 'input-error': confirmPasswordError }" @input="confirmPasswordError = ''" />
 
-          <button
-            type="button"
-            class="password-eye"
-            @click="togglePassword('confirmPassword')"
-          >
-            <i
-              :class="
-                showPassword.confirmPassword ? 'bi bi-eye-slash' : 'bi bi-eye'
-              "
-            ></i>
+          <button type="button" class="password-eye" @click="togglePassword('confirmPassword')">
+            <i :class="showPassword.confirmPassword ? 'bi bi-eye-slash' : 'bi bi-eye'
+              "></i>
           </button>
         </div>
 
@@ -390,44 +228,24 @@
           បោះបង់
         </button>
 
-        <button
-          class="btn btn-green"
-          :disabled="passwordLoading"
-          @click="handleChangePassword"
-        >
+        <button class="btn btn-green" :disabled="passwordLoading" @click="handleChangePassword">
           {{ passwordLoading ? "កំពុងរក្សាទុក..." : "រក្សាទុក" }}
         </button>
       </template>
     </BaseModal>
 
     <!-- Delete account modal -->
-    <BaseModal
-      :is-open="isDeleteAccountModalOpen"
-      title="លុបគណនី"
-      width="500px"
-      @close="closeDeleteAccountModal"
-    >
+    <BaseModal :is-open="isDeleteAccountModalOpen" title="លុបគណនី" width="500px" @close="closeDeleteAccountModal">
       <div class="profile-field">
         <label>លេខសម្ងាត់</label>
 
         <div class="password-input">
-          <input
-            v-model="deleteAccountForm.password"
-            :type="showDeleteAccountPassword ? 'text' : 'password'"
-            :class="{ 'input-error': deleteAccountError }"
-            @input="deleteAccountError = ''"
-          />
+          <input v-model="deleteAccountForm.password" :type="showDeleteAccountPassword ? 'text' : 'password'"
+            :class="{ 'input-error': deleteAccountError }" @input="deleteAccountError = ''" />
 
-          <button
-            type="button"
-            class="password-eye"
-            @click="showDeleteAccountPassword = !showDeleteAccountPassword"
-          >
-            <i
-              :class="
-                showDeleteAccountPassword ? 'bi bi-eye-slash' : 'bi bi-eye'
-              "
-            ></i>
+          <button type="button" class="password-eye" @click="showDeleteAccountPassword = !showDeleteAccountPassword">
+            <i :class="showDeleteAccountPassword ? 'bi bi-eye-slash' : 'bi bi-eye'
+              "></i>
           </button>
         </div>
       </div>
@@ -453,11 +271,7 @@
           បោះបង់
         </button>
 
-        <button
-          class="btn btn-green"
-          :disabled="deleteAccountLoading"
-          @click="handleDeleteAccount"
-        >
+        <button class="btn btn-green" :disabled="deleteAccountLoading" @click="handleDeleteAccount">
           {{ deleteAccountLoading ? "កំពុងលុប..." : "លុបគណនី" }}
         </button>
       </template>
@@ -465,22 +279,30 @@
   </div>
 </template>
 <script setup>
-import { useStudentStore } from "@/stores/student";
+import { useAuthStore } from "@/stores/authStore";
 import { useFormValidation } from "@/composables/useFormValidation";
 import { onMounted, ref, computed } from "vue";
 import { useRouter } from "vue-router";
+
 const router = useRouter();
-const studentStore = useStudentStore();
+const authStore = useAuthStore();
+
+const imgBaseUrl = import.meta.env.VITE_BASE_URL_FOR_IMAGE;
+
 const avatarInput = ref(null);
 const isEditModalOpen = ref(false);
+
 const isPasswordModalOpen = ref(false);
 const passwordLoading = ref(false);
 const passwordError = ref("");
 const passwordSuccess = ref("");
+
 const imageRefresh = ref(Date.now());
+
 const oldPasswordError = ref("");
 const newPasswordError = ref("");
 const confirmPasswordError = ref("");
+
 const avatarDeleting = ref(false);
 const isDeleteAccountModalOpen = ref(false);
 const deleteAccountLoading = ref(false);
@@ -492,20 +314,10 @@ const deleteAccountForm = ref({
 });
 const { errors: validationErrors, validatePassword } = useFormValidation();
 
-// Computed property for the avatar URL
-const avatarUrl = computed(() => {
-  if (!studentStore.profile?.avatar) {
-    return "https://i.pravatar.cc/160?img=32";
-  }
-  return `http://quiz_management_system.tdomain.work.gd${studentStore.profile.avatar}?t=${imageRefresh.value}`;
-});
-
 onMounted(async () => {
-  await studentStore.getProfile();
-  console.log("student profile:", studentStore.profile);
+  await authStore.fetchProfile();
 });
 
-// ===================== Password ======================
 const showPassword = ref({
   oldPassword: false,
   newPassword: false,
@@ -578,7 +390,7 @@ const handleChangePassword = async () => {
   try {
     passwordLoading.value = true;
 
-    await studentStore.changePassword(
+    await authStore.changePassword(
       passwordForm.value.oldPassword,
       passwordForm.value.newPassword,
     );
@@ -595,7 +407,7 @@ const uploadAvatar = async (event) => {
   const file = event.target.files[0];
   if (!file) return;
   try {
-    await studentStore.uploadAvatar(file);
+    await authStore.uploadAvatar(file);
     // Update the timestamp to force the browser to reload the image
     imageRefresh.value = Date.now();
     event.target.value = "";
@@ -608,12 +420,12 @@ const uploadAvatar = async (event) => {
 
 // ===================== Delete Avatar ======================
 const deleteAvatar = async () => {
-  if (!studentStore.profile?.avatar) return;
+  if (!authStore.profile?.avatar) return;
 
   try {
     avatarDeleting.value = true;
 
-    await studentStore.deleteAvatar();
+    await authStore.deleteAvatar();
 
     imageRefresh.value = Date.now();
 
@@ -646,7 +458,7 @@ const saveValue = (value) => {
 };
 
 const openEditModal = () => {
-  const profile = studentStore.profile;
+  const profile = authStore.profile;
 
   editForm.value = {
     firstName: showValue(profile?.firstName),
@@ -664,7 +476,7 @@ const closeEditModal = () => {
 
 const handleUpdateProfile = async () => {
   try {
-    await studentStore.updateProfile({
+    await authStore.updateProfile({
       firstName: saveValue(editForm.value.firstName),
       lastName: saveValue(editForm.value.lastName),
       phone: saveValue(editForm.value.phone),
@@ -701,7 +513,7 @@ const handleDeleteAccount = async () => {
   try {
     deleteAccountLoading.value = true;
 
-    await studentStore.deleteAccount(deleteAccountForm.value.password);
+    await authStore.deleteAccount(deleteAccountForm.value.password);
 
     sessionStorage.removeItem("user_token");
     sessionStorage.removeItem("user_role");
@@ -709,7 +521,7 @@ const handleDeleteAccount = async () => {
     router.replace("/login");
   } catch (err) {
     deleteAccountError.value =
-      studentStore.error || err.message || "លេខសម្ងាត់មិនត្រឹមត្រូវ!";
+      authStore.error || err.message || "លេខសម្ងាត់មិនត្រឹមត្រូវ!";
   } finally {
     deleteAccountLoading.value = false;
   }
@@ -736,36 +548,29 @@ const handleDeleteAccount = async () => {
   --purple-border: #e9d8fd;
   --shadow: 0 2px 6px rgba(15, 23, 42, 0.12);
   --shadow-md: 0 12px 26px rgba(15, 23, 42, 0.14);
+
   width: 100%;
-  min-height: calc(100vh - 150px);
-  display: grid;
-  grid-template-columns: 290px 650px;
-  gap: 16px;
-  align-items: center;
-  align-content: center;
-  justify-content: center;
-  justify-items: stretch;
-  max-width: none;
-  margin: 0;
+  max-width: 1140px;         /* 🎯 Fix ទំហំទទឹងសរុបត្រឹម ១១៤០px (ទំហំស្តង់ដារពេញអេក្រង់ធំល្មម) */
+  margin: 0;                 /* ផ្អែកនៅកៀកខាងឆ្វេងជាប់ Sidebar ដដែល */
   padding: 24px;
-  background: transparent;
+  
+  display: grid;
+  grid-template-columns: 290px 810px; /* 🎯 Fix ទំហំ Card ឆ្វេង ២៩០px និង Card ស្តាំ ៨១០px ជាប់ត្រឹមហ្នឹងតែម្តង */
+  gap: 24px;                 /* គម្លាតចន្លោះ Card ទាំងពីរ */
+  
+  align-items: start;
 }
-
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
 .page-header {
   margin-bottom: 28px;
 }
+
 .page-header h1 {
   font-size: 1.75rem;
   font-weight: 700;
   color: var(--text-primary);
   letter-spacing: -0.01em;
 }
+
 .page-header p {
   font-size: 0.875rem;
   color: var(--text-secondary);
@@ -822,12 +627,11 @@ const handleDeleteAccount = async () => {
   color: #1f2937;
 }
 
-/* LEFT CARD */
 .left-card {
   background: var(--card);
   border-radius: 18px;
   box-shadow: var(--shadow);
-  min-height: 500px;
+  min-height: 560px;        
   padding: 28px 24px 24px;
   display: flex;
   flex-direction: column;
@@ -835,10 +639,23 @@ const handleDeleteAccount = async () => {
   justify-content: center;
 }
 
+/* RIGHT CARD */
+.right-card {
+  background: var(--card);
+  border-radius: 18px;
+  box-shadow: var(--shadow);
+  min-height: 580px;        
+  padding: 28px 30px 32px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; 
+}
+
 .avatar-wrapper {
   position: relative;
   margin-bottom: 16px;
 }
+
 .avatar-wrapper img {
   width: 96px;
   height: 96px;
@@ -847,6 +664,7 @@ const handleDeleteAccount = async () => {
   border: 4px solid #dbe7f7;
   display: block;
 }
+
 .avatar-placeholder {
   width: 96px;
   height: 96px;
@@ -860,6 +678,7 @@ const handleDeleteAccount = async () => {
   font-weight: 700;
   border: 4px solid #dbe7f7;
 }
+
 .btn-upload {
   position: absolute;
   bottom: 0;
@@ -876,9 +695,11 @@ const handleDeleteAccount = async () => {
   box-shadow: var(--shadow);
   transition: box-shadow 0.2s;
 }
+
 .btn-upload:hover {
   box-shadow: var(--shadow-md);
 }
+
 .btn-upload svg {
   width: 14px;
   height: 14px;
@@ -901,9 +722,11 @@ const handleDeleteAccount = async () => {
   box-shadow: var(--shadow);
   transition: background 0.2s;
 }
+
 .btn-delete-avatar:hover {
   background: #fed7d7;
 }
+
 .btn-delete-avatar svg {
   width: 14px;
   height: 14px;
@@ -917,11 +740,13 @@ const handleDeleteAccount = async () => {
   line-height: 1.2;
   margin-bottom: 6px;
 }
+
 .user-email {
   font-size: 0.88rem;
   color: #697392;
   margin-bottom: 10px;
 }
+
 .badge {
   background: #ebf4ff;
   color: var(--blue);
@@ -955,6 +780,7 @@ const handleDeleteAccount = async () => {
   border: none;
   transition: all 0.2s;
 }
+
 .btn svg {
   width: 16px;
   height: 16px;
@@ -966,6 +792,7 @@ const handleDeleteAccount = async () => {
   border: 1.5px solid #1f2937;
   color: var(--text-primary);
 }
+
 .btn-outline:hover {
   background: #f7fafc;
 }
@@ -975,6 +802,7 @@ const handleDeleteAccount = async () => {
   border: 1.5px solid var(--purple-border);
   color: #6b46c1;
 }
+
 .btn-purple:hover {
   background: #e9d8fd;
 }
@@ -984,6 +812,7 @@ const handleDeleteAccount = async () => {
   border: 1.5px solid var(--green-border);
   color: var(--green);
 }
+
 .btn-green:hover {
   background: #c6f6d5;
 }
@@ -996,16 +825,7 @@ const handleDeleteAccount = async () => {
 }
 
 /* RIGHT CARD */
-.right-card {
-  background: var(--card);
-  border-radius: 18px;
-  box-shadow: var(--shadow);
-  min-height: 500px;
-  padding: 28px 30px 32px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
+
 
 .right-card h2 {
   font-family: "Kantumruy Pro", "Noto Sans Khmer", sans-serif;
@@ -1032,6 +852,7 @@ const handleDeleteAccount = async () => {
     box-shadow 0.2s,
     border-color 0.2s;
 }
+
 .info-item:hover {
   box-shadow: var(--shadow);
   border-color: #d6e0ec;
@@ -1048,6 +869,7 @@ const handleDeleteAccount = async () => {
   line-height: 1.5;
   margin-bottom: 8px;
 }
+
 .info-label svg {
   width: 30px;
   height: 30px;
@@ -1060,6 +882,7 @@ const handleDeleteAccount = async () => {
 .icon-green {
   color: var(--green);
 }
+
 .icon-blue {
   color: var(--blue);
 }
@@ -1087,8 +910,9 @@ const handleDeleteAccount = async () => {
 }
 
 @media (min-width: 1280px) {
-  .layout {
-    grid-template-columns: 300px 660px;
+.layout {
+    /* 🎯 បង្ខំឱ្យ Fix ទំហំដដែល ទោះជាអេក្រង់រីកធំប៉ុនណាក៏ដោយ */
+    grid-template-columns: 290px 810px; 
   }
 }
 
@@ -1152,6 +976,7 @@ const handleDeleteAccount = async () => {
     font-size: 1.05rem;
   }
 }
+
 /* Modal */
 :deep(.glass-box) {
   border-radius: 14px;

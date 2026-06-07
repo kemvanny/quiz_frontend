@@ -18,7 +18,7 @@
         "
       >
         <img
-          :src="`http://quiz_management_system.tdomain.work.gd${studentStore.profile?.avatar}`"
+          :src="`${imgBaseUrl}${authStore.profile?.avatar}`"
           alt="avatar"
           style="
             width: 36px;
@@ -32,24 +32,26 @@
           class="d-flex flex-column justify-content-center"
           style="line-height: 1.1"
         >
-          <span class="fw-bold" style="font-size: 0.85rem; color: var(--em-dk)"
-            >{{ studentStore.profile?.firstName }}
-            {{ studentStore.profile?.lastName }}</span
-          >
-          <span style="font-size: 0.7rem; color: var(--em); font-weight: 600">{{
-            studentStore.profile?.role
-          }}</span>
+          <span class="fw-bold" style="font-size: 0.85rem; color: var(--em-dk)">
+            {{ authStore.profile?.firstName }} {{ authStore.profile?.lastName }}
+          </span>
+          <span style="font-size: 0.7rem; color: var(--em); font-weight: 600">
+            {{ authStore.profile?.role }}
+          </span>
         </div>
       </div>
     </div>
   </div>
 </template>
+
 <script setup>
-import { useStudentStore } from "@/stores/student";
+import { useAuthStore } from "@/stores/authStore"; 
 import { onMounted } from "vue";
-const studentStore = useStudentStore();
+
+const imgBaseUrl = import.meta.env.VITE_BASE_URL_FOR_IMAGE;
+const authStore = useAuthStore();
+
 onMounted(async () => {
-  await studentStore.getProfile();
-  console.log("student profile:", studentStore.profile);
+  await authStore.fetchProfile();
 });
 </script>

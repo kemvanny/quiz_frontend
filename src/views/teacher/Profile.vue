@@ -196,7 +196,7 @@
 import { ref, reactive, onMounted } from 'vue';
 import { useToast } from 'vue-toastification';
 import { getProfile, updateProfile, updateAvatar, deleteAvatar } from '@/api/teacher.api';
-import { logout } from '@/api/auth.api';
+import { logoutAPI } from '@/api/auth.api';
 import BaseModal from '@/components/common/BaseModal.vue'; 
 import { useAuthStore } from '@/stores/auth';
 const toast = useToast();
@@ -375,7 +375,7 @@ const openLogoutModal = () => {
 const confirmSignOut = async () => {
   isLogoutModalOpen.value = false; 
   try {
-    await logout(); 
+    await logoutAPI(); 
   } catch (err) {
     console.error("Logout API Error:", err);
   } finally {

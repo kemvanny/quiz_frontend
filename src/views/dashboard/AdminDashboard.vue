@@ -485,7 +485,6 @@ const fetchAllSubmissions = async () => {
       currentPageExam.value = res.data.data.page || 1;
       limitExam.value = res.data.data.limit || 10;
       
-      console.log("Recent Submissions:", submissionList.value);
     }
   } catch (error) {
     console.error("Error fetching all submissions:", error);
