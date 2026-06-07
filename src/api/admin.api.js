@@ -9,7 +9,6 @@ export const createUser = (payload, token) => {
     }
   });
 };
-export const deleteUser = (id) => api.delete(`/admin/users/${id}`);
 
 export const updateStatus = (id, data) => api.put(`/admin/users/status/${id}`, data);
 
