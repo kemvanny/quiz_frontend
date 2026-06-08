@@ -14,20 +14,21 @@ export const logoutAPI = () => {
 export const getProfileAPI = () => {
   return api.get('/user/profile');
 };
-
-// Update Profile 
+ 
+// Update Profile
 export const updateProfileAPI = (profileData) => {
   return api.put("/user/profile", profileData);
 };
 
-// Upload Profile Picture 
+// Upload Profile
 export const uploadProfilePictureAPI = (file) => {
   const formData = new FormData();
+  
   formData.append("avatar", file);
 
   return api.put("/user/profile/avatar", formData, {
     headers: {
-      "Content-Type": "multipart/form-data",
+     "Content-Type": "multipart/form-data",
     },
   });
 };
@@ -45,7 +46,7 @@ export const deleteProfilePictureAPI = () => {
   return api.delete("/user/profile/avatar");
 };
 
-// Delete Account (ដក id ចេញ ព្រោះចាប់តាម Token នៅ Backend)
+// Delete Account
 export const deleteAccountAPI = (password) => {
   return api.delete("/auth/deleteAccount", {
     data: {

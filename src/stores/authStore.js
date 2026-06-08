@@ -8,10 +8,9 @@ import {
   changePasswordAPI,
   deleteProfilePictureAPI,
   deleteAccountAPI,
-} from "@/api/auth.api"; 
+} from "@/api/auth.api";
 
 export const useAuthStore = defineStore("auth", () => {
-
   const profile = ref(null);
   const loading = ref(false);
   const error = ref(null);
@@ -21,10 +20,11 @@ export const useAuthStore = defineStore("auth", () => {
     error.value = null;
     try {
       const response = await getProfileAPI();
-      
+
       profile.value = response.data.data || response.data;
     } catch (err) {
-      error.value = err.response?.data?.message || err.message || "Failed to fetch profile";
+      error.value =
+        err.response?.data?.message || err.message || "Failed to fetch profile";
       console.error("Error fetching profile:", err);
     } finally {
       loading.value = false;
@@ -32,18 +32,18 @@ export const useAuthStore = defineStore("auth", () => {
   };
 
   const uploadAvatar = async (file) => {
-    loading.value = true;
-    error.value = null;
+   loading.value = true;
+   error.value = null;
     try {
-      await uploadProfilePictureAPI(file);
-      await fetchProfile(); 
-      return { success: true };
+      const response = await uploadProfilePictureAPI(file);
+
+      return response.data || response;
     } catch (err) {
-      error.value = err.response?.data?.message || err.message || "Failed to upload avatar";
-      console.error("Error uploading avatar:", err);
+      const errorMsg = err.response?.data?.msg || "Failed to upload";
+      error.value = errorMsg;
       throw err;
     } finally {
-      loading.value = false;
+     loading.value = false;
     }
   };
 
@@ -52,11 +52,14 @@ export const useAuthStore = defineStore("auth", () => {
     error.value = null;
     try {
       const response = await updateProfileAPI(profileData);
-      
+
       profile.value = response.data.data || response.data;
       return response;
     } catch (err) {
-      error.value = err.response?.data?.message || err.message || "Failed to update profile";
+      error.value =
+        err.response?.data?.message ||
+        err.message ||
+        "Failed to update profile";
       console.error("Error updating profile:", err);
       throw err;
     } finally {
@@ -75,7 +78,11 @@ export const useAuthStore = defineStore("auth", () => {
       }
       return response;
     } catch (err) {
-      error.value = err.response?.data?.msg || err.response?.data?.message || err.message || "Failed to change password";
+      error.value =
+        err.response?.data?.msg ||
+        err.response?.data?.message ||
+        err.message ||
+        "Failed to change password";
       console.error("Change password failed:", err);
       throw err;
     } finally {
@@ -83,23 +90,22 @@ export const useAuthStore = defineStore("auth", () => {
     }
   };
 
- 
   const deleteAvatar = async () => {
     loading.value = true;
     error.value = null;
     try {
       const response = await deleteProfilePictureAPI();
-      await fetchProfile(); 
+      await fetchProfile();
       return response;
     } catch (err) {
-      error.value = err.response?.data?.message || err.message || "Failed to delete avatar";
+      error.value =
+        err.response?.data?.message || err.message || "Failed to delete avatar";
       console.error("Error deleting avatar:", err);
       throw err;
     } finally {
       loading.value = false;
     }
   };
-
 
   const deleteAccount = async (password) => {
     loading.value = true;
@@ -109,10 +115,14 @@ export const useAuthStore = defineStore("auth", () => {
       if (response.data?.result === false) {
         throw new Error(response.data?.msg || "Failed to delete account");
       }
-      profile.value = null; 
+      profile.value = null;
       return response;
     } catch (err) {
-      error.value = err.response?.data?.msg || err.response?.data?.message || err.message || "Failed to delete account";
+      error.value =
+        err.response?.data?.msg ||
+        err.response?.data?.message ||
+        err.message ||
+        "Failed to delete account";
       console.error("Delete account failed:", err);
       throw err;
     } finally {

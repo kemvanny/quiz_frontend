@@ -11,7 +11,7 @@
       <template #user-profile>
         <div class="profile-card">
         <div class="profile-info">
-          <img :src="`${imgBaseUrl}${adminProfile.avatar}`" alt="Profile" class="profile-img" />
+          <img :src="`${imgBaseUrl}${adminProfile.avatar}?t=${layoutImageRefresh}`" alt="Profile" class="profile-img" />
           <div class="profile-text">
             <span class="profile-name">{{ adminProfile.firstName }} {{ adminProfile.lastName }}</span>
             <span class="profile-role">{{ adminProfile.role }}</span>
@@ -64,7 +64,7 @@
               <i class="bi bi-bell"></i>
               <span class="dot"></span>
             </button>
-            <img :src="`${imgBaseUrl}${adminProfile.avatar}`" class="avatar" alt="Admin" />
+            <img :src="`${imgBaseUrl}${adminProfile.avatar}?t=${layoutImageRefresh}`" class="avatar" alt="Admin" />
             <div>
               <div class="user-name">{{ adminProfile.firstName }} {{ adminProfile.lastName }}</div>
               <div class="user-role">{{ adminProfile.role }}</div>
@@ -86,23 +86,24 @@
 
 </template>
 <script setup>
-import { ref, onMounted, onUnmounted, watch } from 'vue'
+import { ref, onMounted, onUnmounted, watch, computed } from 'vue'
 import { useRouter } from 'vue-router'
-import { getProfileAPI } from '@/api/auth.api'
 import { getSearchUsers } from '@/api/admin.api'
 import defaultImage from '../assets/images/default.png';
 
+import { useAuthStore } from '@/stores/authStore';
+const authStore = useAuthStore();
+
 const router = useRouter()
-
 const imgBaseUrl = import.meta.env.VITE_BASE_URL_FOR_IMAGE;
-
-
 const isLogoutModalOpen = ref(false);
 
-const adminProfile = ref({
-  fullName: '',
-  email: '',
-  role: ''
+const layoutImageRefresh = ref(Date.now())
+
+const adminProfile = computed(() => authStore.profile || { fullName: '', email: '', role: '', avatar: '' })
+
+watch(() => authStore.profile?.avatar, () => {
+  layoutImageRefresh.value = Date.now()
 })
 
 const usersList = ref([]);
@@ -188,27 +189,13 @@ const handleClickOutside = (event) => {
   }
 }
 
-const fetchAdminProfile = async () => {
-  try {
-    const res = await getProfileAPI()
 
-    if (res.data && res.data.data) {
-      adminProfile.value = res.data.data
-    }
-  } catch (error) {
-    console.error("មិនអាចទាញទិន្នន័យ Profile បានទេ:", error)
-
-    if (error.response && error.response.status === 401) {
-      handleLogout()
-    }
+onMounted(async () => {
+  if (typeof authStore.fetchProfile === 'function') {
+    await authStore.fetchProfile()
   }
-}
-
-onMounted(() => {
-  fetchAdminProfile()
   document.addEventListener('click', handleClickOutside)
 })
-
 onUnmounted(() => {
   document.removeEventListener('click', handleClickOutside)
 })

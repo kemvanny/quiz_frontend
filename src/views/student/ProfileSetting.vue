@@ -2,7 +2,7 @@
   <div class="layout" v-if="authStore.profile">
     <div class="left-card">
       <div class="avatar-wrapper">
-        <img :src="`${imgBaseUrl}${authStore?.profile.avatar}`" alt="Profile photo" class="avatar-image" />
+        <img :src="`${imgBaseUrl}${authStore.profile.avatar}?t=${imageRefresh}`" alt="Profile photo" class="avatar-image" />
         <input ref="avatarInput" type="file" accept="image/*" hidden @change="uploadAvatar" />
 
         <button class="btn-upload" title="Upload photo" @click="avatarInput.click()">
@@ -277,11 +277,17 @@
       </template>
     </BaseModal>
   </div>
+  <div class="toast-wrap">
+    <div class="toast-msg" :class="{ 'show': toast.show }">
+      <i :class="toast.icon"></i>
+      <span>{{ toast.message }}</span>
+    </div>
+  </div>
 </template>
 <script setup>
 import { useAuthStore } from "@/stores/authStore";
 import { useFormValidation } from "@/composables/useFormValidation";
-import { onMounted, ref, computed } from "vue";
+import { onMounted, ref, computed ,reactive} from "vue";
 import { useRouter } from "vue-router";
 
 const router = useRouter();
@@ -291,6 +297,21 @@ const imgBaseUrl = import.meta.env.VITE_BASE_URL_FOR_IMAGE;
 
 const avatarInput = ref(null);
 const isEditModalOpen = ref(false);
+
+const toast = reactive({
+  show: false,
+  message: '',
+  icon: ''
+});
+
+const triggerToast = (msg, iconClass) => {
+  toast.message = msg;
+  toast.icon = iconClass;
+  toast.show = true;
+  setTimeout(() => {
+    toast.show = false;
+  }, 3000);
+}
 
 const isPasswordModalOpen = ref(false);
 const passwordLoading = ref(false);
@@ -314,9 +335,6 @@ const deleteAccountForm = ref({
 });
 const { errors: validationErrors, validatePassword } = useFormValidation();
 
-onMounted(async () => {
-  await authStore.fetchProfile();
-});
 
 const showPassword = ref({
   oldPassword: false,
@@ -406,15 +424,33 @@ const handleChangePassword = async () => {
 const uploadAvatar = async (event) => {
   const file = event.target.files[0];
   if (!file) return;
+
+  if (file.size > 2 * 1024 * 1024) {
+    triggerToast('ទំហំរូបភាពត្រូវតែតូចជាង 2MB', 'fa-solid fa-circle-xmark');
+    return;
+  }
+
   try {
+    triggerToast('កំពុងផ្ទុកឡើងរូបភាព...', 'fa-solid fa-spinner fa-spin');
+    
+    if (authStore.error) authStore.error = null;
+
     await authStore.uploadAvatar(file);
-    // Update the timestamp to force the browser to reload the image
+
+    if (typeof authStore.fetchProfile === 'function') {
+      await authStore.fetchProfile();
+    }
+    
     imageRefresh.value = Date.now();
-    event.target.value = "";
+    
+    triggerToast('ផ្លាស់ប្តូររូបភាពប្រវត្តិរូបជោគជ័យ!', 'fa-solid fa-circle-check');
+
   } catch (err) {
-    console.log("Upload error status:", err.response?.status);
-    console.log("Upload error data:", err.response?.data);
-    console.log("Upload error message:", err.message);
+    console.error("Student upload error:", err);
+    const errorMsg = err.response?.data?.msg || 'មិនអាចផ្ទុកឡើងរូបភាពបានទេ';
+    triggerToast(errorMsg, 'fa-solid fa-circle-xmark');
+  } finally {
+    event.target.value = '';
   }
 };
 
@@ -526,6 +562,11 @@ const handleDeleteAccount = async () => {
     deleteAccountLoading.value = false;
   }
 };
+
+onMounted(async () => {
+  await authStore.fetchProfile();
+});
+
 </script>
 
 <style scoped>

@@ -4,7 +4,7 @@
       <template #user-profile>
         <div class="profile-card">
         <div class="profile-info">
-          <img :src="`${imgBaseUrl}${authStore.profile?.avatar}`" alt="Profile" class="profile-img" />
+          <img :src="`${imgBaseUrl}${authStore.profile?.avatar}?t=${layoutImageRefresh}`" alt="Profile" class="profile-img" />
           <div class="profile-text">
             <span class="profile-name">{{ authStore.profile?.firstName }} {{ authStore.profile?.lastName }}</span>
             <span class="profile-role">{{ authStore.profile?.role }}</span>
@@ -35,7 +35,7 @@
 </template>
 
 <script setup>
-import { computed ,ref,onMounted} from "vue";
+import { computed ,ref,onMounted,watch} from "vue";
 import { useRoute } from "vue-router";
 import DashboardNav from "@/components/layout/navbar/student/DashboardNav.vue";
 import ClassroomNav from "@/components/layout/navbar/student/ClassroomNav.vue";
@@ -51,6 +51,7 @@ const route = useRoute();
 
 const imgBaseUrl = import.meta.env.VITE_BASE_URL_FOR_IMAGE
 const isLogoutModalOpen = ref(false)
+const layoutImageRefresh = ref(Date.now())
 
 const studentMainMenus = [
   {
@@ -96,14 +97,14 @@ const handleLogout = () => {
   router.push('/login')
 }
 
+watch(() => authStore.profile?.avatar, () => {
+  layoutImageRefresh.value = Date.now()
+})
+
 onMounted(async () => {
   
-  if (!authStore.profile) {
-    try {
-      await authStore.fetchProfile() 
-    } catch (err) {
-      console.error("Failed to load profile to store:", err)
-    }
+ if (typeof authStore.fetchProfile === 'function') {
+    await authStore.fetchProfile()
   }
 })
 
