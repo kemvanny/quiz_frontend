@@ -14,6 +14,8 @@ import StudentDashboard from '@/views/dashboard/StudentDashboard.vue'
 import Quizzes from '@/views/teacher/Quizzes.vue'
 import FinalExam from '@/views/teacher/FinalExam.vue'
 import RoomManagement from '@/views/teacher/RoomManagement.vue'
+import RoomDetail from '@/views/teacher/RoomDetail.vue'
+import ExamDetailView from '@/views/teacher/ExamDetailView.vue'
 import ClassStream from '@/views/teacher/ClassStream.vue'
 import StudentResults from '@/views/teacher/StudentResults.vue'
 import TeacherValidations from '@/views/teacher/TeacherValidations.vue'
@@ -116,6 +118,20 @@ const router = createRouter({
         component: RoomManagement,
         meta: {title: "Room Management"}
       },
+      {
+          path: 'room-management/:roomId',
+          name: 'RoomDetail',
+          component: RoomDetail,
+          meta: { title: "Room Details" },
+          props: true 
+        },
+        {
+          path: 'exams/:examId',
+          name: 'ExamDetailView',
+          component: ExamDetailView,
+          meta: { title: "Exam Quiz View" },
+          props: true
+        },
       {
         path: 'class-stream',
         name: 'ClassStream',

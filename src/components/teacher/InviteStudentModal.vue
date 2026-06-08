@@ -171,7 +171,6 @@ const sendSingleInvite = async () => {
   border: 1px solid #e2e8f0;
 }
 
-/* ធានាថា Table ដើរតួជា Inner content */
 .invites-list-container table {
   width: 100%;
 }

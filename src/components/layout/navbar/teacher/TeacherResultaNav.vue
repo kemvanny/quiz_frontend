@@ -52,11 +52,13 @@
                     style="border: 1px solid var(--bdr); background: #ffffff; cursor: pointer; transition: .2s; box-shadow: var(--sh-sm);"
                     onmouseover="this.style.borderColor='var(--em-mid)';"
                     onmouseout="this.style.borderColor='var(--bdr)';">
-                    <img src="https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcQTs4Gaz2D9hyLPSjUFHdcLhwoP5JbyaMy3-CXKrYPU4oJnTeRW"
+                    
+                    <img :src="authStore.avatarUrl"
                         alt="avatar"
                         style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover; border: 1.5px solid var(--em-mid);" />
+                    
                     <div class="d-none d-sm-flex flex-column justify-content-center pe-2" style="line-height: 1.1;">
-                        <span class="fw-bold" style="font-size: .8rem; color: var(--txt);">Hean Liza</span>
+                        <span class="fw-bold" style="font-size: .8rem; color: var(--txt);">{{ authStore.fullName }}</span>
                         <span style="font-size: .65rem; color: var(--txt-mu); font-weight: 500;">Instructor</span>
                     </div>
                 </div>
@@ -64,6 +66,17 @@
         </div>
     </div>
 </template>
+
+<script setup>
+import { onMounted } from 'vue';
+import { useAuthStore } from '@/stores/auth'; 
+
+const authStore = useAuthStore();
+
+onMounted(() => {
+  authStore.fetchUserProfile();
+});
+</script>
 
 <style scoped>
 .tb-section {

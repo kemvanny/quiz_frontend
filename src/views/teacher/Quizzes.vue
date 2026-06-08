@@ -1,13 +1,9 @@
 <template>
   <div class="quiz-builder-container">
     <div class="app-shell flex-grow-1 overflow-hidden">
-      <!-- ══ MAIN COLUMN ══ -->
       <div class="main-col">
-
-        <!-- ══ WORKSPACE ══ -->
         <div class="workspace">
-
-          <!-- LEFT: Question list -->
+          
           <div class="panel">
             <div class="panel-head">
               <span class="panel-lbl">Question List</span>
@@ -28,16 +24,12 @@
               style="border:1.5px dashed rgba(16,185,129,.35)!important;background:rgba(16,185,129,.04);color:var(--em);font-size:.78rem"
               @click="addNewQuestion">
               <i class="fas fa-plus-circle me-1"></i> បន្ថែមសំណួរថ្មី
-            </button>
+            </button>  
           </div>
 
-          <!-- CENTER: Scrollable feed -->
           <div class="feed-col" id="questionFeed">
-            
-            <!-- Compact Glass Quiz Title Header -->
             <div class="flex-shrink-0 mb-2 p-3 position-relative overflow-hidden quiz-info-header">
               <div class="position-absolute decoration-circle"></div>
-
               <div class="position-relative z-1 d-flex flex-column gap-1">
                 <div class="d-flex align-items-center gap-2 mb-1">
                   <div class="d-flex align-items-center justify-content-center rounded-circle icon-circle">
@@ -45,13 +37,11 @@
                   </div>
                   <div class="quiz-info-lbl">Quiz Info</div>
                 </div>
-
                 <input type="text" v-model="quizTitle" class="w-100 border-0 fw-bold p-0 text-dark quiz-title-input" onfocus="this.style.color='var(--em)'" onblur="this.style.color='var(--txt)'" placeholder="Enter Quiz Title...">
                 <textarea v-model="quizInstructions" class="w-100 border-0 p-0 m-0 quiz-desc-input" rows="1" placeholder="Provide optional instructions..." @input="autoGrowTextarea"></textarea>
               </div>
             </div>
 
-            <!-- Dynamic Question Cards -->
             <div v-for="(q, qIdx) in questions" 
                  :key="qIdx" 
                  :id="`qcard-${qIdx}`"
@@ -59,7 +49,6 @@
                  :class="{ 'active-card': selectedQuestionIndex === qIdx }"
                  @click="selectedQuestionIndex = qIdx">
               
-              <!-- Card header -->
               <div class="d-flex align-items-center justify-content-between px-3 py-2 border-bottom bg-light">
                 <div class="d-flex align-items-center gap-2">
                   <div class="q-num-badge">{{ qIdx + 1 }}</div>
@@ -71,12 +60,10 @@
                 </div>
               </div>
 
-              <!-- Card body -->
               <div class="p-3 d-flex flex-column gap-2">
                 <textarea v-model="q.text" class="q-field" rows="3" placeholder="Type your question here…"></textarea>
                 <div class="text-uppercase fw-bold text-muted" style="font-size:.6rem;letter-spacing:1.1px">Answers &amp; Choices</div>
                 
-                <!-- Choices grid -->
                 <div class="d-flex flex-column gap-2">
                   <div v-for="(choice, cIdx) in q.choices" 
                        :key="cIdx" 
@@ -101,7 +88,6 @@
                 </div>
               </div>
 
-              <!-- Card footer -->
               <div class="d-flex align-items-center justify-content-between px-3 pb-3">
                 <button class="btn btn-sm fw-bold rounded-3 border-0 bg-transparent text-emerald" style="color:var(--em);font-size:.76rem" @click="addChoice(qIdx)">
                   <i class="fas fa-plus-circle me-1"></i> បន្ថែមជម្រើស
@@ -111,16 +97,13 @@
                 </button>
               </div>
             </div>
-
           </div>
 
-          <!-- RIGHT: Progress panel -->
           <div class="panel">
             <div class="panel-head">
               <span class="panel-lbl">Quiz Progress</span>
             </div>
             <div class="flex-grow-1 overflow-y-auto p-3 d-flex flex-column gap-3" style="padding:16px 14px">
-              <!-- Ring -->
               <div class="d-flex justify-content-center">
                 <div style="position:relative;width:120px;height:120px">
                   <svg width="120" height="120" viewBox="0 0 120 120" class="svg-ring">
@@ -154,110 +137,37 @@
               <button class="btn btn-outline-secondary btn-sm rounded-3 fw-bold w-100" @click="openPreviewModal">
                 <i class="fas fa-eye me-1"></i> Preview
               </button>
-              <button class="btn btn-sm rounded-3 fw-bold text-white w-100 save-publish-btn" style="background:linear-gradient(135deg,var(--em),var(--em-dk));box-shadow:0 4px 14px rgba(16,185,129,.3)" @click="saveFullQuiz">
-                <i class="fas fa-paper-plane me-1"></i> Publish
+              <button class="btn btn-sm rounded-3 fw-bold text-white w-100 save-publish-btn" style="background:linear-gradient(135deg,var(--em),var(--em-dk));box-shadow:0 4px 14px rgba(16,185,129,.3)" @click="finalizePublish" :disabled="isSubmitting">
+                <span v-if="isSubmitting" class="spinner-border spinner-border-sm me-1"></span>
+                <i v-else class="fas fa-paper-plane me-1"></i> Publish
               </button>
             </div>
           </div>
-        </div><!-- /workspace -->
-      </div><!-- /main-col -->
-    </div><!-- /app-shell -->
 
-    <!-- ══ PUBLISH MODAL ══ -->
-    <div class="modal-overlay" v-if="showPublishModal" @click.self="showPublishModal = false">
-      <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content border-0 rounded-4 shadow-lg p-1">
-          <div class="modal-header border-0 pb-0">
-            <h5 class="modal-title fw-bold">
-              <i class="fas fa-paper-plane me-2 text-success"></i> Publish Quiz
-            </h5>
-            <button type="button" class="btn-close" @click="showPublishModal = false"></button>
-          </div>
-          <div class="modal-body pt-3">
-            <p class="text-muted small mb-3">Review your quiz details before publishing to students.</p>
-            <div class="row g-2 mb-3">
-              <div class="col-4">
-                <div class="p-3 rounded-3 text-center" style="background:var(--em-soft)">
-                  <div class="fw-bold" style="color:var(--em);font-size:1.2rem">{{ totalPoints }}/100</div>
-                  <div class="text-muted fw-bold text-uppercase mt-1" style="font-size:.65rem">Points</div>
-                </div>
-              </div>
-              <div class="col-4">
-                <div class="p-3 rounded-3 text-center" style="background:#eff6ff">
-                  <div class="fw-bold" style="color:#3b82f6;font-size:1.2rem">{{ questions.length }}</div>
-                  <div class="text-muted fw-bold text-uppercase mt-1" style="font-size:.65rem">Questions</div>
-                </div>
-              </div>
-              <div class="col-4">
-                <div class="p-3 rounded-3 text-center" style="background:#fefce8">
-                  <div class="fw-bold" style="color:#f59e0b;font-size:1.2rem">{{ progressPercent }}%</div>
-                  <div class="text-muted fw-bold text-uppercase mt-1" style="font-size:.65rem">Completion</div>
-                </div>
-              </div>
-            </div>
-            <div class="mb-4">
-              <label class="form-label small fw-bold text-muted">Overall progress</label>
-              <div class="progress rounded-pill" style="height:8px">
-                <div class="progress-bar" :style="{ width: progressPercent + '%' }" style="background:linear-gradient(90deg,var(--em),#34d399);"></div>
-              </div>
-            </div>
-            <div class="mb-4">
-              <label class="form-label small fw-bold text-muted text-uppercase" style="letter-spacing:.8px">Assign to Room</label>
-              <div class="input-group shadow-sm">
-                <select v-model="assignedRoom" class="form-select shadow-none" style="font-size:.9rem; border-color: var(--bdr);">
-                  <option value="">Select classroom…</option>
-                  <option value="Math Grade 10">Math – Grade 10</option>
-                  <option value="Science Grade 9">Science – Grade 9</option>
-                  <option value="Grade 12-A">Grade 12-A</option>
-                  <option value="Grade 11-B">Grade 11-B</option>
-                </select>
-                <button class="btn fw-bold px-3 shadow-none new-room-modal-btn" type="button" style="background: var(--em-soft); color: var(--em); border: 1px solid var(--em-mid); font-size:.9rem; transition:.2s;" onmouseover="this.style.background='#d1fae5'" onmouseout="this.style.background='var(--em-soft)'">
-                  <i class="fas fa-plus me-1"></i> New Room
-                </button>
-              </div>
-            </div>
-            <div class="p-3 rounded-3 small" style="background:var(--em-soft);color:var(--em);">
-              <i class="fas fa-info-circle me-2"></i>
-              Students will be notified immediately once published.
-            </div>
-          </div>
-          <div class="modal-footer border-0 pt-0 pb-3 px-3">
-            <button class="btn btn-light rounded-3 fw-bold px-3" @click="showPublishModal = false">Cancel</button>
-            <button class="btn text-white rounded-3 fw-bold px-4 finalize-pub-btn" style="background:linear-gradient(135deg,var(--em),var(--em-dk))" @click="finalizePublish">
-              <i class="fas fa-paper-plane me-1"></i> Publish Now
-            </button>
-          </div>
         </div>
       </div>
     </div>
 
-    <!-- ══ PREVIEW MODAL (STUDENT VIEW) ══ -->
     <div class="modal-overlay" v-if="showPreviewModal" @click.self="showPreviewModal = false">
       <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
         <div class="modal-content border-0 rounded-4 shadow-lg overflow-hidden" style="background: #f8fafc;">
-          
-          <!-- Top Accent Bar -->
           <div style="height: 6px; background: linear-gradient(90deg, var(--em), var(--em-dk));"></div>
-          
           <div class="modal-header border-0 pb-0 px-4 pt-4">
             <h5 class="modal-title fw-bold text-dark d-flex align-items-center gap-2">
               <i class="fas fa-eye" style="color: var(--em);"></i> Student Preview
             </h5>
             <button type="button" class="btn-close shadow-none" @click="showPreviewModal = false"></button>
           </div>
-          
           <div class="modal-body p-4" style="user-select: none; -webkit-user-select: none; max-height: 60vh; overflow-y: auto;">
             <div class="mb-4 pb-3 border-bottom text-center">
               <h3 class="fw-bold" style="color: var(--txt);">{{ quizTitle || 'Untitled Quiz' }}</h3>
               <p class="text-muted small mb-1" v-if="quizInstructions">{{ quizInstructions }}</p>
               <p class="text-muted small mb-0">This is exactly how students will see the exam.</p>
             </div>
-
             <div v-if="questions.length === 0" class="text-center py-5 text-muted">
               <i class="fas fa-inbox fa-3x mb-3 opacity-50"></i>
               <p>No questions added yet.</p>
             </div>
-
             <div v-else>
               <div v-for="(q, index) in questions" :key="index" class="mb-4">
                 <div class="d-flex justify-content-between align-items-center mb-3">
@@ -265,15 +175,13 @@
                   <span class="text-muted fw-bold" style="font-size: .85rem;">{{ q.pts }} Points</span>
                 </div>
                 <h5 class="fw-bold mb-3" style="color: var(--txt); line-height: 1.5;">{{ q.text || '(Empty Question)' }}</h5>
-                
                 <div class="options-container">
                   <div v-for="(choice, cIdx) in q.choices" 
                        :key="cIdx" 
-                       class="p-3 mb-2 bg-white rounded-3 shadow-sm border option-preview-row" 
-                       style="cursor: pointer; transition: .2s;">
+                       class="p-3 mb-2 bg-white rounded-3 shadow-sm border option-preview-row">
                     <div class="form-check m-0 d-flex align-items-center gap-2">
-                      <input class="form-check-input mt-0 shadow-none" type="radio" :name="`preview_q${index}`" :id="`preview_q${index}_opt${cIdx}`">
-                      <label class="form-check-label w-100" :for="`preview_q${index}_opt${cIdx}`" style="color: var(--txt); font-size: .95rem; cursor: pointer;">
+                      <input class="form-check-input mt-0 shadow-none" type="radio" :name="`preview_q${index}`">
+                      <label class="form-check-label w-100" style="color: var(--txt); font-size: .95rem;">
                         {{ choice.text || `Option ${getKhmerAlphabet(cIdx)}` }}
                       </label>
                     </div>
@@ -283,31 +191,71 @@
               </div>
             </div>
           </div>
-          
           <div class="modal-footer border-0 pt-0 pb-4 px-4 bg-white" style="border-top: 1px solid var(--bdr) !important;">
             <button class="btn btn-light rounded-3 fw-bold px-4" @click="showPreviewModal = false">Exit Preview</button>
-            <button class="btn text-white rounded-3 fw-bold px-4 disabled" style="background: var(--em);">
-              Submit Exam
-            </button>
+            <button class="btn text-white rounded-3 fw-bold px-4 disabled" style="background: var(--em);">Submit Exam</button>
           </div>
         </div>
+      </div>
+    </div>
+
+    <div v-if="showCodeModal" class="modal-backdrop-custom d-flex align-items-center justify-content-center" @click.self="showCodeModal = false">
+      <div class="modal-dialog-custom p-4 bg-white rounded-4 shadow-lg text-center slide-in" style="width: 100%; max-width: 420px; z-index: 9999;">
+        
+        <div class="success-icon-wrapper mb-3 mx-auto d-flex align-items-center justify-content-center rounded-circle bg-success bg-opacity-10 text-success" style="width: 56px; height: 56px;">
+          <i class="fas fa-check-circle fa-2x"></i>
+        </div>
+
+        <h4 class="fw-bold text-dark mb-1">បង្កើតវិញ្ញាសាជោគជ័យ!</h4>
+        <p class="text-muted small mb-4">វិញ្ញាសារបស់អ្នកត្រូវបានដាក់ផ្សាយជាផ្លូវការរួចរាល់ហើយ។ សូមចម្លងកូដខាងក្រោមដើម្បីផ្ញើចូលទៅកាន់ថ្នាក់រៀនរបស់អ្នក៖</p>
+
+        <div class="d-flex align-items-center justify-content-between p-3 mb-4 rounded-3 border bg-light">
+          <span class="fw-bold fs-4 text-dark" style="letter-spacing: 1px; font-family: monospace;">{{ generatedExamCode }}</span>
+          <button class="btn btn-sm btn-dark rounded-2 px-3 fw-bold d-flex align-items-center gap-1" @click="copyCodeToClipboard">
+            <i class="far fa-copy"></i> Copy
+          </button>
+        </div>
+
+        <div class="w-100">
+          <button class="btn btn-light w-100 rounded-3 fw-bold py-2 text-muted" @click="showCodeModal = false">
+            បិទផ្ទាំងនេះ (Close)
+          </button>
+        </div>
+
       </div>
     </div>
 
   </div>
 </template>
 
+
 <script setup>
-import { ref, computed, nextTick } from 'vue'
+import { ref, computed, nextTick, onMounted } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { useToast } from 'vue-toastification'
+import { useAuthStore } from '@/stores/auth' 
+import { createExam, createQuestion } from '@/api/exam.api'
 
+const route = useRoute()
+const router = useRouter()
+const toast = useToast()
+const authStore = useAuthStore() 
+
+// UI Control States
 const qNavScrollRef = ref(null)
+const isSubmitting = ref(false)
+const showPreviewModal = ref(false)
+const selectedQuestionIndex = ref(0)
 
-const quizTitle = ref('Create Quiz')
+// Alphanumeric Exam Joining Code Modal States
+const showCodeModal = ref(false)
+const generatedExamCode = ref('')
+
+// Form Reactive Fields
+const quizTitle = ref('')
 const quizInstructions = ref('')
-const quizStatus = ref('Draft')
 const quizDuration = ref(60)
 
-// Khmer labels and alphabet mapping
 const KH = ["ក", "ខ", "គ", "ឃ", "ង", "ច"]
 const KH_N = ["១", "២", "៣", "៤", "៥", "៦", "៧", "៨", "៩", "១០"]
 
@@ -315,6 +263,7 @@ const questions = ref([
   {
     text: '',
     pts: 10,
+    question_type: 'multiple_choice',
     choices: [
       { text: '', isCorrect: true },
       { text: '', isCorrect: false }
@@ -322,35 +271,10 @@ const questions = ref([
   }
 ])
 
-const selectedQuestionIndex = ref(0)
-const showPublishModal = ref(false)
-const showPreviewModal = ref(false)
-const assignedRoom = ref('')
+// Helpers & Calculators
+const getKhmerNumber = (num) => KH_N[num - 1] || num.toString()
+const getKhmerAlphabet = (idx) => KH[idx] || String.fromCharCode(65 + idx)
 
-const getKhmerNumber = (num) => {
-  return KH_N[num - 1] || num.toString()
-}
-
-const getKhmerAlphabet = (idx) => {
-  return KH[idx] || String.fromCharCode(65 + idx)
-}
-
-// Question Navigation Selection & auto scroll
-const selectQuestion = (idx) => {
-  selectedQuestionIndex.value = idx
-  // Scroll center feed to the selected card
-  const card = document.getElementById(`qcard-${idx}`)
-  if (card) {
-    card.scrollIntoView({ behavior: 'smooth', block: 'start' })
-  }
-  // Scroll left nav to keep the active item visible
-  const navItem = document.getElementById(`qnav-${idx}`)
-  if (navItem && qNavScrollRef.value) {
-    navItem.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
-  }
-}
-
-// Stats & Progress Calculations
 const totalPoints = computed(() => {
   return questions.value.reduce((sum, q) => sum + (parseInt(q.pts) || 0), 0)
 })
@@ -369,11 +293,24 @@ const progressColor = computed(() => {
   return '#f59e0b'
 })
 
-// Question Card Add/Delete
+// Question Items Managers
+const selectQuestion = (idx) => {
+  selectedQuestionIndex.value = idx
+  const card = document.getElementById(`qcard-${idx}`)
+  if (card) {
+    card.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
+  const navItem = document.getElementById(`qnav-${idx}`)
+  if (navItem && qNavScrollRef.value) {
+    navItem.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
+  }
+}
+
 const addNewQuestion = () => {
   questions.value.push({
     text: '',
     pts: 10,
+    question_type: 'multiple_choice',
     choices: [
       { text: '', isCorrect: true },
       { text: '', isCorrect: false }
@@ -383,12 +320,8 @@ const addNewQuestion = () => {
   selectedQuestionIndex.value = newIndex
 
   nextTick(() => {
-    // Scroll the center feed to the new question card
     const card = document.getElementById(`qcard-${newIndex}`)
-    if (card) {
-      card.scrollIntoView({ behavior: 'smooth', block: 'start' })
-    }
-    // Scroll the left Question List panel to the bottom so the new item is visible
+    if (card) card.scrollIntoView({ behavior: 'smooth', block: 'start' })
     if (qNavScrollRef.value) {
       qNavScrollRef.value.scrollTo({
         top: qNavScrollRef.value.scrollHeight,
@@ -407,7 +340,6 @@ const removeQuestion = (idx) => {
   }
 }
 
-// Options/Choices Add/Delete
 const addChoice = (qIdx) => {
   const q = questions.value[qIdx]
   if (q.choices.length < KH.length) {
@@ -417,9 +349,7 @@ const addChoice = (qIdx) => {
 
 const removeChoice = (qIdx, cIdx) => {
   const q = questions.value[qIdx]
-  if (q.choices.length > 1) {
-    q.choices.splice(cIdx, 1)
-  }
+  if (q.choices.length > 1) q.choices.splice(cIdx, 1)
 }
 
 const setCorrectChoice = (qIdx, cIdx) => {
@@ -428,27 +358,101 @@ const setCorrectChoice = (qIdx, cIdx) => {
   })
 }
 
-// Modal Handlers
-const openPreviewModal = () => {
-  showPreviewModal.value = true
-}
-
-const saveFullQuiz = () => {
-  showPublishModal.value = true
-}
-
-const finalizePublish = () => {
-  alert("ជោគជ័យ! កម្រងសំណួរត្រូវបានផ្ញើទៅកាន់ថ្នាក់រៀន។")
-  showPublishModal.value = false
-}
-
-// Auto grow description textarea
+const openPreviewModal = () => { showPreviewModal.value = true }
 const autoGrowTextarea = (event) => {
   const el = event.target
   el.style.height = 'auto'
   el.style.height = el.scrollHeight + 'px'
 }
+
+// Pure code-based generation flow without room bindings
+const finalizePublish = async () => {
+  if (!quizTitle.value || !quizTitle.value.trim()) {
+    toast.error("សូមបញ្ចូលចំណងជើងវិញ្ញាសា!")
+    return
+  }
+
+  try {
+    isSubmitting.value = true
+
+    // Generate date parameters programmatically
+    const today = new Date()
+    const start_date_only = today.toISOString().split('T')[0]
+    
+    const nextWeek = new Date()
+    nextWeek.setDate(today.getDate() + 7)
+    const end_date_only = nextWeek.toISOString().split('T')[0]
+
+    const examPayload = {
+      title: quizTitle.value.trim(),
+      type: 'quiz',
+      description: quizInstructions.value ? quizInstructions.value.trim() : 'គ្មានការពិពណ៌នា',
+      duration: parseInt(quizDuration.value) || 60,
+      total_points: totalPoints.value,
+      status: 'active',
+      start_time: start_date_only, 
+      end_time: end_date_only
+    }
+
+    // 1. Fire creation request
+    const createRes = await createExam(examPayload)
+    const createdExam = createRes.data?.data || createRes.data
+
+    if (!createdExam || !createdExam.id) {
+      toast.error("ការបង្កើតវិញ្ញាសាបានបរាជ័យ!")
+      return
+    }
+
+    // 2. Loop and attach all generated questions to this exam container ID
+    for (const q of questions.value) {
+      const parsedOptions = q.choices.map(c => c.text.trim())
+      const correctChoiceObj = q.choices.find(c => c.isCorrect)
+      const parsedCorrectAnswer = correctChoiceObj ? correctChoiceObj.text.trim() : parsedOptions[0]
+
+      const questionPayload = {
+        exam_id: createdExam.id,
+        question: q.text.trim() || 'សំណួរទទេ',
+        options: JSON.stringify(parsedOptions),
+        correct_answer: JSON.stringify([parsedCorrectAnswer]),
+        points: parseInt(q.pts) || 5
+      }
+      await createQuestion(questionPayload)
+    }
+
+    // 3. Catch generated exam_code directly from response to open your success modal popup
+    if (createdExam.exam_code) {
+      generatedExamCode.value = createdExam.exam_code
+      showCodeModal.value = true
+      toast.success("បង្កើតវិញ្ញាសាជោគជ័យ!")
+    } else {
+      toast.warning("បង្កើតជោគជ័យ ប៉ុន្តែមិនទាន់មានកូដវិញ្ញាសាពី Backend ទេ")
+    }
+
+  } catch (err) {
+    console.error("Failed to build quiz structural components:", err)
+    toast.error("មានបញ្ហាក្នុងការបង្កើតវិញ្ញាសា!")
+  } finally {
+    isSubmitting.value = false
+  }
+}
+
+// Clipboard Action Handlers
+const copyCodeToClipboard = async () => {
+  try {
+    await navigator.clipboard.writeText(generatedExamCode.value)
+    toast.success("បានចម្លងកូដវិញ្ញាសារួចរាល់!")
+  } catch (err) {
+    toast.error("មិនអាចចម្លងកូដបានទេ!")
+  }
+}
+
+onMounted(() => {
+  if (!authStore.user) {
+    authStore.fetchUserProfile()
+  }
+})
 </script>
+
 
 <style scoped>
 .quiz-builder-container {
@@ -491,31 +495,6 @@ const autoGrowTextarea = (event) => {
   flex-direction: column; 
   height: 100%; 
   overflow: hidden; 
-}
-
-/* ── Topbar ── */
-.topbar {
-  flex-shrink: 0;
-  height: 64px;
-  background: var(--surf);
-  border-bottom: 1px solid var(--bdr);
-  display: flex;
-  align-items: center;
-}
-
-.tb-section { 
-  display: flex; 
-  align-items: center; 
-  padding: 0 18px; 
-  border-right: 1px solid var(--bdr); 
-  gap: 12px; 
-  height: 100%;
-}
-.tb-section:last-child { 
-  border-right: none; 
-}
-.tb-section.grow { 
-  flex: 1; 
 }
 
 /* Workspace 3-col grid */
@@ -910,14 +889,10 @@ const autoGrowTextarea = (event) => {
   border-color: var(--em) !important;
   background: var(--em-soft) !important;
 }
-</style>
-
-<style>
-/* Clean layout overrides when Quiz Builder is active to make it full bleed on the right of the sidebar */
 .content-body:has(.quiz-builder-container) {
   padding: 0 !important;
   overflow: hidden !important;
-  height: calc(100vh - 80px) !important; /* Fit perfectly below the standard shared top navbar */
+  height: calc(100vh - 80px) !important;
   background-color: #f4f7fe;
 }
 
@@ -929,4 +904,27 @@ const autoGrowTextarea = (event) => {
 .content-body:has(.quiz-builder-container) .main-content {
   height: 100% !important;
 }
+
+.modal-backdrop-custom {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(15, 23, 42, 0.3);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 9999;
+}
+
+/* Micro Animation Entrance Specs */
+.slide-in {
+  animation: modalSlideEntrance 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes modalSlideEntrance {
+  from { opacity: 0; transform: translateY(12px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
 </style>
+

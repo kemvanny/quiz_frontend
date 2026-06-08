@@ -7,16 +7,17 @@
                     <i class="fas fa-bars"></i>
                 </button>
                 <div style="min-width: 0;">
-                    <h4 class="m-0 fw-bold text-dark fs-5 text-truncate">{{title}}</h4>
+                    <h4 class="m-0 fw-bold text-dark fs-5 text-truncate">{{ title }}</h4>
                 </div>
             </div>
 
-            <!-- Profile Dropdown -->
             <div class="profile-pill flex-shrink-0 pe-2">
-                <img src="https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcQTs4Gaz2D9hyLPSjUFHdcLhwoP5JbyaMy3-CXKrYPU4oJnTeRW"
-                    alt="avatar" class="profile-ava" />
+                <img :src="authStore.avatarUrl" alt="avatar" class="profile-ava" />
+                
                 <div class="d-none d-sm-flex flex-column justify-content-center" style="line-height: 1.1;">
-                    <span class="fw-bold" style="font-size: .8rem; color: var(--txt);">Hean Liza</span>
+                    <span class="fw-bold" style="font-size: .8rem; color: var(--txt);">
+                        {{ authStore.fullName }}
+                    </span>
                     <span style="font-size: .65rem; color: var(--txt-mu); font-weight: 500;">Instructor</span>
                 </div>
             </div>
@@ -25,9 +26,17 @@
 </template>
 
 <script setup>
+import { onMounted } from 'vue';
+import { useAuthStore } from '@/stores/auth';
 defineProps(({
     title: { type: String, default: 'ការកំណត់គណនី' }
 }))
+
+const authStore = useAuthStore();
+
+onMounted(() => {
+  authStore.fetchUserProfile();
+});
 </script>
 
 <style>

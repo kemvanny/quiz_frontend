@@ -21,10 +21,8 @@ export const useStudentStore = defineStore("student", () => {
     error.value = null;
     try {
       const response = await getStudentProfile();
-      profile.value = response.data.data; // Correctly accessing nested data payload
+      profile.value = response.data.data; 
     } catch (err) {
-      // 1. Changed block variable to 'err' to avoid name clashing with the 'error' ref
-      // 2. Extracted readable message text string for easier UI rendering
       error.value =
         err.response?.data?.message || err.message || "Failed to fetch profile";
       console.error("Error fetching profile:", err);
