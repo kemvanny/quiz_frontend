@@ -1,6 +1,26 @@
 <template>
   <div class="app-layout">
-    <BaseSidebar :mainMenus="studentMainMenus" />
+    <BaseSidebar :mainMenus="studentMainMenus" @logout="handleLogout">
+      <template #user-profile>
+        <div class="profile-card">
+        <div class="profile-info">
+          <img :src="`${imgBaseUrl}${authStore.profile?.avatar}?t=${layoutImageRefresh}`" alt="Profile" class="profile-img" />
+          <div class="profile-text">
+            <span class="profile-name">{{ authStore.profile?.firstName }} {{ authStore.profile?.lastName }}</span>
+            <span class="profile-role">{{ authStore.profile?.role }}</span>
+          </div>
+        </div>
+
+        <button class="logout-btn" @click.prevent="isLogoutModalOpen = true" title="ចាកចេញ">
+          <i class="bi bi-box-arrow-right"></i>
+        </button>
+
+        <LogoutModal :show="isLogoutModalOpen" title="Student" @close="isLogoutModalOpen = false"
+          @confirm="handleLogout" />
+
+      </div>
+      </template>
+    </BaseSidebar>
     <div class="main-wrapper">
       <component :is="activeNavbar" />
       <main class="content-body">
@@ -15,15 +35,23 @@
 </template>
 
 <script setup>
-import { computed } from "vue";
+import { computed ,ref,onMounted,watch} from "vue";
 import { useRoute } from "vue-router";
 import DashboardNav from "@/components/layout/navbar/student/DashboardNav.vue";
 import ClassroomNav from "@/components/layout/navbar/student/ClassroomNav.vue";
 import AnalyticsResultNav from "@/components/layout/navbar/student/AnalyticsResultNav.vue";
 import ProfilesettingNav from "@/components/layout/navbar/student/ProfilesettingNav.vue";
 import AssignmentNav from "@/components/layout/navbar/student/AssignmentNav.vue";
+import { useRouter } from "vue-router";
+import { useAuthStore } from "@/stores/authStore";
 
+const router = useRouter()
+const authStore = useAuthStore()
 const route = useRoute();
+
+const imgBaseUrl = import.meta.env.VITE_BASE_URL_FOR_IMAGE
+const isLogoutModalOpen = ref(false)
+const layoutImageRefresh = ref(Date.now())
 
 const studentMainMenus = [
   {
@@ -63,6 +91,23 @@ const activeNavbar = computed(() => {
       return ProfilesettingNav;
   }
 });
+const handleLogout = () => {
+  isLogoutModalOpen.value = false
+  sessionStorage.clear()
+  router.push('/login')
+}
+
+watch(() => authStore.profile?.avatar, () => {
+  layoutImageRefresh.value = Date.now()
+})
+
+onMounted(async () => {
+  
+ if (typeof authStore.fetchProfile === 'function') {
+    await authStore.fetchProfile()
+  }
+})
+
 </script>
 <style>
 .welcome-meta h1 {
@@ -78,7 +123,6 @@ const activeNavbar = computed(() => {
   margin-top: 2px;
 }
 
-/* add new */
 :root {
   --em: #10b981;
   --em-dk: #059669;

@@ -64,8 +64,10 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { loginAPI } from '@/api/auth.api'
 import { useFormValidation } from '@/composables/useFormValidation'
+import { useToast } from 'vue-toastification'
 
 const router = useRouter()
+const toast = useToast()
 
 const showPassword = ref(false);
 const isLoading = ref(false);
@@ -79,9 +81,9 @@ const togglePassword = () => {
 const { errors, validateEmail, validatePassword } = useFormValidation();
 
 const handleLogin = async () => {
-
     if (isLoading.value) return;
 
+    // ១. ផ្ទៀងផ្ទាត់ទិន្នន័យ Input
     validateEmail(email.value);
     validatePassword(password.value);
 
@@ -89,32 +91,49 @@ const handleLogin = async () => {
 
     isLoading.value = true;
     try {
-        const data = await loginAPI(email.value, password.value);
+        // ២. ហៅទៅកាន់ API
+        const response = await loginAPI(email.value, password.value);
+        
+        // 🎯 ៣. ពិនិត្យត្រួតអានទិន្នន័យឱ្យត្រូវប្រាកដ (Handle ទាំង response.data.data ឬ response.data)
+        const result = response.data?.data ? response.data.data : response.data;
 
-        if (data && data.data.token) {
-            sessionStorage.setItem('user_token', data.data.token)
-            sessionStorage.setItem('user_role', data.data.role_id)
-            const roleId = data.data.role_id
+        if (result && result.token) {
+            // រក្សាទុក Token និង Role ទៅក្នុង sessionStorage
+            sessionStorage.setItem('user_token', result.token)
+            sessionStorage.setItem('user_role', result.role_id)
+            
+            // បំប្លែង Role ទៅជា Number ដើម្បីកុំឱ្យខុសលក្ខខណ្ឌ ===
+            const roleId = Number(result.role_id);
 
+            // ៤. ប្តូរទំព័រ (Redirect) ទៅតាម Role
             if (roleId === 1) {
+                toast.success("ស្វាគមន៍លោក Admin! ចូលប្រើប្រាស់បានជោគជ័យ។");
                 router.push('/admin/dashboard')
             } else if (roleId === 2) {
+                toast.success("ស្វាគមន៍លោកគ្រូ/អ្នកគ្រូ! ចូលប្រើប្រាស់បានជោគជ័យ។");
                 router.push('/teacher/dashboard')
             } else if (roleId === 3) {
+                toast.success("ស្វាគមន៍ប្អូនៗសិស្សានុសិស្ស! ចូលប្រើប្រាស់បានជោគជ័យ។");
                 router.push('/student/dashboard')
             } else {
-                console.log("គណនីរបស់អ្នកមិនទាន់មានសិទ្ធិ Role ក្នុងប្រព័ន្ធឡើយ!")
-                const errorMessage = error.response?.data?.message || "អ៊ីមែល ឬពាក្យសម្ងាត់មិនត្រឹមត្រូវ!";
-
-
-                errors.value.email = errorMessage;
-                errors.value.password = "សូមពិនិត្យមើលពាក្យសម្ងាត់របស់អ្នកឡើងវិញ!";
+                toast.warning("គណនីរបស់អ្នកមិនទាន់មានសិទ្ធិ Role ក្នុងប្រព័ន្ធឡើយ!");
+                errors.value.email = "គណនីគ្មានសិទ្ធិចូលប្រើប្រាស់!";
             }
+        } else {
+            toast.error("ការផ្ទៀងផ្ទាត់បរាជ័យ ទិន្នន័យមកពី Server មិនត្រឹមត្រូវ!");
         }
+
     } catch (error) {
-        console.error("Login Error:", error)
+        console.error("Login Error:", error);
+        let errorMessage = "មិនអាចចូលគណនីបានទេ! សូមព្យាយាមម្តងទៀត។";
+        
+        if (error.response && error.response.data) {
+            errorMessage = error.response.data.message || errorMessage;
+        }
+        
+        toast.error(errorMessage);
     } finally {
-        isLoading.value = false
+        isLoading.value = false;
     }
 }
 </script>

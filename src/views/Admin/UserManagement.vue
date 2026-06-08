@@ -39,8 +39,8 @@
             </template>
         </SearchFilter>
         <!-- Table Component -->
-        <DataTable :headers="userHeaders" :items="filteredUsers" :is-loading="isLoading" :current-page="currentPage" :limit="limit"
-            :total="totalRecords" @update:page="changePage">
+        <DataTable :headers="userHeaders" :items="filteredUsers" :is-loading="isLoading" :current-page="currentPage"
+            :limit="limit" :total="totalRecords" @update:page="changePage">
             <template #row="{ item }">
                 <td>{{ item.user_code }}</td>
                 <td>{{ item.fullName }}</td>
@@ -103,11 +103,6 @@
                             <input type="radio" value="teacher" v-model="selectedRoleForCreate" hidden>
                             <i class="bi bi-easel"></i> គ្រូបង្រៀន
                         </label>
-
-                        <!-- <label class="chip" :class="{ 'active': selectedRoleForCreate === 'admin' }">
-                            <input type="radio" value="admin" v-model="selectedRoleForCreate" hidden>
-                            <i class="bi bi-shield-lock"></i>អ្នកគ្រប់គ្រង
-                        </label> -->
                     </div>
                 </div>
             </div>
@@ -132,8 +127,9 @@ import StatusBadge from "@/components/common/StatusBadge.vue";
 import { useToast } from "vue-toastification";
 import Swal from 'sweetalert2';
 
-const { formatDate } = useDate();
 const { errors, validateFirstName, validateLastName, validateEmail } = useFormValidation();
+const toast = useToast();
+const { formatDate } = useDate();
 
 const users = ref([]);
 const isLoading = ref(false);
@@ -162,10 +158,9 @@ const userHeaders = [
     { label: "សកម្មភាព", key: "actions" },
 ];
 
-
 const changePage = async (newPage) => {
     currentPage.value = newPage;
-    await fetchUsers(); 
+    await fetchUsers();
 };
 
 const filteredUsers = computed(() => {
@@ -212,7 +207,7 @@ const fetchUsers = async () => {
     } catch (error) {
         console.error('Cannot get users:', error);
     } finally {
-       isLoading.value = false;
+        isLoading.value = false;
     }
 }
 
@@ -248,6 +243,9 @@ const handleCreate = async () => {
 
             await fetchUsers();
         }
+        toast.success("បង្កើតគណនីអ្នកប្រើប្រាស់បានជោគជ័យ!", {
+            toastClassName: "custom-toast-success"
+        });
 
     } catch (error) {
         console.log(error);
