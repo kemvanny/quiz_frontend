@@ -55,13 +55,6 @@
 </template>
 
 <script setup>
-<<<<<<< HEAD
-import { ref } from 'vue';
-import CreateRoomModal from '@/components/common/CreateRoomModal.vue';
-const isCreateRoomOpen = ref(false);
-const emit = defineEmits(['room-created']);
-
-=======
 import { ref, onMounted } from 'vue';
 import CreateRoomModal from '@/components/teacher/CreateRoomModal.vue';
 import { useAuthStore } from '@/stores/auth'; 
@@ -71,17 +64,13 @@ const emit = defineEmits(['room-created']);
 
 const authStore = useAuthStore();
 
->>>>>>> 3a96a95c4c6dd9ac66352b8587649d00222e9455
 const onRoomCreated = (roomData) => {
     isCreateRoomOpen.value = false;
     console.log("Room created successfully from topbar:", roomData);
     emit('room-created', roomData);
 };
-<<<<<<< HEAD
-=======
 
 onMounted(() => {
   authStore.fetchUserProfile();
 });
->>>>>>> 3a96a95c4c6dd9ac66352b8587649d00222e9455
 </script>

@@ -55,12 +55,6 @@ const badgeConfig = computed(() => {
   color: #c62828;
 }
 
-<<<<<<< HEAD
-.role-admin { background-color: #ffe6e6; color: #ff4d4d; }
-.role-teacher { background-color: #e6f0ff; color: #3385ff; }
-.role-student { background-color: #e6f7ed; color: #2e7d32; }
-.badge-default { background-color: #eeeeee; color: #333333; }
-=======
 
 .status-confirmed { 
   background: linear-gradient(135deg, rgba(224, 242, 254, 0.45) 0%, rgba(186, 230, 253, 0.45) 100%); 
@@ -102,5 +96,4 @@ const badgeConfig = computed(() => {
   background: linear-gradient(135deg, rgba(245, 245, 245, 0.5) 0%, rgba(224, 224, 224, 0.5) 100%); 
   color: #616161;
 }
->>>>>>> 3a96a95c4c6dd9ac66352b8587649d00222e9455
 </style>
