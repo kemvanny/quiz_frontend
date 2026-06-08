@@ -6,7 +6,9 @@ export function useFormValidation() {
         password: '',
         firstName: '',
         lastName: '',
-        role: ''
+        role: '',
+        phone: '',
+        address: ''
     })
 
     const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
@@ -14,6 +16,10 @@ export function useFormValidation() {
     const namePattern = /^[a-zA-Z Khmer\u1780-\u17F9\s]+$/
 
     const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#^()_+\-=[\]{};':"\\|,.<>\/?])[A-Za-z\d@$!%*?&#^()_+\-=[\]{};':"\\|,.<>\/?]{8,}$/;
+
+    const phonePattern = /^(0\d{8,9})$/
+
+    const addressPattern = /^[a-zA-Z0-9 Khmer\u1780-\u17F9\s,.\/\-]+$/
 
     const validateEmail = (value) => {
         if (!value) {
@@ -37,9 +43,11 @@ export function useFormValidation() {
 
     const validateFirstName = (value) => {
         if (!value || value.trim() === '') {
-            errors.value.firstName = 'សូមបញ្ចូលនាមខ្លួន!'
+            errors.value.firstName = 'សូមបញ្ចូលនាមត្រកូល!'
+        } else if (value.trim().length < 2) {
+            errors.value.firstName = 'នាមត្រកូលត្រូវមានយ៉ាងហោចណាស់ ២ តួអក្សរឡើងទៅ!'
         } else if (!namePattern.test(value)) {
-            errors.value.firstName = 'នាមខ្លួនអាចវាយបានតែអក្សរ (ខ្មែរ/អង់គ្លេស) ប៉ុណ្ណោះ ហាមប្រើសញ្ញាពិសេសផ្សេងៗ!'
+            errors.value.firstName = 'នាមត្រកូលអាចវាយបានតែអក្សរ ខ្មែរ​ ឬ អង់គ្លេស ប៉ុណ្ណោះ ហាមប្រើសញ្ញាពិសេសផ្សេងៗ!'
         } else {
             errors.value.firstName = ''
         }
@@ -47,9 +55,11 @@ export function useFormValidation() {
 
     const validateLastName = (value) => {
         if (!value || value.trim() === '') {
-            errors.value.lastName = 'សូមបញ្ចូលនាមត្រកូល!'
+            errors.value.lastName = 'សូមបញ្ចូលនាមខ្លួន!'
+        } else if (value.trim().length < 2) {
+            errors.value.lastName = 'នាមខ្លួនត្រូវមានយ៉ាងហោចណាស់ ២ តួអក្សរឡើងទៅ!'
         } else if (!namePattern.test(value)) {
-            errors.value.lastName = 'នាមត្រកូលអាចវាយបានតែអក្សរ (ខ្មែរ/អង់គ្លេស) ប៉ុណ្ណោះ ហាមប្រើសញ្ញាពិសេសផ្សេងៗ!'
+            errors.value.lastName = 'នាមខ្លួនអាចវាយបានតែអក្សរ ខ្មែរ​ ឬ​ អង់គ្លេស ប៉ុណ្ណោះ ហាមប្រើសញ្ញាពិសេសផ្សេងៗ!'
         } else {
             errors.value.lastName = ''
         }
@@ -63,12 +73,36 @@ export function useFormValidation() {
         }
     }
 
+    const validatePhone = (value) => {
+        if (!value) {
+            errors.value.phone = 'សូមបញ្ចូលលេខទូរស័ព្ទ!'
+        } else if (!phonePattern.test(value)) {
+            errors.value.phone = 'ទម្រង់លេខទូរស័ព្ទមិនត្រឹមត្រូវ (ឧទាហរណ៍៖ 012345678)'
+        } else {
+            errors.value.phone = ''
+        }
+    }
+
+    const validateAddress = (value) => {
+    if (!value || value.trim() === '') {
+        errors.value.address = 'សូមបញ្ចូលអាសយដ្ឋាន!'
+    } else if (value.trim().length < 4) {
+        errors.value.address = 'អាសយដ្ឋានត្រូវមានយ៉ាងហោចណាស់ ៤ តួអក្សរឡើងទៅ!'
+    } else if (!addressPattern.test(value)) {
+        errors.value.address = 'អាសយដ្ឋានអាចវាយបានតែអក្សរ លេខ និងសញ្ញា ( , . / - ) ប៉ុណ្ណោះ ហាមប្រើសញ្ញាពិសេសផ្សេងៗ!'
+    } else {
+        errors.value.address = ''
+    }
+}
+
     return {
         errors,
         validateEmail,
         validatePassword,
         validateFirstName,
         validateLastName,
-        validateRole
+        validateRole,
+        validatePhone,
+        validateAddress
     }
 }
