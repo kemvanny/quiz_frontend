@@ -4,12 +4,13 @@
       <div class="main-col">
         <div class="workspace">
           
-          <div class="panel">
-            <div class="panel-head">
+          <div class="panel d-flex flex-column" style="height: 100%; max-height: calc(100vh - 120px);">
+            <div class="panel-head flex-shrink-0">
               <span class="panel-lbl">Question List</span>
               <span class="panel-count" id="qCountLabel">{{ questions.length }} Q</span>
             </div>
-            <div class="q-nav-scroll" ref="qNavScrollRef">
+            
+            <div class="q-nav-scroll flex-grow-1 overflow-y-auto" ref="qNavScrollRef" style="max-height: calc(100% - 100px);">
               <div v-for="(q, idx) in questions" 
                    :key="idx"
                    :id="`qnav-${idx}`"
@@ -20,11 +21,14 @@
                 <span class="q-badge">{{ q.pts }}pt</span>
               </div>
             </div>
-            <button class="btn btn-sm m-2 fw-bold rounded-3 border-0 add-q-btn"
-              style="border:1.5px dashed rgba(16,185,129,.35)!important;background:rgba(16,185,129,.04);color:var(--em);font-size:.78rem"
-              @click="addNewQuestion">
-              <i class="fas fa-plus-circle me-1"></i> បន្ថែមសំណួរថ្មី
-            </button>  
+
+            <div class="p-2 border-top bg-white flex-shrink-0">
+              <button class="btn btn-sm fw-bold rounded-3 border-0 add-q-btn w-100 py-2"
+                style="border:1.5px dashed rgba(16,185,129,.35)!important; background:rgba(16,185,129,.04); color:var(--em); font-size:.78rem;"
+                @click="addNewQuestion">
+                <i class="fas fa-plus-circle me-1"></i> បន្ថែមសំណួរថ្មី
+              </button>
+            </div>
           </div>
 
           <div class="feed-col" id="questionFeed">
@@ -137,13 +141,13 @@
               <button class="btn btn-outline-secondary btn-sm rounded-3 fw-bold w-100" @click="openPreviewModal">
                 <i class="fas fa-eye me-1"></i> Preview
               </button>
+              
               <button class="btn btn-sm rounded-3 fw-bold text-white w-100 save-publish-btn" style="background:linear-gradient(135deg,var(--em),var(--em-dk));box-shadow:0 4px 14px rgba(16,185,129,.3)" @click="finalizePublish" :disabled="isSubmitting">
                 <span v-if="isSubmitting" class="spinner-border spinner-border-sm me-1"></span>
                 <i v-else class="fas fa-paper-plane me-1"></i> Publish
               </button>
             </div>
           </div>
-
         </div>
       </div>
     </div>
@@ -151,7 +155,7 @@
     <div class="modal-overlay" v-if="showPreviewModal" @click.self="showPreviewModal = false">
       <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
         <div class="modal-content border-0 rounded-4 shadow-lg overflow-hidden" style="background: #f8fafc;">
-          <div style="height: 6px; background: linear-gradient(90deg, var(--em), var(--em-dk));"></div>
+          <div style="height: 6px; background: linear-gradientem), var(--em-dk));"></div>
           <div class="modal-header border-0 pb-0 px-4 pt-4">
             <h5 class="modal-title fw-bold text-dark d-flex align-items-center gap-2">
               <i class="fas fa-eye" style="color: var(--em);"></i> Student Preview
@@ -228,7 +232,6 @@
   </div>
 </template>
 
-
 <script setup>
 import { ref, computed, nextTick, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
@@ -241,24 +244,26 @@ const router = useRouter()
 const toast = useToast()
 const authStore = useAuthStore() 
 
-// UI Control States
+// គ្រប់គ្រងស្ថានភាពការបង្ហាញ UI
 const qNavScrollRef = ref(null)
 const isSubmitting = ref(false)
 const showPreviewModal = ref(false)
 const selectedQuestionIndex = ref(0)
 
-// Alphanumeric Exam Joining Code Modal States
+// គ្រប់គ្រងស្ថានភាពផ្ទាំងបង្ហាញកូដវិញ្ញាសា (Exam Code Modal)
 const showCodeModal = ref(false)
 const generatedExamCode = ref('')
 
-// Form Reactive Fields
-const quizTitle = ref('')
+// ទិន្នន័យ Form នៃវិញ្ញាសា
+const quizTitle = ref('Create Quiz')
 const quizInstructions = ref('')
 const quizDuration = ref(60)
 
+// អក្សរ និងលេខខ្មែរសម្រាប់ប្រើប្រាស់លើ Interface
 const KH = ["ក", "ខ", "គ", "ឃ", "ង", "ច"]
 const KH_N = ["១", "២", "៣", "៤", "៥", "៦", "៧", "៨", "៩", "១០"]
 
+// កម្រងសំណួរ និងជម្រើសចម្លើយ
 const questions = ref([
   {
     text: '',
@@ -271,10 +276,28 @@ const questions = ref([
   }
 ])
 
-// Helpers & Calculators
-const getKhmerNumber = (num) => KH_N[num - 1] || num.toString()
-const getKhmerAlphabet = (idx) => KH[idx] || String.fromCharCode(65 + idx)
+const getKhmerNumber = (num) => {
+  return KH_N[num - 1] || num.toString()
+}
 
+const getKhmerAlphabet = (idx) => {
+  return KH[idx] || String.fromCharCode(65 + idx)
+}
+
+// មុខងាររុករក និងរំកិល Scroll ទៅកាន់សំណួរដែលបានជ្រើសរើស
+const selectQuestion = (idx) => {
+  selectedQuestionIndex.value = idx
+  const card = document.getElementById(`qcard-${idx}`)
+  if (card) {
+    card.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
+  const navItem = document.getElementById(`qnav-${idx}`)
+  if (navItem && qNavScrollRef.value) {
+    navItem.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
+  }
+}
+
+// គណនាពិន្ទុ និងគំនូសរង្វង់ Progress 
 const totalPoints = computed(() => {
   return questions.value.reduce((sum, q) => sum + (parseInt(q.pts) || 0), 0)
 })
@@ -293,19 +316,7 @@ const progressColor = computed(() => {
   return '#f59e0b'
 })
 
-// Question Items Managers
-const selectQuestion = (idx) => {
-  selectedQuestionIndex.value = idx
-  const card = document.getElementById(`qcard-${idx}`)
-  if (card) {
-    card.scrollIntoView({ behavior: 'smooth', block: 'start' })
-  }
-  const navItem = document.getElementById(`qnav-${idx}`)
-  if (navItem && qNavScrollRef.value) {
-    navItem.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
-  }
-}
-
+// បន្ថែម និងលុបសំណួរចេញពី Array
 const addNewQuestion = () => {
   questions.value.push({
     text: '',
@@ -340,6 +351,7 @@ const removeQuestion = (idx) => {
   }
 }
 
+// បន្ថែម និងលុបជម្រើសចម្លើយ
 const addChoice = (qIdx) => {
   const q = questions.value[qIdx]
   if (q.choices.length < KH.length) {
@@ -358,24 +370,22 @@ const setCorrectChoice = (qIdx, cIdx) => {
   })
 }
 
-const openPreviewModal = () => { showPreviewModal.value = true }
-const autoGrowTextarea = (event) => {
-  const el = event.target
-  el.style.height = 'auto'
-  el.style.height = el.scrollHeight + 'px'
+// គ្រប់គ្រងការបើក Preview
+const openPreviewModal = () => {
+  showPreviewModal.value = true
 }
 
-// Pure code-based generation flow without room bindings
+// មុខងារចម្បង៖ ដាក់ផ្សាយវិញ្ញាសា និងសំណួរចម្លើយ រួចចាប់យក Exam Code មកបង្ហាញ
 const finalizePublish = async () => {
-  if (!quizTitle.value || !quizTitle.value.trim()) {
+  if (!quizTitle.value || quizTitle.value.trim() === '') {
     toast.error("សូមបញ្ចូលចំណងជើងវិញ្ញាសា!")
     return
   }
 
   try {
     isSubmitting.value = true
+    console.log("=== ចាប់ផ្តើមបាញ់បង្កើតវិញ្ញាសា ===")
 
-    // Generate date parameters programmatically
     const today = new Date()
     const start_date_only = today.toISOString().split('T')[0]
     
@@ -394,49 +404,50 @@ const finalizePublish = async () => {
       end_time: end_date_only
     }
 
-    // 1. Fire creation request
     const createRes = await createExam(examPayload)
     const createdExam = createRes.data?.data || createRes.data
 
-    if (!createdExam || !createdExam.id) {
+    if (!createdExam || !createdExam.examId) {
       toast.error("ការបង្កើតវិញ្ញាសាបានបរាជ័យ!")
       return
     }
 
-    // 2. Loop and attach all generated questions to this exam container ID
+    // 🎯 ជួសជុលការបង្កើតសំណួរឱ្យត្រូវតាម Postman រូបភាពដើមរបស់លីហ្សា
     for (const q of questions.value) {
       const parsedOptions = q.choices.map(c => c.text.trim())
       const correctChoiceObj = q.choices.find(c => c.isCorrect)
       const parsedCorrectAnswer = correctChoiceObj ? correctChoiceObj.text.trim() : parsedOptions[0]
 
       const questionPayload = {
-        exam_id: createdExam.id,
+        exam_id: createdExam.examId,
         question: q.text.trim() || 'សំណួរទទេ',
-        options: JSON.stringify(parsedOptions),
-        correct_answer: JSON.stringify([parsedCorrectAnswer]),
+        question_type: 'multiple_choice',  // 🚀 ១. ថែម Key នេះតាម Postman
+        options: parsedOptions,             // 🚀 ២. បោះជា Array ផ្ទាល់ (លុប JSON.stringify ចេញ)
+        correct_answer: [parsedCorrectAnswer], // 🚀 ៣. បោះជា Array នៃអក្សរផ្ទាល់ (លុប JSON.stringify ចេញ)
         points: parseInt(q.pts) || 5
       }
+      
+      console.log("បាញ់សំណួរទៅកាន់ Server:", questionPayload)
       await createQuestion(questionPayload)
     }
 
-    // 3. Catch generated exam_code directly from response to open your success modal popup
-    if (createdExam.exam_code) {
-      generatedExamCode.value = createdExam.exam_code
-      showCodeModal.value = true
-      toast.success("បង្កើតវិញ្ញាសាជោគជ័យ!")
+    if (createdExam.examCode) {
+      generatedExamCode.value = createdExam.examCode
+      showCodeModal.value = true // 🚀 បើកផ្ទាំងបង្ហាញកូដសម្គាល់ជោគជ័យ
+      toast.success("វិញ្ញាសាត្រូវបានដាក់ផ្សាយជោគជ័យ!")
     } else {
-      toast.warning("បង្កើតជោគជ័យ ប៉ុន្តែមិនទាន់មានកូដវិញ្ញាសាពី Backend ទេ")
+      toast.warning("បង្កើតជោគជ័យ ប៉ុន្តែរកមិនឃើញកូដវិញ្ញាសាទេ")
     }
 
   } catch (err) {
-    console.error("Failed to build quiz structural components:", err)
-    toast.error("មានបញ្ហាក្នុងការបង្កើតវិញ្ញាសា!")
+    console.error("Error status:", err)
+    toast.error("ការផ្សព្វផ្សាយវិញ្ញាសាបានបរាជ័យ!")
   } finally {
     isSubmitting.value = false
   }
 }
 
-// Clipboard Action Handlers
+// មុខងារចម្លងកូដវិញ្ញាសាទៅកាន់ Clipboard
 const copyCodeToClipboard = async () => {
   try {
     await navigator.clipboard.writeText(generatedExamCode.value)
@@ -446,13 +457,19 @@ const copyCodeToClipboard = async () => {
   }
 }
 
+// ពង្រីកទំហំ Textarea ស្វ័យប្រវត្តទៅតាមខ្លឹមសារអក្សរ
+const autoGrowTextarea = (event) => {
+  const el = event.target
+  el.style.height = 'auto'
+  el.style.height = el.scrollHeight + 'px'
+}
+
 onMounted(() => {
   if (!authStore.user) {
     authStore.fetchUserProfile()
   }
 })
 </script>
-
 
 <style scoped>
 .quiz-builder-container {
@@ -889,6 +906,10 @@ onMounted(() => {
   border-color: var(--em) !important;
   background: var(--em-soft) !important;
 }
+</style>
+
+<style>
+/* Clean layout overrides when Quiz Builder is active to make it full bleed on the right of the sidebar */
 .content-body:has(.quiz-builder-container) {
   padding: 0 !important;
   overflow: hidden !important;

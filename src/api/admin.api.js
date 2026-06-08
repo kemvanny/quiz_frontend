@@ -1,7 +1,9 @@
 import api from './axiosInstance';
 
+// Get All User
 export const getAllUsers = (params) => api.get('/admin/getAllUsers', { params });
 
+// Create User
 export const createUser = (payload, token) => {
   return api.post('/admin/createUser', payload, {
     headers: {
@@ -9,8 +11,8 @@ export const createUser = (payload, token) => {
     }
   });
 };
-export const deleteUser = (id) => api.delete(`/admin/users/${id}`);
 
+// Update Status User
 export const updateStatus = (id, data) => api.put(`/admin/users/status/${id}`, data);
 
 export const getSummerise = () => api.get('/admin/dashboard/overview');

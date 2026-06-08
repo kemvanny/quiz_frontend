@@ -18,7 +18,7 @@
           </button>
         </div>
 
-        <p class="text-muted small mb-4 text-start">Review your quiz specifications before deploying it live to your classroom pipeline.</p>
+        <p class="text-muted small mb-4 text-start">សូមពិនិត្យមើលព័ត៌មានលម្អិតនៃវិញ្ញាសារបស់អ្នក មុនពេលដាក់ផ្សាយជាផ្លូវការទៅក្នុងប្រព័ន្ធដើម្បីទទួលបានកូដសម្គាល់។</p>
         
         <div class="row g-3 mb-4">
           <div class="col-4">
@@ -48,21 +48,9 @@
           </div>
         </div>
 
-        <div v-if="roomId" class="info-alert-box text-start">
+        <div class="info-alert-box text-start mb-2">
           <i class="fas fa-info-circle info-icon-emerald me-2"></i> 
-          <span>វិញ្ញាសានេះនឹងត្រូវបញ្ចូលទៅក្នុងថ្នាក់រៀនបច្ចុប្បន្នរបស់អ្នកដោយស្វ័យប្រវត្តិ។ សិស្សទាំងអស់ក្នុងថ្នាក់នឹងទទួលបានការជូនដំណឹងភ្លាមៗ។</span>
-        </div>
-
-        <div v-else class="mb-4 text-start">
-            <label class="form-label small fw-bold text-slate mb-2 text-uppercase tracking-wide">Assign to Classroom</label>
-            <div class="select-wrapper">
-                <select v-model="localAssignedRoom" class="form-select-custom shadow-sm" required>
-                <option value="">Select classroom…</option>
-                <option v-for="room in rooms" :key="room.id" :value="room.id">
-                    {{ room.name }}
-                </option>
-                </select>
-            </div>
+          <span>បន្ទាប់ពីចុចដាក់ផ្សាយ ប្រព័ន្ធនឹងបង្កើតកូដវិញ្ញាសា (Exam Code) ជូនលោកគ្រូ-អ្នកគ្រូស្វ័យប្រវត្តិ ដើម្បីយកទៅចែករំលែកជូនសិស្សានុសិស្ស។</span>
         </div>
 
         <div class="d-flex gap-2 justify-content-end border-top-custom pt-4 mt-2">
@@ -80,52 +68,18 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue'
-import { getMyRooms } from '@/api/teacher.api'
-
 const props = defineProps({
   isOpen: Boolean,
   isSubmitting: Boolean,
   totalPoints: Number,
   questionCount: Number,
-  progressPercent: Number,
-  roomId: [String, Number]
+  progressPercent: Number
 })
 
 const emit = defineEmits(['close', 'confirm'])
-const localAssignedRoom = ref('')
-const rooms = ref([])
-
-const fetchRoomsList = async () => {
-  if (props.roomId) return
-  try {
-    const res = await getMyRooms()
-    
-    if (res.data && res.data.data) {
-      rooms.value = res.data.data
-    } else if (res.data && Array.isArray(res.data)) {
-      rooms.value = res.data
-    } else if (res.data && res.data.rooms) {
-      rooms.value = res.data.rooms
-    } else {
-      rooms.value = []
-    }
-    
-    console.log(" Loaded Rooms inside Modal Successfully:", rooms.value)
-  } catch (err) {
-    console.error("Error loading rooms inside modal:", err)
-  }
-}
-
-watch(() => props.isOpen, (isOpenNow) => {
-  if (isOpenNow) {
-    localAssignedRoom.value = ''
-    fetchRoomsList()
-  }
-})
 
 const handleConfirm = () => {
-  emit('confirm', localAssignedRoom.value)
+  emit('confirm')
 }
 </script>
 
@@ -137,8 +91,9 @@ const handleConfirm = () => {
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(15, 23, 42, 0.3);
-  backdrop-filter: blur(5px);
+  background: rgba(15, 23, 42, 0.4);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   z-index: 1060;
   display: flex;
   align-items: center;
@@ -175,11 +130,6 @@ const handleConfirm = () => {
 
 .text-slate {
   color: #475569;
-}
-
-.tracking-wide {
-  letter-spacing: 0.5px;
-  font-size: 11px;
 }
 
 /* Icon Wrap Accent Containers Styling */
@@ -256,35 +206,6 @@ const handleConfirm = () => {
 .progress-bar-gradient {
   background: linear-gradient(90deg, #10b981, #34d399);
   border-radius: 20px;
-}
-
-/* Beautiful Rounded-3 Custom Form Select Components Layout Inputs */
-.select-wrapper {
-  position: relative;
-  width: 100%;
-}
-
-.form-select-custom {
-  width: 100%;
-  font-size: 0.9rem;
-  font-weight: 500;
-  color: #334155;
-  padding: 11px 16px;
-  border-radius: 12px;
-  border: 1px solid #e2e8f0;
-  background-color: #ffffff;
-  cursor: pointer;
-  appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' fill='none'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%2364748b' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 16px center;
-  transition: all 0.2s ease;
-}
-
-.form-select-custom:focus {
-  outline: none;
-  border-color: #10b981;
-  box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.08);
 }
 
 /* Info Alert Notification Box Styles */

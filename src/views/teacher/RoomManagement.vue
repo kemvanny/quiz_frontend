@@ -1,6 +1,5 @@
 <template>
   <div class="workspace-container">
-    <!-- Clean Minimalist Search Bar Layer -->
     <div class="workspace-toolbar mb-4">
       <div class="search-wrapper position-relative">
         <i class="fas fa-search search-icon"></i>
@@ -13,13 +12,11 @@
       </div>
     </div>
 
-    <!-- Clean Loader -->
     <div class="w-100 py-5 my-5 text-center" v-if="loading">
       <div class="spinner-custom"></div>
       <p class="text-muted small mt-3 fw-medium">កំពុងទាញទិន្នន័យ...</p>
     </div>
 
-    <!-- Solid Material Dashboard Card Grid Layout -->
     <div v-else class="classroom-grid">
       <div 
         v-for="(room, index) in filteredRooms" 
@@ -27,7 +24,6 @@
         class="material-classroom-card"
         @click="goToRoomDetail(room.id)"
       >
-        <!-- Top Core Details Layout Info -->
         <div class="card-main-content">
           <div class="d-flex align-items-start justify-content-between gap-3">
             <div class="d-flex align-items-center gap-3">
@@ -38,7 +34,6 @@
                 <h3 class="classroom-title-text text-truncate" :title="room.name">
                   {{ room.name }}
                 </h3>
-                <!-- Student Count Sub-label -->
                 <span class="student-count-subtext">
                   <i class="fas fa-users me-1 text-muted"></i>
                   <strong>{{ room.studentCount || 0 }}</strong> សិស្សសរុប
@@ -46,7 +41,6 @@
               </div>
             </div>
             
-            <!-- Standard Actions Group Restored to Normal Icons -->
             <div class="normal-action-group d-flex align-items-center" @click.stop>
               <button class="std-btn btn-edit-normal" @click="openUpdateModal(room)" title="កែប្រែបន្ទប់">
                 <i class="fas fa-pen"></i>
@@ -58,115 +52,135 @@
           </div>
         </div>
 
-        <!-- Solid Distinct Card Footer Operations Tray -->
         <div class="card-footer-tray d-flex align-items-center justify-content-between" @click.stop>
           <div class="status-indicator-tag">
             <span class="active-dot-pulse"></span>
             <span class="small-text">Active</span>
           </div>
 
-          <!-- Standard-style Contextual Invite Button -->
           <button 
-            class="btn-standard-invite d-inline-flex align-items-center gap-1"
-            @click="handleInviteStudent(room)">
-            <i class="fas fa-user-plus text-xs"></i> Invite Student
+            class="btn btn-sm invite-student-btn d-flex align-items-center gap-1"
+            @click.stop="handleInviteStudent(room)">
+            <i class="fas fa-user-plus"></i> Invite
           </button>
         </div>
+
       </div>
     </div>
 
-    <!-- Modals Layout Logic Integration Left Safely Alone -->
-    <CreateRoomModal :is-open="isCreateOpen" @close="isCreateOpen = false" @created="handleRoomCreatedSuccess" />
-    <UpdateRoomModal :is-open="isUpdateOpen" :room-data="selectedRoom" @close="closeUpdateModal" @updated="fetchRooms" />
-    <DeleteRoomModal :is-open="isDeleteOpen" :room-data="selectedRoom" @close="closeDeleteModal" @deleted="fetchRooms" />
-    <InviteStudentModal :is-open="isInviteOpen" :room-data="selectedRoom" @close="isInviteOpen = false" />
+    <CreateRoomModal 
+      :is-open="isCreateOpen" 
+      @close="isCreateOpen = false" 
+      @created="handleRoomCreatedSuccess" 
+    />
+
+    <UpdateRoomModal 
+      :is-open="isUpdateOpen" 
+      :room-data="selectedRoom" 
+      @close="closeUpdateModal" 
+      @updated="fetchRooms" 
+    />
+
+    <DeleteRoomModal 
+      :is-open="isDeleteOpen" 
+      :room-data="selectedRoom" 
+      @close="closeDeleteModal" 
+      @deleted="fetchRooms" 
+    />
+
+    <InviteStudentModal 
+      :is-open="isInviteOpen" 
+      :room-data="selectedRoom" 
+      @close="isInviteOpen = false" 
+    />
   </div>
 </template>
 
-  <script setup>
-  import { ref, computed, onMounted } from 'vue'
-  import { useRouter } from 'vue-router'
-  import { getMyRooms } from '@/api/teacher.api'
+<script setup>
+import { ref, computed, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
+import { getMyRooms } from '@/api/teacher.api'
 
-  import UpdateRoomModal from '@/components/teacher/UpdateRoomModal.vue'
-  import DeleteRoomModal from '@/components/teacher/DeleteRoomModal.vue'
-  import InviteStudentModal from '@/components/teacher/InviteStudentModal.vue'
+import CreateRoomModal from '@/components/teacher/CreateRoomModal.vue'
+import UpdateRoomModal from '@/components/teacher/UpdateRoomModal.vue'
+import DeleteRoomModal from '@/components/teacher/DeleteRoomModal.vue'
+import InviteStudentModal from '@/components/teacher/InviteStudentModal.vue'
 
-  const router = useRouter()
+const router = useRouter()
 
-  const searchQuery = ref('')
-  const rooms = ref([])
-  const loading = ref(false)
-  const selectedRoom = ref(null)
+const searchQuery = ref('')
+const rooms = ref([])
+const loading = ref(false)
+const selectedRoom = ref(null)
 
-  const isCreateOpen = ref(false)
-  const isUpdateOpen = ref(false)
-  const isDeleteOpen = ref(false)
-  const isInviteOpen = ref(false)
+const isCreateOpen = ref(false)
+const isUpdateOpen = ref(false)
+const isDeleteOpen = ref(false)
+const isInviteOpen = ref(false)
 
-  const filteredRooms = computed(() => {
-    if (!searchQuery.value) return rooms.value
-    return rooms.value.filter(room => 
-      room.name.toLowerCase().includes(searchQuery.value.toLowerCase())
-    )
+const filteredRooms = computed(() => {
+  if (!searchQuery.value) return rooms.value
+  return rooms.value.filter(room => 
+    room.name.toLowerCase().includes(searchQuery.value.toLowerCase())
+  )
+})
+
+const goToRoomDetail = (roomId) => {
+  router.push({
+    name: 'RoomDetail',
+    params: { roomId: roomId }
   })
+}
 
-  const goToRoomDetail = (roomId) => {
-    router.push({
-      name: 'RoomDetail',
-      params: { roomId: roomId }
-    })
+const fetchRooms = async () => {
+  try {
+    loading.value = true
+    const response = await getMyRooms()
+    rooms.value = response.data?.data || response.data || []
+  } catch (error) {
+    console.error("Error fetching rooms:", error)
+  } finally {
+    loading.value = false
   }
+}
 
-  const fetchRooms = async () => {
-    try {
-      loading.value = true
-      const response = await getMyRooms()
-      rooms.value = response.data?.data || response.data || []
-    } catch (error) {
-      console.error("Error fetching rooms:", error)
-    } finally {
-      loading.value = false
-    }
-  }
+const handleRoomCreatedSuccess = async (newRoom) => {
+  await fetchRooms()
+  selectedRoom.value = newRoom
+  isInviteOpen.value = true
+}
 
-  const handleRoomCreatedSuccess = async (newRoom) => {
-    await fetchRooms()
-    selectedRoom.value = newRoom
-    isInviteOpen.value = true
-  }
+const openUpdateModal = (room) => {
+  selectedRoom.value = room
+  isUpdateOpen.value = true
+}
 
-  const openUpdateModal = (room) => {
-    selectedRoom.value = room
-    isUpdateOpen.value = true
-  }
+const closeUpdateModal = () => {
+  isUpdateOpen.value = false
+  selectedRoom.value = null
+}
 
-  const closeUpdateModal = () => {
-    isUpdateOpen.value = false
-    selectedRoom.value = null
-  }
+const openDeleteModal = (room) => {
+  selectedRoom.value = room
+  isDeleteOpen.value = true
+}
 
-  const openDeleteModal = (room) => {
-    selectedRoom.value = room
-    isDeleteOpen.value = true
-  }
+const closeDeleteModal = () => {
+  isDeleteOpen.value = false
+  selectedRoom.value = null
+}
 
-  const closeDeleteModal = () => {
-    isDeleteOpen.value = false
-    selectedRoom.value = null
-  }
+const handleInviteStudent = (room) => {
+  selectedRoom.value = room
+  isInviteOpen.value = true
+}
 
-  const handleInviteStudent = (room) => {
-    selectedRoom.value = room
-    isInviteOpen.value = true
-  }
-
-  onMounted(() => {
-    fetchRooms()
-  })
-  </script>
-
+onMounted(() => {
+  fetchRooms()
+})
+</script>
 <style scoped>
+
 .workspace-container {
   padding: 1.5rem 0.5rem;
 }

@@ -26,36 +26,17 @@
     </template>
 
     <div class="sidebar-footer">
-      <div class="profile-card">
-        <div class="profile-info">
-          <img :src="`${imgBaseUrl}${userProfile.avatar}`" alt="Profile" class="profile-img" />
-          <div class="profile-text">
-            <span class="profile-name">{{ userProfile.firstName }} {{ userProfile.lastName }}</span>
-            <span class="profile-role">{{ userProfile.role }}</span>
-          </div>
-        </div>
-
-        <button class="logout-btn" @click.prevent="$emit('logout')" title="ចាកចេញ">
-          <i class="bi bi-box-arrow-right"></i>
-        </button>
-        <LogoutModal :show="isLogoutModalOpen" @close="isLogoutModalOpen = false" @confirm="handleLogout" />
-
-      </div>
+      <slot name="user-profile"></slot>
     </div>
   </aside>
 </template>
 
 <script setup>
-const imgBaseUrl = import.meta.env.VITE_BASE_URL_FOR_IMAGE;
 
 defineProps({
   roleName: {
     type: String,
     default: 'ADMIN'
-  },
-  userProfile: {
-    type: Object,
-    default: () => ({ fullName: '', avatar: '', role: '' })
   },
   mainMenus: {
     type: Array,
@@ -66,8 +47,6 @@ defineProps({
     default: () => []
   }
 })
-
-defineEmits(['logout'])
 
 </script>
 
