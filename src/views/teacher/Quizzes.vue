@@ -148,6 +148,7 @@
               </button>
             </div>
           </div>
+
         </div>
       </div>
     </div>
@@ -155,7 +156,7 @@
     <div class="modal-overlay" v-if="showPreviewModal" @click.self="showPreviewModal = false">
       <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
         <div class="modal-content border-0 rounded-4 shadow-lg overflow-hidden" style="background: #f8fafc;">
-          <div style="height: 6px; background: linear-gradientem), var(--em-dk));"></div>
+          <div style="height: 6px; background: linear-gradient(90deg, var(--em), var(--em-dk));"></div>
           <div class="modal-header border-0 pb-0 px-4 pt-4">
             <h5 class="modal-title fw-bold text-dark d-flex align-items-center gap-2">
               <i class="fas fa-eye" style="color: var(--em);"></i> Student Preview
@@ -204,19 +205,19 @@
     </div>
 
     <div v-if="showCodeModal" class="modal-backdrop-custom d-flex align-items-center justify-content-center" @click.self="showCodeModal = false">
-      <div class="modal-dialog-custom p-4 bg-white rounded-4 shadow-lg text-center slide-in" style="width: 100%; max-width: 420px; z-index: 9999;">
+      <div class="modal-dialog-custom p-4 bg-white rounded-4 shadow-lg text-center slide-in" style="width: 100%; max-width: 480px; z-index: 9999;">
         
         <div class="success-icon-wrapper mb-3 mx-auto d-flex align-items-center justify-content-center rounded-circle bg-success bg-opacity-10 text-success" style="width: 56px; height: 56px;">
           <i class="fas fa-check-circle fa-2x"></i>
         </div>
 
         <h4 class="fw-bold text-dark mb-1">បង្កើតវិញ្ញាសាជោគជ័យ!</h4>
-        <p class="text-muted small mb-4">វិញ្ញាសារបស់អ្នកត្រូវបានដាក់ផ្សាយជាផ្លូវការរួចរាល់ហើយ។ សូមចម្លងកូដខាងក្រោមដើម្បីផ្ញើចូលទៅកាន់ថ្នាក់រៀនរបស់អ្នក៖</p>
+        <p class="text-muted small mb-4">វិញ្ញាសារបស់អ្នកត្រូវបានដាក់ផ្សាយជាផ្លូវការរួចរាល់ហើយ។ សូមចម្លងតំណភ្ជាប់ខាងក្រោមដើម្បីផ្ញើជូនសិស្សានុសិស្ស៖</p>
 
-        <div class="d-flex align-items-center justify-content-between p-3 mb-4 rounded-3 border bg-light">
-          <span class="fw-bold fs-4 text-dark" style="letter-spacing: 1px; font-family: monospace;">{{ generatedExamCode }}</span>
-          <button class="btn btn-sm btn-dark rounded-2 px-3 fw-bold d-flex align-items-center gap-1" @click="copyCodeToClipboard">
-            <i class="far fa-copy"></i> Copy
+        <div class="d-flex align-items-center justify-content-between p-2.5 mb-4 rounded-3 border bg-light text-start">
+          <span class="text-dark text-truncate me-2 fw-medium" style="font-size: 0.88rem; max-width: 320px;">{{ generatedExamLink }}</span>
+          <button class="btn btn-sm btn-dark rounded-2 px-3 fw-bold d-flex align-items-center gap-1 flex-shrink-0" @click="copyLinkToClipboard">
+            <i class="far fa-copy"></i> Copy Link
           </button>
         </div>
 
@@ -231,6 +232,7 @@
 
   </div>
 </template>
+
 
 <script setup>
 import { ref, computed, nextTick, onMounted } from 'vue'
@@ -250,9 +252,9 @@ const isSubmitting = ref(false)
 const showPreviewModal = ref(false)
 const selectedQuestionIndex = ref(0)
 
-// គ្រប់គ្រងស្ថានភាពផ្ទាំងបង្ហាញកូដវិញ្ញាសា (Exam Code Modal)
+// គ្រប់គ្រងស្ថានភាពផ្ទាំងបង្ហាញតំណភ្ជាប់វិញ្ញាសា (Exam Link Modal)
 const showCodeModal = ref(false)
-const generatedExamCode = ref('')
+const generatedExamLink = ref('')
 
 // ទិន្នន័យ Form នៃវិញ្ញាសា
 const quizTitle = ref('Create Quiz')
@@ -263,7 +265,7 @@ const quizDuration = ref(60)
 const KH = ["ក", "ខ", "គ", "ឃ", "ង", "ច"]
 const KH_N = ["១", "២", "៣", "៤", "៥", "៦", "៧", "៨", "៩", "១០"]
 
-// កម្រងសំណួរ និងជម្រើសចម្លើយ
+// កម្រងសំណួរ និងជម្រើសចម្លើយលំនាំដើម
 const questions = ref([
   {
     text: '',
@@ -375,13 +377,47 @@ const openPreviewModal = () => {
   showPreviewModal.value = true
 }
 
-// មុខងារចម្បង៖ ដាក់ផ្សាយវិញ្ញាសា និងសំណួរចម្លើយ រួចចាប់យក Exam Code មកបង្ហាញ
+// មុខងារចម្បង៖ ដាក់ផ្សាយវិញ្ញាសា និងសំណួរចម្លើយ (Dynamic Mode)
 const finalizePublish = async () => {
-  if (!quizTitle.value || quizTitle.value.trim() === '') {
-    toast.error("សូមបញ្ចូលចំណងជើងវិញ្ញាសា!")
+  
+  // ═══════════════════════════════════════════════  ផ្នែកទប់ទិន្នន័យទទេ (FRONTEND VALIDATION)
+  
+  // ១. ឆែកចំណងជើងវិញ្ញាសា
+  if (!quizTitle.value || quizTitle.value.trim() === '' || quizTitle.value.trim() === 'Create Quiz') {
+    toast.error("សូមបញ្ចូលចំណងជើងវិញ្ញាសាថ្មីឱ្យបានត្រឹមត្រូវ!")
     return
   }
 
+  // ២. រុករកឆែកមើលខ្លឹមសារក្នុងសំណួរ និងចម្លើយនីមួយៗ
+  for (let i = 0; i < questions.value.length; i++) {
+    const q = questions.value[i]
+    
+    // បើប្រអប់សំណួរទទេ
+    if (!q.text || q.text.trim() === '') {
+      toast.error(`សូមបញ្ចូលខ្លឹមសារសំណួរ សម្រាប់សំណួរទី ${i + 1}!`)
+      selectQuestion(i) // រំកិលអេក្រង់ទៅរកសំណួរដែលមានបញ្ហា
+      return
+    }
+
+    // បើប្រអប់ជម្រើសចម្លើយណាមួយទំនេរទទេ
+    for (let cIdx = 0; cIdx < q.choices.length; cIdx++) {
+      if (!q.choices[cIdx].text || q.choices[cIdx].text.trim() === '') {
+        toast.error(`សូមបំពេញខ្លឹមសារចម្លើយ ចំណុច ${getKhmerAlphabet(cIdx)} ក្នុងសំណួរទី ${i + 1}!`)
+        selectQuestion(i)
+        return
+      }
+    }
+
+    // ឆែកមើលថាតើមានគ្រីសយកចម្លើយត្រឹមត្រូវ (Radio Button) ហើយឬនៅ
+    const hasCorrect = q.choices.some(c => c.isCorrect)
+    if (!hasCorrect) {
+      toast.error(`សូមជ្រើសរើសចម្លើយដែលត្រឹមត្រូវ (Correct?) មួយ សម្រាប់សំណួរទី ${i + 1}!`)
+      selectQuestion(i)
+      return
+    }
+  }
+
+  // ═══════════════════════════════════════════════ ផ្នែកបាញ់បញ្ចូល API ទៅកាន់ SERVER
   try {
     isSubmitting.value = true
     console.log("=== ចាប់ផ្តើមបាញ់បង្កើតវិញ្ញាសា ===")
@@ -412,7 +448,7 @@ const finalizePublish = async () => {
       return
     }
 
-    // 🎯 ជួសជុលការបង្កើតសំណួរឱ្យត្រូវតាម Postman រូបភាពដើមរបស់លីហ្សា
+    // វាយបញ្ចូលសំណួរចម្លើយម្តងមួយៗទៅតាមទម្រង់ Postman Array ផ្ទាល់
     for (const q of questions.value) {
       const parsedOptions = q.choices.map(c => c.text.trim())
       const correctChoiceObj = q.choices.find(c => c.isCorrect)
@@ -420,10 +456,10 @@ const finalizePublish = async () => {
 
       const questionPayload = {
         exam_id: createdExam.examId,
-        question: q.text.trim() || 'សំណួរទទេ',
-        question_type: 'multiple_choice',  // 🚀 ១. ថែម Key នេះតាម Postman
-        options: parsedOptions,             // 🚀 ២. បោះជា Array ផ្ទាល់ (លុប JSON.stringify ចេញ)
-        correct_answer: [parsedCorrectAnswer], // 🚀 ៣. បោះជា Array នៃអក្សរផ្ទាល់ (លុប JSON.stringify ចេញ)
+        question: q.text.trim(),
+        question_type: 'multiple_choice',  
+        options: parsedOptions,             
+        correct_answer: [parsedCorrectAnswer], 
         points: parseInt(q.pts) || 5
       }
       
@@ -431,12 +467,13 @@ const finalizePublish = async () => {
       await createQuestion(questionPayload)
     }
 
-    if (createdExam.examCode) {
-      generatedExamCode.value = createdExam.examCode
-      showCodeModal.value = true // 🚀 បើកផ្ទាំងបង្ហាញកូដសម្គាល់ជោគជ័យ
+    // បើកផ្ទាំងបង្ហាញតំណភ្ជាប់ Link ពិតប្រាកដដែលបានមកពី API
+    if (createdExam.link) {
+      generatedExamLink.value = createdExam.link 
+      showCodeModal.value = true               
       toast.success("វិញ្ញាសាត្រូវបានដាក់ផ្សាយជោគជ័យ!")
     } else {
-      toast.warning("បង្កើតជោគជ័យ ប៉ុន្តែរកមិនឃើញកូដវិញ្ញាសាទេ")
+      toast.warning("បង្កើតជោគជ័យ ប៉ុន្តែរកមិនឃើញតំណភ្ជាប់ Link ពី Backend ទេ")
     }
 
   } catch (err) {
@@ -447,13 +484,13 @@ const finalizePublish = async () => {
   }
 }
 
-// មុខងារចម្លងកូដវិញ្ញាសាទៅកាន់ Clipboard
-const copyCodeToClipboard = async () => {
+// មុខងារចម្លងតំណភ្ជាប់វិញ្ញាសាទៅកាន់ Clipboard
+const copyLinkToClipboard = async () => {
   try {
-    await navigator.clipboard.writeText(generatedExamCode.value)
-    toast.success("បានចម្លងកូដវិញ្ញាសារួចរាល់!")
+    await navigator.clipboard.writeText(generatedExamLink.value)
+    toast.success("បានចម្លងតំណភ្ជាប់វិញ្ញាសារួចរាល់!")
   } catch (err) {
-    toast.error("មិនអាចចម្លងកូដបានទេ!")
+    toast.error("មិនអាចចម្លងតំណភ្ជាប់បានទេ!")
   }
 }
 
@@ -470,7 +507,6 @@ onMounted(() => {
   }
 })
 </script>
-
 <style scoped>
 .quiz-builder-container {
   --em:      #10b981;

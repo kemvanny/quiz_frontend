@@ -34,7 +34,7 @@
             <template #right-side>
                 <div class="total-users-badge">
                     <span class="lbl-text">ចំនួនសរុប</span>
-                    <span class="num-counter">{{ filteredUsers.length }}</span>
+                    <span class="num-counter">{{ totalRecords }}</span>
                 </div>
             </template>
         </SearchFilter>
@@ -58,7 +58,7 @@
                     </button>
                 </td>
                 <td>
-                    <button class="btn-action-view">
+                    <button class="btn-action-view" @click="openUserDetail(item)">
                         <i class="bi bi-arrow-right-short"></i>លម្អិត
                     </button>
                 </td>
@@ -115,6 +115,13 @@
                 </BaseButton>
             </template>
         </BaseModal>
+
+       <UserDetailModal 
+    v-if="isDetailModalOpen" 
+    :show="isDetailModalOpen" 
+    :user="selectedUser" 
+    @close="isDetailModalOpen = false" 
+/>
     </div>
 </template>
 
@@ -126,6 +133,7 @@ import { useFormValidation } from "@/composables/useFormValidation";
 import StatusBadge from "@/components/common/StatusBadge.vue";
 import { useToast } from "vue-toastification";
 import Swal from 'sweetalert2';
+import UserDetailModal from "@/components/common/UserDetailModal.vue";
 
 const { errors, validateFirstName, validateLastName, validateEmail } = useFormValidation();
 const toast = useToast();
@@ -135,6 +143,9 @@ const users = ref([]);
 const isLoading = ref(false);
 const isModalOpen = ref(false);
 const loadingSubmit = ref(false);
+
+const isDetailModalOpen = ref(false);
+const selectedUser = ref(null);
 
 const searchQuery = ref("");
 const selectedRoleForFilter = ref("");
@@ -148,6 +159,10 @@ const totalRecords = ref(0);
 const selectedRoleForCreate = ref('student');
 const form = ref({ firstName: '', lastName: '', email: '' })
 
+const openUserDetail = (user) => {
+    selectedUser.value = user;
+    isDetailModalOpen.value = true;
+}
 const userHeaders = [
     { label: "លេខសម្គាល់", key: "id" },
     { label: "ឈ្មោះ", key: "name" },
@@ -195,18 +210,18 @@ const fetchUsers = async () => {
             page: currentPage.value,
             limit: limit.value
         });
-        
+
         if (res.data && res.data.data) {
             const rawUsers = res.data.data.users || [];
-            
+
             users.value = rawUsers.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
 
-            totalRecords.value = res.data.data.total || 0;     
-            currentPage.value = res.data.data.page || 1;      
-            limit.value = res.data.data.limit || 10;           
+            totalRecords.value = res.data.data.total || 0;
+            currentPage.value = res.data.data.page || 1;
+            limit.value = res.data.data.limit || 10;
         }
     } catch (error) {
-        console.error('Cannot get users:', error);
+        toast.error("មិនអាចទាញទិន្នន័យបានទេ!");
     } finally {
         isLoading.value = false;
     }
@@ -431,18 +446,19 @@ onMounted(() => {
 .btn-badge-wrapper:active {
     transform: scale(0.97);
 }
+
 .small-swal-popup {
-    padding: 1.20rem !important; 
+    padding: 1.20rem !important;
     border-radius: 12px !important;
 }
 
 .small-swal-popup .swal2-icon {
-    transform: scale(0.7) !important; 
-    margin: 0px auto -10px auto !important; 
+    transform: scale(0.7) !important;
+    margin: 0px auto -10px auto !important;
 }
 
 .small-swal-title {
-    font-size: 18px !important; 
+    font-size: 18px !important;
     font-weight: 700 !important;
     color: #2c3e50 !important;
     padding: 0 !important;
@@ -450,7 +466,7 @@ onMounted(() => {
 }
 
 .small-swal-text {
-    font-size: 14.5px !important; 
+    font-size: 14.5px !important;
     color: #5a6a85 !important;
     margin-top: 6px !important;
     margin-bottom: 15px !important;
@@ -458,7 +474,7 @@ onMounted(() => {
 
 .small-swal-btn {
     font-size: 16px !important;
-    padding: 6px 14px !important; 
+    padding: 6px 14px !important;
     border-radius: 6px !important;
     margin: 0 4px !important;
 }
