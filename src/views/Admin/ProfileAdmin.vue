@@ -58,7 +58,7 @@
 
       <div class="fields-grid">
         <div class="field-group">
-          <label class="field-label"><i class="fa-solid fa-user"></i> នាមត្រកូល</label>
+          <label class="field-label"> នាមត្រកូល</label>
           <div class="field-input-wrap">
             <i class="fa-solid fa-user field-icon"></i>
             <input class="field-input user-email" :class="{ 'input-error': errors.firstName }" type="text"
@@ -69,7 +69,7 @@
         </div>
 
         <div class="field-group">
-          <label class="field-label"><i class="fa-solid fa-user"></i> នាមខ្លួន</label>
+          <label class="field-label"> នាមខ្លួន</label>
           <div class="field-input-wrap">
             <i class="fa-solid fa-user-tag field-icon"></i>
             <input class="field-input" :class="{ 'input-error': errors.lastName }" type="text"
@@ -79,7 +79,7 @@
         </div>
 
         <div class="field-group field-full">
-          <label class="field-label"><i class="fa-solid fa-envelope"></i> អាសយដ្ឋានអ៊ីមែល</label>
+          <label class="field-label"> អាសយដ្ឋានអ៊ីមែល</label>
           <div class="field-input-wrap">
             <i class="fa-solid fa-envelope field-icon" style="color:var(--teal-500);"></i>
             <div class="role-display locked-email-display">
@@ -89,7 +89,7 @@
         </div>
 
         <div class="field-group">
-          <label class="field-label"><i class="fa-solid fa-phone"></i> លេខទូរស័ព្ទ</label>
+          <label class="field-label"> លេខទូរស័ព្ទ</label>
           <div class="field-input-wrap">
             <i class="fa-solid fa-phone field-icon"></i>
             <input class="field-input" :class="{ 'is-null': !userProfile.phone && !isEditMode }" type="tel"
@@ -99,7 +99,7 @@
         </div>
 
         <div class="field-group">
-          <label class="field-label"><i class="fa-solid fa-location-dot"></i>អាសយដ្ឋាន</label>
+          <label class="field-label">អាសយដ្ឋាន</label>
           <div class="field-input-wrap">
             <i class="fa-solid fa-location-dot field-icon"></i>
             <input class="field-input" :class="{ 'is-null': !userProfile.address && !isEditMode }" type="text"
@@ -109,7 +109,7 @@
         </div>
 
         <div class="field-group field-full">
-          <label class="field-label"><i class="fa-solid fa-shield-halved"></i> តួនាទីក្នុងប្រព័ន្ធ</label>
+          <label class="field-label"> តួនាទីក្នុងប្រព័ន្ធ</label>
           <div class="field-input-wrap">
             <i class="fa-solid fa-shield-halved field-icon" style="color:var(--teal-500);"></i>
             <div class="role-display">
@@ -120,7 +120,7 @@
         </div>
 
         <div class="field-group field-full">
-          <label class="field-label"><i class="fa-solid fa-id-badge"></i>លេខកូដគណនី</label>
+          <label class="field-label">លេខកូដគណនី</label>
           <div class="field-input-wrap">
             <i class="fa-solid fa-id-badge field-icon"></i>
             <input class="field-input readonly-code" type="text" :value="authStore.profile.code || 'A0001'" readonly />
