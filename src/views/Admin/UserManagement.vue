@@ -159,8 +159,6 @@ const userHeaders = [
 ];
 
 const usersList = ref([]);
-
-
 const changePage = async (newPage) => {
     currentPage.value = newPage;
     await fetchUsers();
