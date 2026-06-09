@@ -17,7 +17,8 @@
               font-weight: 800;
               color: var(--green-primary);
             ">
-                        {{ examDashboardData?.total_exams }}
+                        <span v-if="isLoadingQuiz" class="skeleton skeleton-text"></span>
+                        <span v-else>{{ examDashboardData?.total_exams ?? 0 }}</span>
                     </div>
                     <div style="font-size: 12px; color: var(--text-muted); font-weight: 600">
                         វិញ្ញាសាសរុប
@@ -27,7 +28,8 @@
             <div class="col-md-3">
                 <div class="dash-card text-center">
                     <div style="font-size: 28px; font-weight: 800; color: #f07a3b">
-                        {{ examDashboardData?.total_questions }}
+                        <span v-if="isLoadingQuiz" class="skeleton skeleton-text"></span>
+                        <span v-else>{{ examDashboardData?.total_questions ?? 0 }}</span>
                     </div>
                     <div style="font-size: 12px; color: var(--text-muted); font-weight: 600">
                         សំណួរសរុប
@@ -37,7 +39,8 @@
             <div class="col-md-3">
                 <div class="dash-card text-center">
                     <div style="font-size: 28px; font-weight: 800; color: var(--green-dark)">
-                        {{ examDashboardData?.pending_exams }}
+                        <span v-if="isLoadingQuiz" class="skeleton skeleton-text"></span>
+                        <span v-else>{{ examDashboardData?.pending_exams ?? 0 }}</span>
                     </div>
                     <div style="font-size: 12px; color: var(--text-muted); font-weight: 600">
                         កំពុងដំណើរការ
@@ -47,7 +50,8 @@
             <div class="col-md-3">
                 <div class="dash-card text-center">
                     <div style="font-size: 28px; font-weight: 800; color: #e05c5c">
-                        {{ examDashboardData?.finished_exams }}
+                        <span v-if="isLoadingQuiz" class="skeleton skeleton-text"></span>
+                        <span v-else>{{ examDashboardData?.finished_exams ?? 0 }}</span>
                     </div>
                     <div style="font-size: 12px; color: var(--text-muted); font-weight: 600">
                         បានបញ្ចប់
@@ -56,7 +60,8 @@
             </div>
         </div>
 
-        <DataTable :headers="quizHeaders" :items="exams" :is-loading="isLoading" :current-page="currentPage" :limit="limit" :total="totalRecords" @update:page="changePage">
+        <DataTable :headers="quizHeaders" :items="exams" :is-loading="isLoading" :current-page="currentPage"
+            :limit="limit" :total="totalRecords" @update:page="changePage">
             <template #row="{ item, index }">
                 <td>{{ (currentPage - 1) * limit + index + 1 }}</td>
                 <td>{{ item.title }}</td>
@@ -74,7 +79,7 @@
 </template>
 <script setup>
 import { onMounted, ref } from "vue";
-import { getAllExams ,getDashboardExamData} from "@/api/admin.api";
+import { getAllExams, getDashboardExamData } from "@/api/admin.api";
 import { useDate } from "@/composables/useDate";
 import StatusBadge from "@/components/common/StatusBadge.vue";
 
@@ -87,6 +92,7 @@ const limit = ref(10);
 const totalRecords = ref(0);
 
 const isLoading = ref(false);
+const isLoadingQuiz = ref(false);
 
 const quizHeaders = [
     { label: "លេខសម្គាល់", key: "id" },
@@ -107,34 +113,38 @@ const fetchExam = async () => {
     try {
         const res = await getAllExams({
             page: currentPage.value,
-            limit: limit.value
+            limit: limit.value,
         });
-        if(res.data && res.data.data){
+        if (res.data && res.data.data) {
             const rawExams = res.data.data.quizzes || [];
-            exams.value = rawExams.sort((a,b) => new Date(b.created_at) - new Date(a.created_at));
+            exams.value = rawExams.sort(
+                (a, b) => new Date(b.created_at) - new Date(a.created_at),
+            );
             totalRecords.value = res.data.data.total || 0;
             currentPage.value = res.data.data.page || 1;
             limit.value = res.data.data.limit || 10;
         }
     } catch (error) {
-        console.log('Cannot get quizzes',error);
+        console.log("Cannot get quizzes", error);
     } finally {
         isLoading.value = false;
     }
-}
+};
 
 const fetchExamDashboardData = async () => {
     try {
+        isLoadingQuiz.value = true;
         const res = await getDashboardExamData();
         examDashboardData.value = res.data.data;
     } catch (error) {
-        console.log('Cannot get exam dashboard data',error);
+        console.log("Cannot get exam dashboard data", error);
+    } finally {
+        isLoadingQuiz.value = false;
     }
-}
+};
 
 onMounted(() => {
     fetchExam();
     fetchExamDashboardData();
-})
-
+});
 </script>

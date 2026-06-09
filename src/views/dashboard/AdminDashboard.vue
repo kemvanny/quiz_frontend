@@ -20,8 +20,10 @@
             </div>
             <div class="stat-label">អ្នកប្រើប្រាស់សរុប</div>
             <div class="stat-value">
-              {{ dashboardTotal?.total_users?.count }}
+              <span v-if="isLoadingDashboard" class="skeleton skeleton-text"></span>
+              <span v-else>{{ dashboardTotal?.total_users?.count }}</span>
             </div>
+            <div v-if="isLoadingDashboard" class="skeleton skeleton-badge"></div>
             <span class="stat-badge badge-up"><i class="bi bi-arrow-up-short"></i>
               {{
                 dashboardTotal?.total_users?.this_week_count
@@ -36,8 +38,10 @@
             </div>
             <div class="stat-label">សរុបបន្ទប់</div>
             <div class="stat-value">
-              {{ dashboardTotal?.total_rooms?.count }}
+              <span v-if="isLoadingDashboard" class="skeleton skeleton-text"></span>
+              <span v-else>{{ dashboardTotal?.total_rooms?.count }}</span>
             </div>
+            <div v-if="isLoadingDashboard" class="skeleton skeleton-badge"></div>
             <span class="stat-badge badge-up"><i class="bi bi-arrow-up-short"></i>{{
               dashboardTotal?.total_rooms?.new_count }} បន្ថែមថ្មី</span>
           </div>
@@ -49,7 +53,8 @@
             </div>
             <div class="stat-label">វិញ្ញាសាសរុប</div>
             <div class="stat-value">
-              {{ dashboardTotal?.total_exams?.count }}
+              <span v-if="isLoadingDashboard" class="skeleton skeleton-text"></span>
+            <span v-else>{{ dashboardTotal?.total_exams?.count }}</span>
             </div>
             <span class="stat-badge badge-up"><i class="bi bi-arrow-up-short"></i>
               {{
@@ -65,7 +70,8 @@
             </div>
             <div class="stat-label">ការដាក់ស្នើ</div>
             <div class="stat-value">
-              {{ dashboardTotal?.submissions?.count }}%
+              <span v-if="isLoadingDashboard" class="skeleton skeleton-text"></span>
+              <span v-else>{{ dashboardTotal?.submissions?.count }}%</span>
             </div>
             <span class="stat-badge badge-down"><i class="bi bi-arrow-down-short"></i>
               {{ dashboardTotal?.submissions?.change_percent }}% ធ្លាក់ចុះ</span>
@@ -286,6 +292,7 @@ const { formatDate } = useDate();
 const dashboardTotal = ref([]);
 const submissionList = ref([]);
 const isLoading = ref(false);
+const isLoadingDashboard = ref(false);
 
 const currentPage = ref(1);
 const limit = ref(7);
@@ -442,10 +449,13 @@ const fetchRecentActivity = async () => {
 
 const fetchDashboardTotal = async () => {
   try {
+    isLoadingDashboard.value = true;
     const res = await getDashboardData();
     dashboardTotal.value = res.data.data;
   } catch (error) {
     console.log('Failed to fetch dashboard total', error);
+  }finally {
+    isLoadingDashboard.value = false;
   }
 }
 
@@ -1435,4 +1445,6 @@ onMounted(() => {
     grid-column: auto;
   }
 }
+
+
 </style>

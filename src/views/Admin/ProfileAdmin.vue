@@ -3,8 +3,6 @@
 
     <div class="left-panel">
       <div class="avatar-ring">
-        <!-- <div v-if="!authStore.profile.avatar" class="avatar-placeholder">SA</div>
-        <img v-else :src="`${imgBaseUrl}${authStore.profile.avatar}`" alt="Avatar" /> -->
         <img :src="`${imgBaseUrl}${authStore.profile.avatar}?t=${imageRefresh}`" alt="Avatar" />
         <span class="status-dot" title="Online"></span>
       </div>
@@ -16,7 +14,7 @@
       </span>
 
       <span class="code-chip">
-        <i class="fa-solid fa-hashtag" style="font-size:.7rem;"></i> {{ authStore.profile.code || 'A0001' }}
+        <i class="fa-solid fa-hashtag" style="font-size:.7rem;"></i> {{ authStore.profile.code  }}
       </span>
 
       <div class="stats-strip">
@@ -60,10 +58,10 @@
 
       <div class="fields-grid">
         <div class="field-group">
-          <label class="field-label"><i class="fa-solid fa-user"></i> នាមត្រកូល</label>
+          <label class="field-label"> នាមត្រកូល</label>
           <div class="field-input-wrap">
             <i class="fa-solid fa-user field-icon"></i>
-            <input class="field-input" :class="{ 'input-error': errors.firstName }" type="text"
+            <input class="field-input user-email" :class="{ 'input-error': errors.firstName }" type="text"
               v-model="userProfile.firstName" @input="validateFirstName(userProfile.firstName)"
               :readonly="!isEditMode" />
           </div>
@@ -71,7 +69,7 @@
         </div>
 
         <div class="field-group">
-          <label class="field-label"><i class="fa-solid fa-user"></i> នាមខ្លួន</label>
+          <label class="field-label"> នាមខ្លួន</label>
           <div class="field-input-wrap">
             <i class="fa-solid fa-user-tag field-icon"></i>
             <input class="field-input" :class="{ 'input-error': errors.lastName }" type="text"
@@ -81,35 +79,37 @@
         </div>
 
         <div class="field-group field-full">
-          <label class="field-label"><i class="fa-solid fa-envelope"></i> អាសយដ្ឋានអ៊ីមែល</label>
+          <label class="field-label"> អាសយដ្ឋានអ៊ីមែល</label>
           <div class="field-input-wrap">
             <i class="fa-solid fa-envelope field-icon" style="color:var(--teal-500);"></i>
             <div class="role-display locked-email-display">
-              <span class="role-text">{{ authStore.profile.email }}</span>
+             {{ authStore.profile.email }}
             </div>
           </div>
         </div>
 
         <div class="field-group">
-          <label class="field-label"><i class="fa-solid fa-phone"></i> លេខទូរស័ព្ទ</label>
+          <label class="field-label"> លេខទូរស័ព្ទ</label>
           <div class="field-input-wrap">
             <i class="fa-solid fa-phone field-icon"></i>
             <input class="field-input" :class="{ 'is-null': !userProfile.phone && !isEditMode }" type="tel"
-              v-model="userProfile.phone" placeholder="មិនទាន់មានទិន្នន័យ · Not Provided" :readonly="!isEditMode" />
+              v-model="userProfile.phone" @input="validatePhone(userProfile.phone)" placeholder="មិនទាន់មានទិន្នន័យ · Not Provided" :readonly="!isEditMode" />
           </div>
+          <span v-if="errors.phone" class="error-text">{{ errors.phone }}</span>
         </div>
 
         <div class="field-group">
-          <label class="field-label"><i class="fa-solid fa-location-dot"></i>អាសយដ្ឋាន</label>
+          <label class="field-label">អាសយដ្ឋាន</label>
           <div class="field-input-wrap">
             <i class="fa-solid fa-location-dot field-icon"></i>
             <input class="field-input" :class="{ 'is-null': !userProfile.address && !isEditMode }" type="text"
-              v-model="userProfile.address" placeholder="មិនទាន់មានទិន្នន័យ · Not Provided" :readonly="!isEditMode" />
+              v-model="userProfile.address" @input="validateAddress(userProfile.address)" placeholder="មិនទាន់មានទិន្នន័យ · Not Provided" :readonly="!isEditMode" />
           </div>
+          <span v-if="errors.address" class="error-text">{{ errors.address }}</span>
         </div>
 
         <div class="field-group field-full">
-          <label class="field-label"><i class="fa-solid fa-shield-halved"></i> តួនាទីក្នុងប្រព័ន្ធ</label>
+          <label class="field-label"> តួនាទីក្នុងប្រព័ន្ធ</label>
           <div class="field-input-wrap">
             <i class="fa-solid fa-shield-halved field-icon" style="color:var(--teal-500);"></i>
             <div class="role-display">
@@ -120,7 +120,7 @@
         </div>
 
         <div class="field-group field-full">
-          <label class="field-label"><i class="fa-solid fa-id-badge"></i>លេខកូដគណនី</label>
+          <label class="field-label">លេខកូដគណនី</label>
           <div class="field-input-wrap">
             <i class="fa-solid fa-id-badge field-icon"></i>
             <input class="field-input readonly-code" type="text" :value="authStore.profile.code || 'A0001'" readonly />
@@ -136,7 +136,8 @@
         </button>
 
         <button v-if="isEditMode" class="btn-save" :disabled="!hasChanges || hasErrors" @click="saveChanges">
-          <i class="fa-solid fa-floppy-disk"></i> ផ្លាស់ប្តូរលេខសម្ងាត់
+           <i class="fa-solid" :class="authStore.loading ? 'fa-spinner fa-spin' : 'fa-floppy-disk'"></i> 
+    {{ authStore.loading ? 'កំពុងរក្សាទុក...' : 'រក្សាទុកព័ត៌មាន' }}
         </button>
 
         <span v-else class="readonly-note">
@@ -175,6 +176,34 @@ const triggerFileInput = () => {
   fileInput.value.click()
 }
 
+const userProfile = reactive({
+  firstName: "",
+  lastName: "",
+  phone: null,
+  address: null
+})
+
+const originalProfile = ref({ ...userProfile })
+
+const {
+  errors,
+  validateFirstName,
+  validateLastName,
+  validatePhone,
+  validateAddress
+} = useFormValidation()
+
+const hasErrors = computed(() => {
+  return !!(errors.value.firstName || errors.value.lastName || errors.value.phone || errors.value.address)
+})
+
+const hasChanges = computed(() => {
+  return userProfile.firstName !== originalProfile.value.firstName ||
+         userProfile.lastName !== originalProfile.value.lastName ||
+         userProfile.phone !== originalProfile.value.phone ||
+         userProfile.address !== originalProfile.value.address
+})
+
 // Upload Image
 const onFileSelected = async (event) => {
   const file = event.target.files[0]
@@ -206,22 +235,6 @@ try {
 }
 }
 
-const {
-  errors,
-  validateFirstName,
-  validateLastName
-} = useFormValidation()
-
-const userProfile = reactive({
-  firstName: "",
-  lastName: "",
-  phone: null,
-  address: null
-})
-
-
-const originalProfile = ref({ ...userProfile })
-
 
 const syncProfileData = () => {
   if (authStore.profile) {
@@ -244,17 +257,6 @@ const toast = reactive({
   icon: ''
 })
 
-const hasChanges = computed(() => {
-  return userProfile.firstName !== originalProfile.value.firstName ||
-    userProfile.lastName !== originalProfile.value.lastName ||
-    userProfile.phone !== originalProfile.value.phone ||
-    userProfile.address !== originalProfile.value.address
-})
-
-const hasErrors = computed(() => {
-  return !!(errors.value.firstName || errors.value.lastName)
-})
-
 const toggleEdit = () => {
   isEditMode.value = !isEditMode.value
   if (!isEditMode.value) {
@@ -262,9 +264,39 @@ const toggleEdit = () => {
   }
 }
 
+
+
+// Update Profile
+const saveChanges = async () => {
+  validateFirstName(userProfile.firstName)
+  validateLastName(userProfile.lastName)
+  validatePhone(userProfile.phone)
+  validateAddress(userProfile.address)
+
+  if (hasErrors.value) return
+
+  try {
+    await authStore.updateProfile({
+      firstName: userProfile.firstName,
+      lastName: userProfile.lastName,
+      phone: userProfile.phone,
+      address: userProfile.address
+    })
+
+    originalProfile.value = { ...userProfile }
+    isEditMode.value = false
+    triggerToast('កែប្រែព័ត៌មាន Admin ជោគជ័យ!', 'fa-solid fa-circle-check')
+  } catch (err) {
+    const errorMsg = err.response?.data?.message || 'ការកែប្រែព័ត៌មានបរាជ័យ!'
+    triggerToast(errorMsg, 'fa-solid fa-circle-xmark')
+  }
+}
+
 const clearErrors = () => {
   errors.value.firstName = ''
   errors.value.lastName = ''
+  rrors.value.phone = ''
+  errors.value.address = ''
 }
 
 const cancelEdit = () => {
@@ -272,22 +304,6 @@ const cancelEdit = () => {
   clearErrors()
   isEditMode.value = false
   triggerToast('Changes discarded.', 'fa-solid fa-rotate-left')
-}
-
-const saveChanges = async () => {
-  validateFirstName(userProfile.firstName)
-  validateLastName(userProfile.lastName)
-
-  if (hasErrors.value) return
-
-  try {
-
-    originalProfile.value = { ...userProfile }
-    isEditMode.value = false
-    triggerToast('Profile updated successfully!', 'fa-solid fa-circle-check')
-  } catch (err) {
-    triggerToast('Failed to update profile.', 'fa-solid fa-circle-xmark')
-  }
 }
 
 const triggerToast = (msg, iconClass) => {
@@ -390,6 +406,7 @@ onMounted(async () => {
     box-shadow: 0 0 0 0 rgba(34, 197, 94, 0);
   }
 }
+
 
 .user-name {
   font-size: 1.35rem;
