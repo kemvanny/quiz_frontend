@@ -202,7 +202,9 @@ const handleUpdate = (exam) => {
   editForm.value = {
     title: exam.title,
     duration: exam.duration,
-    description: exam.description || ''
+    description: exam.description || '',
+    type: exam.type || 'quiz',     
+    status: exam.status || 'active'  
   }
   showUpdateModal.value = true
 }
@@ -212,10 +214,39 @@ const submitUpdateExam = async () => {
   try {
     isProcessing.value = true
     
-    await updateExam(selectedExamId.value, editForm.value)
+    // រៀបចំកាលបរិច្ឆេទស្វ័យប្រវត្ត (YYYY-MM-DD H:mm) ឱ្យត្រូវតាមលក្ខខណ្ឌ Postman របស់លីហ្សា
+    const today = new Date()
+    const year = today.getFullYear()
+    const month = String(today.getMonth() + 1).padStart(2, '0')
+    const day = String(today.getDate()).padStart(2, '0')
+    const start_date_formatted = `${year}-${month}-${day} 00:00`
+    
+    const nextWeek = new Date()
+    nextWeek.setDate(today.getDate() + 7)
+    const endYear = nextWeek.getFullYear()
+    const endMonth = String(nextWeek.getMonth() + 1).padStart(2, '0')
+    const endDay = String(nextWeek.getDate()).padStart(2, '0')
+    const end_date_formatted = `${endYear}-${endMonth}-${endDay} 23:59`
+
+    //បញ្ចូលកញ្ចប់ Payload ពេញលេញតាមដែល Backend ចង់បាន
+    const fullUpdatePayload = {
+      title: editForm.value.title.trim(),
+      type: editForm.value.type,
+      description: editForm.value.description ? editForm.value.description.trim() : 'គ្មានការពិពណ៌នា',
+      duration: parseInt(editForm.value.duration) || 60,
+      status: editForm.value.status,
+      start_time: start_date_formatted,
+      end_time: end_date_formatted
+    }
+
+    console.log("Payload ដែលរុញទៅ Update លើ Server:", fullUpdatePayload)
+
+    // ហៅទៅកាន់ API (ទម្រង់ URL នឹងរត់ទៅកាន់ /api/exams/update/:id តាមទម្រង់ api service របស់លីហ្សា)
+    await updateExam(selectedExamId.value, fullUpdatePayload)
     
     toast.success("ព័ត៌មានវិញ្ញាសាត្រូវបានកែប្រែដោយជោគជ័យ!")
     
+    // ធ្វើបច្ចុប្បន្នភាពទិន្នន័យនៅលើអេក្រង់ Frontend ភ្លាមៗ (Reactive Update)
     const examIndex = assignedExams.value.findIndex(e => e.id === selectedExamId.value)
     if (examIndex !== -1) {
       assignedExams.value[examIndex].title = editForm.value.title
@@ -226,7 +257,7 @@ const submitUpdateExam = async () => {
     showUpdateModal.value = false
   } catch (err) {
     console.error("Failed to update exam layout:", err)
-    toast.error("ការរក្សាទុកការកែប្រែបានបរាជ័យ!")
+    toast.error("ការរក្សាទុកការកែប្រែបានបរាជ័យ! សូមពិនិត្យមើល Console។")
   } finally {
     isProcessing.value = false
   }

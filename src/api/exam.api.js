@@ -5,8 +5,8 @@ export const createExam = (payload) => {
   return api.post('/exams/create', payload); 
 };
 
-export const updateExam = (id, examData) => { 
-  return api.put(`/exams/${id}`, examData); 
+export const updateExam = (id, data) => {
+  return api.put(`/exams/update/${id}`, data);
 };
 
 export const deleteExam = (id) => { 
