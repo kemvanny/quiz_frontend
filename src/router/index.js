@@ -4,7 +4,6 @@ import AdminDashboard from '@/views/dashboard/AdminDashboard.vue'
 import UserManagement from '@/views/admin/UserManagement.vue'
 import QuizManagement from '@/views/admin/QuizManagement.vue'
 import ResultSubmission from '@/views/admin/ResultSubmission.vue'
-import Setting from '@/views/admin/Setting.vue'
 import SystemHealth from '@/views/admin/SystemHealth.vue'
 import Login from '@/views/auth/Login.vue'
 import TeacherLayout from '@/layouts/TeacherLayout.vue'
@@ -23,13 +22,28 @@ import ProfileSetting from '@/views/student/ProfileSetting.vue'
 import Classroom from '@/views/student/Classroom.vue'
 import Assignment from '@/views/student/Assignment.vue'
 import Assignments from '@/views/teacher/Assignments.vue'
+import ProfileAdmin from '@/views/admin/ProfileAdmin.vue'
+import homeScreen from '@/views/landing/homepage.vue'
+import aboutScreen from '@/views/landing/aboutUs.vue'
+import featuresScreen from '@/views/landing/feature.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/',
-      redirect: '/login' 
+      name: 'Home',
+      component: homeScreen,
+    },
+    {
+      path: '/about',
+      name: 'About',
+      component: aboutScreen,
+    },
+    {
+      path: '/features',
+      name: 'Features',
+      component: featuresScreen,
     },
     {
       path: '/login',
@@ -67,10 +81,10 @@ const router = createRouter({
           meta : {title: "Results & Submissions"}
         },
         {
-          path: 'settings',
-          name: 'Settings',
-          component: Setting,
-          meta : {title: "Settings"}
+          path: 'profile-admin',
+          name: 'ProfileAdmin',
+          component: ProfileAdmin,
+          meta : {title: "Profile Admin"}
         },
         {
           path: 'system-health',

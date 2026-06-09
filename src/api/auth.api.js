@@ -1,9 +1,56 @@
 import api from "./axiosInstance";
 
-export const loginAPI = async (email, password) => {
-  const response = await api.post('/auth/login', { email, password })
-  return response.data;
-}
+// Login 
+export const loginAPI = (email, password) => {
+  return api.post('/auth/login', { email, password });
+};
 
-export const getProfile = () => api.get('/user/profile');
-export const logout = () => api.post('/auth/logout');
+// Logout
+export const logoutAPI = () => {
+  return api.post('/auth/logout');
+};
+
+// Get Profile 
+export const getProfileAPI = () => {
+  return api.get('/user/profile');
+};
+ 
+// Update Profile
+export const updateProfileAPI = (profileData) => {
+  return api.put("/user/profile", profileData);
+};
+
+// Upload Profile
+export const uploadProfilePictureAPI = (file) => {
+  const formData = new FormData();
+  
+  formData.append("avatar", file);
+
+  return api.put("/user/profile/avatar", formData, {
+    headers: {
+     "Content-Type": "multipart/form-data",
+    },
+  });
+};
+
+// Change Password
+export const changePasswordAPI = (oldPassword, newPassword) => {
+  return api.put("/auth/changePassword", {
+    oldPassword,
+    newPassword,
+  });
+};
+
+// Delete Profile Picture
+export const deleteProfilePictureAPI = () => {
+  return api.delete("/user/profile/avatar");
+};
+
+// Delete Account
+export const deleteAccountAPI = (password) => {
+  return api.delete("/auth/deleteAccount", {
+    data: {
+      password,
+    },
+  });
+};

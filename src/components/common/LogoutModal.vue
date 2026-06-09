@@ -10,7 +10,7 @@
           </div>
           
           <h5 class="fw-bold text-dark mb-2" style="font-family: 'Kantumruuy Pro', sans-serif;">ចាកចេញពីប្រព័ន្ធ?</h5>
-          <p class="text-muted small mb-4">តើបងពិតជាចង់ចាកចេញពីគណនីភ្នំពេញ Pralong Admin នេះមែនទេ?</p>
+          <p class="text-muted small mb-4">តើបងពិតជាចង់ចាកចេញពីគណនី Pralong {{title}} នេះមែនទេ?</p>
 
           <div class="d-flex gap-2 justify-content-center">
             <button type="button" class="btn btn-light rounded-3 w-50 fw-semibold text-muted" @click="$emit('close')">
@@ -28,7 +28,8 @@
 
 <script setup>
 defineProps({
-  show: { type: Boolean, required: true }
+  show: { type: Boolean, required: true },
+  title : {type: String}
 });
 
 defineEmits(['close', 'confirm']);
