@@ -122,8 +122,8 @@ const handleLogin = async () => {
         const result = response.data?.data ? response.data.data : response.data;
 
         if (result && result.token) {
-            sessionStorage.setItem('user_token', result.token)
-            sessionStorage.setItem('user_role', result.role_id)
+            localStorage.setItem('user_token', result.token)
+            localStorage.setItem('user_role', result.role_id)
 
             const roleId = Number(result.role_id);
             let redirectPath = '';

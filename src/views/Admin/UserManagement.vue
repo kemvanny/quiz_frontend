@@ -252,10 +252,7 @@ const handleCreate = async () => {
             email: form.value.email,
             role_id: roleId
         }
-        console.log("Payload sent:", JSON.stringify(payload));
-
-        const token = sessionStorage.getItem('user_token');
-        console.log("Token checking:", token);
+        const token =localStorage.getItem('user_token');
         const res = await createUser(payload, token);
 
         if (res.data?.result) {

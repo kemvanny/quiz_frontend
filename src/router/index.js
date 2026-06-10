@@ -24,6 +24,7 @@ import Assignment from '@/views/student/Assignment.vue'
 import Assignments from '@/views/teacher/Assignments.vue'
 import ProfileAdmin from '@/views/admin/ProfileAdmin.vue'
 import NotFound from '@/views/NotFound.vue'
+import AcceptRoom from '@/views/student/AcceptRoom.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -182,18 +183,58 @@ const router = createRouter({
 
     },
     {
+      path: '/invitations/:id/accept',
+      name: 'AcceptInvitation',
+      component: AcceptRoom,
+      meta: { title: 'Accept Class Invitation' }
+    },
+    {
       path: '/:pathMatch(.*)*',
       name: 'NotFound',
       component: NotFound
-    }
+    },
+
   ]
 });
 
-router.beforeEach((to, from) => {
-  const isLoggedIn = !!sessionStorage.getItem('user_token');
-  const userRoleId = sessionStorage.getItem('user_role');
-  const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
+// router.beforeEach((to, from) => {
+//   const isLoggedIn = !!sessionStorage.getItem('user_token');
+//   const userRoleId = sessionStorage.getItem('user_role'); 
+//   const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
 
+//   const requiredRole = to.meta.role; 
+
+//   const rolePaths = {
+//     '1': 'admin',
+//     '2': 'teacher',
+//     '3': 'student'
+//   };
+
+//   const userRoleName = rolePaths[userRoleId]; 
+
+//   if (requiresAuth && !isLoggedIn) {
+//     return { path: '/login' };
+//   }
+
+
+//   if (isLoggedIn) {
+
+//     if (to.path === '/login' && userRoleName) {
+//       return { path: `/${userRoleName}/dashboard` };
+//     }
+
+//     if (requiredRole && userRoleName !== requiredRole) {
+//       return { path: `/${userRoleName}/dashboard` };
+//     }
+//   }
+
+//   return true;
+// });
+
+router.beforeEach((to, from) => {
+  const isLoggedIn = !!localStorage.getItem('user_token');
+  const userRoleId = localStorage.getItem('user_role');
+  const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
   const requiredRole = to.meta.role;
 
   const rolePaths = {
@@ -203,18 +244,16 @@ router.beforeEach((to, from) => {
   };
 
   const userRoleName = rolePaths[userRoleId];
-
+  if (to.name === 'AcceptInvitation') {
+    return true;
+  }
   if (requiresAuth && !isLoggedIn) {
     return { path: '/login' };
   }
-
-
   if (isLoggedIn) {
-
     if (to.path === '/login' && userRoleName) {
       return { path: `/${userRoleName}/dashboard` };
     }
-
     if (requiredRole && userRoleName !== requiredRole) {
       return { path: `/${userRoleName}/dashboard` };
     }
@@ -222,5 +261,4 @@ router.beforeEach((to, from) => {
 
   return true;
 });
-
 export default router
