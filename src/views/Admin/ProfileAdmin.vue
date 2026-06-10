@@ -13,10 +13,6 @@
         <i class="fa-solid fa-shield-halved"></i> {{ authStore.profile.role }}
       </span>
 
-      <span class="code-chip">
-        <i class="fa-solid fa-hashtag" style="font-size:.7rem;"></i> {{ authStore.profile.code  }}
-      </span>
-
       <div class="stats-strip">
         <div class="stat-box">
           <span class="stat-num">48</span>
@@ -295,7 +291,7 @@ const saveChanges = async () => {
 const clearErrors = () => {
   errors.value.firstName = ''
   errors.value.lastName = ''
-  rrors.value.phone = ''
+  errors.value.phone = ''
   errors.value.address = ''
 }
 
