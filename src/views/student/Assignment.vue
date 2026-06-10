@@ -7,18 +7,12 @@
           <div class="tab-pills">
             <button class="tab-pill active">
               To-Do
-              <span
-                class="count-badge"
-                style="background: #fef2f2; color: #dc2626"
-                >{{ todoCount }}</span
-              >
+              <span class="count-badge" style="background: #fef2f2; color: #dc2626">{{ todoCount }}</span>
             </button>
             <button class="tab-pill">Completed</button>
             <button class="tab-pill">Overdue</button>
           </div>
-          <div
-            style="font-size: 0.8rem; color: var(--txt-mu); font-weight: 600"
-          >
+          <div style="font-size: 0.8rem; color: var(--txt-mu); font-weight: 600">
             <i class="fas fa-calendar-week me-1"></i> Week of May 18, 2026
           </div>
         </div>
@@ -33,64 +27,37 @@
           </div>
           <div class="flex-grow-1">
             <div class="task-meta">
-              <span
-                class="meta-chip"
-                style="background: #fef2f2; color: #dc2626"
-                ><i class="fas fa-cloud-download-alt"></i> Loading Exam</span
-              >
+              <span class="meta-chip" style="background: #fef2f2; color: #dc2626"><i
+                  class="fas fa-cloud-download-alt"></i> Loading Exam</span>
             </div>
             <div class="task-title">Fetching assignment exam...</div>
             <div class="task-details">
-              <span class="task-detail" style="font-weight: 400"
-                ><i class="fas fa-link"></i> Code {{ examJoinCode }}</span
-              >
+              <span class="task-detail" style="font-weight: 400"><i class="fas fa-link"></i> Code {{ examJoinCode
+                }}</span>
             </div>
           </div>
         </div>
 
-        <a
-          v-else-if="joinedExam"
-          href="#"
-          class="task-card type-exam"
-          @click.prevent
-        >
+        <a v-else-if="joinedExam" href="#" class="task-card type-exam" @click.prevent>
           <div class="task-icon" style="background: #fef2f2; color: #ef4444">
             <i class="fas fa-bolt"></i>
           </div>
           <div class="flex-grow-1">
             <div class="task-meta">
-              <span
-                class="meta-chip"
-                style="background: #fef2f2; color: #dc2626"
-                ><i class="fas fa-check-circle"></i> Ready</span
-              >
-              <span
-                class="meta-chip"
-                style="background: #f1f5f9; color: var(--txt-m)"
-                >{{ examTypeLabel }}</span
-              >
-              <span
-                class="meta-chip"
-                style="background: var(--em-soft); color: var(--em-dk)"
-                ><i class="fas fa-link"></i> {{ examJoinCode }}</span
-              >
+              <span class="meta-chip" style="background: #fef2f2; color: #dc2626"><i class="fas fa-check-circle"></i>
+                Ready</span>
+              <span class="meta-chip" style="background: #f1f5f9; color: var(--txt-m)">{{ examTypeLabel }}</span>
+              <span class="meta-chip" style="background: var(--em-soft); color: var(--em-dk)"><i
+                  class="fas fa-link"></i> {{ examJoinCode }}</span>
             </div>
             <div class="task-title">{{ joinedExam.title }}</div>
             <div class="task-details">
-              <span
-                class="task-detail"
-                style="color: #dc2626; font-weight: 400"
-                ><i class="fas fa-clipboard-check"></i>
-                {{ examResponseMessage || "Exam is correct. You can start exam." }}</span
-              >
-              <span class="task-detail" style="font-weight: 400"
-                ><i class="fas fa-stopwatch"></i>
-                {{ joinedExam.duration }} minutes</span
-              >
-              <span class="task-detail" style="font-weight: 400"
-                ><i class="fas fa-star"></i>
-                {{ joinedExam.total_points }} points</span
-              >
+              <span class="task-detail" style="color: #dc2626; font-weight: 400"><i class="fas fa-clipboard-check"></i>
+                {{ examResponseMessage || "Exam is correct. You can start exam." }}</span>
+              <span class="task-detail" style="font-weight: 400"><i class="fas fa-stopwatch"></i>
+                {{ joinedExam.duration }} minutes</span>
+              <span class="task-detail" style="font-weight: 400"><i class="fas fa-star"></i>
+                {{ joinedExam.total_points }} points</span>
             </div>
           </div>
           <button class="task-cta cta-red" type="button" @click.stop.prevent="startExam">
@@ -104,22 +71,14 @@
           </div>
           <div class="flex-grow-1">
             <div class="task-meta">
-              <span
-                class="meta-chip"
-                style="background: #fef2f2; color: #dc2626"
-                ><i class="fas fa-circle-exclamation"></i> Unable to Load</span
-              >
-              <span
-                class="meta-chip"
-                style="background: #f1f5f9; color: var(--txt-m)"
-                >{{ examJoinCode }}</span
-              >
+              <span class="meta-chip" style="background: #fef2f2; color: #dc2626"><i
+                  class="fas fa-circle-exclamation"></i> Unable to Load</span>
+              <span class="meta-chip" style="background: #f1f5f9; color: var(--txt-m)">{{ examJoinCode }}</span>
             </div>
             <div class="task-title">Exam assignment is not available</div>
             <div class="task-details">
-              <span class="task-detail" style="color: #dc2626; font-weight: 400"
-                ><i class="fas fa-info-circle"></i> {{ examError }}</span
-              >
+              <span class="task-detail" style="color: #dc2626; font-weight: 400"><i class="fas fa-info-circle"></i> {{
+                examError }}</span>
             </div>
           </div>
           <button class="task-cta cta-red" type="button" @click="fetchJoinedExam">
@@ -356,7 +315,7 @@ function startExam() {
 
 onMounted(fetchJoinedExam);
 </script>
-<style  scoped>
+<style scoped>
 *,
 *::before,
 *::after {
@@ -364,6 +323,7 @@ onMounted(fetchJoinedExam);
   margin: 0;
   padding: 0;
 }
+
 :root {
   --em: #10b981;
   --em-dk: #059669;
@@ -376,6 +336,7 @@ onMounted(fetchJoinedExam);
   --sh-sm: 0 4px 12px rgba(0, 0, 0, 0.03);
   --sh-hover: 0 16px 36px rgba(0, 0, 0, 0.07);
 }
+
 body {
   font-family: "Inter", sans-serif;
   background-color: #f4f7fe;
@@ -386,10 +347,12 @@ body {
   overflow: hidden;
   color: var(--txt);
 }
+
 a {
   text-decoration: none;
   color: inherit;
 }
+
 .workspace {
   flex: 1;
   overflow-y: auto;
@@ -403,6 +366,7 @@ a {
   justify-content: space-between;
   margin-bottom: 28px;
 }
+
 .tab-pills {
   display: flex;
   gap: 6px;
@@ -413,6 +377,7 @@ a {
   padding: 5px;
   box-shadow: var(--sh-sm);
 }
+
 .tab-pill {
   padding: 7px 20px;
   border-radius: 10px;
@@ -427,14 +392,17 @@ a {
   align-items: center;
   gap: 7px;
 }
+
 .tab-pill.active {
   background: #fff;
   color: var(--em-dk);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 }
+
 .tab-pill:hover:not(.active) {
   color: var(--txt);
 }
+
 .count-badge {
   display: inline-flex;
   align-items: center;
@@ -459,6 +427,7 @@ a {
   align-items: center;
   gap: 8px;
 }
+
 .section-label::after {
   content: "";
   flex: 1;
@@ -483,6 +452,7 @@ a {
   overflow: hidden;
   cursor: pointer;
 }
+
 /* Left accent stripe */
 .task-card::before {
   content: "";
@@ -494,22 +464,28 @@ a {
   border-radius: 20px 0 0 20px;
   transition: width 0.2s;
 }
+
 .task-card:hover {
   transform: translateY(-3px);
   box-shadow: var(--sh-hover);
 }
+
 .task-card:hover::before {
   width: 6px;
 }
+
 .task-card-static {
   cursor: default;
 }
+
 .task-card-static:hover {
   transform: none;
 }
+
 .task-card-static:hover .task-icon {
   transform: none;
 }
+
 .task-card-static .task-cta {
   cursor: pointer;
 }
@@ -517,20 +493,25 @@ a {
 .task-card.type-exam::before {
   background: #ef4444;
 }
+
 .task-card.type-exam:hover {
   border-color: rgba(239, 68, 68, 0.2);
   box-shadow: 0 16px 36px rgba(239, 68, 68, 0.1);
 }
+
 .task-card.type-assign::before {
   background: #3b82f6;
 }
+
 .task-card.type-assign:hover {
   border-color: rgba(59, 130, 246, 0.2);
   box-shadow: 0 16px 36px rgba(59, 130, 246, 0.1);
 }
+
 .task-card.type-done::before {
   background: var(--em);
 }
+
 .task-card.type-done:hover {
   border-color: rgba(16, 185, 129, 0.2);
   box-shadow: 0 16px 36px rgba(16, 185, 129, 0.1);
@@ -548,6 +529,7 @@ a {
   flex-shrink: 0;
   transition: transform 0.25s;
 }
+
 .task-card:hover .task-icon {
   transform: scale(1.08) rotate(-4deg);
 }
@@ -560,6 +542,7 @@ a {
   margin-bottom: 7px;
   flex-wrap: wrap;
 }
+
 .meta-chip {
   padding: 3px 10px;
   border-radius: 7px;
@@ -569,6 +552,7 @@ a {
   align-items: center;
   gap: 4px;
 }
+
 .task-title {
   font-size: 1rem;
   font-weight: 700;
@@ -576,11 +560,13 @@ a {
   margin-bottom: 8px;
   line-height: 1.3;
 }
+
 .task-details {
   display: flex;
   gap: 20px;
   flex-wrap: wrap;
 }
+
 .task-detail {
   font-size: 0.78rem;
   font-weight: 600;
@@ -603,32 +589,39 @@ a {
   transition: all 0.22s;
   white-space: nowrap;
 }
+
 .task-cta:hover {
   transform: scale(1.04);
 }
+
 .cta-red {
   background: #fef2f2;
   color: #dc2626;
   border: 1.5px solid #fee2e2;
 }
+
 .cta-red:hover {
   background: #ef4444;
   color: #fff;
 }
+
 .cta-blue {
   background: #eff6ff;
   color: #2563eb;
   border: 1.5px solid #dbeafe;
 }
+
 .cta-blue:hover {
   background: #3b82f6;
   color: #fff;
 }
+
 .cta-green {
   background: var(--em-soft);
   color: var(--em-dk);
   border: 1.5px solid #bbf7d0;
 }
+
 .cta-green:hover {
   background: var(--em);
   color: #fff;
@@ -638,9 +631,11 @@ a {
 ::-webkit-scrollbar {
   width: 5px;
 }
+
 ::-webkit-scrollbar-track {
   background: transparent;
 }
+
 ::-webkit-scrollbar-thumb {
   background: #e2e8f0;
   border-radius: 99px;
