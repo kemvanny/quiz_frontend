@@ -293,10 +293,11 @@ a {
 }
 /* Toast */
 .toast-wrap {
-  position: fixed;
-  bottom: 2rem;
-  right: 2rem;
-  z-index: 999;
+    position: fixed;
+    bottom: 20px; 
+    right: 20px;
+    z-index: 999999; 
+    pointer-events: none;
 }
 
 .toast-msg {
@@ -323,7 +324,12 @@ a {
 .toast-msg i {
   color: #4ade80;
 }
-
+.toast-container {
+    z-index: 999999 !important;
+    position: fixed;
+    top: 20px;
+    right: 20px;
+}
 @keyframes fadeUp {
   from {
     opacity: 0;

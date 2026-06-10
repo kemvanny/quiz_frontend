@@ -37,8 +37,8 @@
 
                     <div class="input-group-custom" :class="{ 'has-error': errors.password }">
                         <i class="fas fa-lock"></i>
-                        <input :type="showPassword ? 'text' : 'password'" v-model.trim="password" placeholder="ពាក្យសម្ងាត់"
-                            @input="validatePassword(password)">
+                        <input :type="showPassword ? 'text' : 'password'" v-model.trim="password"
+                            placeholder="ពាក្យសម្ងាត់" @input="validatePassword(password)">
                         <i class="fas" :class="showPassword ? 'fa-eye-slash' : 'fa-eye'" @click="togglePassword"
                             style="cursor: pointer; margin-left: auto;"></i>
                     </div>
@@ -46,6 +46,10 @@
 
                     <div class="forgot-password">
                         <a href="#">ភ្លេចពាក្យសម្ងាត់?</a>
+                    </div>
+
+                    <div v-if="backendError" class="backend-error-alert">
+                        <i class="fas fa-exclamation-circle me-2"></i>{{ backendError }}
                     </div>
 
                     <button type="submit" class="btn-login" :disabled="isLoading">
@@ -56,82 +60,116 @@
             </div>
 
         </div>
+        <div class="toast-wrap">
+            <div class="toast-msg" :class="{ 'show': toast.show }">
+                <i :class="toast.icon"></i>
+                <span>{{ toast.message }}</span>
+            </div>
+        </div>
     </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref,reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import { loginAPI } from '@/api/auth.api'
 import { useFormValidation } from '@/composables/useFormValidation'
-import { useToast } from 'vue-toastification'
+
 
 const router = useRouter()
-const toast = useToast()
 
 const showPassword = ref(false);
 const isLoading = ref(false);
 const email = ref('')
 const password = ref('')
 
+const backendError = ref('');
+
 const togglePassword = () => {
     showPassword.value = !showPassword.value;
 };
+
+const toast = reactive({
+  show: false,
+  message: '',
+  icon: ''
+})
+const triggerToast = (msg, iconClass) => {
+  toast.message = msg
+  toast.icon = iconClass
+  toast.show = true
+  setTimeout(() => {
+    toast.show = false
+  }, 3000)
+}
 
 const { errors, validateEmail, validatePassword } = useFormValidation();
 
 const handleLogin = async () => {
     if (isLoading.value) return;
 
-    // ១. ផ្ទៀងផ្ទាត់ទិន្នន័យ Input
+    backendError.value = '';
+
     validateEmail(email.value);
     validatePassword(password.value);
 
     if (errors.value.email || errors.value.password) return;
+    triggerToast("កំពុងផ្ទៀងផ្ទាត់ព័ត៌មាន...", 'fa-solid fa-spinner fa-spin');
 
     isLoading.value = true;
     try {
-        // ២. ហៅទៅកាន់ API
         const response = await loginAPI(email.value, password.value);
-        
-        // 🎯 ៣. ពិនិត្យត្រួតអានទិន្នន័យឱ្យត្រូវប្រាកដ (Handle ទាំង response.data.data ឬ response.data)
         const result = response.data?.data ? response.data.data : response.data;
 
         if (result && result.token) {
-            // រក្សាទុក Token និង Role ទៅក្នុង sessionStorage
             localStorage.setItem('user_token', result.token)
             localStorage.setItem('user_role', result.role_id)
-            
-            // បំប្លែង Role ទៅជា Number ដើម្បីកុំឱ្យខុសលក្ខខណ្ឌ ===
-            const roleId = Number(result.role_id);
 
-            // ៤. ប្តូរទំព័រ (Redirect) ទៅតាម Role
+            const roleId = Number(result.role_id);
+            let redirectPath = '';
+
             if (roleId === 1) {
-                toast.success("ស្វាគមន៍លោក Admin! ចូលប្រើប្រាស់បានជោគជ័យ។");
-                router.push('/admin/dashboard')
+                triggerToast("ស្វាគមន៍លោក Admin! ចូលប្រើប្រាស់បានជោគជ័យ។", 'fa-solid fa-circle-check');
+               redirectPath = '/admin/dashboard';
             } else if (roleId === 2) {
-                toast.success("ស្វាគមន៍លោកគ្រូ/អ្នកគ្រូ! ចូលប្រើប្រាស់បានជោគជ័យ។");
-                router.push('/teacher/dashboard')
+                triggerToast("ស្វាគមន៍លោកគ្រូ/អ្នកគ្រូ! ចូលប្រើប្រាស់បានជោគជ័យ។", 'fa-solid fa-circle-check');
+                redirectPath = '/teacher/dashboard';
             } else if (roleId === 3) {
-                toast.success("ស្វាគមន៍ប្អូនៗសិស្សានុសិស្ស! ចូលប្រើប្រាស់បានជោគជ័យ។");
-                router.push('/student/dashboard')
+               triggerToast("ស្វាគមន៍ប្អូនៗសិស្សានុសិស្ស! ចូលប្រើប្រាស់បានជោគជ័យ។", 'fa-solid fa-circle-check');
+                redirectPath = '/student/dashboard';
             } else {
-                toast.warning("គណនីរបស់អ្នកមិនទាន់មានសិទ្ធិ Role ក្នុងប្រព័ន្ធឡើយ!");
-                errors.value.email = "គណនីគ្មានសិទ្ធិចូលប្រើប្រាស់!";
+                backendError.value = "គណនីគ្មានសិទ្ធិចូលប្រើប្រាស់!";
+                return;
             }
-        } else {
-            toast.error("ការផ្ទៀងផ្ទាត់បរាជ័យ ទិន្នន័យមកពី Server មិនត្រឹមត្រូវ!");
+            setTimeout(() => {
+            router.push(redirectPath);
+        }, 1300);
+        }
+        else {
+            toast.show = false;
+            triggerToast("អ៊ីមែល ឬពាក្យសម្ងាត់មិនត្រឹមត្រូវ!", 'fa-solid fa-circle-xmark');
+
+            backendError.value = response.data?.message || result?.message || "អ៊ីមែល ឬពាក្យសម្ងាត់មិនត្រឹមត្រូវឡើយ!";
         }
 
     } catch (error) {
-        console.error("Login Error:", error);
-        let errorMessage = "មិនអាចចូលគណនីបានទេ! សូមព្យាយាមម្តងទៀត។";
-        
-        if (error.response && error.response.data) {
-            errorMessage = error.response.data.message || errorMessage;
+
+        let errorMessage = "អ៊ីមែល ឬពាក្យសម្ងាត់មិនត្រឹមត្រូវឡើយ!";
+      
+
+        if (error.response) {
+            if (error.response.status === 429) {
+                
+                errorMessage = "សំណើច្រើនពេក! សូមរង់ចាំមួយភ្លែត រួចព្យាយាមម្តងទៀត។";
+            } else if (error.response.data && error.response.data.message) {
+                errorMessage = error.response.data.message;
+            }
+        } else {
+
+            errorMessage = "មិនអាចភ្ជាប់ទៅកាន់ម៉ាស៊ីនមេបានទេ!";
         }
-        
-        toast.error(errorMessage);
+        triggerToast(errorMessage, 'fa-solid fa-circle-xmark');
+        backendError.value = errorMessage;
     } finally {
         isLoading.value = false;
     }
@@ -143,6 +181,31 @@ const handleLogin = async () => {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+}
+
+.backend-error-alert {
+    background-color: #fdf2f2;
+    color: #de3545;
+    border: 1px solid #f8b4b4;
+    padding: 10px 12px;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-5px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .login-container {
@@ -372,16 +435,16 @@ input:-webkit-autofill:active {
     transition: 0.3s;
 }
 
-.input-group-custom i.fa-eye, 
+.input-group-custom i.fa-eye,
 .input-group-custom i.fa-eye-slash {
     margin-right: 10px;
-    color: #94a3b8; 
+    color: #94a3b8;
     transition: color 0.2s;
 }
 
-.input-group-custom i.fa-eye:hover, 
+.input-group-custom i.fa-eye:hover,
 .input-group-custom i.fa-eye-slash:hover {
-    color: #10b981; 
+    color: #10b981;
 }
 
 .input-group-custom:focus-within {
