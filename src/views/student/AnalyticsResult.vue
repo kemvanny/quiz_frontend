@@ -12,17 +12,17 @@
             <div class="arc-label">89%</div>
           </div>
           <div>
-            <div class="stat-label">Overall Avg</div>
+            <div class="stat-label">មធ្យមភាគសរុប</div>
             <div class="stat-value" style="color: var(--em)">A–</div>
-            <div class="stat-sub">Semester GPA</div>
+            <div class="stat-sub">GPA ប្រចាំឆមាស</div>
           </div>
         </div>
         <div class="stat-card">
           <div class="stat-icon ic-blue"><i class="fas fa-trophy"></i></div>
           <div>
-            <div class="stat-label">Highest Score</div>
+            <div class="stat-label">ពិន្ទុខ្ពស់បំផុត</div>
             <div class="stat-value">98%</div>
-            <div class="stat-sub" style="color: #3b82f6">Physics Midterm</div>
+            <div class="stat-sub" style="color: #3b82f6">ប្រឡងពាក់កណ្តាលឆមាស រូបវិទ្យា</div>
           </div>
         </div>
         <div class="stat-card">
@@ -30,10 +30,10 @@
             <i class="fas fa-check-double"></i>
           </div>
           <div>
-            <div class="stat-label">Total Graded</div>
+            <div class="stat-label">បានដាក់ពិន្ទុសរុប</div>
             <div class="stat-value">34</div>
             <div class="stat-sub" style="color: #9333ea">
-              Exams & Assignments
+              ការប្រឡង និងកិច្ចការ
             </div>
           </div>
         </div>
@@ -42,27 +42,27 @@
       <!-- Table Card -->
       <div class="table-card">
         <div class="table-head">
-          <h6>Semester Grades</h6>
+          <h6>ពិន្ទុប្រចាំឆមាស</h6>
           <button class="download-btn">
-            <i class="fas fa-download"></i> Transcript
+            <i class="fas fa-download"></i> ប្រតិចារិក
           </button>
         </div>
 
         <div class="filter-row">
-          <button class="filter-btn active">All</button>
-          <button class="filter-btn">Physics</button>
-          <button class="filter-btn">Web Dev 101</button>
-          <button class="filter-btn">Grade 12-A</button>
+          <button class="filter-btn active">ទាំងអស់</button>
+          <button class="filter-btn">រូបវិទ្យា</button>
+          <button class="filter-btn">អភិវឌ្ឍវេប 101</button>
+          <button class="filter-btn">ថ្នាក់ទី 12-A</button>
         </div>
 
         <table>
           <thead>
             <tr>
-              <th>Assessment</th>
-              <th>Course</th>
-              <th>Submitted</th>
-              <th>Score</th>
-              <th>Grade</th>
+              <th>ការវាយតម្លៃ</th>
+              <th>វគ្គសិក្សា</th>
+              <th>បានដាក់ស្នើ</th>
+              <th>ពិន្ទុ</th>
+              <th>និទ្ទេស</th>
               <th></th>
             </tr>
           </thead>
@@ -76,11 +76,11 @@
                   >
                     <i class="fas fa-bolt"></i>
                   </div>
-                  <div class="assess-name">Quiz: Java Basics</div>
+                  <div class="assess-name">សំណួរ៖ មូលដ្ឋាន Java</div>
                 </div>
               </td>
-              <td><span class="course-tag">Grade 12-A</span></td>
-              <td style="color: var(--txt-mu)">Oct 12, 2023</td>
+              <td><span class="course-tag">ថ្នាក់ទី 12-A</span></td>
+              <td style="color: var(--txt-mu)">12 តុលា 2023</td>
               <td>
                 <div class="score-wrap" style="min-width: 120px">
                   <div class="score-bar">
@@ -94,7 +94,7 @@
               </td>
               <td><span class="grade-badge grade-a">A</span></td>
               <td class="text-end">
-                <button class="action-btn">Review →</button>
+                <button class="action-btn">ពិនិត្យមើល</button>
               </td>
             </tr>
             <tr>
@@ -106,11 +106,11 @@
                   >
                     <i class="fas fa-code"></i>
                   </div>
-                  <div class="assess-name">HTML & CSS Layouts</div>
+                  <div class="assess-name">ប្លង់ HTML និង CSS</div>
                 </div>
               </td>
-              <td><span class="course-tag">Web Dev 101</span></td>
-              <td style="color: var(--txt-mu)">Oct 08, 2023</td>
+              <td><span class="course-tag">អភិវឌ្ឍវេប 101</span></td>
+              <td style="color: var(--txt-mu)">08 តុលា 2023</td>
               <td>
                 <div class="score-wrap" style="min-width: 120px">
                   <div class="score-bar">
@@ -124,7 +124,7 @@
               </td>
               <td><span class="grade-badge grade-a">A</span></td>
               <td class="text-end">
-                <button class="action-btn">Review →</button>
+                <button class="action-btn">ពិនិត្យមើល</button>
               </td>
             </tr>
             <tr>
@@ -136,11 +136,11 @@
                   >
                     <i class="fas fa-graduation-cap"></i>
                   </div>
-                  <div class="assess-name">Midterm — Physics</div>
+                  <div class="assess-name">ប្រឡងពាក់កណ្តាលឆមាស៖ រូបវិទ្យា</div>
                 </div>
               </td>
-              <td><span class="course-tag">Grade 11-B</span></td>
-              <td style="color: var(--txt-mu)">Sep 25, 2023</td>
+              <td><span class="course-tag">ថ្នាក់ទី 11-B</span></td>
+              <td style="color: var(--txt-mu)">25 កញ្ញា 2023</td>
               <td>
                 <div class="score-wrap" style="min-width: 120px">
                   <div class="score-bar">
@@ -154,7 +154,7 @@
               </td>
               <td><span class="grade-badge grade-b">B</span></td>
               <td class="text-end">
-                <button class="action-btn">Review →</button>
+                <button class="action-btn">ពិនិត្យមើល</button>
               </td>
             </tr>
             <tr>
@@ -166,11 +166,11 @@
                   >
                     <i class="fas fa-vial"></i>
                   </div>
-                  <div class="assess-name">Lab Report 1</div>
+                  <div class="assess-name">របាយការណ៍មន្ទីរពិសោធន៍ 1</div>
                 </div>
               </td>
-              <td><span class="course-tag">Grade 11-B</span></td>
-              <td style="color: var(--txt-mu)">Sep 15, 2023</td>
+              <td><span class="course-tag">ថ្នាក់ទី 11-B</span></td>
+              <td style="color: var(--txt-mu)">15 កញ្ញា 2023</td>
               <td>
                 <div class="score-wrap" style="min-width: 120px">
                   <div class="score-bar">
@@ -184,7 +184,7 @@
               </td>
               <td><span class="grade-badge grade-c">C</span></td>
               <td class="text-end">
-                <button class="action-btn">Review →</button>
+                <button class="action-btn">ពិនិត្យមើល</button>
               </td>
             </tr>
           </tbody>
@@ -236,6 +236,7 @@ a {
   flex: 1;
   overflow-y: auto;
   padding: 2rem 2.5rem;
+  font-family: "Kantumruy Pro", "Noto Sans Khmer", "Inter", sans-serif;
 }
 
 /* ── Stat Strip ── */
