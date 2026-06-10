@@ -43,7 +43,7 @@
             :limit="limit" :total="totalRecords" @update:page="changePage">
             <template #row="{ item }">
                 <td>{{ item.user_code }}</td>
-                <td>{{ item.fullName }}</td>
+                <td class="text-capitalize">{{ item.fullName }}</td>
                 <td>{{ item.email }}</td>
                 <td>
                     <StatusBadge :type="item.role" />
