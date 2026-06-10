@@ -1,13 +1,9 @@
 <template>
-  <div>
-    <div class="workspace">
+    <div>
       <!-- Filter row -->
       <div class="filter-row">
         <div class="search-pill">
-          <i
-            class="fas fa-search"
-            style="color: var(--txt-mu); font-size: 0.85rem"
-          ></i>
+          <i class="fas fa-search" style="color: var(--txt-mu); font-size: 0.85rem"></i>
           <input type="text" placeholder="Search courses or instructors…" />
         </div>
         <div class="tab-pills">
@@ -19,42 +15,32 @@
 
       <!-- Room Grid -->
       <div class="room-grid">
-        <!-- Card 1 — Java CS -->
         <a href="#" class="room-card">
           <div class="card-banner green">
             <div class="status-chip">
               <div class="status-dot" style="background: #10b981"></div>
               Active
             </div>
-            <div
-              class="card-icon"
-              style="
+            <div class="card-icon" style="
                 background: linear-gradient(135deg, var(--em), var(--em-dk));
-              "
-            >
+              ">
               <i class="fas fa-code"></i>
             </div>
           </div>
           <div class="card-body">
             <div class="card-title">Computer Science: Java Basics</div>
             <div class="card-instructor">
-              <img
-                src="https://ui-avatars.com/api/?name=Hean+Liza&background=10b981&color=fff"
-              />
+              <img src="https://ui-avatars.com/api/?name=Hean+Liza&background=10b981&color=fff" />
               <span>Hean Liza</span>
             </div>
             <div class="prog-label">
-              <span>Course Progress</span
-              ><span style="color: var(--em)">65%</span>
+              <span>Course Progress</span><span style="color: var(--em)">65%</span>
             </div>
             <div class="prog-track">
-              <div
-                class="prog-fill"
-                style="
+              <div class="prog-fill" style="
                   width: 65%;
                   background: linear-gradient(90deg, var(--em), #34d399);
-                "
-              ></div>
+                "></div>
             </div>
           </div>
           <div class="card-footer">
@@ -62,333 +48,18 @@
               <i class="far fa-calendar-alt" style="color: var(--em)"></i> Next
               task due tomorrow
             </div>
-            <i
-              class="fas fa-arrow-right"
-              style="color: var(--txt-mu); font-size: 0.78rem"
-            ></i>
+            <i class="fas fa-arrow-right" style="color: var(--txt-mu); font-size: 0.78rem"></i>
           </div>
         </a>
 
-        <!-- Card 2 — Physics -->
-        <a href="#" class="room-card">
-          <div class="card-banner blue">
-            <div class="status-chip">
-              <div class="status-dot" style="background: #3b82f6"></div>
-              Active
-            </div>
-            <div
-              class="card-icon"
-              style="background: linear-gradient(135deg, #3b82f6, #6366f1)"
-            >
-              <i class="fas fa-atom"></i>
-            </div>
-          </div>
-          <div class="card-body">
-            <div class="card-title">Advanced Physics 11-B</div>
-            <div class="card-instructor">
-              <img
-                src="https://ui-avatars.com/api/?name=Kem+Vanny&background=3b82f6&color=fff"
-              />
-              <span>Kem Vanny</span>
-            </div>
-            <div class="prog-label">
-              <span>Course Progress</span
-              ><span style="color: #3b82f6">30%</span>
-            </div>
-            <div class="prog-track">
-              <div
-                class="prog-fill"
-                style="
-                  width: 30%;
-                  background: linear-gradient(90deg, #3b82f6, #60a5fa);
-                "
-              ></div>
-            </div>
-          </div>
-          <div class="card-footer">
-            <div class="footer-note">
-              <i class="fas fa-bell" style="color: #3b82f6"></i> New assignment
-              posted
-            </div>
-            <i
-              class="fas fa-arrow-right"
-              style="color: var(--txt-mu); font-size: 0.78rem"
-            ></i>
-          </div>
-        </a>
-
-        <!-- Card 3 — Calculus -->
-        <a href="#" class="room-card">
-          <div class="card-banner amber">
-            <div class="status-chip" style="color: #92400e">
-              <div class="status-dot" style="background: #f59e0b"></div>
-              Wrapping Up
-            </div>
-            <div
-              class="card-icon"
-              style="background: linear-gradient(135deg, #f59e0b, #fbbf24)"
-            >
-              <i class="fas fa-square-root-alt"></i>
-            </div>
-          </div>
-          <div class="card-body">
-            <div class="card-title">Calculus I</div>
-            <div class="card-instructor">
-              <img
-                src="https://ui-avatars.com/api/?name=Som+Chan&background=f59e0b&color=fff"
-              />
-              <span>Som Chan</span>
-            </div>
-            <div class="prog-label">
-              <span>Course Progress</span
-              ><span style="color: #f59e0b">90%</span>
-            </div>
-            <div class="prog-track">
-              <div
-                class="prog-fill"
-                style="
-                  width: 90%;
-                  background: linear-gradient(90deg, #f59e0b, #fde047);
-                "
-              ></div>
-            </div>
-          </div>
-          <div class="card-footer">
-            <div class="footer-note">
-              <i class="fas fa-flag-checkered" style="color: #f59e0b"></i> Final
-              exam upcoming
-            </div>
-            <i
-              class="fas fa-arrow-right"
-              style="color: var(--txt-mu); font-size: 0.78rem"
-            ></i>
-          </div>
-        </a>
-
-        <!-- Card 4 — Web Dev -->
-        <a href="#" class="room-card">
-          <div class="card-banner purple">
-            <div class="status-chip">
-              <div class="status-dot" style="background: #8b5cf6"></div>
-              Active
-            </div>
-            <div
-              class="card-icon"
-              style="background: linear-gradient(135deg, #8b5cf6, #a78bfa)"
-            >
-              <i class="fas fa-globe"></i>
-            </div>
-          </div>
-          <div class="card-body">
-            <div class="card-title">Web Development 101</div>
-            <div class="card-instructor">
-              <img
-                src="https://ui-avatars.com/api/?name=Reaksa+Mon&background=8b5cf6&color=fff"
-              />
-              <span>Reaksa Mon</span>
-            </div>
-            <div class="prog-label">
-              <span>Course Progress</span
-              ><span style="color: #8b5cf6">52%</span>
-            </div>
-            <div class="prog-track">
-              <div
-                class="prog-fill"
-                style="
-                  width: 52%;
-                  background: linear-gradient(90deg, #8b5cf6, #c4b5fd);
-                "
-              ></div>
-            </div>
-          </div>
-          <div class="card-footer">
-            <div class="footer-note">
-              <i class="fas fa-clock" style="color: #8b5cf6"></i> Quiz due in 3
-              days
-            </div>
-            <i
-              class="fas fa-arrow-right"
-              style="color: var(--txt-mu); font-size: 0.78rem"
-            ></i>
-          </div>
-        </a>
-
-        <!-- Card 5 — Biology -->
-        <a href="#" class="room-card">
-          <div class="card-banner rose">
-            <div class="status-chip">
-              <div class="status-dot" style="background: #f43f5e"></div>
-              Active
-            </div>
-            <div
-              class="card-icon"
-              style="background: linear-gradient(135deg, #f43f5e, #fb7185)"
-            >
-              <i class="fas fa-dna"></i>
-            </div>
-          </div>
-          <div class="card-body">
-            <div class="card-title">Biology — Grade 11</div>
-            <div class="card-instructor">
-              <img
-                src="https://ui-avatars.com/api/?name=Chanda+Pich&background=f43f5e&color=fff"
-              />
-              <span>Chanda Pich</span>
-            </div>
-            <div class="prog-label">
-              <span>Course Progress</span
-              ><span style="color: #f43f5e">78%</span>
-            </div>
-            <div class="prog-track">
-              <div
-                class="prog-fill"
-                style="
-                  width: 78%;
-                  background: linear-gradient(90deg, #f43f5e, #fb7185);
-                "
-              ></div>
-            </div>
-          </div>
-          <div class="card-footer">
-            <div class="footer-note">
-              <i class="far fa-calendar-check" style="color: #f43f5e"></i> Lab
-              report due Friday
-            </div>
-            <i
-              class="fas fa-arrow-right"
-              style="color: var(--txt-mu); font-size: 0.78rem"
-            ></i>
-          </div>
-        </a>
-
-        <!-- Card 6 — English -->
-        <a href="#" class="room-card">
-          <div class="card-banner cyan">
-            <div class="status-chip">
-              <div class="status-dot" style="background: #06b6d4"></div>
-              Active
-            </div>
-            <div
-              class="card-icon"
-              style="background: linear-gradient(135deg, #06b6d4, #22d3ee)"
-            >
-              <i class="fas fa-book-open"></i>
-            </div>
-          </div>
-          <div class="card-body">
-            <div class="card-title">English Communication</div>
-            <div class="card-instructor">
-              <img
-                src="https://ui-avatars.com/api/?name=Lina+Sok&background=06b6d4&color=fff"
-              />
-              <span>Lina Sok</span>
-            </div>
-            <div class="prog-label">
-              <span>Course Progress</span
-              ><span style="color: #06b6d4">40%</span>
-            </div>
-            <div class="prog-track">
-              <div
-                class="prog-fill"
-                style="
-                  width: 40%;
-                  background: linear-gradient(90deg, #06b6d4, #67e8f9);
-                "
-              ></div>
-            </div>
-          </div>
-          <div class="card-footer">
-            <div class="footer-note">
-              <i class="fas fa-pen-nib" style="color: #06b6d4"></i> Essay draft
-              due Monday
-            </div>
-            <i
-              class="fas fa-arrow-right"
-              style="color: var(--txt-mu); font-size: 0.78rem"
-            ></i>
-          </div>
-        </a>
       </div>
     </div>
-    <div
-      class="modal-wrap"
-      :class="{ open: isJoinModalOpen }"
-      @click.self="closeJoinModal"
-    >
-      <div class="modal-box">
-        <div class="modal-title">Join a Room</div>
-        <div class="modal-sub">Enter the code provided by your instructor.</div>
-        <label class="modal-label" for="roomCode">Room Code</label>
-        <input
-          class="modal-input"
-          :class="{ invalid: roomCodeError }"
-          id="roomCode"
-          ref="roomCodeInput"
-          v-model="roomCode"
-          type="text"
-          placeholder="e.g. AB12-CD34"
-          maxlength="12"
-          autocomplete="off"
-          @input="roomCodeError = false"
-          @keyup.enter="joinRoom"
-        />
-        <div class="modal-actions">
-          <button class="modal-btn primary" type="button" @click="joinRoom">
-            <i class="bi bi-door-open"></i> Join Now
-          </button>
-          <button class="modal-btn" type="button" @click="closeJoinModal">
-            Cancel
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
 </template>
+
 <script setup>
-import { nextTick, onMounted, onUnmounted, ref } from "vue";
 
-const isJoinModalOpen = ref(false);
-const roomCode = ref("");
-const roomCodeError = ref(false);
-const roomCodeInput = ref(null);
-
-async function openJoinModal() {
-  roomCode.value = "";
-  roomCodeError.value = false;
-  isJoinModalOpen.value = true;
-  await nextTick();
-  roomCodeInput.value?.focus();
-}
-
-function closeJoinModal() {
-  isJoinModalOpen.value = false;
-}
-
-function joinRoom() {
-  const code = roomCode.value.trim();
-  if (!code) {
-    roomCodeError.value = true;
-    roomCodeInput.value?.focus();
-    return;
-  }
-  alert("Successfully joined room: " + code.toUpperCase());
-  closeJoinModal();
-}
-
-function handleKeydown(e) {
-  if (e.key === "Escape") closeJoinModal();
-}
-
-onMounted(() => {
-  window.addEventListener("classroom:open-join-modal", openJoinModal);
-  window.addEventListener("keydown", handleKeydown);
-});
-
-onUnmounted(() => {
-  window.removeEventListener("classroom:open-join-modal", openJoinModal);
-  window.removeEventListener("keydown", handleKeydown);
-});
 </script>
+
 <style scoped>
 *,
 *::before,
@@ -397,6 +68,7 @@ onUnmounted(() => {
   margin: 0;
   padding: 0;
 }
+
 :root {
   --em: #10b981;
   --em-dk: #059669;
@@ -410,6 +82,7 @@ onUnmounted(() => {
   --sh-md: 0 10px 25px rgba(0, 0, 0, 0.05);
   --sh-hover: 0 20px 40px rgba(16, 185, 129, 0.13);
 }
+
 body {
   font-family: "Inter", sans-serif;
   background-color: #f4f7fe;
@@ -436,6 +109,7 @@ body {
   gap: 16px;
   margin-bottom: 30px;
 }
+
 .search-pill {
   display: flex;
   align-items: center;
@@ -447,6 +121,7 @@ body {
   width: 280px;
   box-shadow: var(--sh-sm);
 }
+
 .search-pill input {
   border: none;
   outline: none;
@@ -455,6 +130,7 @@ body {
   color: var(--txt);
   width: 100%;
 }
+
 .tab-pills {
   display: flex;
   gap: 6px;
@@ -465,6 +141,7 @@ body {
   padding: 5px;
   box-shadow: var(--sh-sm);
 }
+
 .tab-pill {
   padding: 7px 18px;
   border-radius: 10px;
@@ -476,11 +153,13 @@ body {
   background: transparent;
   transition: 0.18s;
 }
+
 .tab-pill.active {
   background: #fff;
   color: var(--em-dk);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 }
+
 .tab-pill:hover:not(.active) {
   color: var(--txt);
 }
@@ -507,6 +186,7 @@ body {
   box-shadow: var(--sh-sm);
   cursor: pointer;
 }
+
 .room-card:hover {
   border-color: rgba(16, 185, 129, 0.3);
   transform: translateY(-5px);
@@ -522,21 +202,27 @@ body {
   justify-content: flex-end;
   padding: 16px;
 }
+
 .card-banner.green {
   background: linear-gradient(135deg, #d1fae5, #a7f3d0);
 }
+
 .card-banner.blue {
   background: linear-gradient(135deg, #dbeafe, #bfdbfe);
 }
+
 .card-banner.amber {
   background: linear-gradient(135deg, #fef9c3, #fde68a);
 }
+
 .card-banner.purple {
   background: linear-gradient(135deg, #ede9fe, #ddd6fe);
 }
+
 .card-banner.rose {
   background: linear-gradient(135deg, #ffe4e6, #fecdd3);
 }
+
 .card-banner.cyan {
   background: linear-gradient(135deg, #cffafe, #a5f3fc);
 }
@@ -553,6 +239,7 @@ body {
   align-items: center;
   gap: 5px;
 }
+
 .status-dot {
   width: 6px;
   height: 6px;
@@ -576,6 +263,7 @@ body {
   transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
   color: #fff;
 }
+
 .room-card:hover .card-icon {
   transform: scale(1.08) rotate(6deg);
 }
@@ -586,6 +274,7 @@ body {
   flex: 1;
   min-width: 0;
 }
+
 .room-card .card-title {
   font-size: 1.05rem;
   font-weight: 700;
@@ -596,21 +285,25 @@ body {
   min-height: 2.6em;
   overflow-wrap: anywhere;
 }
+
 .room-card:hover .card-title {
   color: var(--em-dk);
 }
+
 .room-card .card-instructor {
   display: flex;
   align-items: center;
   gap: 7px;
   margin-bottom: 18px;
 }
+
 .room-card .card-instructor img {
   width: 24px;
   height: 24px;
   border-radius: 50%;
   object-fit: cover;
 }
+
 .room-card .card-instructor span {
   font-size: 0.8rem;
   color: var(--txt-mu);
@@ -626,12 +319,14 @@ body {
   color: var(--txt-m);
   margin-bottom: 6px;
 }
+
 .room-card .prog-track {
   height: 5px;
   background: #f1f5f9;
   border-radius: 99px;
   overflow: hidden;
 }
+
 .room-card .prog-fill {
   height: 100%;
   border-radius: 99px;
@@ -649,6 +344,7 @@ body {
   gap: 10px;
   margin-top: auto;
 }
+
 .room-card .footer-note {
   font-size: 0.78rem;
   font-weight: 600;
@@ -659,6 +355,7 @@ body {
   min-width: 0;
   line-height: 1.3;
 }
+
 .room-card .footer-note i {
   font-size: 0.75rem;
   flex-shrink: 0;
@@ -675,9 +372,11 @@ body {
   padding: 24px;
   background: rgba(15, 23, 42, 0.42);
 }
+
 .modal-wrap.open {
   display: flex;
 }
+
 .modal-box {
   width: min(380px, 100%);
   background: var(--surf);
@@ -686,12 +385,14 @@ body {
   padding: 28px;
   box-shadow: 0 22px 60px rgba(15, 23, 42, 0.18);
 }
+
 .modal-title {
   font-size: 1.05rem;
   font-weight: 800;
   color: var(--txt);
   margin-bottom: 4px;
 }
+
 .modal-sub {
   font-size: 0.83rem;
   font-weight: 600;
@@ -699,6 +400,7 @@ body {
   line-height: 1.5;
   margin-bottom: 20px;
 }
+
 .modal-label {
   display: block;
   font-size: 0.72rem;
@@ -708,6 +410,7 @@ body {
   color: var(--txt-m);
   margin-bottom: 8px;
 }
+
 .modal-input {
   width: 100%;
   border: 1px solid var(--bdr);
@@ -723,19 +426,23 @@ body {
   outline: none;
   transition: 0.16s;
 }
+
 .modal-input:focus {
   border-color: var(--em);
   background: #fff;
   box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.12);
 }
+
 .modal-input.invalid {
   border-color: #ef4444;
 }
+
 .modal-actions {
   display: grid;
   gap: 10px;
   margin-top: 18px;
 }
+
 .modal-btn {
   display: inline-flex;
   align-items: center;
@@ -752,15 +459,18 @@ body {
   padding: 11px 14px;
   transition: 0.16s;
 }
+
 .modal-btn:hover {
   background: #f8fafc;
   border-color: #cbd5e1;
 }
+
 .modal-btn.primary {
   background: var(--em);
   border-color: var(--em);
   color: #fff;
 }
+
 .modal-btn.primary:hover {
   background: var(--em-dk);
   border-color: var(--em-dk);
@@ -770,9 +480,11 @@ body {
 ::-webkit-scrollbar {
   width: 5px;
 }
+
 ::-webkit-scrollbar-track {
   background: transparent;
 }
+
 ::-webkit-scrollbar-thumb {
   background: #e2e8f0;
   border-radius: 99px;

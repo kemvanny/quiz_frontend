@@ -11,15 +11,12 @@
                     <div style="font-size:0.75rem;color:var(--txt-mu);font-weight:600;">ពិន្ទុ មតិកែលម្អ និងទិដ្ឋភាពសមត្ថភាព</div>
                 </div>
             </div>
-            <a href="6.st-profile.html" class="d-flex align-items-center gap-2 p-1 pe-3 rounded-pill"
-                style="border:1px solid var(--bdr);background:#fff;box-shadow:var(--sh-sm);">
-                <img src="https://ui-avatars.com/api/?name=Sok+Vibol&background=random" alt="avatar"
-                    style="width:34px;height:34px;border-radius:50%;border:2px solid var(--em-soft);" />
-                <div style="line-height:1.1;">
-                    <div class="fw-bold" style="font-size:.82rem;color:var(--txt);">Sok Vibol</div>
-                    <div style="font-size:.68rem;color:var(--txt-mu);font-weight:500;">សិស្ស</div>
-                </div>
-            </a>
+            <BaseProfile/>
         </div>
     </div>
 </template>
+
+<script setup>
+import BaseProfile from '@/components/common/BaseProfile.vue';
+
+</script>

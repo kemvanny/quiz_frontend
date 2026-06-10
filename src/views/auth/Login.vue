@@ -99,8 +99,8 @@ const handleLogin = async () => {
 
         if (result && result.token) {
             // រក្សាទុក Token និង Role ទៅក្នុង sessionStorage
-            sessionStorage.setItem('user_token', result.token)
-            sessionStorage.setItem('user_role', result.role_id)
+            localStorage.setItem('user_token', result.token)
+            localStorage.setItem('user_role', result.role_id)
             
             // បំប្លែង Role ទៅជា Number ដើម្បីកុំឱ្យខុសលក្ខខណ្ឌ ===
             const roleId = Number(result.role_id);

@@ -1,6 +1,6 @@
 <template>
   <div class="app-layout">
-    <BaseSidebar :mainMenus="studentMainMenus" @logout="handleLogout">
+    <BaseSidebar :mainMenus="studentMainMenus" roleName="Student" @logout="handleLogout">
       <template #user-profile>
         <div class="profile-card">
         <div class="profile-info">
@@ -64,7 +64,7 @@ const studentMainMenus = [
     routeName: "Classroom",
     icon: "bi bi-door-open-fill",
   },
-  { name: "បញ្ជីកិច្ចការ", routeName: "Assignment", icon: "bi bi-list-task" },
+  { name: "ការប្រឡង", routeName: "Assignment", icon: "bi bi-list-task" },
   {
     name: "ការវិភាគ និងលទ្ធផល",
     routeName: "AnalyticsResult",
