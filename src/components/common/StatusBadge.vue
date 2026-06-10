@@ -12,7 +12,8 @@ const props = defineProps({
 });
 
 const badgeConfig = computed(() => {
-  const val = props.type?.toLowerCase();
+  const val = props.type?.toString().trim().toLowerCase();
+
 
   const configs = {
     // Status

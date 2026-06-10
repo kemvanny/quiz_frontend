@@ -3,8 +3,12 @@ import api from './axiosInstance';
 // Get All User
 export const getAllUsers = (params) => api.get('/admin/getAllUsers', { params });
 
+// Get User By ID
+export const getUserByID = (id) => api.get(`/admin/getUser/${id}`);
+
 // Create User
 export const createUser = (payload, token) => {
+  console.log("Token sent to API:", token);
   return api.post('/admin/createUser', payload, {
     headers: {
       'Authorization': `Bearer ${token}` 
