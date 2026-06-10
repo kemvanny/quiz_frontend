@@ -127,11 +127,12 @@ const router = createRouter({
         },
         {
           path: 'exams/:examId',
-          name: 'ExamDetailView',
+          name: 'TeacherExamDetail',
           component: ExamDetailView,
           meta: { title: "Exam Quiz View" },
           props: true
         },
+        
       {
         path: 'class-stream',
         name: 'ClassStream',

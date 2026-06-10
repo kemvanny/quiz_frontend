@@ -24,4 +24,3 @@ export const submitQuiz = (quizId, answers) => {
 export const getMyResults = () => {
   return api.get("/student/results");
 };
-

@@ -10,7 +10,7 @@
               <span
                 class="count-badge"
                 style="background: #fef2f2; color: #dc2626"
-                >2</span
+                >{{ todoCount }}</span
               >
             </button>
             <button class="tab-pill">Completed</button>
@@ -26,8 +26,34 @@
         <!-- SECTION: Urgent -->
         <div class="section-label">Urgent — Due Today</div>
 
-        <!-- Exam card -->
-        <a href="#" class="task-card type-exam">
+        <!-- Exam card from join code -->
+        <div v-if="isExamLoading" class="task-card task-card-static type-exam">
+          <div class="task-icon" style="background: #fef2f2; color: #ef4444">
+            <i class="fas fa-circle-notch fa-spin"></i>
+          </div>
+          <div class="flex-grow-1">
+            <div class="task-meta">
+              <span
+                class="meta-chip"
+                style="background: #fef2f2; color: #dc2626"
+                ><i class="fas fa-cloud-download-alt"></i> Loading Exam</span
+              >
+            </div>
+            <div class="task-title">Fetching assignment exam...</div>
+            <div class="task-details">
+              <span class="task-detail" style="font-weight: 400"
+                ><i class="fas fa-link"></i> Code {{ examJoinCode }}</span
+              >
+            </div>
+          </div>
+        </div>
+
+        <a
+          v-else-if="joinedExam"
+          href="#"
+          class="task-card type-exam"
+          @click.prevent
+        >
           <div class="task-icon" style="background: #fef2f2; color: #ef4444">
             <i class="fas fa-bolt"></i>
           </div>
@@ -36,40 +62,76 @@
               <span
                 class="meta-chip"
                 style="background: #fef2f2; color: #dc2626"
-                ><i class="fas fa-exclamation-circle"></i> High Priority</span
+                ><i class="fas fa-check-circle"></i> Ready</span
               >
               <span
                 class="meta-chip"
                 style="background: #f1f5f9; color: var(--txt-m)"
-                >Grade 12-A</span
+                >{{ examTypeLabel }}</span
               >
               <span
                 class="meta-chip"
                 style="background: var(--em-soft); color: var(--em-dk)"
-                ><i class="fas fa-shield-alt"></i> Secure Mode</span
+                ><i class="fas fa-link"></i> {{ examJoinCode }}</span
               >
             </div>
-            <div class="task-title">Midterm Exam — Physics</div>
+            <div class="task-title">{{ joinedExam.title }}</div>
             <div class="task-details">
-              <span class="task-detail" style="color: #dc2626; font-weight: 400"
-                ><i class="far fa-clock"></i> Due Today, 11:59 PM</span
+              <span
+                class="task-detail"
+                style="color: #dc2626; font-weight: 400"
+                ><i class="fas fa-clipboard-check"></i>
+                {{ examResponseMessage || "Exam is correct. You can start exam." }}</span
               >
               <span class="task-detail" style="font-weight: 400"
-                ><i class="fas fa-stopwatch"></i> 60 minutes</span
+                ><i class="fas fa-stopwatch"></i>
+                {{ joinedExam.duration }} minutes</span
               >
               <span class="task-detail" style="font-weight: 400"
-                ><i class="fas fa-question-circle"></i> 40 questions</span
+                ><i class="fas fa-star"></i>
+                {{ joinedExam.total_points }} points</span
               >
             </div>
           </div>
-          <button class="task-cta cta-red">Start Exam</button>
+          <button class="task-cta cta-red" type="button" @click.stop.prevent="startExam">
+            Start Exam
+          </button>
         </a>
 
+        <div v-else class="task-card task-card-static type-exam">
+          <div class="task-icon" style="background: #fef2f2; color: #ef4444">
+            <i class="fas fa-triangle-exclamation"></i>
+          </div>
+          <div class="flex-grow-1">
+            <div class="task-meta">
+              <span
+                class="meta-chip"
+                style="background: #fef2f2; color: #dc2626"
+                ><i class="fas fa-circle-exclamation"></i> Unable to Load</span
+              >
+              <span
+                class="meta-chip"
+                style="background: #f1f5f9; color: var(--txt-m)"
+                >{{ examJoinCode }}</span
+              >
+            </div>
+            <div class="task-title">Exam assignment is not available</div>
+            <div class="task-details">
+              <span class="task-detail" style="color: #dc2626; font-weight: 400"
+                ><i class="fas fa-info-circle"></i> {{ examError }}</span
+              >
+            </div>
+          </div>
+          <button class="task-cta cta-red" type="button" @click="fetchJoinedExam">
+            Retry
+          </button>
+        </div>
+
         <!-- SECTION: This Week -->
-        <div class="section-label">This Week</div>
+        <!-- <div class="section-label">This Week</div> -->
 
         <!-- Assignment card -->
-        <a href="#" class="task-card type-assign">
+        <!-- <a href="#" class="task-card type-assign">
           <div class="task-icon" style="background: #eff6ff; color: #3b82f6">
             <i class="fas fa-file-code"></i>
           </div>
@@ -100,10 +162,10 @@
             </div>
           </div>
           <button class="task-cta cta-blue">View Details</button>
-        </a>
+        </a> -->
 
         <!-- Quiz card -->
-        <a href="#" class="task-card type-assign">
+        <!-- <a href="#" class="task-card type-assign">
           <div class="task-icon" style="background: #f0fdfa; color: #0d9488">
             <i class="fas fa-database"></i>
           </div>
@@ -134,13 +196,13 @@
             </div>
           </div>
           <button class="task-cta cta-blue">Take Quiz</button>
-        </a>
+        </a> -->
 
         <!-- SECTION: Completed -->
-        <div class="section-label">Completed Recently</div>
+        <!-- <div class="section-label">Completed Recently</div> -->
 
         <!-- Done card 1 -->
-        <a href="4.st-results.html" class="task-card type-done">
+        <!-- <a href="4.st-results.html" class="task-card type-done">
           <div
             class="task-icon"
             style="background: var(--em-soft); color: var(--em)"
@@ -176,10 +238,10 @@
             </div>
           </div>
           <button class="task-cta cta-green">View Results</button>
-        </a>
+        </a> -->
 
         <!-- Done card 2 -->
-        <a href="4.st-results.html" class="task-card type-done">
+        <!-- <a href="4.st-results.html" class="task-card type-done">
           <div
             class="task-icon"
             style="background: var(--em-soft); color: var(--em)"
@@ -215,11 +277,85 @@
             </div>
           </div>
           <button class="task-cta cta-green">View Results</button>
-        </a>
+        </a> -->
       </div>
     </div>
   </div>
 </template>
+<script setup>
+import { computed, onMounted, ref } from "vue";
+import { useRoute } from "vue-router";
+import { joinExam } from "@/api/exam.api";
+
+const route = useRoute();
+
+const defaultExamCode = "e104abc7";
+const joinedExam = ref(null);
+const isExamLoading = ref(false);
+const examError = ref("");
+const examResponseMessage = ref("");
+
+const examJoinCode = computed(() => {
+  const code = route.query.code || route.query.examCode || defaultExamCode;
+  return Array.isArray(code) ? code[0] : String(code);
+});
+
+const examTypeLabel = computed(() => {
+  const type = joinedExam.value?.type || "exam";
+  return type.charAt(0).toUpperCase() + type.slice(1);
+});
+
+const todoCount = computed(() => (joinedExam.value || isExamLoading.value ? 3 : 2));
+
+function getExamFromResponse(payload) {
+  return payload?.exam || payload?.data?.exam || payload?.data || null;
+}
+
+async function fetchJoinedExam() {
+  const code = examJoinCode.value.trim();
+
+  if (!code) {
+    examError.value = "Missing exam code.";
+    joinedExam.value = null;
+    return;
+  }
+
+  try {
+    isExamLoading.value = true;
+    examError.value = "";
+
+    const response = await joinExam(code);
+    const payload = response.data;
+    const exam = getExamFromResponse(payload);
+
+    if (payload?.result === false || !exam) {
+      throw new Error(payload?.msg || payload?.message || "No exam data returned.");
+    }
+
+    joinedExam.value = exam;
+    examResponseMessage.value = payload?.msg || payload?.message || "";
+  } catch (error) {
+    joinedExam.value = null;
+    examError.value =
+      error.response?.data?.msg ||
+      error.response?.data?.message ||
+      error.message ||
+      "Failed to fetch exam.";
+  } finally {
+    isExamLoading.value = false;
+  }
+}
+
+function startExam() {
+  if (!joinedExam.value) return;
+
+  sessionStorage.setItem("active_exam_id", joinedExam.value.id);
+  sessionStorage.setItem("active_exam", JSON.stringify(joinedExam.value));
+  alert(`Starting ${joinedExam.value.title}`);
+}
+
+onMounted(fetchJoinedExam);
+</script>
 <style  scoped>
 *,
 *::before,
@@ -364,6 +500,18 @@ a {
 }
 .task-card:hover::before {
   width: 6px;
+}
+.task-card-static {
+  cursor: default;
+}
+.task-card-static:hover {
+  transform: none;
+}
+.task-card-static:hover .task-icon {
+  transform: none;
+}
+.task-card-static .task-cta {
+  cursor: pointer;
 }
 
 .task-card.type-exam::before {

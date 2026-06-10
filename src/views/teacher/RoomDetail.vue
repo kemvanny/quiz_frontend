@@ -195,7 +195,7 @@ const fetchExamsForRoom = async () => {
   }
 }
 
-const viewExamDetails = (examId) => router.push({ name: 'ExamDetailView', params: { examId } })
+const viewExamDetails = (examId) => router.push({ name: 'TeacherExamDetail', params: { examId } })
 
 const handleUpdate = (exam) => {
   selectedExamId.value = exam.id
@@ -214,7 +214,7 @@ const submitUpdateExam = async () => {
   try {
     isProcessing.value = true
     
-    // រៀបចំកាលបរិច្ឆេទស្វ័យប្រវត្ត (YYYY-MM-DD H:mm) ឱ្យត្រូវតាមលក្ខខណ្ឌ Postman របស់លីហ្សា
+    // រៀបចំកាលបរិច្ឆេទស្វ័យប្រវត្ត (YYYY-MM-DD H:mm) 
     const today = new Date()
     const year = today.getFullYear()
     const month = String(today.getMonth() + 1).padStart(2, '0')
@@ -228,7 +228,7 @@ const submitUpdateExam = async () => {
     const endDay = String(nextWeek.getDate()).padStart(2, '0')
     const end_date_formatted = `${endYear}-${endMonth}-${endDay} 23:59`
 
-    //បញ្ចូលកញ្ចប់ Payload ពេញលេញតាមដែល Backend ចង់បាន
+    //Payload 
     const fullUpdatePayload = {
       title: editForm.value.title.trim(),
       type: editForm.value.type,
@@ -241,12 +241,11 @@ const submitUpdateExam = async () => {
 
     console.log("Payload ដែលរុញទៅ Update លើ Server:", fullUpdatePayload)
 
-    // ហៅទៅកាន់ API (ទម្រង់ URL នឹងរត់ទៅកាន់ /api/exams/update/:id តាមទម្រង់ api service របស់លីហ្សា)
+    // ហៅទៅកាន់ API (ទម្រង់ URL នឹងរត់ទៅកាន់ /api/exams/update/:id)
     await updateExam(selectedExamId.value, fullUpdatePayload)
     
     toast.success("ព័ត៌មានវិញ្ញាសាត្រូវបានកែប្រែដោយជោគជ័យ!")
     
-    // ធ្វើបច្ចុប្បន្នភាពទិន្នន័យនៅលើអេក្រង់ Frontend ភ្លាមៗ (Reactive Update)
     const examIndex = assignedExams.value.findIndex(e => e.id === selectedExamId.value)
     if (examIndex !== -1) {
       assignedExams.value[examIndex].title = editForm.value.title

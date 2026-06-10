@@ -324,6 +324,12 @@ a {
   color: #4ade80;
 }
 
+.custom-toast-container {
+  z-index: 999999 !important;
+  width: 100% !important;
+  max-width: 400px !important;
+}
+
 @keyframes fadeUp {
   from {
     opacity: 0;

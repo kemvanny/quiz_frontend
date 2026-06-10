@@ -1,12 +1,26 @@
 <template>
   <div class="app-shell">
-    
-
-
+    <div class="class-sidebar">
+      <div class="sidebar-header">My Classes</div>
+      <div class="class-list">
+        <div v-for="room in myClasses" :key="room.id" class="class-item" :class="{ active: room.id === activeClassId }">
+          <div class="class-initial">{{ room.name[0] }}</div>
+          <div class="class-info">
+            <h6>{{ room.name }}</h6>
+            <span>{{ room.section }}</span>
+          </div>
+        </div>
+      </div>
+      <button class="btn-add-class">+ New Class</button>
+    </div>
+      
     <div class="main-col">
-
-
-      <div class="workspace">
+      <div class="topbar">
+        <div class="breadcrumb">
+          <span>Classrooms</span> <i class="fas fa-chevron-right mx-2"></i> 
+          <span class="active-room">{{ activeClassName }}</span>
+        </div>
+      </div> <div class="workspace">
         
         <div class="class-banner">
           <div class="class-banner-content">
@@ -198,17 +212,25 @@
           </div>
         </div>
 
-      </div></div></div>
-</template>
+      </div> </div> </div> </template>
 
 <script setup>
 import { ref } from 'vue'
+
+const activeClassId = ref(1);
+const activeClassName = ref('CS101');
+
+const myClasses = ref([
+  { id: 1, name: 'CS101', section: 'Section A' },
+  { id: 2, name: 'Web Dev', section: 'Section B' }
+]);
+
+const postText = ref('');
 
 // គ្រប់គ្រងការប្តូរផ្ទាំង Tab
 const currentTab = ref('stream')
 
 // ទិន្នន័យសម្រាប់ Tab Stream
-const postText = ref('')
 const posts = ref([
   { content: 'Please review the attached project requirements. Make sure to submit your repository links before the deadline!', time: 'May 17, 10:30 AM' },
   { content: 'Pop quiz! This covers chapters 1 through 3. You have 30 minutes to complete it. Good luck!', time: 'May 10, 02:15 PM' }
@@ -243,19 +265,26 @@ const studentResults = ref([
 </script>
 
 <style scoped>
-/* ── Variables & Global Core Layout ── */
+
 :root {
   --em: #10b981; --em-dk: #059669; --em-mid: #34d399; --em-soft: #ecfdf5;
   --bg: #f8fafc; --surf: #ffffff; --bdr: #e2e8f0; --txt: #1e293b;
   --txt-m: #475569; --txt-mu: #94a3b8; --sh-sm: 0 4px 12px rgba(0,0,0,0.03); --sh-md: 0 8px 24px rgba(0,0,0,0.06);
 }
-.app-shell { display: flex; height: 100vh; overflow: hidden; width: 100%; }
 
+.app-shell { display: flex; height: 100vh; overflow: hidden; width: 100%; } 
 .sidebar { width: 240px; border-right: 1px solid var(--bdr); background: #fff; padding: 20px 14px; display: flex; flex-direction: column; flex-shrink: 0; }
 .nav-item { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 10px; text-decoration: none; color: var(--txt-mu); font-size: .83rem; font-weight: 600; transition: .15s; }
 .nav-item.active { background: var(--em-soft); color: var(--em); }
 .nav-item:hover:not(.active) { background: #f8fafc; color: var(--txt); }
-
+.class-sidebar { width: 220px; background: #ffffff; border-right: 1px solid var(--bdr); padding: 20px; display: flex; flex-direction: column; gap: 20px; }
+.sidebar-header { font-size: 0.75rem; font-weight: 800; color: var(--txt-mu); text-transform: uppercase; }
+.class-item { display: flex; align-items: center; gap: 12px; padding: 10px; border-radius: 12px; cursor: pointer; transition: 0.2s; }
+.class-item.active { background: var(--em-soft); color: var(--em); }
+.class-initial { width: 35px; height: 35px; background: var(--em); color: white; display: flex; align-items: center; justify-content: center; border-radius: 8px; font-weight: 700; }
+.class-info h6 { font-size: 0.85rem; margin: 0; font-weight: 700; }
+.class-info span { font-size: 0.7rem; color: var(--txt-mu); }
+.btn-add-class { margin-top: auto; padding: 10px; border: 2px dashed var(--bdr); background: transparent; border-radius: 12px; font-weight: 700; cursor: pointer; }
 .main-col { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
 .topbar { height: 70px; background: rgba(255,255,255,0.85); backdrop-filter: blur(12px); border-bottom: 1px solid var(--bdr); display: flex; align-items: center; justify-content: space-between; padding: 12px 28px; }
 .search-bar { background: white; border-radius: 30px; padding: 8px 16px; border: 1px solid var(--bdr); max-width: 320px; display: flex; align-items: center; gap: 10px; }
@@ -275,7 +304,7 @@ const studentResults = ref([
 .class-tab { padding: 8px 20px; font-size: 0.82rem; font-weight: 700; color: var(--txt-mu); cursor: pointer; border-radius: 24px; transition: 0.2s; }
 .class-tab.active { color: #fff; background: var(--em); box-shadow: 0 4px 12px rgba(16,185,129,0.2); }
 
-/* TAB 1: Stream Layout Grid */
+/* Stream Layout Grid */
 .stream-grid { display: grid; grid-template-columns: 260px 1fr; gap: 24px; align-items: start; }
 @media (max-width: 992px) { .stream-grid { grid-template-columns: 1fr; } }
 
@@ -344,4 +373,5 @@ const studentResults = ref([
 .score-green { color: var(--em); } .score-orange { color: #f59e0b; } .score-muted { color: var(--txt-mu); }
 .btn-row-action { padding: 5px 12px; border-radius: 6px; font-size: 0.72rem; font-weight: 700; background: #fff; border: 1px solid var(--bdr); color: var(--txt-m); cursor: pointer; }
 .btn-row-review { background: var(--em-soft); color: var(--em-dk); border-color: transparent; }
+
 </style>
