@@ -10,22 +10,23 @@
       </template>
       <template #user-profile>
         <div class="profile-card">
-        <div class="profile-info">
-          <img :src="`${imgBaseUrl}${adminProfile.avatar}?t=${layoutImageRefresh}`" alt="Profile" class="profile-img" />
-          <div class="profile-text">
-            <span class="profile-name">{{ adminProfile.firstName }} {{ adminProfile.lastName }}</span>
-            <span class="profile-role">{{ adminProfile.role }}</span>
+          <div class="profile-info">
+            <img :src="`${imgBaseUrl}${adminProfile.avatar}?t=${layoutImageRefresh}`" alt="Profile"
+              class="profile-img" />
+            <div class="profile-text">
+              <span class="profile-name">{{ adminProfile.firstName }} {{ adminProfile.lastName }}</span>
+              <span class="profile-role">{{ adminProfile.role }}</span>
+            </div>
           </div>
+
+          <button class="logout-btn" @click.prevent="isLogoutModalOpen = true" title="ចាកចេញ">
+            <i class="bi bi-box-arrow-right"></i>
+          </button>
+
+          <LogoutModal :show="isLogoutModalOpen" title="Admin" @close="isLogoutModalOpen = false"
+            @confirm="handleLogout" />
+
         </div>
-
-        <button class="logout-btn" @click.prevent="isLogoutModalOpen = true" title="ចាកចេញ">
-          <i class="bi bi-box-arrow-right"></i>
-        </button>
-
-        <LogoutModal :show="isLogoutModalOpen" title= "Admin" @close="isLogoutModalOpen = false"
-          @confirm="handleLogout"  />
-
-      </div>
       </template>
     </BaseSidebar>
 
@@ -64,11 +65,13 @@
               <i class="bi bi-bell"></i>
               <span class="dot"></span>
             </button>
-            <img :src="`${imgBaseUrl}${adminProfile.avatar}?t=${layoutImageRefresh}`" class="avatar" alt="Admin" />
-            <div>
-              <div class="user-name">{{ adminProfile.firstName }} {{ adminProfile.lastName }}</div>
-              <div class="user-role">{{ adminProfile.role }}</div>
-            </div>
+            <router-link :to="{ name: 'ProfileAdmin' }" class="profile-link">
+              <img :src="`${imgBaseUrl}${adminProfile.avatar}?t=${layoutImageRefresh}`" class="avatar" alt="Admin" />
+              <div class="user-details">
+                <div class="user-name">{{ adminProfile.firstName }} {{ adminProfile.lastName }}</div>
+                <div class="user-role">{{ adminProfile.role }}</div>
+              </div>
+            </router-link>
           </div>
         </template>
       </BaseNavbar>
@@ -77,26 +80,40 @@
         <div class="main-content">
           <div class="page-body">
             <router-view />
+            <div class="toast-wrap" v-if="toastState.show">
+      <div class="toast-msg show">
+        <i :class="toastState.icon"></i>
+        <span>{{ toastState.message }}</span>
+      </div>
+    </div>
           </div>
         </div>
 
       </main>
     </div>
+    <UserDetailModal :user="selectedUser" :show="isUserModalOpen" @close="isUserModalOpen = false" />
   </div>
 
 </template>
 <script setup>
 import { ref, onMounted, onUnmounted, watch, computed } from 'vue'
 import { useRouter } from 'vue-router'
-import { getSearchUsers } from '@/api/admin.api'
+import { getSearchUsers, getUserByID } from '@/api/admin.api'
 import defaultImage from '../assets/images/default.png';
+import UserDetailModal from '@/components/admin/UserDetailModal.vue';
+import { useToast } from '@/composables/useToast';
 
 import { useAuthStore } from '@/stores/authStore';
 const authStore = useAuthStore();
 
+const {toastState}=useToast();
+
 const router = useRouter()
 const imgBaseUrl = import.meta.env.VITE_BASE_URL_FOR_IMAGE;
 const isLogoutModalOpen = ref(false);
+
+const isUserModalOpen = ref(false);
+const selectedUser = ref(null);
 
 const layoutImageRefresh = ref(Date.now())
 
@@ -129,8 +146,8 @@ const adminSystemMenus = [
 ]
 
 const handleLogout = () => {
-  isLogoutModalOpen.value = false; 
-  sessionStorage.clear();
+  isLogoutModalOpen.value = false;
+  localStorage.clear();
   router.push('/login');
 };
 
@@ -177,10 +194,27 @@ watch(searchQuery, (newQuery) => {
   }, 400)
 })
 
-const handleSelectUser = (user) => {
-  searchQuery.value = user.fullName
-  isDropdownOpen.value = false
-}
+const handleSelectUser = async (user) => {
+  try {
+    isLoading.value = true;
+
+    const res = await getUserByID(user.id);
+
+
+    selectedUser.value = res.data?.data || res.data;
+
+    isUserModalOpen.value = true;
+    isDropdownOpen.value = false;
+    searchQuery.value = "";
+  } catch (error) {
+    console.error("មិនអាចទាញយកព័ត៌មានលម្អិតបានទេ:", error);
+
+    selectedUser.value = user;
+    isUserModalOpen.value = true;
+  } finally {
+    isLoading.value = false;
+  }
+};
 
 const handleClickOutside = (event) => {
   const wrapper = document.querySelector('.search-wrapper')
@@ -211,6 +245,19 @@ onUnmounted(() => {
 .search-wrapper {
   position: relative;
   width: 320px;
+}
+
+.profile-link {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: inherit;
+  gap: 10px;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
 }
 
 .search-dropdown-result {

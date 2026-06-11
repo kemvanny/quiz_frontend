@@ -43,7 +43,7 @@
             :limit="limit" :total="totalRecords" @update:page="changePage">
             <template #row="{ item }">
                 <td>{{ item.user_code }}</td>
-                <td>{{ item.fullName }}</td>
+                <td class="text-capitalize">{{ item.fullName }}</td>
                 <td>{{ item.email }}</td>
                 <td>
                     <StatusBadge :type="item.role" />
@@ -73,21 +73,21 @@
 
                 <div class="glass-field">
                     <label>នាមខ្លួន</label>
-                    <input type="text" placeholder="អាន" v-model="form.firstName"
+                    <input type="text" placeholder="សូមបញ្ចូលនាមខ្លួន" v-model="form.firstName"
                         :class="{ 'input-error': errors.firstName }">
                     <span v-if="errors.firstName" class="text-danger-msg">{{ errors.firstName }}</span>
                 </div>
 
                 <div class="glass-field">
                     <label>នាមត្រកូល</label>
-                    <input type="text" placeholder="ដានីកា" v-model="form.lastName"
+                    <input type="text" placeholder="សូមបញ្ចូលនាមត្រកូល" v-model="form.lastName"
                         :class="{ 'input-error': errors.lastName }">
                     <span v-if="errors.lastName" class="text-danger-msg">{{ errors.lastName }}</span>
                 </div>
 
                 <div class="glass-field full">
                     <label>អ៊ីមែល</label>
-                    <input type="email" placeholder="andanika@gmail.com" v-model="form.email"
+                    <input type="email" placeholder="សូមបញ្ចូលអ៊ីមែល" v-model="form.email"
                         :class="{ 'input-error': errors.email }">
                     <span v-if="errors.email" class="text-danger-msg">{{ errors.email }}</span>
                 </div>
@@ -116,27 +116,24 @@
             </template>
         </BaseModal>
 
-       <UserDetailModal 
-    v-if="isDetailModalOpen" 
-    :show="isDetailModalOpen" 
-    :user="selectedUser" 
-    @close="isDetailModalOpen = false" 
-/>
+        <UserDetailModal v-if="isDetailModalOpen" :show="isDetailModalOpen" :user="selectedUser"
+            @close="isDetailModalOpen = false" />
     </div>
 </template>
 
 <script setup>
-import { ref, computed, onMounted, watch } from "vue";
+import { ref, computed, onMounted, watch, nextTick } from "vue";
 import { getAllUsers, createUser, ChangeStatusUser } from "@/api/admin.api";
 import { useDate } from "@/composables/useDate";
 import { useFormValidation } from "@/composables/useFormValidation";
 import StatusBadge from "@/components/common/StatusBadge.vue";
-import { useToast } from "vue-toastification";
 import Swal from 'sweetalert2';
-import UserDetailModal from "@/components/common/UserDetailModal.vue";
+import UserDetailModal from "@/components/admin/UserDetailModal.vue";
+import { useToast } from "@/composables/useToast";
+
+const { triggerToast } = useToast();
 
 const { errors, validateFirstName, validateLastName, validateEmail } = useFormValidation();
-const toast = useToast();
 const { formatDate } = useDate();
 
 const users = ref([]);
@@ -159,8 +156,10 @@ const totalRecords = ref(0);
 const selectedRoleForCreate = ref('student');
 const form = ref({ firstName: '', lastName: '', email: '' })
 
-const openUserDetail = (user) => {
+
+const openUserDetail = async (user) => {
     selectedUser.value = user;
+    await nextTick();
     isDetailModalOpen.value = true;
 }
 const userHeaders = [
@@ -180,6 +179,7 @@ const changePage = async (newPage) => {
 
 const filteredUsers = computed(() => {
     return users.value.filter((u) => {
+
         const nameText = u.fullName ? u.fullName.toLowerCase() : "";
         const emailText = u.email ? u.email.toLowerCase() : "";
         const search = searchQuery.value.toLowerCase();
@@ -191,7 +191,6 @@ const filteredUsers = computed(() => {
 
         const filterStatus = selectedStatusForFilter.value.toLowerCase();
         let matchesStatus = true;
-
         if (filterStatus === 'active') {
             matchesStatus = u.is_active === 1 || u.is_active === true;
         } else if (filterStatus === 'inactive') {
@@ -205,22 +204,26 @@ const filteredUsers = computed(() => {
 const fetchUsers = async () => {
     isLoading.value = true;
     try {
+
         const res = await getAllUsers({
             page: currentPage.value,
-            limit: limit.value
+            limit: limit.value,
+            search: searchQuery.value,
+            role: selectedRoleForFilter.value,
+            status: selectedStatusForFilter.value
         });
 
         if (res.data && res.data.data) {
             const rawUsers = res.data.data.users || [];
 
-            users.value = rawUsers.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+            users.value = rawUsers;
 
             totalRecords.value = res.data.data.total || 0;
             currentPage.value = res.data.data.page || 1;
             limit.value = res.data.data.limit || 10;
         }
     } catch (error) {
-        toast.error("មិនអាចទាញទិន្នន័យបានទេ!");
+        triggerToast("មិនអាចទាញយកទិន្នន័យបានទេ!", 'fa-solid fa-circle-xmark');
     } finally {
         isLoading.value = false;
     }
@@ -230,11 +233,14 @@ const handleCreate = async () => {
     validateFirstName(form.value.firstName);
     validateLastName(form.value.lastName);
     validateEmail(form.value.email);
+
     if (errors.value.firstName || errors.value.lastName || errors.value.email) {
         return;
     }
 
     loadingSubmit.value = true;
+    triggerToast("កំពុងបង្កើតគណនី សូមរង់ចាំ...", 'fa-solid fa-spinner fa-spin');
+
     try {
         let roleId = 3;
         if (selectedRoleForCreate.value === 'teacher') roleId = 2;
@@ -246,33 +252,36 @@ const handleCreate = async () => {
             email: form.value.email,
             role_id: roleId
         }
-
-        const token = sessionStorage.getItem('token');
-
+        const token =localStorage.getItem('user_token');
         const res = await createUser(payload, token);
+
         if (res.data?.result) {
             isModalOpen.value = false;
             form.value = { firstName: '', lastName: '', email: '' };
             errors.value = { firstName: '', lastName: '', email: '' };
             selectedRoleForCreate.value = 'student';
-
             await fetchUsers();
+
+            triggerToast("បង្កើតគណនីអ្នកប្រើប្រាស់បានជោគជ័យ!", 'fa-solid fa-circle-check');
         }
-        toast.success("បង្កើតគណនីអ្នកប្រើប្រាស់បានជោគជ័យ!", {
-            toastClassName: "custom-toast-success"
-        });
 
     } catch (error) {
-        console.log(error);
 
-        let backendMessage = "មិនអាចភ្ជាប់ទៅកាន់ម៉ាស៊ីនមេបានទេ!";
+        const errorDetails = error.response?.data?.details || "";
 
-        if (error.response?.status === 500 || error.response?.status === 409) {
+        if (error.response?.status === 409 || errorDetails.includes('Duplicate entry')) {
             errors.value.email = "អ៊ីមែលនេះត្រូវបានប្រើប្រាស់រួចរាល់ហើយ! សូមប្តូរថ្មី។";
+            triggerToast("អ៊ីមែលនេះត្រូវបានប្រើប្រាស់រួចហើយ!", 'fa-solid fa-circle-xmark');
+        } else if (error.response?.status === 500) {
+            if (errorDetails.includes('Duplicate entry')) {
+                errors.value.email = "អ៊ីមែលនេះមានក្នុងប្រព័ន្ធរួចហើយ!";
+                triggerToast("អ៊ីមែលនេះត្រូវបានប្រើប្រាស់រួចហើយ!", 'fa-solid fa-circle-xmark');
+            } else {
+                triggerToast("មានបញ្ហានៅលើម៉ាស៊ីនមេ (Server Error)!", 'fa-solid fa-triangle-exclamation');
+            }
         } else {
-            backendMessage = "មិនអាចភ្ជាប់ទៅកាន់ម៉ាស៊ីនមេបានទេ!";
+            triggerToast("ការបង្កើតគណនីបានបរាជ័យ!", 'fa-solid fa-circle-xmark');
         }
-        toast.error("ការបង្កើតគណនីបានបរាជ័យ! សូមព្យាយាមម្តងទៀត។");
     } finally {
         loadingSubmit.value = false;
     }
@@ -320,13 +329,10 @@ const handleToggleStatus = async (user) => {
                 if (res.data?.result || res.status === 200) {
                     await fetchUsers();
 
-                    toast.success("ស្ថានភាពគណនីត្រូវបានផ្លាស់ប្ដូរដោយជោគជ័យ!", {
-                        toastClassName: "custom-toast-success"
-                    });
+                    triggerToast("ស្ថានភាពគណនីត្រូវបានផ្លាស់ប្ដូរដោយជោគជ័យ!", 'fa-solid fa-circle-check');
                 }
             } catch (error) {
-                console.error(error);
-                toast.error("ការផ្លាស់ប្ដូរស្ថានភាពបានបរាជ័យ! សូមព្យាយាមម្ដងទៀត។");
+                triggerToast("ការផ្លាស់ប្ដូរស្ថានភាពបានបរាជ័យ!", 'fa-solid fa-circle-xmark');
             } finally {
                 isLoading.value = false;
             }

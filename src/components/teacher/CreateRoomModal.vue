@@ -58,13 +58,10 @@ const handleCreateRoom = async () => {
   try {
     createLoading.value = true;
     
-    // ហៅ API បង្កើតបន្ទប់ទទេរ
     const res = await createRoom({ name: form.name.trim() });
     
-    // ចាប់យកទិន្នន័យបន្ទប់ដែលទើបបង្កើតរួច (រួមទាំង ID ពី Backend)
     const newRoomData = res.data?.data || res.data;
 
-    // ផ្ញើ Object បន្ទប់ថ្មីនេះទៅឱ្យ Parent
     emit('created', newRoomData);
     handleClose();
   } catch (err) {

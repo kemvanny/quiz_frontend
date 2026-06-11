@@ -68,13 +68,13 @@
             <div class="icon-wrap ic-orange">
               <i class="bi bi-send-check-fill"></i>
             </div>
-            <div class="stat-label">ការដាក់ស្នើ</div>
+            <div class="stat-label">ការដាក់បញ្ជូនទាំងអស់</div>
             <div class="stat-value">
               <span v-if="isLoadingDashboard" class="skeleton skeleton-text"></span>
-              <span v-else>{{ dashboardTotal?.submissions?.count }}%</span>
+              <span v-else>{{ dashboardTotal?.submissions?.count }}</span>
             </div>
             <span class="stat-badge badge-down"><i class="bi bi-arrow-down-short"></i>
-              {{ dashboardTotal?.submissions?.change_percent }}% ធ្លាក់ចុះ</span>
+              {{ dashboardTotal?.submissions?.change_percent }}% ធៀបនឹងសប្តាហ៍មុន</span>
           </div>
         </div>
       </div>
@@ -295,7 +295,7 @@ const isLoading = ref(false);
 const isLoadingDashboard = ref(false);
 
 const currentPage = ref(1);
-const limit = ref(7);
+const limit = ref(5);
 const totalRecords = ref(0);
 const recentActivitiesList = ref([]);
 const currentPageExam = ref(1);

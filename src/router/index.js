@@ -23,19 +23,42 @@ import Classroom from '@/views/student/Classroom.vue'
 import Assignment from '@/views/student/Assignment.vue'
 import Assignments from '@/views/teacher/Assignments.vue'
 import ProfileAdmin from '@/views/admin/ProfileAdmin.vue'
+import NotFound from '@/views/NotFound.vue'
+import AcceptRoom from '@/views/student/AcceptRoom.vue'
+import ForgetPassword from '@/views/auth/ForgetPassword.vue'
+import ResetPassword from '@/views/auth/ResetPassword.vue'
+import CheckEmail from '@/views/auth/CheckEmail.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/',
-      redirect: '/login' 
+      redirect: '/login'
     },
     {
       path: '/login',
       name: 'Login',
-      component:Login,
-      meta: {title:"Login"}
+      component: Login,
+      meta: { title: "Login" }
+    },
+    {
+      path: '/forget-password',
+      name: 'ForgetPassword',
+      component: ForgetPassword,
+      meta : {title: "Forget Password"}
+    },
+    {
+      path: '/reset-password',
+      name: 'ResetPassword',
+      component: ResetPassword,
+      meta : {title: "Reset Password"}
+    },
+    {
+      path: '/check-email',
+      name: "CheckEmail",
+      component: CheckEmail,
+      meta : {title: "Check Email"}
     },
     {
       path: '/admin',
@@ -43,152 +66,197 @@ const router = createRouter({
       meta: { requiresAuth: true, role: 'admin' },
       children: [
         {
-          path: 'dashboard', 
+          path: 'dashboard',
           name: 'AdminDashboard',
           component: AdminDashboard,
-          meta : {title: "Dashboard"}
+          meta: { title: "Dashboard" }
         },
         {
           path: 'users-management',
           name: 'UserManagement',
           component: UserManagement,
-          meta : {title: "User Management"}
+          meta: { title: "User Management" }
         },
         {
           path: 'quizzes',
           name: 'QuizManagement',
           component: QuizManagement,
-          meta : {title: "Quiz Management"}
+          meta: { title: "Quiz Management" }
         },
         {
           path: 'results-submissions',
           name: 'ResultSubmission',
           component: ResultSubmission,
-          meta : {title: "Results & Submissions"}
+          meta: { title: "Results & Submissions" }
         },
         {
           path: 'profile-admin',
           name: 'ProfileAdmin',
           component: ProfileAdmin,
-          meta : {title: "Profile Admin"}
+          meta: { title: "Profile Admin" }
         },
         {
           path: 'system-health',
           name: 'SystemHealth',
           component: SystemHealth,
-          meta : {title: "System Health"}
+          meta: { title: "System Health" }
         },
 
       ]
     },
     {
-      path:'/teacher',
-      component:TeacherLayout,
+      path: '/teacher',
+      component: TeacherLayout,
       meta: { requiresAuth: true, role: 'teacher' },
       children: [
-      {
-        path: 'dashboard',
-        name: 'TeacherDashboard',
-        component: TeacherDashboard,
-        meta: {title: "Teacher Dashboard"}
-      },
-      {
-        path: 'quizzes',
-        name: 'Quizzes',
-        component: Quizzes,
-        meta: {title: "Quizzes", customHeader: true, fullscreen: true}
-      },
-      {
-        path: 'assignments',
-        name: 'Assignments',
-        component: Assignments,
-        meta: {title: "Assignments"}
-      },
-      {
-        path: 'final-exam',
-        name: 'FinalExam',
-        component: FinalExam,
-        meta: {title: "Final Exam"}
-      },
-      {
-        path: 'room-management',
-        name: 'RoomManagement',
-        component: RoomManagement,
-        meta: {title: "Room Management"}
-      },
-      {
-        path: 'class-stream',
-        name: 'ClassStream',
-        component: ClassStream,
-        meta: {title: "Class Stream"}
-      },
-      {
-        path: 'student-results',
-        name: 'StudentResults',
-        component: StudentResults,
-        meta: {title: "Student Results"}
-      },
-      {
-        path: 'teacher-validations',
-        name: 'TeacherValidations',
-        component: TeacherValidations,
-        meta: {title: "Teacher Validations"}
-      },
-      {
-        path: 'profile',
-        name: 'Profile',
-        component: Profile,
-        meta: {title: "Profile"}
-      }
-    ]
+        {
+          path: 'dashboard',
+          name: 'TeacherDashboard',
+          component: TeacherDashboard,
+          meta: { title: "Teacher Dashboard" }
+        },
+        {
+          path: 'quizzes',
+          name: 'Quizzes',
+          component: Quizzes,
+          meta: { title: "Quizzes", customHeader: true, fullscreen: true }
+        },
+        {
+          path: 'assignments',
+          name: 'Assignments',
+          component: Assignments,
+          meta: { title: "Assignments" }
+        },
+        {
+          path: 'final-exam',
+          name: 'FinalExam',
+          component: FinalExam,
+          meta: { title: "Final Exam" }
+        },
+        {
+          path: 'room-management',
+          name: 'RoomManagement',
+          component: RoomManagement,
+          meta: { title: "Room Management" }
+        },
+        {
+          path: 'class-stream',
+          name: 'ClassStream',
+          component: ClassStream,
+          meta: { title: "Class Stream" }
+        },
+        {
+          path: 'student-results',
+          name: 'StudentResults',
+          component: StudentResults,
+          meta: { title: "Student Results" }
+        },
+        {
+          path: 'teacher-validations',
+          name: 'TeacherValidations',
+          component: TeacherValidations,
+          meta: { title: "Teacher Validations" }
+        },
+        {
+          path: 'profile',
+          name: 'Profile',
+          component: Profile,
+          meta: { title: "Profile" }
+        }
+      ]
     },
     {
       path: '/student',
       component: StudentLayout,
-      meta: { requiresAuth: true, role: 'student'},
+      meta: { requiresAuth: true, role: 'student' },
       children: [
         {
           path: 'dashboard',
           name: 'StudentDashboard',
           component: StudentDashboard,
-          meta: {title: 'Student Dashboard'}
+          meta: { title: 'Student Dashboard' }
         },
         {
           path: 'assignment',
           name: 'Assignment',
           component: Assignment,
-          meta: {title: 'Assignment'}
+          meta: { title: 'Assignment' }
         },
         {
           path: 'classroom',
           name: 'Classroom',
           component: Classroom,
-          meta: {title: 'Classroom'}
+          meta: { title: 'Classroom' }
         },
         {
           path: 'analytics-result',
           name: 'AnalyticsResult',
           component: AnalyticsResult,
-          meta: {title: 'AnalyticsResult'}
+          meta: { title: 'AnalyticsResult' }
         },
         {
           path: 'profile-setting',
           name: 'ProfileSetting',
           component: ProfileSetting,
-          meta: {title: 'ProfileSetting'}
+          meta: { title: 'ProfileSetting' }
         }
       ]
 
-    }
+    },
+    {
+      path: '/invitations/:id/accept',
+      name: 'AcceptInvitation',
+      component: AcceptRoom,
+      meta: { title: 'Accept Class Invitation' }
+    },
+    {
+      path: '/:pathMatch(.*)*',
+      name: 'NotFound',
+      component: NotFound
+    },
+
   ]
 });
 
+// router.beforeEach((to, from) => {
+//   const isLoggedIn = !!sessionStorage.getItem('user_token');
+//   const userRoleId = sessionStorage.getItem('user_role'); 
+//   const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
+
+//   const requiredRole = to.meta.role; 
+
+//   const rolePaths = {
+//     '1': 'admin',
+//     '2': 'teacher',
+//     '3': 'student'
+//   };
+
+//   const userRoleName = rolePaths[userRoleId]; 
+
+//   if (requiresAuth && !isLoggedIn) {
+//     return { path: '/login' };
+//   }
+
+
+//   if (isLoggedIn) {
+
+//     if (to.path === '/login' && userRoleName) {
+//       return { path: `/${userRoleName}/dashboard` };
+//     }
+
+//     if (requiredRole && userRoleName !== requiredRole) {
+//       return { path: `/${userRoleName}/dashboard` };
+//     }
+//   }
+
+//   return true;
+// });
+
 router.beforeEach((to, from) => {
-  const isLoggedIn = !!sessionStorage.getItem('user_token');
-  const userRoleId = sessionStorage.getItem('user_role'); 
+  const isLoggedIn = !!localStorage.getItem('user_token');
+  const userRoleId = localStorage.getItem('user_role');
   const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
-  
-  const requiredRole = to.meta.role; 
+  const requiredRole = to.meta.role;
 
   const rolePaths = {
     '1': 'admin',
@@ -196,19 +264,17 @@ router.beforeEach((to, from) => {
     '3': 'student'
   };
 
-  const userRoleName = rolePaths[userRoleId]; 
-
+  const userRoleName = rolePaths[userRoleId];
+  if (to.name === 'AcceptInvitation') {
+    return true;
+  }
   if (requiresAuth && !isLoggedIn) {
     return { path: '/login' };
   }
-
-
   if (isLoggedIn) {
-    
     if (to.path === '/login' && userRoleName) {
       return { path: `/${userRoleName}/dashboard` };
     }
-
     if (requiredRole && userRoleName !== requiredRole) {
       return { path: `/${userRoleName}/dashboard` };
     }
@@ -216,5 +282,4 @@ router.beforeEach((to, from) => {
 
   return true;
 });
-
 export default router
