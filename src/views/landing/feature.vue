@@ -1,19 +1,6 @@
 <template>
   <!-- ក្បាលទំព័រ -->
-  <header class="site-header">
-    <div class="header-inner">
-      <a class="logo" href="index.html" aria-label="ទំព័រដើម Prolong">
-        <span class="logo-icon">E</span>
-        <span class="logo-name">Prolong</span>
-      </a>
-      <nav class="main-nav" aria-label="ការរុករកចម្បង">
-        <a href="index.html">ទំព័រដើម</a>
-        <a href="about.html">អំពី</a>
-        <a href="features.html" class="active">មុខងារ</a>
-      </nav>
-      <a class="btn-header" href="index.html#auth">ចូលប្រើ</a>
-    </div>
-  </header>
+  <Navbar />
 
   <main>
     <!-- ផ្នែកដំបូង -->
@@ -464,6 +451,10 @@
     </div>
   </footer>
 </template>
+
+<script setup>
+  import Navbar from "@/components/layout/navbar/landing/LandingPageNavebar.vue";
+</script>
 
 <style scoped>
 /* ===== CSS VARIABLES ===== */

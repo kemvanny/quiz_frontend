@@ -1,19 +1,6 @@
 <template>
   <!-- ក្បាលទំព័រ -->
-  <header>
-    <div class="header-inner">
-      <a class="logo" href="index.html" aria-label="ទំព័រដើម Prolong">
-        <span class="logo-icon">E</span>
-        <span class="logo-text">Prolong</span>
-      </a>
-      <nav aria-label="ការរុករកចម្បង">
-        <a href="index.html">ទំព័រដើម</a>
-        <a href="about.html" class="active">អំពី</a>
-        <a href="features.html">មុខងារ</a>
-      </nav>
-      <a class="btn-header" href="index.html#auth">ចូលប្រើ</a>
-    </div>
-  </header>
+  <Navbar />
 
   <main>
     <!-- Hero -->
@@ -544,6 +531,10 @@
     </div>
   </footer>
 </template>
+
+<script setup>
+  import Navbar from "@/components/layout/navbar/landing/LandingPageNavebar.vue";
+</script>
 
 <style scope>
 :root {

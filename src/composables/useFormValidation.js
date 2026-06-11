@@ -11,7 +11,7 @@ export function useFormValidation() {
         address: ''
     })
 
-    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
+    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{3,}$/
 
     const namePattern = /^[a-zA-Z Khmer\u1780-\u17F9\s]+$/
 

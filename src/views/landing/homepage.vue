@@ -1,21 +1,7 @@
 <template>
   <div>
-    
     <!-- ═══════════════════ ក្បាលទំព័រ ═══════════════════ -->
-    <header>
-      <div class="header-inner">
-        <a class="logo" href="index.html" aria-label="ទំព័រដើម Prolong">
-          <span class="logo-icon">E</span>
-          <span class="logo-text">Prolong</span>
-        </a>
-        <nav class="main-nav" aria-label="ការរុករកចម្បង">
-          <router-link class="active" :to="{ name: 'Home' }">ទំព័រដើម</router-link>
-          <router-link :to="{ name: 'About' }">អំពី</router-link>
-          <router-link :to="{ name: 'Features' }">មុខងារ</router-link>
-        </nav>
-         <router-link class="btn-primary" :to="{ name: 'Login' }">ចូលប្រើ</router-link>
-      </div>
-    </header>
+    <Navbar />
 
     <main>
       <!-- ═══════════════════ ផ្នែកដំបូង ═══════════════════ -->
@@ -436,6 +422,10 @@
   </div>
 </template>
 
+<script setup>
+  import Navbar from "@/components/layout/navbar/landing/LandingPageNavebar.vue";
+</script>
+
 <style scoped>
 /* ─── CSS Variables ─── */
 :root {
@@ -472,13 +462,6 @@
   --radius-3xl: 1.5rem;
 }
 
-body {
-  background: var(--section-bg);
-  font-family: "Noto Sans Khmer", "Inter", system-ui, sans-serif;
-  color: var(--brand-dark);
-  -webkit-font-smoothing: antialiased;
-}
-
 a {
   text-decoration: none;
   color: inherit;
@@ -502,97 +485,6 @@ img {
   .container {
     padding-inline: 1.5rem;
   }
-}
-
-/* ─── Header ─── */
-header {
-  position: sticky;
-  top: 0;
-  z-index: 50;
-  border-bottom: 1px solid rgba(65, 150, 79, 0.1);
-  background: rgba(244, 250, 246, 0.9);
-  backdrop-filter: blur(12px);
-}
-.header-inner {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  min-height: 72px;
-  width: 100%;
-  max-width: 72rem;
-  margin-inline: auto;
-  padding-inline: 1rem;
-}
-@media (min-width: 640px) {
-  .header-inner {
-    padding-inline: 1.5rem;
-  }
-}
-
-.logo {
-  display: flex;
-  align-items: center;
-  gap: 0.625rem;
-  font-weight: 800;
-  color: var(--brand-500);
-}
-.logo-icon {
-  display: grid;
-  place-items: center;
-  height: 2.25rem;
-  width: 2.25rem;
-  border-radius: 0.75rem;
-  background: #74c878;
-  font-size: 0.875rem;
-  color: #fff;
-  box-shadow: 0 4px 12px rgba(67, 165, 87, 0.25);
-}
-.logo-text {
-  font-size: 1.125rem;
-  color: var(--brand-dark);
-}
-
-nav.main-nav {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: var(--text-muted);
-}
-@media (min-width: 640px) {
-  nav.main-nav {
-    gap: 1.5rem;
-    font-size: 0.875rem;
-  }
-}
-nav.main-nav a.active {
-  color: var(--brand-500);
-}
-nav.main-nav a {
-  transition: color 0.2s;
-}
-nav.main-nav a:hover {
-  color: var(--brand-500);
-}
-
-.btn-primary {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 42px;
-  padding-inline: 1.25rem;
-  border-radius: var(--radius-xl);
-  background: var(--brand-500);
-  font-size: 0.875rem;
-  font-weight: 700;
-  color: #fff;
-  box-shadow: 0 4px 14px rgba(67, 165, 87, 0.3);
-  transition: background 0.2s;
-}
-.btn-primary:hover {
-  background: var(--brand-600);
 }
 
 /* ─── Hero ─── */

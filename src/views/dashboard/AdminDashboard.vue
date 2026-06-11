@@ -295,7 +295,7 @@ const isLoading = ref(false);
 const isLoadingDashboard = ref(false);
 
 const currentPage = ref(1);
-const limit = ref(7);
+const limit = ref(5);
 const totalRecords = ref(0);
 const recentActivitiesList = ref([]);
 const currentPageExam = ref(1);
