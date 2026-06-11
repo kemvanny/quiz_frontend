@@ -1,57 +1,22 @@
 <template>
   <div class="main-content">
     <div class="topbar">
-      <h4
-        class="m-0 fw-bold"
-        style="font-size: 1.3rem; color: var(--txt); letter-spacing: -0.3px"
-      >
-        Account Settings
-      </h4>
-
-      <div
-        class="d-flex align-items-center gap-2 p-1 pe-3 rounded-pill"
-        style="
-          border: 1px solid var(--em-soft);
-          background: var(--em-soft);
-          cursor: pointer;
-          transition: 0.2s;
-        "
-      >
-        <img
-          :src="`${imgBaseUrl}${authStore.profile?.avatar}`"
-          alt="avatar"
-          style="
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid #fff;
-          "
-        />
+      <div class="d-flex align-items-center gap-3">
         <div
-          class="d-flex flex-column justify-content-center"
-          style="line-height: 1.1"
-        >
-          <span class="fw-bold" style="font-size: 0.85rem; color: var(--em-dk)">
-            {{ authStore.profile?.firstName }} {{ authStore.profile?.lastName }}
-          </span>
-          <span style="font-size: 0.7rem; color: var(--em); font-weight: 600">
-            {{ authStore.profile?.role }}
-          </span>
+          style="width:42px;height:42px;border-radius:12px;background:var(--em-soft);color:var(--em);display:flex;align-items:center;justify-content:center;font-size:1.1rem;">
+          <i class="fas fa-user"></i>
+        </div>
+        <div>
+          <div class="fw-bold" style="font-size:1.1rem;color:var(--txt);line-height:1.1;">ព័ត៌មានផ្ទាល់ខ្លួន</div>
+          <div style="font-size:0.75rem;color:var(--txt-mu);font-weight:600;">ពិនិត្យ និងកែប្រែព័ត៌មានគណនីរបស់អ្នក</div>
         </div>
       </div>
+
+      <BaseProfile />
     </div>
   </div>
 </template>
 
 <script setup>
-import { useAuthStore } from "@/stores/authStore"; 
-import { onMounted } from "vue";
-
-const imgBaseUrl = import.meta.env.VITE_BASE_URL_FOR_IMAGE;
-const authStore = useAuthStore();
-
-onMounted(async () => {
-  await authStore.fetchProfile();
-});
+import BaseProfile from "@/components/common/BaseProfile.vue";
 </script>

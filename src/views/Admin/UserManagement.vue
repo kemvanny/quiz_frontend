@@ -43,7 +43,7 @@
             :limit="limit" :total="totalRecords" @update:page="changePage">
             <template #row="{ item }">
                 <td>{{ item.user_code }}</td>
-                <td>{{ item.fullName }}</td>
+                <td class="text-capitalize">{{ item.fullName }}</td>
                 <td>{{ item.email }}</td>
                 <td>
                     <StatusBadge :type="item.role" />
@@ -252,10 +252,7 @@ const handleCreate = async () => {
             email: form.value.email,
             role_id: roleId
         }
-        console.log("Payload sent:", JSON.stringify(payload));
-
-        const token = sessionStorage.getItem('user_token');
-        console.log("Token checking:", token);
+        const token =localStorage.getItem('user_token');
         const res = await createUser(payload, token);
 
         if (res.data?.result) {

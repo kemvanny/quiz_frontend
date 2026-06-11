@@ -45,7 +45,7 @@
                     <span v-if="errors.password" class="error-text">{{ errors.password }}</span>
 
                     <div class="forgot-password">
-                        <a href="#">ភ្លេចពាក្យសម្ងាត់?</a>
+                        <router-link :to="{name: 'ForgetPassword'}">ភ្លេចពាក្យសម្ងាត់?</router-link>
                     </div>
 
                     <div v-if="backendError" class="backend-error-alert">
@@ -122,8 +122,8 @@ const handleLogin = async () => {
         const result = response.data?.data ? response.data.data : response.data;
 
         if (result && result.token) {
-            sessionStorage.setItem('user_token', result.token)
-            sessionStorage.setItem('user_role', result.role_id)
+            localStorage.setItem('user_token', result.token)
+            localStorage.setItem('user_role', result.role_id)
 
             const roleId = Number(result.role_id);
             let redirectPath = '';
@@ -143,7 +143,7 @@ const handleLogin = async () => {
             }
             setTimeout(() => {
             router.push(redirectPath);
-        }, 1300);
+        }, 700);
         }
         else {
             toast.show = false;
@@ -175,40 +175,9 @@ const handleLogin = async () => {
     }
 }
 </script>
+ <style scoped>
 
-<style scoped>
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
-.backend-error-alert {
-    background-color: #fdf2f2;
-    color: #de3545;
-    border: 1px solid #f8b4b4;
-    padding: 10px 12px;
-    border-radius: 6px;
-    font-size: 0.9rem;
-    margin-bottom: 15px;
-    display: flex;
-    align-items: center;
-    animation: fadeIn 0.3s ease-in-out;
-}
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(-5px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.login-container {
+ .login-container {
     position: fixed;
     top: 0;
     left: 0;
@@ -544,4 +513,5 @@ input:-webkit-autofill:active {
         font-size: 0.85rem;
     }
 }
+
 </style>

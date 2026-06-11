@@ -2,7 +2,8 @@
   <div class="layout" v-if="authStore.profile">
     <div class="left-card">
       <div class="avatar-wrapper">
-        <img :src="`${imgBaseUrl}${authStore.profile.avatar}?t=${imageRefresh}`" alt="Profile photo" class="avatar-image" />
+        <img :src="`${imgBaseUrl}${authStore.profile.avatar}?t=${imageRefresh}`" alt="Profile photo"
+          class="avatar-image" />
         <input ref="avatarInput" type="file" accept="image/*" hidden @change="uploadAvatar" />
 
         <button class="btn-upload" title="Upload photo" @click="avatarInput.click()">
@@ -252,20 +253,6 @@
       <p v-if="deleteAccountError" class="form-error mt-2">
         {{ deleteAccountError }}
       </p>
-
-      <!-- <template #footer>
-        <button class="btn btn-outline" @click="closeDeleteAccountModal">
-          បោះបង់
-        </button>
-
-        <button
-          class="btn btn-danger"
-          :disabled="deleteAccountLoading"
-          @click="handleDeleteAccount"
-        >
-          {{ deleteAccountLoading ? "កំពុងលុប..." : "លុបគណនី" }}
-        </button>
-      </template> -->
       <template #footer>
         <button class="btn btn-outline" @click="closeDeleteAccountModal">
           បោះបង់
@@ -287,7 +274,7 @@
 <script setup>
 import { useAuthStore } from "@/stores/authStore";
 import { useFormValidation } from "@/composables/useFormValidation";
-import { onMounted, ref, computed ,reactive} from "vue";
+import { onMounted, ref, computed, reactive } from "vue";
 import { useRouter } from "vue-router";
 
 const router = useRouter();
@@ -432,7 +419,7 @@ const uploadAvatar = async (event) => {
 
   try {
     triggerToast('កំពុងផ្ទុកឡើងរូបភាព...', 'fa-solid fa-spinner fa-spin');
-    
+
     if (authStore.error) authStore.error = null;
 
     await authStore.uploadAvatar(file);
@@ -440,9 +427,9 @@ const uploadAvatar = async (event) => {
     if (typeof authStore.fetchProfile === 'function') {
       await authStore.fetchProfile();
     }
-    
+
     imageRefresh.value = Date.now();
-    
+
     triggerToast('ផ្លាស់ប្តូររូបភាពប្រវត្តិរូបជោគជ័យ!', 'fa-solid fa-circle-check');
 
   } catch (err) {
@@ -591,16 +578,21 @@ onMounted(async () => {
   --shadow-md: 0 12px 26px rgba(15, 23, 42, 0.14);
 
   width: 100%;
-  max-width: 1140px;         /* 🎯 Fix ទំហំទទឹងសរុបត្រឹម ១១៤០px (ទំហំស្តង់ដារពេញអេក្រង់ធំល្មម) */
-  margin: 0;                 /* ផ្អែកនៅកៀកខាងឆ្វេងជាប់ Sidebar ដដែល */
+  max-width: 1140px;
+  /* 🎯 Fix ទំហំទទឹងសរុបត្រឹម ១១៤០px (ទំហំស្តង់ដារពេញអេក្រង់ធំល្មម) */
+  margin: 0;
+  /* ផ្អែកនៅកៀកខាងឆ្វេងជាប់ Sidebar ដដែល */
   padding: 24px;
-  
+
   display: grid;
-  grid-template-columns: 290px 810px; /* 🎯 Fix ទំហំ Card ឆ្វេង ២៩០px និង Card ស្តាំ ៨១០px ជាប់ត្រឹមហ្នឹងតែម្តង */
-  gap: 24px;                 /* គម្លាតចន្លោះ Card ទាំងពីរ */
-  
+  grid-template-columns: 290px 810px;
+  /* 🎯 Fix ទំហំ Card ឆ្វេង ២៩០px និង Card ស្តាំ ៨១០px ជាប់ត្រឹមហ្នឹងតែម្តង */
+  gap: 24px;
+  /* គម្លាតចន្លោះ Card ទាំងពីរ */
+
   align-items: start;
 }
+
 .page-header {
   margin-bottom: 28px;
 }
@@ -672,7 +664,7 @@ onMounted(async () => {
   background: var(--card);
   border-radius: 18px;
   box-shadow: var(--shadow);
-  min-height: 560px;        
+  min-height: 560px;
   padding: 28px 24px 24px;
   display: flex;
   flex-direction: column;
@@ -685,11 +677,11 @@ onMounted(async () => {
   background: var(--card);
   border-radius: 18px;
   box-shadow: var(--shadow);
-  min-height: 580px;        
+  min-height: 580px;
   padding: 28px 30px 32px;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start; 
+  justify-content: flex-start;
 }
 
 .avatar-wrapper {
@@ -951,9 +943,9 @@ onMounted(async () => {
 }
 
 @media (min-width: 1280px) {
-.layout {
+  .layout {
     /* 🎯 បង្ខំឱ្យ Fix ទំហំដដែល ទោះជាអេក្រង់រីកធំប៉ុនណាក៏ដោយ */
-    grid-template-columns: 290px 810px; 
+    grid-template-columns: 290px 810px;
   }
 }
 
