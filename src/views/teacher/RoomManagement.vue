@@ -127,7 +127,7 @@ const filteredRooms = computed(() => {
 
 const goToRoomDetail = (roomId) => {
   router.push({
-    name: 'RoomDetail',
+    name: 'ClassStream', 
     params: { roomId: roomId }
   })
 }

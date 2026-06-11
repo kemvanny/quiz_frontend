@@ -134,7 +134,7 @@ const router = createRouter({
         },
         
       {
-        path: 'class-stream',
+        path: 'room-management/:roomId/stream',
         name: 'ClassStream',
         component: ClassStream,
         meta: {title: "Class Stream"}

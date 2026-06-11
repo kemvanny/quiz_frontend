@@ -26,12 +26,17 @@
                     </div>
                 </transition>
 
-                <router-link :to="{ name: 'RoomManagement' }" class="nav-link">
-                    <i class="fas fa-users"></i> គ្រប់គ្រងថ្នាក់រៀន
-                </router-link>
-                <router-link :to="{ name: 'ClassStream' }" class="nav-link">
+                <router-link 
+                :to="{ name: 'RoomManagement' }" 
+                class="nav-link" 
+                active-class="active"
+                :class="{ 'active': $route.name === 'ClassStream' || $route.name === 'RoomDetail' }"
+            >
+                <i class="fas fa-users"></i> គ្រប់គ្រងថ្នាក់រៀន
+            </router-link>
+                <!-- <router-link :to="{ name: 'ClassStream' }" class="nav-link">
                     <i class="fas fa-users"></i> ព័ត៌មានក្នុងថ្នាក់រៀន
-                </router-link>
+                </router-link> -->
                 <router-link :to="{ name: 'StudentResults' }" class="nav-link">
                     <i class="fas fa-chart-bar"></i> លទ្ធផលសិក្សារបស់សិស្ស
                 </router-link>
@@ -87,7 +92,16 @@ const onRoomCreated = (roomData) => {
 .nav-link {
     font-weight: 550 !important;
 }
+.nav-link.active {
+    background-color: #10b981 !important; /* ពណ៌បៃតងដូចក្នុងរូបភាព */
+    color: white !important;              /* អក្សរពណ៌ស */
+    border-radius: 8px;                   /* បើចង់ឱ្យមូលៗដូចក្នុងរូប */
+    font-weight: 600;
+}
 
+.nav-link.active i {
+    color: white !important;
+}
 .dropdown-enter-active,
 .dropdown-leave-active {
     transition: all 0.7s ease;
@@ -111,7 +125,6 @@ const onRoomCreated = (roomData) => {
   display: none; 
 }
 
-/* លុប scrollbar សម្រាប់ IE, Edge និង Firefox */
 .sidebar-nav-container {
   flex: 1;
   overflow-y: auto;

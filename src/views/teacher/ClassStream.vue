@@ -1,26 +1,9 @@
 <template>
   <div class="app-shell">
-    <div class="class-sidebar">
-      <div class="sidebar-header">My Classes</div>
-      <div class="class-list">
-        <div v-for="room in myClasses" :key="room.id" class="class-item" :class="{ active: room.id === activeClassId }">
-          <div class="class-initial">{{ room.name[0] }}</div>
-          <div class="class-info">
-            <h6>{{ room.name }}</h6>
-            <span>{{ room.section }}</span>
-          </div>
-        </div>
-      </div>
-      <button class="btn-add-class">+ New Class</button>
-    </div>
+
       
     <div class="main-col">
-      <div class="topbar">
-        <div class="breadcrumb">
-          <span>Classrooms</span> <i class="fas fa-chevron-right mx-2"></i> 
-          <span class="active-room">{{ activeClassName }}</span>
-        </div>
-      </div> <div class="workspace">
+     <div class="workspace">
         
         <div class="class-banner">
           <div class="class-banner-content">
@@ -30,9 +13,11 @@
               <span><i class="fas fa-users me-2"></i>124 Students</span>
             </div>
           </div>
+          
+   
         </div>
 
-        <div class="class-tabs-container">
+        <div class="class-tabs-container d-flex align-items-center justify-content-between">
           <div class="class-tabs">
             <div class="class-tab" :class="{ active: currentTab === 'stream' }" @click="currentTab = 'stream'">
               <i class="fas fa-stream"></i> Stream
@@ -44,6 +29,10 @@
               <i class="fas fa-chart-bar"></i> Student Result
             </div>
           </div>
+
+          <button class="btn-exams-link" @click="goToExams">
+            <i class="fas fa-file-alt me-2"></i> View All Exams
+          </button>
         </div>
 
         <div v-if="currentTab === 'stream'" class="tab-pane active">
@@ -69,6 +58,7 @@
                   </div>
                 </div>
               </div>
+              
 
               <div class="panel-title">Upcoming</div>
               <div class="upcoming-item">
@@ -215,15 +205,30 @@
       </div> </div> </div> </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 
 const activeClassId = ref(1);
 const activeClassName = ref('CS101');
+const router = useRouter() // ២. ត្រូវប្រកាស router នេះមុននឹងប្រើ
+const props = defineProps(['roomId'])
+
 
 const myClasses = ref([
   { id: 1, name: 'CS101', section: 'Section A' },
   { id: 2, name: 'Web Dev', section: 'Section B' }
 ]);
+
+const goToExams = () => {
+  router.push({ 
+    name: 'RoomDetail', 
+    params: { roomId: props.roomId } 
+  });
+};
+
+onMounted(() => {
+  console.log("Room ID ដែលទើបតែចុចចូលមកគឺ:", props.roomId);
+});
 
 const postText = ref('');
 
@@ -373,5 +378,23 @@ const studentResults = ref([
 .score-green { color: var(--em); } .score-orange { color: #f59e0b; } .score-muted { color: var(--txt-mu); }
 .btn-row-action { padding: 5px 12px; border-radius: 6px; font-size: 0.72rem; font-weight: 700; background: #fff; border: 1px solid var(--bdr); color: var(--txt-m); cursor: pointer; }
 .btn-row-review { background: var(--em-soft); color: var(--em-dk); border-color: transparent; }
+.btn-exams-link {
+  background: transparent;
+  color: #10b981; /* ពណ៌បៃតង */
+  border: 1px solid #10b981;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.btn-exams-link:hover {
+  background: #10b981;
+  color: white;
+}
 
 </style>
