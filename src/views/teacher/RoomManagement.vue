@@ -36,7 +36,7 @@
                 </h3>
                 <span class="student-count-subtext">
                   <i class="fas fa-users me-1 text-muted"></i>
-                  <strong>{{ room.studentCount || 0 }}</strong> សិស្សសរុប
+                  <strong>{{ room.student_count || 0 }}</strong> សិស្សសរុប
                 </span>
               </div>
             </div>
@@ -108,6 +108,7 @@ import InviteStudentModal from '@/components/teacher/InviteStudentModal.vue'
 
 const router = useRouter()
 
+
 const searchQuery = ref('')
 const rooms = ref([])
 const loading = ref(false)
@@ -132,17 +133,17 @@ const goToRoomDetail = (roomId) => {
   })
 }
 
-const fetchRooms = async () => {
-  try {
-    loading.value = true
-    const response = await getMyRooms()
-    rooms.value = response.data?.data || response.data || []
-  } catch (error) {
-    console.error("Error fetching rooms:", error)
-  } finally {
-    loading.value = false
+  const fetchRooms = async () => {
+    try {
+      loading.value = true
+      const response = await getMyRooms()
+      rooms.value = response.data?.data || response.data || []
+    } catch (error) {
+      console.error("Error fetching rooms:", error)
+    } finally {
+      loading.value = false
+    }
   }
-}
 
 const handleRoomCreatedSuccess = async (newRoom) => {
   await fetchRooms()

@@ -4,27 +4,28 @@
       
     <div class="main-col">
      <div class="workspace">
-        
         <div class="class-banner">
           <div class="class-banner-content">
-            <h1 class="class-title">CS101: Intro to Computer Science</h1>
+            <h1 class="class-title">{{ roomData?.name || 'Loading...' }}</h1>
+            
             <div class="class-meta d-flex align-items-center gap-4 flex-wrap">
-              <span><i class="fas fa-layer-group me-2"></i>Section A</span>
-              <span><i class="fas fa-users me-2"></i>124 Students</span>
+              <span>
+                <i class="fas fa-users me-2"></i>
+                {{ roomData?.student_count ?? roomData?.students?.length ?? 0 }} Students
+              </span>
             </div>
           </div>
-          
-   
         </div>
-
+  
         <div class="class-tabs-container d-flex align-items-center justify-content-between">
           <div class="class-tabs">
             <div class="class-tab" :class="{ active: currentTab === 'stream' }" @click="currentTab = 'stream'">
               <i class="fas fa-stream"></i> Stream
             </div>
-            <div class="class-tab" :class="{ active: currentTab === 'people' }" @click="currentTab = 'people'">
-              <i class="fas fa-users"></i> All Student
-            </div>
+          <div class="class-tab" :class="{ active: currentTab === 'people' }" @click="currentTab = 'people'">
+            <i class="fas fa-users"></i> All Student 
+            <span class="badge-count ms-2">({{ roomData?.students?.length || 0 }})</span>
+          </div>
             <div class="class-tab" :class="{ active: currentTab === 'results' }" @click="currentTab = 'results'">
               <i class="fas fa-chart-bar"></i> Student Result
             </div>
@@ -45,7 +46,7 @@
                 </div>
                 <div class="d-flex gap-2 mt-2">
                   <div class="text-center flex-fill">
-                    <div class="stat-num">32</div>
+                    <div class="stat-num">{{ roomData?.student_count ?? roomData?.students?.length ?? 0 }}</div>
                     <div class="stat-lbl">Students</div>
                   </div>
                   <div class="text-center flex-fill border-start border-end">
@@ -72,16 +73,9 @@
 
             <div class="feed-container">
               <div class="composer-card">
-                <div class="d-flex align-items-start gap-3">
-                  <img src="https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcQTs4Gaz2D9hyLPSjUFHdcLhwoP5JbyaMy3-CXKrYPU4oJnTeRW" class="avatar-img" alt="avatar">
-                  <textarea class="composer-input" v-model="postText" rows="2" placeholder="Announce something to your class..."></textarea>
-                </div>
+                <textarea class="composer-input" v-model="newPost.message" rows="2" placeholder="Announce something..."></textarea>
                 <div class="composer-actions">
-                  <div class="attach-btns">
-                    <button class="btn-attach quiz"><i class="fas fa-bolt"></i> Attach Quiz</button>
-                    <button class="btn-attach assignment"><i class="fas fa-file-alt"></i> Assignment</button>
-                  </div>
-                  <button class="btn-post" @click="submitNewPost">Post</button>
+                  <button class="btn-post" @click="handleCreatePost">Post</button>
                 </div>
               </div>
 
@@ -96,17 +90,19 @@
                   </div>
                 </div>
 
-                <div class="post-card" v-for="(post, idx) in posts" :key="idx">
+                <div class="post-card" v-for="post in posts" :key="post.id">
                   <div class="post-header">
                     <div class="post-author">
-                      <img src="https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcQTs4Gaz2D9hyLPSjUFHdcLhwoP5JbyaMy3-CXKrYPU4oJnTeRW" class="avatar-img" alt="avatar">
                       <div class="post-author-info">
                         <h6>Hean Liza <span class="role-badge">Teacher</span></h6>
-                        <span>{{ post.time }}</span>
+                        <span>{{ new Date(post.created_at).toLocaleDateString() }}</span>
                       </div>
                     </div>
+                    <button class="btn btn-link text-danger" @click="handleDelete(post.id)">
+                      <i class="fas fa-trash-alt"></i>
+                    </button>
                   </div>
-                  <div class="post-content">{{ post.content }}</div>
+                  <div class="post-content">{{ post.message }}</div>
                 </div>
               </div>
 
@@ -124,30 +120,21 @@
               <thead>
                 <tr>
                   <th>Student</th>
-                  <th>Status</th>
-                  <th>Enrolled Date</th>
-                  <th class="text-end">Actions</th>
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="(student, sIdx) in students" :key="sIdx">
+                <tr v-for="(student, sIdx) in roomData?.students" :key="student.id">
                   <td>
                     <div class="student-info">
-                      <img :src="student.avatar" alt="">
+                      <img :src="student.avatar || 'default-avatar-url.jpg'" alt="">
                       <div>
-                        <h6>{{ student.name }}</h6>
-                        <span>{{ student.id }}</span>
+                        <h6>{{ student.first_name }} {{ student.last_name }}</h6>
+                        <span>{{ student.student_card_id }}</span>
                       </div>
                     </div>
                   </td>
-                  <td>
-                    <span class="badge px-2 py-1 rounded-2" :class="student.online ? 'bg-online' : 'bg-offline'">
-                      <i class="fas fa-circle me-1" style="font-size:0.5rem"></i>{{ student.online ? 'Online' : 'Offline' }}
-                    </span>
-                  </td>
-                  <td class="date-lbl">{{ student.date }}</td>
                   <td class="text-end">
-                    <button class="btn-remove-student" @click="removeStudent(sIdx)">Remove</button>
+                    <button class="btn-remove-student" @click="openDeleteModal(student)">Remove</button>
                   </td>
                 </tr>
               </tbody>
@@ -202,71 +189,139 @@
           </div>
         </div>
 
-      </div> </div> </div> </template>
+      </div>
+    </div> 
+  </div> 
+<RemoveStudentModal 
+  :is-open="isDeleteModalOpen"
+  :student="studentToDelete"
+  :loading="loading"
+  @close="isDeleteModalOpen = false"
+  @confirm="confirmDelete"
+/>
+</template>
 
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import { useToast } from "vue-toastification";
+import { getOneRoom, removeStudentFromRoom, createPost, getPosts, deletePost } from '@/api/teacher.api'
+import RemoveStudentModal from '@/components/teacher/RemoveStudentModal.vue'; 
 
-const activeClassId = ref(1);
-const activeClassName = ref('CS101');
-const router = useRouter() // ២. ត្រូវប្រកាស router នេះមុននឹងប្រើ
+const router = useRouter()
 const props = defineProps(['roomId'])
+const toast = useToast();
+const newPost = ref({ title: 'New Update', message: '', examLink: '' })
 
+// --- State Management ---
+const roomData = ref(null)
+const loading = ref(true)
+const currentTab = ref('stream')
+const postText = ref('')
 
-const myClasses = ref([
-  { id: 1, name: 'CS101', section: 'Section A' },
-  { id: 2, name: 'Web Dev', section: 'Section B' }
-]);
+// --- Data Lists ---
+const posts = ref([]);
 
-const goToExams = () => {
-  router.push({ 
-    name: 'RoomDetail', 
-    params: { roomId: props.roomId } 
-  });
+const isDeleteModalOpen = ref(false);
+const studentToDelete = ref(null);
+
+const openDeleteModal = (student) => {
+  studentToDelete.value = student; 
+  isDeleteModalOpen.value = true;
 };
 
-onMounted(() => {
-  console.log("Room ID ដែលទើបតែចុចចូលមកគឺ:", props.roomId);
-});
-
-const postText = ref('');
-
-// គ្រប់គ្រងការប្តូរផ្ទាំង Tab
-const currentTab = ref('stream')
-
-// ទិន្នន័យសម្រាប់ Tab Stream
-const posts = ref([
-  { content: 'Please review the attached project requirements. Make sure to submit your repository links before the deadline!', time: 'May 17, 10:30 AM' },
-  { content: 'Pop quiz! This covers chapters 1 through 3. You have 30 minutes to complete it. Good luck!', time: 'May 10, 02:15 PM' }
+const students = ref([
+  { name: 'Chloe Navarro', id: 'STU-9202', online: true, date: 'Sep 01, 2024', avatar: 'https://i.pravatar.cc/150?img=47' }
 ])
+
+const studentResults = ref([
+  { name: 'James Reyes', id: 'STU-9201', status: 'Needs Grading', statusType: 'review', score: '— / 100' }
+])
+
+// --- API & Logic ---
+const fetchRoomData = async () => {
+  try {
+    loading.value = true;
+    const response = await getOneRoom(props.roomId);
+    
+    console.log("ទិន្នន័យ API ផ្ញើមកពី getOneRoom:", response.data);
+    
+    roomData.value = response.data.data || response.data;
+  } catch (error) {
+    console.error("Error:", error);
+  } finally {
+    loading.value = false;
+  }
+};
+
+
+
+const goToExams = () => {
+  router.push({ name: 'RoomDetail', params: { roomId: props.roomId } })
+}
 
 const submitNewPost = () => {
   if (!postText.value.trim()) return
-  posts.value.unshift({
-    content: postText.value.trim(),
-    time: 'Just now'
-  })
+  posts.value.unshift({ content: postText.value.trim(), time: 'Just now' })
   postText.value = ''
 }
 
-// ទិន្នន័យសម្រាប់ Tab People
-const students = ref([
-  { name: 'Chloe Navarro', id: 'STU-9202', online: true, date: 'Sep 01, 2024', avatar: 'https://i.pravatar.cc/150?img=47' },
-  { name: 'David Lim', id: 'STU-9203', online: true, date: 'Sep 02, 2024', avatar: 'https://i.pravatar.cc/150?img=33' },
-  { name: 'James Miller', id: 'STU-9204', online: false, date: 'Sep 05, 2024', avatar: 'https://i.pravatar.cc/150?img=11' }
-])
+const confirmDelete = async () => {
+  if (!studentToDelete.value) return;
 
-const removeStudent = (idx) => {
-  students.value.splice(idx, 1)
+  try {
+    await removeStudentFromRoom(props.roomId, studentToDelete.value.id);
+    await fetchRoomData();
+    toast.success("បានលុបសិស្សចេញពីថ្នាក់ជោគជ័យ!");
+  } catch (error) {
+    console.error(error);
+    toast.error("មានកំហុស៖ មិនអាចលុបសិស្សបានទេ!");
+  } finally {
+    isDeleteModalOpen.value = false; 
+    studentToDelete.value = null;
+  }
 }
 
-// ទិន្នន័យសម្រាប់ Tab Results
-const studentResults = ref([
-  { name: 'James Reyes', id: 'STU-9201', status: 'Needs Grading', statusType: 'review', submitted: 'Nov 5, 9:22 AM', duration: '41m 08s', score: '— / 100', scoreColor: 'muted', avatar: 'https://i.pravatar.cc/150?img=12' },
-  { name: 'Chloe Navarro', id: 'STU-9202', status: 'Graded', statusType: 'graded', submitted: 'Nov 5, 8:47 AM', duration: '36m 52s', score: '97 / 100', scoreColor: 'green', avatar: 'https://i.pravatar.cc/150?img=47' },
-  { name: 'David Lim', id: 'STU-9203', status: 'Graded', statusType: 'graded', submitted: 'Nov 5, 10:14 AM', duration: '50m 31s', score: '74 / 100', scoreColor: 'orange', avatar: 'https://i.pravatar.cc/150?img=33' }
-])
+// ---- POST in Classstream section api intergration ---
+// get all post
+const fetchPosts = async () => {
+  try {
+    const res = await getPosts(props.roomId);
+    posts.value = res.data.data || [];
+  } catch (err) {
+    console.error("Error fetching posts:", err);
+  }
+};
+
+// create new post
+const handleCreatePost = async () => {
+  if (!newPost.value.message.trim()) return;
+  try {
+    await createPost(props.roomId, newPost.value);
+    toast.success("បានបង្ហោះជោគជ័យ!");
+    newPost.value.message = ''; // Reset
+    fetchPosts(); 
+  } catch (err) {
+    toast.error("មានកំហុសក្នុងការបង្ហោះ");
+  }
+};
+
+// delete post
+const handleDelete = async (postId) => {
+  try {
+    await deletePost(props.roomId, postId);
+    toast.success("បានលុបជោគជ័យ!");
+    fetchPosts();
+  } catch (err) {
+    toast.error("មិនអាចលុបបានទេ");
+  }
+};
+
+// --- Lifecycle ---
+onMounted(() => {
+  fetchRoomData()
+  fetchPosts();
+})
 </script>
 
 <style scoped>

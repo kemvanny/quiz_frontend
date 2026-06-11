@@ -30,6 +30,8 @@ export const useAuthStore = defineStore("auth", () => {
     }
   };
 
+
+
   const uploadAvatar = async (file) => {
    loading.value = true;
    error.value = null;
