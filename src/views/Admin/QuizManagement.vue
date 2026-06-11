@@ -71,7 +71,7 @@
                 </td>
                 <td>{{ formatDate(item.created_at) }}</td>
                 <td>
-                    <button class="btn btn-sm bi bi-eye text-success"></button>
+                    <button class="btn btn-sm bi bi-eye text-success" @click="viewQuiz(item)"></button>
                 </td>
             </template>
         </DataTable>
@@ -93,6 +93,14 @@ const totalRecords = ref(0);
 
 const isLoading = ref(false);
 const isLoadingQuiz = ref(false);
+
+const isOpen = ref(false);
+const selectedQuiz = ref(null); // បង្កើត state សម្រាប់រក្សាទុកព័ត៌មាន Quiz ដែលចុច
+
+const viewQuiz = (item) => {
+    selectedQuiz.value = item; 
+    isOpen.value = true;       
+};
 
 const quizHeaders = [
     { label: "លេខសម្គាល់", key: "id" },
