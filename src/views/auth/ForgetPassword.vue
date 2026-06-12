@@ -23,7 +23,7 @@
         <form @submit.prevent="handleForgotPassword">
           <div class="input-group-custom" :class="{ 'has-error': errors.email }">
             <i class="fas fa-envelope"></i>
-            <input type="email" v-model.trim="email" placeholder="អាសយដ្ឋានអ៊ីមែលរបស់អ្នក" required @input="validateEmail(email)">
+            <input type="email" v-model.trim="email" placeholder="អាសយដ្ឋានអ៊ីមែលរបស់អ្នក"  @input="validateEmail(email)">
           </div>
           <span v-if="errors.email" class="error-text">{{ errors.email }}</span>
 
@@ -74,14 +74,22 @@ const handleForgotPassword = async () => {
   backendError.value = ''
   
   try {
-    await forgotPassword(email.value) 
-    triggerToast("តំណភ្ជាប់បានផ្ញើទៅកាន់អ៊ីមែលរបស់អ្នកហើយ!", 'fa-solid fa-circle-check')
-     setTimeout(() => {
-        router.push('/check-email');
-    }, 800);
+    const res = await forgotPassword(email.value);
+
+    if (res.data && res.data.result === false) {
+       backendError.value =  "មិនមានអ៊ីមែលនេះក្នុងប្រព័ន្ធទេ";
+       triggerToast(backendError.value, 'fa-solid fa-circle-xmark');
+    } else {
+     
+       triggerToast("តំណភ្ជាប់បានផ្ញើទៅកាន់អ៊ីមែលរបស់អ្នកហើយ!", 'fa-solid fa-circle-check');
+       setTimeout(() => {
+           router.push('/check-email');
+       }, 800);
+    }
   } catch (err) {
-    backendError.value = "មិនអាចផ្ញើបានទេ សូមព្យាយាមម្តងទៀត"
-    triggerToast("មានកំហុសកើតឡើង", 'fa-solid fa-circle-xmark')
+   
+    backendError.value = "មានបញ្ហាបច្ចេកទេស សូមព្យាយាមម្តងទៀត";
+    triggerToast("មានបញ្ហាបច្ចេកទេស", 'fa-solid fa-circle-xmark');
   } finally {
     isLoading.value = false
   }
