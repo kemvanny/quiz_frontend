@@ -142,9 +142,9 @@ const toast = useToast()
 const authStore = useAuthStore()
 
 const roomId = route.params.roomId
+const allExams = ref([])
 
 const roomName = ref('កំពុងទាញយក...') 
-const assignedExams = ref([])
 const loading = ref(false)
 const isProcessing = ref(false)
 
@@ -163,31 +163,48 @@ const editForm = ref({
   description: ''
 })
 
+const assignedExams = computed(() => {
+  return allExams.value.filter(exam => String(exam.room_id) === String(roomId))
+})
+
 const fetchRoomInformation = async () => {
   if (!roomId) return
   try {
     const res = await getOneRoom(roomId)
     roomName.value = res.data?.data?.name || res.data?.name || 'Unknown Room'
   } catch (err) {
-    console.error("Failed to fetch room name:", err)
     roomName.value = 'មិនអាចទាញយកឈ្មោះបន្ទប់បានទេ'
   }
 }
 
+const fetchRoomData = async () => {
+  try {
+    loading.value = true;
+    const response = await getOneRoom(props.roomId);
+    
+    // បើសិនក្នុង response មាន list exams ស្រាប់
+    roomData.value = response.data.data;
+    
+    // បង្ហាញ exams ក្នុង UI
+    exams.value = roomData.value.exams || []; 
+  } catch (error) {
+    console.error("Error:", error);
+  } finally {
+    loading.value = false;
+  }
+};
+
 const filteredExams = computed(() => {
-  let list = assignedExams.value
-  if (activeFilter.value !== 'all') list = list.filter(e => e.type?.toLowerCase() === activeFilter.value.toLowerCase())
-  if (statusFilter.value !== 'all') list = list.filter(e => e.status?.toLowerCase() === statusFilter.value.toLowerCase())
-  if (sortBy.value === 'title') list = [...list].sort((a, b) => a.title.localeCompare(b.title))
-  if (sortBy.value === 'points') list = [...list].sort((a, b) => (b.total_points || 0) - (a.total_points || 0))
-  return list
+  if (!allExams.value) return []
+  return allExams.value.filter(exam => String(exam.room_id) === String(roomId))
 })
 
-const fetchExamsForRoom = async () => {
+const fetchExamsData = async () => {
   try {
     loading.value = true
     const res = await getExams()
-    assignedExams.value = res.data?.data || res.data || []
+    console.log("ទិន្នន័យ API ទាំងអស់:", res.data?.data); 
+    allExams.value = res.data?.data || res.data || []
   } catch (err) {
     toast.error("មិនអាចទាញយកទិន្នន័យវិញ្ញាសាបានទេ!")
   } finally {
@@ -290,7 +307,7 @@ const confirmDeleteExam = async () => {
 onMounted(() => {
   authStore.fetchUserProfile()
   fetchRoomInformation()
-  fetchExamsForRoom()
+  fetchExamsData()
 })
 </script>
 

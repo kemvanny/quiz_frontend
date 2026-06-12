@@ -25,7 +25,11 @@ import Classroom from '@/views/student/Classroom.vue'
 import Assignment from '@/views/student/Assignment.vue'
 import Assignments from '@/views/teacher/Assignments.vue'
 import ProfileAdmin from '@/views/admin/ProfileAdmin.vue'
+import NotFound from '@/views/NotFound.vue'
 import AcceptRoom from '@/views/student/AcceptRoom.vue'
+import ForgetPassword from '@/views/auth/ForgetPassword.vue'
+import ResetPassword from '@/views/auth/ResetPassword.vue'
+import CheckEmail from '@/views/auth/CheckEmail.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -39,6 +43,24 @@ const router = createRouter({
       name: 'Login',
       component: Login,
       meta: { title: "Login" }
+    },
+    {
+      path: '/forget-password',
+      name: 'ForgetPassword',
+      component: ForgetPassword,
+      meta : {title: "Forget Password"}
+    },
+    {
+      path: '/reset-password',
+      name: 'ResetPassword',
+      component: ResetPassword,
+      meta : {title: "Reset Password"}
+    },
+    {
+      path: '/check-email',
+      name: "CheckEmail",
+      component: CheckEmail,
+      meta : {title: "Check Email"}
     },
     {
       path: '/admin',
@@ -190,16 +212,22 @@ const router = createRouter({
           name: 'ProfileSetting',
           component: ProfileSetting,
           meta: { title: 'ProfileSetting' }
-        },
-
+        }
       ]
+
     },
     {
       path: '/invitations/:id/accept',
       name: 'AcceptInvitation',
       component: AcceptRoom,
       meta: { title: 'Accept Class Invitation' }
-    }
+    },
+    {
+      path: '/:pathMatch(.*)*',
+      name: 'NotFound',
+      component: NotFound
+    },
+
   ]
 });
 

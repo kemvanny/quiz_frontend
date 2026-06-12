@@ -1,13 +1,11 @@
 <template>
   <div class="app-shell">
-
-      
     <div class="main-col">
-     <div class="workspace">
+      <div class="workspace">
+
         <div class="class-banner">
           <div class="class-banner-content">
             <h1 class="class-title">{{ roomData?.name || 'Loading...' }}</h1>
-            
             <div class="class-meta d-flex align-items-center gap-4 flex-wrap">
               <span>
                 <i class="fas fa-users me-2"></i>
@@ -16,16 +14,16 @@
             </div>
           </div>
         </div>
-  
+
         <div class="class-tabs-container d-flex align-items-center justify-content-between">
           <div class="class-tabs">
             <div class="class-tab" :class="{ active: currentTab === 'stream' }" @click="currentTab = 'stream'">
               <i class="fas fa-stream"></i> Stream
             </div>
-          <div class="class-tab" :class="{ active: currentTab === 'people' }" @click="currentTab = 'people'">
-            <i class="fas fa-users"></i> All Student 
-            <span class="badge-count ms-2">({{ roomData?.students?.length || 0 }})</span>
-          </div>
+            <div class="class-tab" :class="{ active: currentTab === 'people' }" @click="currentTab = 'people'">
+              <i class="fas fa-users"></i> All Student 
+              <span class="badge-count ms-2">({{ roomData?.students?.length || 0 }})</span>
+            </div>
             <div class="class-tab" :class="{ active: currentTab === 'results' }" @click="currentTab = 'results'">
               <i class="fas fa-chart-bar"></i> Student Result
             </div>
@@ -38,74 +36,82 @@
 
         <div v-if="currentTab === 'stream'" class="tab-pane active">
           <div class="stream-grid">
-            
             <div class="side-panel">
-              <div class="p-3 mb-4 rounded-3 border bg-white bg-opacity-60">
-                <div class="d-flex align-items-center justify-content-between mb-2">
-                  <span class="overview-lbl">Class Overview</span>
-                </div>
-                <div class="d-flex gap-2 mt-2">
-                  <div class="text-center flex-fill">
-                    <div class="stat-num">{{ roomData?.student_count ?? roomData?.students?.length ?? 0 }}</div>
-                    <div class="stat-lbl">Students</div>
-                  </div>
-                  <div class="text-center flex-fill border-start border-end">
-                    <div class="stat-num text-emerald">86%</div>
-                    <div class="stat-lbl">Avg Grade</div>
-                  </div>
-                  <div class="text-center flex-fill">
-                    <div class="stat-num">14</div>
-                    <div class="stat-lbl">Posts</div>
-                  </div>
-                </div>
+               <div class="d-flex align-items-center justify-content-between mb-2">
+                <span style="font-size: 0.7rem; font-weight: 700; color: var(--txt-mu); text-transform: uppercase; letter-spacing: 1px;">Class Overview</span>
+                <button class="btn btn-sm text-muted p-0"><i class="fas fa-chart-line"></i></button>
               </div>
-              
-
-              <div class="panel-title">Upcoming</div>
-              <div class="upcoming-item">
-                <div class="upcoming-icon"><i class="fas fa-clock"></i></div>
-                <div class="upcoming-text">
-                  <h6>Midterm Project</h6>
-                  <p>Due Tomorrow, 11:59 PM</p>
+              <div class="d-flex gap-2 mt-2">
+                <div class="text-center flex-fill">
+                  <div style="font-weight: 700; color: var(--txt); font-size: 1.2rem;">{{ roomData?.students?.length || 0 }}</div>
+                  <div style="font-size: 0.65rem; color: var(--txt-mu); font-weight: 600;">Students</div>
+                </div>
+                <div class="text-center flex-fill border-start border-end">
+                  <div style="font-weight: 700; color: var(--em); font-size: 1.2rem;">86%</div>
+                  <div style="font-size: 0.65rem; color: var(--txt-mu); font-weight: 600;">Avg Grade</div>
+                </div>
+                <div class="text-center flex-fill">
+                  <div style="font-weight: 700; color: var(--txt); font-size: 1.2rem;"></div>
+                  <div style="font-size: 0.65rem; color: var(--txt-mu); font-weight: 600;">Posts</div>
                 </div>
               </div>
             </div>
 
             <div class="feed-container">
               <div class="composer-card">
-                <textarea class="composer-input" v-model="newPost.message" rows="2" placeholder="Announce something..."></textarea>
+                <input v-model="newPost.title" class="form-control mb-2" placeholder="ចំណងជើង..." />
+                <textarea v-model="newPost.message" class="composer-input mb-2" rows="2" placeholder="សរសេរការប្រកាស..."></textarea>
+                <input v-model="newPost.examLink" class="form-control mb-2" placeholder="បញ្ចូល Link ការប្រឡង..." />
                 <div class="composer-actions">
                   <button class="btn-post" @click="handleCreatePost">Post</button>
                 </div>
               </div>
 
               <div class="d-flex flex-column gap-4">
-                <div class="post-card pinned-banner">
-                  <div class="d-flex align-items-center gap-3">
-                    <div class="pin-wrap"><i class="fas fa-thumbtack"></i></div>
-                    <div>
-                      <div class="pinned-text">Midterm results are now published. Check Student Results for your score.</div>
-                      <div class="pinned-meta">Pinned by Ms. Hean Liza · Oct 28</div>
-                    </div>
-                  </div>
-                </div>
-
                 <div class="post-card" v-for="post in posts" :key="post.id">
-                  <div class="post-header">
-                    <div class="post-author">
-                      <div class="post-author-info">
-                        <h6>Hean Liza <span class="role-badge">Teacher</span></h6>
-                        <span>{{ new Date(post.created_at).toLocaleDateString() }}</span>
+                  <div class="post-header d-flex justify-content-between align-items-center">
+                    <div class="d-flex align-items-center">
+                      <img :src="authStore.avatarUrl" class="avatar-img me-2" alt="avatar" style="width: 40px; height: 40px; border-radius: 50%;">
+                      <div>
+                        <h6 class="mb-0">
+                          {{ authStore.fullName }} 
+                          <span class="role-badge">Teacher</span>
+                        </h6>
+                        <small class="text-muted">
+                          {{ new Date(post.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) }}, 
+                          {{ new Date(post.created_at).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true }) }}
+                        </small>
                       </div>
                     </div>
-                    <button class="btn btn-link text-danger" @click="handleDelete(post.id)">
-                      <i class="fas fa-trash-alt"></i>
-                    </button>
+                    <div class="post-actions">
+                      <button class="btn-action-menu" @click.stop="toggleMenu(post.id)">
+                        <i class="fas fa-ellipsis-v"></i>
+                      </button>
+                      <div class="action-dropdown" v-if="activeMenu === post.id">
+                        <button @click="openEditModal(post)"><i class="fas fa-edit me-2"></i>Edit</button>
+                        <button class="danger" @click="handleDelete(post.id)"><i class="fas fa-trash me-2"></i>Delete</button>
+                      </div>
+                    </div>
                   </div>
-                  <div class="post-content">{{ post.message }}</div>
+
+                  <div class="post-content mt-3">
+                    <p>{{ post.message }}</p>
+                  </div>
+
+                  <a :href="post.exam_link" target="_blank" rel="noopener noreferrer" class="assignment-card-link d-flex align-items-center border rounded-3 shadow-sm overflow-hidden mt-3 mb-2">
+                    <div class="d-flex align-items-center justify-content-center" style="width: 80px; height: 80px; background-color: #f6993f; flex-shrink: 0;">
+                      <i class="fas fa-laptop-code text-white fa-2x"></i>
+                    </div>
+                    <div class="p-3 flex-grow-1">
+                      <h6 class="mb-0 fw-bold text-dark">{{ post.title }}</h6>
+                      <small class="text-muted">Assignment • Click to open exam</small>
+                    </div>
+                    <div class="p-3">
+                      <span class="btn btn-sm px-3 rounded-pill" style="background-color: #e6fffa; color: #38b2ac; font-weight: 600;">View Details</span>
+                    </div>
+                  </a>
                 </div>
               </div>
-
             </div>
           </div>
         </div>
@@ -117,11 +123,7 @@
               <button class="btn btn-sm btn-emerald">Invite</button>
             </div>
             <table class="roster-table">
-              <thead>
-                <tr>
-                  <th>Student</th>
-                </tr>
-              </thead>
+              <thead><tr><th>Student</th></tr></thead>
               <tbody>
                 <tr v-for="(student, sIdx) in roomData?.students" :key="student.id">
                   <td>
@@ -151,17 +153,10 @@
                 <span class="small-meta-lbl"><i class="fas fa-chart-line me-1"></i>Avg: <strong class="text-emerald">76%</strong></span>
               </div>
             </div>
-
             <div class="result-grid-container">
               <div class="rg-header">
-                <div>Student</div>
-                <div>Status</div>
-                <div>Submitted</div>
-                <div>Duration</div>
-                <div>Score</div>
-                <div class="text-end">Action</div>
+                <div>Student</div><div>Status</div><div>Submitted</div><div>Duration</div><div>Score</div><div class="text-end">Action</div>
               </div>
-
               <div class="rg-row" v-for="(res, rIdx) in studentResults" :key="rIdx">
                 <div class="student-info">
                   <img :src="res.avatar" class="student-avatar" alt="">
@@ -171,9 +166,7 @@
                   </div>
                 </div>
                 <div>
-                  <span class="badge-status" :class="'badge-' + res.statusType">
-                    {{ res.status }}
-                  </span>
+                  <span class="badge-status" :class="'badge-' + res.statusType">{{ res.status }}</span>
                 </div>
                 <div class="time-text">{{ res.submitted }}</div>
                 <div class="time-muted">{{ res.duration }}</div>
@@ -185,142 +178,261 @@
                 </div>
               </div>
             </div>
-
           </div>
         </div>
-
       </div>
-    </div> 
-  </div> 
-<RemoveStudentModal 
-  :is-open="isDeleteModalOpen"
-  :student="studentToDelete"
-  :loading="loading"
-  @close="isDeleteModalOpen = false"
-  @confirm="confirmDelete"
-/>
+    </div>
+  </div>
+
+  <div class="modal-overlay" v-if="isEditModalOpen" @click.self="isEditModalOpen = false">
+    <div class="edit-modal">
+      <h6>Edit Post</h6>
+      <input v-model="editPost.title" class="form-control mb-2" placeholder="ចំណងជើង..." />
+      <textarea v-model="editPost.message" class="form-control mb-2" rows="3" placeholder="សរសេរការប្រកាស..."></textarea>
+      <input v-model="editPost.exam_link" class="form-control mb-2" placeholder="Link ការប្រឡង..." />
+      <div class="d-flex justify-content-end gap-2 mt-3">
+        <button class="btn-cancel" @click="isEditModalOpen = false">Cancel</button>
+        <button class="btn-post" @click="handleUpdate">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <RemoveStudentModal 
+    :is-open="isDeleteModalOpen"
+    :student="studentToDelete"
+    :loading="loading"
+    @close="isDeleteModalOpen = false"
+    @confirm="confirmDelete"
+  />
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-import { useToast } from "vue-toastification";
-import { getOneRoom, removeStudentFromRoom, createPost, getPosts, deletePost } from '@/api/teacher.api'
-import RemoveStudentModal from '@/components/teacher/RemoveStudentModal.vue'; 
+import { useToast } from 'vue-toastification'
+import { useAuthStore } from '@/stores/auth'
 
+import {
+  getOneRoom,
+  removeStudentFromRoom,
+  createPost,
+  getPosts,
+  deletePost,
+  updatePost
+} from '@/api/teacher.api'
+
+import RemoveStudentModal from '@/components/teacher/RemoveStudentModal.vue'
+
+//router
 const router = useRouter()
-const props = defineProps(['roomId'])
-const toast = useToast();
-const newPost = ref({ title: 'New Update', message: '', examLink: '' })
+const toast = useToast()
+const authStore = useAuthStore()
 
-// --- State Management ---
+//props
+const props = defineProps(['roomId'])
+
+//state
 const roomData = ref(null)
+const posts = ref([])
+
 const loading = ref(true)
 const currentTab = ref('stream')
-const postText = ref('')
 
-// --- Data Lists ---
-const posts = ref([]);
+const isDeleteModalOpen = ref(false)
+const isEditModalOpen = ref(false)
 
-const isDeleteModalOpen = ref(false);
-const studentToDelete = ref(null);
+const studentToDelete = ref(null)
 
-const openDeleteModal = (student) => {
-  studentToDelete.value = student; 
-  isDeleteModalOpen.value = true;
-};
+const activeMenu = ref(null)
 
+//new post
+const newPost = ref({
+  title: '',
+  message: '',
+  examLink: ''
+})
+
+//edit post
+const editPost = ref({
+  id: null,
+  title: '',
+  message: '',
+  exam_link: ''
+})
+
+//students
 const students = ref([
-  { name: 'Chloe Navarro', id: 'STU-9202', online: true, date: 'Sep 01, 2024', avatar: 'https://i.pravatar.cc/150?img=47' }
+  {
+    name: 'Chloe Navarro',
+    id: 'STU-9202',
+    online: true,
+    date: 'Sep 01, 2024',
+    avatar: 'https://i.pravatar.cc/150?img=47'
+  }
 ])
 
+//results
 const studentResults = ref([
-  { name: 'James Reyes', id: 'STU-9201', status: 'Needs Grading', statusType: 'review', score: '— / 100' }
+  {
+    name: 'James Reyes',
+    id: 'STU-9201',
+    status: 'Needs Grading',
+    statusType: 'review',
+    score: '— / 100'
+  }
 ])
 
-// --- API & Logic ---
+//fetch room
 const fetchRoomData = async () => {
   try {
-    loading.value = true;
-    const response = await getOneRoom(props.roomId);
-    
-    console.log("ទិន្នន័យ API ផ្ញើមកពី getOneRoom:", response.data);
-    
-    roomData.value = response.data.data || response.data;
+    loading.value = true
+    const response = await getOneRoom(props.roomId)
+    roomData.value = response.data.data || response.data
   } catch (error) {
-    console.error("Error:", error);
+    console.error(error)
   } finally {
-    loading.value = false;
-  }
-};
-
-
-
-const goToExams = () => {
-  router.push({ name: 'RoomDetail', params: { roomId: props.roomId } })
-}
-
-const submitNewPost = () => {
-  if (!postText.value.trim()) return
-  posts.value.unshift({ content: postText.value.trim(), time: 'Just now' })
-  postText.value = ''
-}
-
-const confirmDelete = async () => {
-  if (!studentToDelete.value) return;
-
-  try {
-    await removeStudentFromRoom(props.roomId, studentToDelete.value.id);
-    await fetchRoomData();
-    toast.success("បានលុបសិស្សចេញពីថ្នាក់ជោគជ័យ!");
-  } catch (error) {
-    console.error(error);
-    toast.error("មានកំហុស៖ មិនអាចលុបសិស្សបានទេ!");
-  } finally {
-    isDeleteModalOpen.value = false; 
-    studentToDelete.value = null;
+    loading.value = false
   }
 }
 
-// ---- POST in Classstream section api intergration ---
-// get all post
+//fetch posts
 const fetchPosts = async () => {
   try {
-    const res = await getPosts(props.roomId);
-    posts.value = res.data.data || [];
+    const res = await getPosts(props.roomId)
+    posts.value = (res.data.data || []).reverse()
   } catch (err) {
-    console.error("Error fetching posts:", err);
+    console.error(err)
   }
-};
+}
 
-// create new post
+//create post
 const handleCreatePost = async () => {
-  if (!newPost.value.message.trim()) return;
-  try {
-    await createPost(props.roomId, newPost.value);
-    toast.success("បានបង្ហោះជោគជ័យ!");
-    newPost.value.message = ''; // Reset
-    fetchPosts(); 
-  } catch (err) {
-    toast.error("មានកំហុសក្នុងការបង្ហោះ");
-  }
-};
+  if (!newPost.value.message.trim()) return
 
-// delete post
+  try {
+    await createPost(props.roomId, {
+      title: newPost.value.title,
+      message: newPost.value.message,
+      exam_link: newPost.value.examLink
+    })
+
+    toast.success('បានបង្ហោះជោគជ័យ!')
+
+    newPost.value = {
+      title: '',
+      message: '',
+      examLink: ''
+    }
+
+    await fetchPosts()
+
+  } catch (err) {
+    toast.error('មានកំហុស')
+  }
+}
+
+//delete post
 const handleDelete = async (postId) => {
   try {
-    await deletePost(props.roomId, postId);
-    toast.success("បានលុបជោគជ័យ!");
-    fetchPosts();
+    await deletePost(props.roomId, postId)
+    toast.success('បានលុបជោគជ័យ!')
+    await fetchPosts()
   } catch (err) {
-    toast.error("មិនអាចលុបបានទេ");
+    toast.error('មិនអាចលុបបាន')
   }
-};
+}
 
-// --- Lifecycle ---
+//update post
+const handleUpdate = async () => {
+  try {
+    await updatePost(editPost.value.id, {
+      title: editPost.value.title,
+      message: editPost.value.message,
+      examLink: editPost.value.exam_link
+    })
+
+    toast.success('បានកែប្រែជោគជ័យ!')
+    isEditModalOpen.value = false
+    await fetchPosts()
+
+  } catch (err) {
+    toast.error('មិនអាចកែប្រែបាន')
+  }
+}
+
+//open delete modal
+const openDeleteModal = (student) => {
+  studentToDelete.value = student
+  isDeleteModalOpen.value = true
+}
+
+//confirm delete
+const confirmDelete = async () => {
+  if (!studentToDelete.value) return
+
+  try {
+    await removeStudentFromRoom(
+      props.roomId,
+      studentToDelete.value.id
+    )
+
+    await fetchRoomData()
+
+    toast.success('បានលុបសិស្សជោគជ័យ!')
+
+  } catch (error) {
+    toast.error('មិនអាចលុបសិស្សបាន')
+  } finally {
+    isDeleteModalOpen.value = false
+    studentToDelete.value = null
+  }
+}
+
+//toggle menu
+const toggleMenu = (postId) => {
+  activeMenu.value =
+    activeMenu.value === postId ? null : postId
+}
+
+//open edit modal
+const openEditModal = (post) => {
+  editPost.value = {
+    id: post.id,
+    title: post.title,
+    message: post.message,
+    exam_link: post.exam_link
+  }
+
+  isEditModalOpen.value = true
+  activeMenu.value = null
+}
+
+//open exam link
+const openExamLink = (url) => {
+  if (!url) return
+
+  const fullUrl = url.startsWith('http')
+    ? url
+    : `https://${url}`
+
+  window.open(fullUrl, '_blank')
+}
+
+//go exams
+const goToExams = () => {
+  router.push({
+    name: 'RoomDetail',
+    params: {
+      roomId: props.roomId
+    }
+  })
+}
+
+//mounted
 onMounted(() => {
   fetchRoomData()
-  fetchPosts();
+  fetchPosts()
+  authStore.fetchUserProfile()
 })
 </script>
 
@@ -353,7 +465,7 @@ onMounted(() => {
 .profile-pill { display: flex; align-items: center; gap: 10px; padding: 6px; border-radius: 30px; background: #fff; border: 1px solid var(--bdr); }
 .profile-pill img { width: 34px; height: 34px; border-radius: 50%; object-fit: cover; }
 
-.workspace { flex: 1; }
+.workspace {flex: 1; overflow-y: auto; padding: 24px; }
 .class-banner { background: linear-gradient(135deg, rgba(16, 185, 129, 0.95), rgba(5, 150, 105, 0.95)); border-radius: 24px; padding: 36px; color: white; margin-bottom: 24px; box-shadow: 0 10px 30px rgba(16, 185, 129, 0.15); }
 .class-title { font-size: 1.8rem; font-weight: 700; margin-bottom: 6px; }
 .class-meta { font-size: 0.9rem; opacity: 0.9; }
@@ -452,4 +564,28 @@ onMounted(() => {
   color: white;
 }
 
+.assignment-card-link {
+  display: flex !important; /* បង្ខំឱ្យវាបង្ហាញជា Flex */
+  cursor: pointer !important; /* បង្ខំឱ្យ Cursor ចេញជាដៃ */
+  text-decoration: none !important;
+  color: inherit !important;
+  transition: all 0.3s ease;
+}
+
+/* ធានាថាគ្រប់ Child element មិនបាំងការចុច */
+.assignment-card-link * {
+  cursor: pointer !important;
+}
+
+.post-actions { position: relative; }
+.btn-action-menu { background: none; border: none; color: var(--txt-mu); padding: 4px 8px; cursor: pointer; border-radius: 6px; }
+.btn-action-menu:hover { background: #f1f5f9; }
+.action-dropdown { position: absolute; right: 0; top: 100%; background: #fff; border: 1px solid var(--bdr); border-radius: 10px; box-shadow: var(--sh-md); z-index: 100; min-width: 130px; overflow: hidden; }
+.action-dropdown button { display: flex; align-items: center; width: 100%; padding: 10px 14px; border: none; background: none; font-size: 0.8rem; font-weight: 600; cursor: pointer; color: var(--txt); }
+.action-dropdown button:hover { background: #f8fafc; }
+.action-dropdown button.danger { color: #ef4444; }
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 999; display: flex; align-items: center; justify-content: center; }
+.edit-modal { background: #fff; border-radius: 20px; padding: 28px; width: 480px; box-shadow: var(--sh-md); }
+.edit-modal h6 { font-size: 1rem; font-weight: 700; margin-bottom: 16px; }
+.btn-cancel { padding: 8px 20px; border-radius: 30px; border: 1px solid var(--bdr); background: #fff; font-weight: 700; font-size: 0.8rem; cursor: pointer; }
 </style>

@@ -12,6 +12,18 @@ export const logoutAPI = () => {
   return api.post('/auth/logout');
 };
 
+// Forget Password
+export const forgotPassword = (email) => {
+  return api.post('/auth/forgetPassword',{ email: email })
+}
+
+// Reset Password
+export const resetPassword = (token, newPassword) => {
+  return api.post('/auth/resetPassword', {
+   token, newPassword
+  });
+}
+
 // Get Profile 
 export const getProfileAPI = () => {
   return api.get('/user/profile');

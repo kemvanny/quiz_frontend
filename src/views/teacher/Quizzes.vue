@@ -41,7 +41,7 @@
                   </div>
                   <div class="quiz-info-lbl">Quiz Info</div>
                 </div>
-                <input type="text" v-model="quizTitle" class="w-100 border-0 fw-bold p-0 text-dark quiz-title-input" onfocus="this.style.color='var(--em)'" onblur="this.style.color='var(--txt)'" placeholder="Enter Quiz Title...">
+                <input type="text" v-model="quizTitle" class="w-100 border-0 fw-bold p-0 text-dark quiz-title-input" onfocus="this.style.color='var(--em)'" onblur="this.style.color='var(--txt)'" placeholder="Please Input Quiz Title...">
                 <textarea v-model="quizInstructions" class="w-100 border-0 p-0 m-0 quiz-desc-input" rows="1" placeholder="Provide optional instructions..." @input="autoGrowTextarea"></textarea>
               </div>
             </div>
@@ -257,7 +257,7 @@ const showCodeModal = ref(false)
 const generatedExamLink = ref('')
 
 // ទិន្នន័យ Form នៃវិញ្ញាសា
-const quizTitle = ref('Create Quiz')
+const quizTitle = ref('')
 const quizInstructions = ref('')
 const quizDuration = ref(60)
 
