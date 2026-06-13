@@ -565,8 +565,8 @@ onMounted(() => {
 }
 
 .assignment-card-link {
-  display: flex !important; /* បង្ខំឱ្យវាបង្ហាញជា Flex */
-  cursor: pointer !important; /* បង្ខំឱ្យ Cursor ចេញជាដៃ */
+  display: flex !important;
+  cursor: pointer !important;
   text-decoration: none !important;
   color: inherit !important;
   transition: all 0.3s ease;

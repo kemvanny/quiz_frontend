@@ -124,7 +124,6 @@
 <script setup>
 import { ref, computed, onMounted, watch, nextTick } from "vue";
 import { getAllUsers, createUser, ChangeStatusUser } from "@/api/admin.api";
-import { useDate } from "@/composables/useDate";
 import { useFormValidation } from "@/composables/useFormValidation";
 import StatusBadge from "@/components/common/StatusBadge.vue";
 import Swal from 'sweetalert2';
@@ -134,7 +133,6 @@ import { useToast } from "@/composables/useToast";
 const { triggerToast } = useToast();
 
 const { errors, validateFirstName, validateLastName, validateEmail } = useFormValidation();
-const { formatDate } = useDate();
 
 const users = ref([]);
 const isLoading = ref(false);
