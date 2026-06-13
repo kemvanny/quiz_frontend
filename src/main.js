@@ -1,6 +1,6 @@
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
-import Toast from "vue-toastification";
+import Toast, { POSITION } from "vue-toastification";
 
 import App from './App.vue'
 import router from './router'
@@ -12,6 +12,7 @@ import '@fortawesome/fontawesome-free/css/all.min.css'
 import '@fontsource/plus-jakarta-sans'
 import './assets/main.css' 
 import "vue-toastification/dist/index.css";
+
 
 import BaseSidebar from './components/layout/common/BaseSidebar.vue'
 import BaseNavbar from './components/layout/common/BaseNavbar.vue'
@@ -42,6 +43,14 @@ app.component('LogoutModal',LogoutModal)
 app.use(createPinia())
 app.use(Toast, {
   containerClassName: "custom-toast-container",
+});
+app.use(Toast, {
+  position: POSITION.BOTTOM_CENTER, 
+  containerClassName: "custom-toast-container",
+  timeout: 3000,
+  closeOnClick: true,
+  pauseOnFocusLoss: true,
+  draggable: true,
 });
 app.use(router)
 

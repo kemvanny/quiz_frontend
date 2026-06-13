@@ -20,7 +20,6 @@ export const useAuthStore = defineStore("auth", () => {
     error.value = null;
     try {
       const response = await getProfileAPI();
-
       profile.value = response.data.data || response.data;
     } catch (err) {
       error.value =

@@ -170,6 +170,7 @@ const userHeaders = [
     { label: "សកម្មភាព", key: "actions" },
 ];
 
+const usersList = ref([]);
 const changePage = async (newPage) => {
     currentPage.value = newPage;
     await fetchUsers();
