@@ -6,7 +6,7 @@
                     data-bs-target="#sidebarMenu">
                     <i class="fas fa-bars"></i>
                 </button>
-                <a href="6.te-room-mana.html"
+                <a href=""
                     class="btn btn-sm btn-light border shadow-sm rounded-3 d-flex align-items-center justify-content-center flex-shrink-0"
                     style="width: 34px; height: 34px;">
                     <i class="fas fa-arrow-left text-muted"></i>

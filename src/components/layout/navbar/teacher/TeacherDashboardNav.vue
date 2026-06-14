@@ -16,25 +16,20 @@
                         placeholder="ស្វែងរកការប្រឡង...">
                 </div>
             </div>
-
-            <!-- Profile Dropdown (💡 កែប្រែមកចាប់តម្លៃ Dynamic ពី Pinia Store) -->
             <div class="d-flex align-items-center gap-2 p-1 pe-2 rounded-pill flex-shrink-0"
                 style="border: 1px solid var(--bdr); background: #ffffff; cursor: pointer; transition: .2s; box-shadow: var(--sh-sm);"
                 onmouseover="this.style.borderColor='#cbd5e1'; this.style.boxShadow='0 4px 12px rgba(0,0,0,.05)'"
                 onmouseout="this.style.borderColor='var(--bdr)'; this.style.boxShadow='var(--sh-sm)'">
-                
-                <!-- 💡 ប្ដូរ src មកជា :src ចាប់យករូបភាពពី Auth Store -->
-                <img :src="authStore.avatarUrl"
-                    alt="avatar" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover;" />
+
+                <img :src="authStore.avatarUrl" alt="avatar" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover;" />
+            </div>        
                 
                 <div class="d-none d-sm-flex flex-column justify-content-center pe-2" style="line-height: 1.1;">
-                    <!-- 💡 ប្ដូរអក្សរឈ្មោះចាស់ មកប្រើ fullName ពី Store -->
                     <span class="fw-bold" style="font-size: .8rem; color: var(--txt);">{{ authStore.fullName }}</span>
                     <span style="font-size: .65rem; color: var(--txt-mu); font-weight: 500;">Instructor</span>
                 </div>
             </div>
         </div>
-    </div>
 </template>
 
 <script setup>

@@ -1,6 +1,6 @@
 <template>
     <!-- ══ QUIZ MANAGEMENT SECTION ══ -->
-    <div id="section-quizzes" style="display: block">
+    <div id="section-quizzes" >
         <div class="d-flex justify-content-between align-items-center mb-4">
             <div>
                 <div class="page-title">ការគ្រប់គ្រងកម្រងសំណួរ</div>
@@ -60,7 +60,7 @@
             </div>
         </div>
 
-        <DataTable :headers="quizHeaders" :items="exams" :is-loading="isLoading" :current-page="currentPage"
+        <DataTable :headers="quizHeaders" :items="exam" :is-loading="isLoading" :current-page="currentPage"
             :limit="limit" :total="totalRecords" @update:page="changePage">
             <template #row="{ item, index }">
                 <td>{{ (currentPage - 1) * limit + index + 1 }}</td>
@@ -69,23 +69,23 @@
                 <td>
                     <StatusBadge :type="item.status" />
                 </td>
-                <td>{{ formatDate(item.created_at) }}</td>
                 <td>
-                    <button class="btn btn-sm bi bi-eye text-success" @click="viewQuiz(item)"></button>
+                    <button class="btn btn-sm  btn-action-view" @click="openQuizDetail(item)"><i
+                            class="bi bi-arrow-right-short"></i>លម្អិត</button>
                 </td>
             </template>
         </DataTable>
+
+        <QuizDetailModal :show="isOpenQuizDetail" :exam="selectedQuiz" @close="isOpenQuizDetail = false" />
     </div>
 </template>
 <script setup>
 import { onMounted, ref } from "vue";
-import { getAllExams, getDashboardExamData } from "@/api/admin.api";
-import { useDate } from "@/composables/useDate";
+import { getAllExams, getDashboardExamData, getQuizDetail } from "@/api/admin.api";
 import StatusBadge from "@/components/common/StatusBadge.vue";
+import QuizDetailModal from "@/components/admin/QuizDetailModal.vue";
 
-const { formatDate } = useDate();
-
-const exams = ref([]);
+const exam = ref([]);
 const examDashboardData = ref();
 const currentPage = ref(1);
 const limit = ref(10);
@@ -94,12 +94,23 @@ const totalRecords = ref(0);
 const isLoading = ref(false);
 const isLoadingQuiz = ref(false);
 
-const isOpen = ref(false);
-const selectedQuiz = ref(null); // បង្កើត state សម្រាប់រក្សាទុកព័ត៌មាន Quiz ដែលចុច
 
-const viewQuiz = (item) => {
-    selectedQuiz.value = item; 
-    isOpen.value = true;       
+const isOpenQuizDetail = ref(false);
+const selectedQuiz = ref(null);
+
+const openQuizDetail = async (item) => {
+
+    try {
+        const response = await getQuizDetail(item.id);
+        console.log(response.data.data);
+        if (response.data.data) {
+            selectedQuiz.value = response.data.data;
+            isOpenQuizDetail.value = true;
+            console.log("Modal state is now:", isOpenQuizDetail.value);
+        }
+    } catch (err) {
+        console.error("មិនអាចទាញយកទិន្នន័យបានទេ៖", err);
+    }
 };
 
 const quizHeaders = [
@@ -107,7 +118,6 @@ const quizHeaders = [
     { label: "ចំណងជើង", key: "title" },
     { label: "គ្រូបង្រៀន", key: "teacher" },
     { label: "ស្ថានភាព", key: "status" },
-    { label: "ថ្ងៃបង្កើត", key: "createdAt" },
     { label: "សកម្មភាព", key: "actions" },
 ];
 
@@ -125,7 +135,7 @@ const fetchExam = async () => {
         });
         if (res.data && res.data.data) {
             const rawExams = res.data.data.quizzes || [];
-            exams.value = rawExams.sort(
+            exam.value = rawExams.sort(
                 (a, b) => new Date(b.created_at) - new Date(a.created_at),
             );
             totalRecords.value = res.data.data.total || 0;
@@ -156,3 +166,44 @@ onMounted(() => {
     fetchExamDashboardData();
 });
 </script>
+
+<style scoped>
+.btn-action-view {
+    background: transparent;
+    color: #26a269;
+    border: 1px solid rgba(38, 162, 105, 0.4);
+    padding: 4px 10px;
+    border-radius: 15px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    transition: all 0.2s ease;
+}
+
+.btn-action-view:hover {
+    background: linear-gradient(135deg, rgba(232, 245, 233, 0.8) 0%, rgba(200, 230, 201, 0.8) 100%);
+    color: #1b5e20;
+    border-color: #26a269;
+    box-shadow: 0 2px 8px rgba(38, 162, 105, 0.15);
+}
+
+.bt-action-view i {
+    font-size: 16px;
+    line-height: 1;
+}
+.modal-backdrop-custom {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 9999; /* ធានាថាវាបង្ហាញពីលើគេ */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+</style>
