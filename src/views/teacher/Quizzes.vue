@@ -43,6 +43,15 @@
                 </div>
                 <input type="text" v-model="quizTitle" class="w-100 border-0 fw-bold p-0 text-dark quiz-title-input" onfocus="this.style.color='var(--em)'" onblur="this.style.color='var(--txt)'" placeholder="Please Input Quiz Title...">
                 <textarea v-model="quizInstructions" class="w-100 border-0 p-0 m-0 quiz-desc-input" rows="1" placeholder="Provide optional instructions..." @input="autoGrowTextarea"></textarea>
+                <div class="form-group">
+                  <label class="fw-bold" style="font-size: .7rem; color: var(--txt-mu);">ជ្រើសរើសថ្នាក់រៀន៖</label>
+                <select v-model="selectedRoomId" class="form-control">
+                  <option value="" disabled selected>-- ជ្រើសរើសថ្នាក់រៀន --</option>
+                  <option v-for="room in allRooms" :key="room.id" :value="room.id">
+                    {{ room.name }}
+                  </option>
+                </select>
+                </div>
               </div>
             </div>
 
@@ -240,6 +249,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { useToast } from 'vue-toastification'
 import { useAuthStore } from '@/stores/auth' 
 import { createExam, createQuestion } from '@/api/exam.api'
+import { getMyRooms } from '@/api/teacher.api';
 
 const route = useRoute()
 const router = useRouter()
@@ -260,6 +270,11 @@ const generatedExamLink = ref('')
 const quizTitle = ref('')
 const quizInstructions = ref('')
 const quizDuration = ref(60)
+
+
+const roomId = route.params.roomId;
+const allRooms = ref([]); 
+const selectedRoomId = ref('');
 
 // អក្សរ និងលេខខ្មែរសម្រាប់ប្រើប្រាស់លើ Interface
 const KH = ["ក", "ខ", "គ", "ឃ", "ង", "ច"]
@@ -377,107 +392,60 @@ const openPreviewModal = () => {
   showPreviewModal.value = true
 }
 
-// មុខងារចម្បង៖ ដាក់ផ្សាយវិញ្ញាសា និងសំណួរចម្លើយ (Dynamic Mode)
-const finalizePublish = async () => {
-  
-  // ═══════════════════════════════════════════════  ផ្នែកទប់ទិន្នន័យទទេ (FRONTEND VALIDATION)
-  
-  // ១. ឆែកចំណងជើងវិញ្ញាសា
-  if (!quizTitle.value || quizTitle.value.trim() === '' || quizTitle.value.trim() === 'Create Quiz') {
-    toast.error("សូមបញ្ចូលចំណងជើងវិញ្ញាសាថ្មីឱ្យបានត្រឹមត្រូវ!")
-    return
+const getAllRooms = async () => {
+  try {
+    const res = await getMyRooms(); 
+    allRooms.value = res.data.data;
+  } catch (err) {
+    console.error("មិនអាចទាញយកបញ្ជីថ្នាក់រៀនបានទេ:", err);
+    toast.error("មានបញ្ហាក្នុងការផ្ទុកទិន្នន័យថ្នាក់រៀន");
   }
+};
 
-  // ២. រុករកឆែកមើលខ្លឹមសារក្នុងសំណួរ និងចម្លើយនីមួយៗ
+const finalizePublish = async () => {
+  if (!quizTitle.value.trim()) return toast.error("សូមបញ្ចូលចំណងជើងវិញ្ញាសា!")
+  if (!selectedRoomId.value) return toast.error("សូមជ្រើសរើសថ្នាក់រៀនសិន!")
+
+  // Validate Questions
   for (let i = 0; i < questions.value.length; i++) {
     const q = questions.value[i]
-    
-    // បើប្រអប់សំណួរទទេ
-    if (!q.text || q.text.trim() === '') {
-      toast.error(`សូមបញ្ចូលខ្លឹមសារសំណួរ សម្រាប់សំណួរទី ${i + 1}!`)
-      selectQuestion(i) // រំកិលអេក្រង់ទៅរកសំណួរដែលមានបញ្ហា
-      return
-    }
-
-    // បើប្រអប់ជម្រើសចម្លើយណាមួយទំនេរទទេ
-    for (let cIdx = 0; cIdx < q.choices.length; cIdx++) {
-      if (!q.choices[cIdx].text || q.choices[cIdx].text.trim() === '') {
-        toast.error(`សូមបំពេញខ្លឹមសារចម្លើយ ចំណុច ${getKhmerAlphabet(cIdx)} ក្នុងសំណួរទី ${i + 1}!`)
-        selectQuestion(i)
-        return
-      }
-    }
-
-    // ឆែកមើលថាតើមានគ្រីសយកចម្លើយត្រឹមត្រូវ (Radio Button) ហើយឬនៅ
-    const hasCorrect = q.choices.some(c => c.isCorrect)
-    if (!hasCorrect) {
-      toast.error(`សូមជ្រើសរើសចម្លើយដែលត្រឹមត្រូវ (Correct?) មួយ សម្រាប់សំណួរទី ${i + 1}!`)
-      selectQuestion(i)
-      return
-    }
+    if (!q.text.trim()) return toast.error(`សូមបំពេញសំណួរទី ${i + 1}`)
+    if (!q.choices.some(c => c.isCorrect)) return toast.error(`សូមជ្រើសរើសចម្លើយត្រឹមត្រូវសម្រាប់សំណួរទី ${i + 1}`)
   }
 
-  // ═══════════════════════════════════════════════ ផ្នែកបាញ់បញ្ចូល API ទៅកាន់ SERVER
   try {
     isSubmitting.value = true
-    console.log("=== ចាប់ផ្តើមបាញ់បង្កើតវិញ្ញាសា ===")
-
-    const today = new Date()
-    const start_date_only = today.toISOString().split('T')[0]
     
-    const nextWeek = new Date()
-    nextWeek.setDate(today.getDate() + 7)
-    const end_date_only = nextWeek.toISOString().split('T')[0]
-
     const examPayload = {
+      room_id: parseInt(selectedRoomId.value), 
       title: quizTitle.value.trim(),
       type: 'quiz',
-      description: quizInstructions.value ? quizInstructions.value.trim() : 'គ្មានការពិពណ៌នា',
+      description: quizInstructions.value || 'គ្មានការពិពណ៌នា',
       duration: parseInt(quizDuration.value) || 60,
       total_points: totalPoints.value,
       status: 'active',
-      start_time: start_date_only, 
-      end_time: end_date_only
+      start_time: new Date().toISOString().split('T')[0],
+      end_time: new Date(Date.now() + 7 * 86400000).toISOString().split('T')[0]
     }
 
     const createRes = await createExam(examPayload)
-    const createdExam = createRes.data?.data || createRes.data
+    const examId = createRes.data?.data?.examId
 
-    if (!createdExam || !createdExam.examId) {
-      toast.error("ការបង្កើតវិញ្ញាសាបានបរាជ័យ!")
-      return
-    }
-
-    // វាយបញ្ចូលសំណួរចម្លើយម្តងមួយៗទៅតាមទម្រង់ Postman Array ផ្ទាល់
     for (const q of questions.value) {
-      const parsedOptions = q.choices.map(c => c.text.trim())
-      const correctChoiceObj = q.choices.find(c => c.isCorrect)
-      const parsedCorrectAnswer = correctChoiceObj ? correctChoiceObj.text.trim() : parsedOptions[0]
-
-      const questionPayload = {
-        exam_id: createdExam.examId,
-        question: q.text.trim(),
-        question_type: 'multiple_choice',  
-        options: parsedOptions,             
-        correct_answer: [parsedCorrectAnswer], 
-        points: parseInt(q.pts) || 5
-      }
-      
-      console.log("បាញ់សំណួរទៅកាន់ Server:", questionPayload)
-      await createQuestion(questionPayload)
+      await createQuestion({
+        exam_id: examId,
+        question: q.text,
+        question_type: 'multiple_choice',
+        options: q.choices.map(c => c.text),
+        correct_answer: [q.choices.find(c => c.isCorrect)?.text],
+        points: q.pts
+      })
     }
 
-    // បើកផ្ទាំងបង្ហាញតំណភ្ជាប់ Link ពិតប្រាកដដែលបានមកពី API
-    if (createdExam.link) {
-      generatedExamLink.value = createdExam.link 
-      showCodeModal.value = true               
-      toast.success("វិញ្ញាសាត្រូវបានដាក់ផ្សាយជោគជ័យ!")
-    } else {
-      toast.warning("បង្កើតជោគជ័យ ប៉ុន្តែរកមិនឃើញតំណភ្ជាប់ Link ពី Backend ទេ")
-    }
-
+    generatedExamLink.value = createRes.data?.data?.link
+    showCodeModal.value = true
+    toast.success("វិញ្ញាសាត្រូវបានដាក់ផ្សាយជោគជ័យ!")
   } catch (err) {
-    console.error("Error status:", err)
     toast.error("ការផ្សព្វផ្សាយវិញ្ញាសាបានបរាជ័យ!")
   } finally {
     isSubmitting.value = false
@@ -501,11 +469,18 @@ const autoGrowTextarea = (event) => {
   el.style.height = el.scrollHeight + 'px'
 }
 
-onMounted(() => {
-  if (!authStore.user) {
-    authStore.fetchUserProfile()
+onMounted(async () => {
+  try {
+    const res = await getAllRooms(); 
+    allRooms.value = res.data.data;
+  } catch (err) {
+    toast.error("មិនអាចផ្ទុកបញ្ជីថ្នាក់រៀនបានទេ");
   }
-})
+  
+  if (!authStore.user) {
+    authStore.fetchUserProfile();
+  }
+});
 </script>
 <style scoped>
 .quiz-builder-container {

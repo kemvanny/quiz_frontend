@@ -18,7 +18,6 @@ export const createPost = (roomId, data) => {return api.post(`/exams/rooms/${roo
 export const getPosts = (roomId) => {return api.get(`/exams/rooms/${roomId}/posts`);};
 export const updatePost = (postId, data) => {return api.put(`/exams/rooms/posts/${postId}`, data);};
 export const deletePost = (roomId, postId) => {return api.delete(`/exams/rooms/${roomId}/posts/${postId}`);};
-
 // ================= PROFILE =================
 export const getProfile = () => api.get('/user/profile');
 export const updateProfile = (profileData) => api.put('/user/profile', profileData);

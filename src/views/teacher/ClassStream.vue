@@ -313,7 +313,7 @@ const handleCreatePost = async () => {
     await createPost(props.roomId, {
       title: newPost.value.title,
       message: newPost.value.message,
-      exam_link: newPost.value.examLink
+      examLink: newPost.value.examLink
     })
 
     toast.success('បានបង្ហោះជោគជ័យ!')
@@ -327,6 +327,7 @@ const handleCreatePost = async () => {
     await fetchPosts()
 
   } catch (err) {
+    console.error("កំហុស:", err.response?.data)
     toast.error('មានកំហុស')
   }
 }

@@ -23,17 +23,14 @@
       <p class="mt-2 mb-0">កំពុងទាញយក...</p>
     </div>
 
-    <div v-else-if="filteredExams.length === 0" class="state-empty">
-      <i class="fas fa-folder-open empty-icon"></i>
-      <p class="mb-0">មិនមានវិញ្ញាសា</p>
-    </div>
+    <div v-else-if="allExams.length === 0" class="state-empty">
+  <i class="fas fa-folder-open empty-icon"></i>
+  <p class="mb-0">មិនមានវិញ្ញាសា</p>
+  </div>
 
     <div v-else class="exam-list">
       <div
-        class="exam-row"
-        v-for="exam in filteredExams"
-        :key="exam.id"
-        @click="viewExamDetails(exam.id)"
+        class="exam-row" v-for="exam in allExams" :key="exam.id" @click="viewExamDetails(exam.id)" 
       >
         <div class="row-icon" :class="exam.status === 'active' ? 'ic-active' : 'ic-draft'">
           <i class="fas fa-file-alt"></i>
@@ -133,7 +130,7 @@ import { ref, computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useToast } from 'vue-toastification'
 import { useAuthStore } from '@/stores/auth'
-import { getExams, updateExam, deleteExam } from '@/api/exam.api'
+import { getExams, updateExam, deleteExam, getExamsInRoom } from '@/api/exam.api'
 import { getOneRoom } from '@/api/teacher.api'
 
 const route = useRoute()
@@ -147,6 +144,9 @@ const allExams = ref([])
 const roomName = ref('កំពុងទាញយក...') 
 const loading = ref(false)
 const isProcessing = ref(false)
+
+const roomData = ref(null); 
+const exams = ref([]);     
 
 const activeFilter = ref('all')
 const statusFilter = ref('all')
@@ -168,15 +168,21 @@ const assignedExams = computed(() => {
 })
 
 const fetchRoomInformation = async () => {
-  if (!roomId) return
+  if (!props.roomId) return  
   try {
-    const res = await getOneRoom(roomId)
+    const res = await getOneRoom(props.roomId)  
     roomName.value = res.data?.data?.name || res.data?.name || 'Unknown Room'
   } catch (err) {
     roomName.value = 'មិនអាចទាញយកឈ្មោះបន្ទប់បានទេ'
   }
 }
 
+  const props = defineProps({
+    roomId: {
+      type: [String, Number],
+      required: true
+    }
+  })
 const fetchRoomData = async () => {
   try {
     loading.value = true;
@@ -194,6 +200,7 @@ const fetchRoomData = async () => {
   }
 };
 
+
 const filteredExams = computed(() => {
   if (!allExams.value) return []
   return allExams.value.filter(exam => String(exam.room_id) === String(roomId))
@@ -202,11 +209,15 @@ const filteredExams = computed(() => {
 const fetchExamsData = async () => {
   try {
     loading.value = true
-    const res = await getExams()
-    console.log("ទិន្នន័យ API ទាំងអស់:", res.data?.data); 
-    allExams.value = res.data?.data || res.data || []
+    const res = await getExamsInRoom(route.params.roomId);
+    
+    // បន្ថែមការ Log នេះ
+    console.log("URL ដែលហៅទៅ:", `/exams/teacher/rooms/${route.params.roomId}`);
+    console.log("ទិន្នន័យដែលទទួលបាន:", res.data);
+
+    allExams.value = res.data?.data || [];
   } catch (err) {
-    toast.error("មិនអាចទាញយកទិន្នន័យវិញ្ញាសាបានទេ!")
+    console.error("កំហុស API:", err);
   } finally {
     loading.value = false
   }
@@ -303,6 +314,9 @@ const confirmDeleteExam = async () => {
     examToDelete.value = null
   }
 }
+
+
+
 
 onMounted(() => {
   authStore.fetchUserProfile()
