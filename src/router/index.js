@@ -28,6 +28,7 @@ import AcceptRoom from '@/views/student/AcceptRoom.vue'
 import ForgetPassword from '@/views/auth/ForgetPassword.vue'
 import ResetPassword from '@/views/auth/ResetPassword.vue'
 import CheckEmail from '@/views/auth/CheckEmail.vue'
+import TakeExam from '@/views/student/TakeExam.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -210,6 +211,12 @@ const router = createRouter({
       meta: { title: 'Accept Class Invitation' }
     },
     {
+      path: '/take-exam/:codeExam',
+      name: 'TakeExam',
+      component: TakeExam,
+      meta: { title: 'Take Exam' }
+    },
+    {
       path: '/:pathMatch(.*)*',
       name: 'NotFound',
       component: NotFound
@@ -217,40 +224,6 @@ const router = createRouter({
 
   ]
 });
-
-// router.beforeEach((to, from) => {
-//   const isLoggedIn = !!sessionStorage.getItem('user_token');
-//   const userRoleId = sessionStorage.getItem('user_role'); 
-//   const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
-
-//   const requiredRole = to.meta.role; 
-
-//   const rolePaths = {
-//     '1': 'admin',
-//     '2': 'teacher',
-//     '3': 'student'
-//   };
-
-//   const userRoleName = rolePaths[userRoleId]; 
-
-//   if (requiresAuth && !isLoggedIn) {
-//     return { path: '/login' };
-//   }
-
-
-//   if (isLoggedIn) {
-
-//     if (to.path === '/login' && userRoleName) {
-//       return { path: `/${userRoleName}/dashboard` };
-//     }
-
-//     if (requiredRole && userRoleName !== requiredRole) {
-//       return { path: `/${userRoleName}/dashboard` };
-//     }
-//   }
-
-//   return true;
-// });
 
 router.beforeEach((to, from) => {
   const isLoggedIn = !!localStorage.getItem('user_token');
