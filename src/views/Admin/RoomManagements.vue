@@ -60,9 +60,9 @@
 
             <!-- Room Cards Grid -->
             <div v-else class="row g-4 room-grid">
-                <div v-for="room in rooms" :key="room.id" class="col-12 col-sm-6 col-lg-4 col-xl-3">
+                <div v-for="(room,index) in rooms" :key="room.id" class="col-12 col-sm-6 col-lg-4 col-xl-3">
                     <div class="room-card h-100">
-                        <div class="card-accent">
+                        <div class="card-accent" :style="getAccentColor(index)">
                             <div class="room-avatar">
                                 {{ getInitials(room.name) }}
                             </div>
@@ -148,6 +148,24 @@ const fetchRooms = async (page = 1) => {
     }
 };
 
+const pastelGradients = [
+  'linear-gradient(160deg, #dcfce7 0%, #a7f3d0 100%)', // Green
+  'linear-gradient(160deg, #e0f2f1 0%, #b2dfdb 100%)', // Teal
+  'linear-gradient(160deg, #eff6ff 0%, #bfdbfe 100%)', // Blue
+  'linear-gradient(160deg, #fdf2f8 0%, #fbcfe8 100%)', // Pink
+  'linear-gradient(160deg, #fffbeb 0%, #fde68a 100%)', // Yellow
+  'linear-gradient(160deg, #faf5ff 0%, #e9d5ff 100%)', // Purple
+  'linear-gradient(160deg, #fef2f2 0%, #fecaca 100%)', // Red/Coral
+  'linear-gradient(160deg, #fff7ed 0%, #ffedd5 100%)'  // Orange
+];
+
+const getAccentColor = (index) => {
+  // ប្រើ Modulo เพื่อให้វា Loop กลับมารੰဂแรกเมื่อ Index เกินจำนวนពណ៌
+  const gradientIndex = index % pastelGradients.length;
+  return {
+    background: pastelGradients[gradientIndex]
+  };
+};
 
 const getInitials = (name = '') => name.split(' ').slice(0, 2).map(w => w[0]?.toUpperCase() ?? '').join('');
 
@@ -271,7 +289,8 @@ onMounted(() => fetchRooms())
 }
 
 .card-accent {
-    background: linear-gradient(160deg, #dcfce7 0%, #a7f3d0 100%);
+    /* background: linear-gradient(160deg, #dcfce7 0%, #a7f3d0 100%); */
+    background: #f8fafc;
     padding: 1.1rem 1rem 1.5rem;
     position: relative;
     display: flex;
