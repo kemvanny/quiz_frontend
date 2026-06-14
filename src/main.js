@@ -41,9 +41,7 @@ app.component('BasePagination',BasePagination)
 app.component('LogoutModal',LogoutModal)
 
 app.use(createPinia())
-app.use(Toast, {
-  containerClassName: "custom-toast-container",
-});
+
 app.use(Toast, {
   position: POSITION.BOTTOM_CENTER, 
   containerClassName: "custom-toast-container",

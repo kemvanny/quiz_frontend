@@ -30,6 +30,7 @@ import AcceptRoom from '@/views/student/AcceptRoom.vue'
 import ForgetPassword from '@/views/auth/ForgetPassword.vue'
 import ResetPassword from '@/views/auth/ResetPassword.vue'
 import CheckEmail from '@/views/auth/CheckEmail.vue'
+import RoomManagements from '@/views/admin/RoomManagements.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -103,7 +104,12 @@ const router = createRouter({
           component: SystemHealth,
           meta: { title: "System Health" }
         },
-
+        {
+          path: 'room-managements',
+          name: 'RoomManagements',
+          component: RoomManagements,
+          meta: {title: "Room Managements"}
+        }
       ]
     },
     {
