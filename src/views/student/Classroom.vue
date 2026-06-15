@@ -1,64 +1,162 @@
+<script setup>
+import { ref, onMounted, computed } from 'vue';
+import { getAllRoom } from '@/api/student.api';
+const imgBaseUrl = import.meta.env.VITE_BASE_URL_FOR_IMAGE;
+
+const rooms = ref([]);
+const isLoading = ref(false);
+const errorMessage = ref('');
+
+const searchQuery = ref('');
+const activeTab = ref('All');
+
+const currentPage = ref(1);
+const itemsPerPage = ref(8);
+
+const fetchRooms = async () => {
+  isLoading.value = true;
+  errorMessage.value = '';
+  try {
+    const response = await getAllRoom();
+    if (response.data && response.data.result === true && response.data.data) {
+
+      if (Array.isArray(response.data.data.data)) {
+        rooms.value = response.data.data.data;
+      } else if (Array.isArray(response.data.data)) {
+        rooms.value = response.data.data;
+      } else {
+        rooms.value = [];
+      }
+    } else {
+      rooms.value = [];
+    }
+
+  } catch (error) {
+    errorMessage.value = "មិនអាចទាញយកទិន្នន័យបន្ទប់សិក្សាបានទេ!";
+    rooms.value = [];
+  } finally {
+    isLoading.value = false;
+  }
+};
+
+const getBannerClass = (index) => {
+  const colors = ['green', 'blue', 'amber', 'purple', 'rose', 'cyan'];
+  return colors[index % colors.length];
+};
+
+const filteredRooms = computed(() => {
+  if (!Array.isArray(rooms.value)) return [];
+
+  return rooms.value.filter(room => {
+    const roomName = (room.name || '').toLowerCase();
+    const teacherName = (room.teacher_name || '').toLowerCase();
+    const searchTarget = searchQuery.value.toLowerCase();
+    const matchesSearch = roomName.includes(searchTarget) || teacherName.includes(searchTarget);
+    return matchesSearch;
+  });
+});
+const totalPages = computed(() => {
+  return Math.ceil(filteredRooms.value.length / itemsPerPage.value) || 1;
+});
+
+const paginatedRooms = computed(() => {
+  const start = (currentPage.value - 1) * itemsPerPage.value;
+  const end = start + itemsPerPage.value;
+  return filteredRooms.value.slice(start, end);
+});
+
+const changePage = (page) => {
+  if (page >= 1 && page <= totalPages.value) {
+    currentPage.value = page;
+  }
+};
+const translateStatus = (status) => {
+  if (!status) return 'មិនច្បាស់';
+  const statusLower = status.toLowerCase().trim();
+  switch (statusLower) {
+    case 'accepted':
+      return 'បានចូលរួម';
+    case 'pending':
+      return 'កំពុងរង់ចាំ';
+    case 'rejected':
+      return 'បានបដិសេធ';
+    default:
+      return status;
+  }
+};
+
+onMounted(() => {
+  fetchRooms();
+});
+</script>
+
 <template>
-    <div>
-      <!-- Filter row -->
-      <div class="filter-row">
-        <div class="search-pill">
-          <i class="fas fa-search" style="color: var(--txt-mu); font-size: 0.85rem"></i>
-          <input type="text" placeholder="Search courses or instructors…" />
-        </div>
-        <div class="tab-pills">
-          <button class="tab-pill active">All Classes</button>
-          <button class="tab-pill">In Progress</button>
-          <button class="tab-pill">Completed</button>
-        </div>
-      </div>
-
-      <!-- Room Grid -->
-      <div class="room-grid">
-        <a href="#" class="room-card">
-          <div class="card-banner green">
-            <div class="status-chip">
-              <div class="status-dot" style="background: #10b981"></div>
-              Active
-            </div>
-            <div class="card-icon" style="
-                background: linear-gradient(135deg, var(--em), var(--em-dk));
-              ">
-              <i class="fas fa-code"></i>
-            </div>
-          </div>
-          <div class="card-body">
-            <div class="card-title">Computer Science: Java Basics</div>
-            <div class="card-instructor">
-              <img src="https://ui-avatars.com/api/?name=Hean+Liza&background=10b981&color=fff" />
-              <span>Hean Liza</span>
-            </div>
-            <div class="prog-label">
-              <span>Course Progress</span><span style="color: var(--em)">65%</span>
-            </div>
-            <div class="prog-track">
-              <div class="prog-fill" style="
-                  width: 65%;
-                  background: linear-gradient(90deg, var(--em), #34d399);
-                "></div>
-            </div>
-          </div>
-          <div class="card-footer">
-            <div class="footer-note">
-              <i class="far fa-calendar-alt" style="color: var(--em)"></i> Next
-              task due tomorrow
-            </div>
-            <i class="fas fa-arrow-right" style="color: var(--txt-mu); font-size: 0.78rem"></i>
-          </div>
-        </a>
-
+  <div>
+    <div class="filter-row">
+      <div class="search-pill">
+        <i class="fas fa-search" style="color: var(--txt-mu); font-size: 0.85rem"></i>
+        <input v-model="searchQuery" type="text" placeholder="ស្វែងរកវគ្គសិក្សា ឬគ្រូបង្រៀន..."
+          @input="currentPage = 1" />
       </div>
     </div>
+
+    <div v-if="isLoading" class="text-center py-5" style="color: var(--txt-m); font-weight: bold;">
+      <i class="fas fa-spinner fa-spin mr-2"></i> កំពុងទាញយកទិន្នន័យ...
+    </div>
+
+    <div v-else-if="errorMessage" class="text-center py-5 text-danger" style="font-weight: bold;">
+      {{ errorMessage }}
+    </div>
+
+    <div v-else-if="paginatedRooms.length === 0" class="text-center py-5"
+      style="color: var(--txt-mu); font-size: 1.1rem;">
+      មិនមានបន្ទប់សិក្សាឡើយ
+    </div>
+
+    <div v-else class="room-grid">
+      <a v-for="(room, index) in paginatedRooms" :key="room.id" href="#" class="room-card">
+        <div class="card-banner" :class="getBannerClass(index)">
+          <div class="status-chip">
+            <div class="status-dot" style="background: #10b981;"></div>
+            {{ translateStatus(room.invitation_status) }}
+          </div>
+          <div class="card-icon" style="background: linear-gradient(135deg, var(--em), var(--em-dk));">
+            <img :src="`${imgBaseUrl}${room.thumnail}`" alt=""><i class="fas fa-code"></i>
+          </div>
+        </div>
+
+        <div class="card-body">
+          <div class="card-title">{{ room.name }}</div>
+
+          <div class="card-instructor">
+            <span>បង្រៀនដោយ: {{ room.teacher_name }}</span>
+          </div>
+        </div>
+
+        <div class="card-footer">
+          <div class="footer-note">
+            <i class="far fa-calendar-alt" style="color: var(--em)"></i>
+            ចុចទីនេះដើម្បីចូលបន្ទប់សិក្សា
+          </div>
+          <i class="fas fa-arrow-right" style="color: var(--txt-mu); font-size: 0.78rem"></i>
+        </div>
+      </a>
+    </div>
+
+    <div v-if="totalPages > 1" class="pagination-container">
+      <button class="page-btn" :disabled="currentPage === 1" @click="changePage(currentPage - 1)">
+        <i class="fas fa-chevron-left"></i> ថយក្រោយ
+      </button>
+
+      <span class="page-info">ទំព័រ {{ currentPage }} នៃ {{ totalPages }}</span>
+
+      <button class="page-btn" :disabled="currentPage === totalPages" @click="changePage(currentPage + 1)">
+        បន្ទាប់ <i class="fas fa-chevron-right"></i>
+      </button>
+    </div>
+
+  </div>
 </template>
-
-<script setup>
-
-</script>
 
 <style scoped>
 *,
@@ -86,19 +184,7 @@
 body {
   font-family: "Inter", sans-serif;
   background-color: #f4f7fe;
-  background-image:
-    radial-gradient(at 0% 0%, hsla(158, 76%, 76%, 0.6) 0, transparent 50%),
-    radial-gradient(at 100% 100%, hsla(209, 43%, 80%, 0.6) 0, transparent 50%);
-  height: 100vh;
-  overflow: hidden;
   color: var(--txt);
-}
-
-/* ── WORKSPACE ── */
-.workspace {
-  flex: 1;
-  overflow-y: auto;
-  padding: 36px 40px;
 }
 
 /* ── FILTER ROW ── */
@@ -160,10 +246,6 @@ body {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 }
 
-.tab-pill:hover:not(.active) {
-  color: var(--txt);
-}
-
 /* ── ROOM GRID ── */
 .room-grid {
   display: grid;
@@ -185,6 +267,7 @@ body {
   transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: var(--sh-sm);
   cursor: pointer;
+  text-decoration: none;
 }
 
 .room-card:hover {
@@ -193,7 +276,6 @@ body {
   box-shadow: var(--sh-hover);
 }
 
-/* Banner */
 .card-banner {
   height: 110px;
   position: relative;
@@ -246,7 +328,6 @@ body {
   border-radius: 50%;
 }
 
-/* Floating icon */
 .card-icon {
   position: absolute;
   bottom: -22px;
@@ -260,15 +341,9 @@ body {
   font-size: 1.5rem;
   border: 4px solid #fff;
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
-  transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
   color: #fff;
 }
 
-.room-card:hover .card-icon {
-  transform: scale(1.08) rotate(6deg);
-}
-
-/* Body */
 .room-card .card-body {
   padding: 42px 26px 20px;
   flex: 1;
@@ -280,14 +355,8 @@ body {
   font-weight: 700;
   color: var(--txt);
   margin-bottom: 6px;
-  transition: color 0.2s;
   line-height: 1.3;
   min-height: 2.6em;
-  overflow-wrap: anywhere;
-}
-
-.room-card:hover .card-title {
-  color: var(--em-dk);
 }
 
 .room-card .card-instructor {
@@ -310,7 +379,6 @@ body {
   font-weight: 600;
 }
 
-/* Progress */
 .room-card .prog-label {
   display: flex;
   justify-content: space-between;
@@ -330,10 +398,8 @@ body {
 .room-card .prog-fill {
   height: 100%;
   border-radius: 99px;
-  transition: width 1s ease-out;
 }
 
-/* Footer */
 .room-card .card-footer {
   padding: 14px 26px;
   border-top: 1px solid var(--bdr);
@@ -341,8 +407,6 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 10px;
-  margin-top: auto;
 }
 
 .room-card .footer-note {
@@ -352,141 +416,52 @@ body {
   display: flex;
   align-items: center;
   gap: 6px;
-  min-width: 0;
-  line-height: 1.3;
 }
 
-.room-card .footer-note i {
-  font-size: 0.75rem;
-  flex-shrink: 0;
-}
-
-/* Modal */
-.modal-wrap {
-  position: fixed;
-  inset: 0;
-  z-index: 1000;
-  display: none;
+/* ── PAGINATION STYLE ── */
+.pagination-container {
+  display: flex;
   align-items: center;
   justify-content: center;
-  padding: 24px;
-  background: rgba(15, 23, 42, 0.42);
+  gap: 16px;
+  margin-top: 35px;
 }
 
-.modal-wrap.open {
-  display: flex;
-}
-
-.modal-box {
-  width: min(380px, 100%);
-  background: var(--surf);
-  border: 1px solid var(--bdr);
-  border-radius: 18px;
-  padding: 28px;
-  box-shadow: 0 22px 60px rgba(15, 23, 42, 0.18);
-}
-
-.modal-title {
-  font-size: 1.05rem;
-  font-weight: 800;
-  color: var(--txt);
-  margin-bottom: 4px;
-}
-
-.modal-sub {
-  font-size: 0.83rem;
-  font-weight: 600;
-  color: var(--txt-mu);
-  line-height: 1.5;
-  margin-bottom: 20px;
-}
-
-.modal-label {
-  display: block;
-  font-size: 0.72rem;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  color: var(--txt-m);
-  margin-bottom: 8px;
-}
-
-.modal-input {
-  width: 100%;
-  border: 1px solid var(--bdr);
-  border-radius: 12px;
-  background: #f8fafc;
-  color: var(--txt);
-  font: inherit;
-  font-size: 0.95rem;
-  font-weight: 700;
-  letter-spacing: 1.5px;
-  padding: 12px 14px;
-  text-transform: uppercase;
-  outline: none;
-  transition: 0.16s;
-}
-
-.modal-input:focus {
-  border-color: var(--em);
-  background: #fff;
-  box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.12);
-}
-
-.modal-input.invalid {
-  border-color: #ef4444;
-}
-
-.modal-actions {
-  display: grid;
-  gap: 10px;
-  margin-top: 18px;
-}
-
-.modal-btn {
+.page-btn {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  gap: 8px;
+  gap: 6px;
+  padding: 8px 16px;
   border: 1px solid var(--bdr);
-  border-radius: 12px;
+  border-radius: 10px;
   background: #fff;
-  color: var(--txt-mu);
+  color: var(--txt-m);
+  font-size: 0.83rem;
+  font-weight: 700;
   cursor: pointer;
-  font: inherit;
-  font-size: 0.9rem;
-  font-weight: 800;
-  padding: 11px 14px;
-  transition: 0.16s;
 }
 
-.modal-btn:hover {
-  background: #f8fafc;
-  border-color: #cbd5e1;
+.page-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
-.modal-btn.primary {
-  background: var(--em);
-  border-color: var(--em);
-  color: #fff;
+.page-info {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--txt-m);
 }
 
-.modal-btn.primary:hover {
-  background: var(--em-dk);
-  border-color: var(--em-dk);
+.text-center {
+  text-align: center;
 }
 
-/* Scrollbar */
-::-webkit-scrollbar {
-  width: 5px;
+.py-5 {
+  padding-top: 3rem;
+  padding-bottom: 3rem;
 }
 
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #e2e8f0;
-  border-radius: 99px;
+.text-danger {
+  color: #ef4444;
 }
 </style>
