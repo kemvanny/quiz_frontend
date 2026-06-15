@@ -2,20 +2,14 @@ import api from "./axiosInstance";
 
 
 export const createExam = (payload) => { return api.post('/exams/create', payload); };
-
 export const updateExam = (id, data) => {return api.put(`/exams/update/${id}`, data);};
-
 export const deleteExam = (id) => { return api.delete(`/exams/${id}`); };
-
 export const getExams = () => { return api.get('/exams/getAll'); };
-
 export const createQuestion = (payload) => { return api.post('/exams/question/create', payload); };
-
 export const getQuestionsForTeacher = (examId) => { return api.get(`/exams/question/teacher/${examId}`); };
-
 export const updateQuestion = (id, data) => {  return api.put(`/exams/question/update/${id}`, data);};
-
 export const deleteQuestion = (id) => {return api.delete(`/exams/question/delete/${id}`); };
-  
 export const joinExam = (examCode) => { return api.get(`/exams/join/${encodeURIComponent(examCode)}`); };
+export const getExamsInRoom = (roomId) => api.get(`/exams/teacher/rooms/${roomId}`);
+
 

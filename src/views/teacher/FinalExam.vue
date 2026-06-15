@@ -409,7 +409,7 @@ function removeChoice(idx) {
   if (currentQ.value.correctChoice >= currentQ.value.choices.length) currentQ.value.correctChoice = 0
 }
 
-function updateSummary() {} // reactivity handles it
+function updateSummary() {} 
 
 // ── Modals ──
 const showPublishModal = ref(false)
