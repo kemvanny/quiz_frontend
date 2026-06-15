@@ -188,10 +188,10 @@ const fetchRoomData = async () => {
     loading.value = true;
     const response = await getOneRoom(props.roomId);
     
-    // បើសិនក្នុង response មាន list exams ស្រាប់
+    // if in response also have list exam
     roomData.value = response.data.data;
     
-    // បង្ហាញ exams ក្នុង UI
+    //show in ui exam
     exams.value = roomData.value.exams || []; 
   } catch (error) {
     console.error("Error:", error);
@@ -211,7 +211,6 @@ const fetchExamsData = async () => {
     loading.value = true
     const res = await getExamsInRoom(route.params.roomId);
     
-    // បន្ថែមការ Log នេះ
     console.log("URL ដែលហៅទៅ:", `/exams/teacher/rooms/${route.params.roomId}`);
     console.log("ទិន្នន័យដែលទទួលបាន:", res.data);
 
@@ -242,7 +241,7 @@ const submitUpdateExam = async () => {
   try {
     isProcessing.value = true
     
-    // រៀបចំកាលបរិច្ឆេទស្វ័យប្រវត្ត (YYYY-MM-DD H:mm) 
+    // autometic (YYYY-MM-DD H:mm) 
     const today = new Date()
     const year = today.getFullYear()
     const month = String(today.getMonth() + 1).padStart(2, '0')
@@ -269,7 +268,7 @@ const submitUpdateExam = async () => {
 
     console.log("Payload ដែលរុញទៅ Update លើ Server:", fullUpdatePayload)
 
-    // ហៅទៅកាន់ API (ទម្រង់ URL នឹងរត់ទៅកាន់ /api/exams/update/:id)
+    // call tv API  /api/exams/update/:id
     await updateExam(selectedExamId.value, fullUpdatePayload)
     
     toast.success("ព័ត៌មានវិញ្ញាសាត្រូវបានកែប្រែដោយជោគជ័យ!")
