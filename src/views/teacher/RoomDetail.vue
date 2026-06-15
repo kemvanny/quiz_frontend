@@ -23,17 +23,14 @@
       <p class="mt-2 mb-0">កំពុងទាញយក...</p>
     </div>
 
-    <div v-else-if="filteredExams.length === 0" class="state-empty">
-      <i class="fas fa-folder-open empty-icon"></i>
-      <p class="mb-0">មិនមានវិញ្ញាសា</p>
-    </div>
+    <div v-else-if="allExams.length === 0" class="state-empty">
+  <i class="fas fa-folder-open empty-icon"></i>
+  <p class="mb-0">មិនមានវិញ្ញាសា</p>
+  </div>
 
     <div v-else class="exam-list">
       <div
-        class="exam-row"
-        v-for="exam in filteredExams"
-        :key="exam.id"
-        @click="viewExamDetails(exam.id)"
+        class="exam-row" v-for="exam in allExams" :key="exam.id" @click="viewExamDetails(exam.id)" 
       >
         <div class="row-icon" :class="exam.status === 'active' ? 'ic-active' : 'ic-draft'">
           <i class="fas fa-file-alt"></i>
@@ -133,7 +130,7 @@ import { ref, computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useToast } from 'vue-toastification'
 import { useAuthStore } from '@/stores/auth'
-import { getExams, updateExam, deleteExam } from '@/api/exam.api'
+import { getExams, updateExam, deleteExam, getExamsInRoom } from '@/api/exam.api'
 import { getOneRoom } from '@/api/teacher.api'
 
 const route = useRoute()
@@ -147,6 +144,9 @@ const allExams = ref([])
 const roomName = ref('កំពុងទាញយក...') 
 const loading = ref(false)
 const isProcessing = ref(false)
+
+const roomData = ref(null); 
+const exams = ref([]);     
 
 const activeFilter = ref('all')
 const statusFilter = ref('all')
@@ -168,24 +168,30 @@ const assignedExams = computed(() => {
 })
 
 const fetchRoomInformation = async () => {
-  if (!roomId) return
+  if (!props.roomId) return  
   try {
-    const res = await getOneRoom(roomId)
+    const res = await getOneRoom(props.roomId)  
     roomName.value = res.data?.data?.name || res.data?.name || 'Unknown Room'
   } catch (err) {
     roomName.value = 'មិនអាចទាញយកឈ្មោះបន្ទប់បានទេ'
   }
 }
 
+  const props = defineProps({
+    roomId: {
+      type: [String, Number],
+      required: true
+    }
+  })
 const fetchRoomData = async () => {
   try {
     loading.value = true;
     const response = await getOneRoom(props.roomId);
     
-    // បើសិនក្នុង response មាន list exams ស្រាប់
+    // if in response also have list exam
     roomData.value = response.data.data;
     
-    // បង្ហាញ exams ក្នុង UI
+    //show in ui exam
     exams.value = roomData.value.exams || []; 
   } catch (error) {
     console.error("Error:", error);
@@ -193,6 +199,7 @@ const fetchRoomData = async () => {
     loading.value = false;
   }
 };
+
 
 const filteredExams = computed(() => {
   if (!allExams.value) return []
@@ -202,11 +209,14 @@ const filteredExams = computed(() => {
 const fetchExamsData = async () => {
   try {
     loading.value = true
-    const res = await getExams()
-    console.log("ទិន្នន័យ API ទាំងអស់:", res.data?.data); 
-    allExams.value = res.data?.data || res.data || []
+    const res = await getExamsInRoom(route.params.roomId);
+    
+    console.log("URL ដែលហៅទៅ:", `/exams/teacher/rooms/${route.params.roomId}`);
+    console.log("ទិន្នន័យដែលទទួលបាន:", res.data);
+
+    allExams.value = res.data?.data || [];
   } catch (err) {
-    toast.error("មិនអាចទាញយកទិន្នន័យវិញ្ញាសាបានទេ!")
+    console.error("កំហុស API:", err);
   } finally {
     loading.value = false
   }
@@ -231,7 +241,7 @@ const submitUpdateExam = async () => {
   try {
     isProcessing.value = true
     
-    // រៀបចំកាលបរិច្ឆេទស្វ័យប្រវត្ត (YYYY-MM-DD H:mm) 
+    // autometic (YYYY-MM-DD H:mm) 
     const today = new Date()
     const year = today.getFullYear()
     const month = String(today.getMonth() + 1).padStart(2, '0')
@@ -258,7 +268,7 @@ const submitUpdateExam = async () => {
 
     console.log("Payload ដែលរុញទៅ Update លើ Server:", fullUpdatePayload)
 
-    // ហៅទៅកាន់ API (ទម្រង់ URL នឹងរត់ទៅកាន់ /api/exams/update/:id)
+    // call tv API  /api/exams/update/:id
     await updateExam(selectedExamId.value, fullUpdatePayload)
     
     toast.success("ព័ត៌មានវិញ្ញាសាត្រូវបានកែប្រែដោយជោគជ័យ!")
@@ -303,6 +313,9 @@ const confirmDeleteExam = async () => {
     examToDelete.value = null
   }
 }
+
+
+
 
 onMounted(() => {
   authStore.fetchUserProfile()
