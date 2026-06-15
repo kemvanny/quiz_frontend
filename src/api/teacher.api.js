@@ -12,6 +12,13 @@ export const getRoomInvitations = (roomId) => api.get(`/teacher/rooms/${roomId}/
 export const getOneRoom = (roomId) => api.get(`/teacher/rooms/${roomId}`);
 export const updateRoom = (roomId, roomData) => api.put(`/teacher/rooms/${roomId}`, roomData);
 export const deleteRoomApi = (roomId) => api.delete(`/teacher/rooms/${roomId}`);
+export const removeStudentFromRoom = (roomId, studentId) => {return api.delete(`/teacher/rooms/${roomId}/students/${studentId}`);};
+
+// ================= ClassStream =================
+export const createPost = (roomId, data) => {return api.post(`/exams/rooms/${roomId}/posts`, data);};
+export const getPosts = (roomId) => {return api.get(`/exams/rooms/${roomId}/posts`);};
+export const updatePost = (postId, data) => {return api.put(`/exams/rooms/posts/${postId}`, data);};
+export const deletePost = (roomId, postId) => {return api.delete(`/exams/rooms/${roomId}/posts/${postId}`);};
 
 // ================= PROFILE =================
 export const getProfile = () => api.get('/user/profile');

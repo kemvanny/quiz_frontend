@@ -8,7 +8,6 @@
     @close="$emit('close')"
   >
     <div class="glass-body p-4 text-center">
-      <!-- Icon ព្រមានពណ៌ក្រហមបែបលេចធ្លោ -->
       <div class="d-flex align-items-center justify-content-center mx-auto mb-3 rounded-circle bg-danger-light" style="width: 60px; height: 60px;">
         <i class="fas fa-exclamation-triangle text-danger fs-3"></i>
       </div>

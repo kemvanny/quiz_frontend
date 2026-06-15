@@ -38,3 +38,9 @@ export const getSearchUsers = (query) => api.get(`/admin/users?search=${query}`)
 export const getAllSubmissions = (params) => api.get('/admin/dashboard/recentSubmissions', { params });
 
 export const ChangeStatusUser = (id, status) => api.put(`/admin/changeUserStatus/${id}`, { status });
+
+export const getQuizDetail = (id) => api.get(`/admin/quizzes/${id}`);
+
+export const getTotalUser = () => api.get('admin/examDashboardTotal');
+
+export const getRoom = (params) => {return api.get('/admin/rooms', { params });};

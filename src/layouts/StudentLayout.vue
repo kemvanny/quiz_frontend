@@ -93,7 +93,7 @@ const activeNavbar = computed(() => {
 });
 const handleLogout = () => {
   isLogoutModalOpen.value = false
-  sessionStorage.clear()
+  localStorage.clear()
   router.push('/login')
 }
 

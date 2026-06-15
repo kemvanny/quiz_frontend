@@ -22,10 +22,10 @@ onMounted(async () => {
         const response = await joinRoom(invitationId, token);
         if (response.data.success) {
             isSuccess.value = true;
-            statusMessage.value = response.data.message || "អ្នកបានចូលរួមបន្ទប់សិក្សាដោយជោគជ័យ!";
+            statusMessage.value = response.data.message = "អ្នកបានចូលរួមបន្ទប់សិក្សាដោយជោគជ័យ!";
         } else {
             isSuccess.value = false;
-            statusMessage.value = response.data.error || "ការចូលរួមបន្ទប់សិក្សាត្រូវបានបដិសេធ។";
+            statusMessage.value = response.data.error = "ការចូលរួមបន្ទប់សិក្សាត្រូវបានបដិសេធ។";
         }
     } catch (error) {
         isSuccess.value = false;
@@ -38,10 +38,9 @@ onMounted(async () => {
 
 <template>
     <div class="shell">
-        <!-- ── TOPBAR NAV ───────────────────────────────────────────── -->
         <header class="topbar">
-            <div class="logo-mark"><i class="bi bi-patch-question-fill"></i></div>
-            <span class="logo-text">Quiz<span>Pralang</span></span>
+            <div class="logo-mark"><i class="fa-solid fa-graduation-cap"></i></div>
+            <span class="logo-text">Prolang<span>Student</span></span>
             <div class="topbar-right">
                 <router-link :to="{ name: 'StudentDashboard' }" class="nav-pill">
                     <i class="bi bi-grid-1x2"></i> Dashboard
@@ -124,7 +123,7 @@ onMounted(async () => {
 
         <!-- FOOTER -->
         <footer>
-            <p>Quiz Pralang Learning Platform &nbsp;·&nbsp; Classroom Invitation &nbsp;·&nbsp; 2026</p>
+            <p>Pralang Learning Platform &nbsp;·&nbsp; Classroom Invitation &nbsp;·&nbsp; 2026</p>
         </footer>
     </div>
 </template>

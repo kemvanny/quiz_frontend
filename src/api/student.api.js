@@ -10,22 +10,36 @@ export const joinRoom = (id, token) => {
   });
 };
 
-// Get All Assignments in Room
-export const getAssignments = (roomId) => {
-  return api.get(`/student/rooms/${roomId}/assignments`);
+// Get All Room
+export const getAllRoom = () => {
+  return api.get(`/student/rooms`);
 };
 
-// Get Quiz Details
-export const getQuizDetails = (quizId) => {
-  return api.get(`/student/quizzes/${quizId}`);
+export const getAllStudentExamResult = () => {
+  return api.get(`/exams/student/results`);
 };
 
-// Submit Quiz Answers
-export const submitQuiz = (quizId, answers) => {
-  return api.post(`/student/quizzes/${quizId}/submit`, { answers });
-};
+export const examApi = {
+    checkExamCode: async (examCode) => {
+        const response = await api.get(`${BASE_URL}/exams/join/${examCode}`);
+        return response.data; 
+    },
+    getRooms: async () => {
+        const response = await api.get(`${BASE_URL}/student/rooms`);
+        return response.data; 
+    },
+    startExam: async (studentData) => {
+        const response = await api.post(`${BASE_URL}/exams/startExam`, studentData);
+        return response.data; 
+    },
 
-// Get Results
-export const getMyResults = () => {
-  return api.get("/student/results");
+    getQuestions: async (examId) => {
+        const response = await api.get(`${BASE_URL}/exams/question/student/${examId}`);
+        return response.data;
+    },
+
+    submitExam: async (submissionData) => {
+        const response = await api.post(`${BASE_URL}/exams/submitExam`, submissionData);
+        return response.data;
+    }
 };
