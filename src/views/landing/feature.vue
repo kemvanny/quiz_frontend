@@ -388,72 +388,13 @@
   </main>
 
   <!-- បាតទំព័រ -->
-  <footer class="site-footer">
-    <div class="footer-bg"></div>
+  <Footer />
 
-    <div class="footer-inner">
-      <div class="footer-top">
-        <div class="footer-brand">
-          <div class="footer-logo">
-            <div class="footer-logo-icon">EE</div>
-            <div>
-              <h2>Prolong</h2>
-              <p>វេទិកាប្រឡងអនឡាញសម័យថ្មី</p>
-            </div>
-          </div>
-          <p>
-            ជួយសាលារៀន គ្រូ និងសិស្សគ្រប់គ្រងការប្រឡងឱ្យលឿនជាងមុន ឆ្លាតជាងមុន
-            និងមានសុវត្ថិភាពជាងមុន។
-          </p>
-        </div>
-
-        <div class="footer-links">
-          <div>
-            <h3>ផលិតផល</h3>
-            <ul>
-              <li><a href="#features">មុខងារ</a></li>
-              <li><a href="#workflow">លំហូរការងារ</a></li>
-              <li><a href="#teachers">គ្រូ</a></li>
-              <li><a href="#students">សិស្ស</a></li>
-            </ul>
-          </div>
-
-          <div>
-            <h3>ក្រុមហ៊ុន</h3>
-            <ul>
-              <li><a href="#about">អំពីយើង</a></li>
-              <li><a href="#">ការងារ</a></li>
-              <li><a href="#contact">ទំនាក់ទំនង</a></li>
-              <li><a href="#">ជំនួយ</a></li>
-            </ul>
-          </div>
-
-          <div>
-            <h3>ធនធាន</h3>
-            <ul>
-              <li><a href="#">ឯកសារ</a></li>
-              <li><a href="#">គោលការណ៍ឯកជនភាព</a></li>
-              <li><a href="#">លក្ខខណ្ឌប្រើប្រាស់</a></li>
-              <li><a href="#">មជ្ឈមណ្ឌលជំនួយ</a></li>
-            </ul>
-          </div>
-        </div>
-      </div>
-
-      <div class="footer-bottom">
-        <p>© 2026 Prolong. រក្សាសិទ្ធិគ្រប់យ៉ាង។</p>
-        <div class="footer-bottom-links">
-          <a href="#">ឯកជនភាព</a>
-          <a href="#">លក្ខខណ្ឌ</a>
-          <a href="#">ខូគី</a>
-        </div>
-      </div>
-    </div>
-  </footer>
 </template>
 
 <script setup>
   import Navbar from "@/components/layout/navbar/landing/LandingPageNavebar.vue";
+  import Footer from "@/components/layout/navbar/landing/FooterLandingPage.vue";
 </script>
 
 <style scoped>
@@ -499,13 +440,6 @@
 }
 
 /* ===== GLOBAL ===== */
-body {
-  background-color: var(--brand-50);
-  font-family: var(--font-sans);
-  color: var(--brand-dark);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
 
 a {
   text-decoration: none;
@@ -537,108 +471,11 @@ ul {
   }
 }
 
-/* ===== HEADER ===== */
-.site-header {
-  position: sticky;
-  top: 0;
-  z-index: 50;
-  border-bottom: 1px solid rgba(65, 150, 79, 0.1);
-  background-color: rgba(244, 250, 246, 0.9);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-}
-
-.header-inner {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  min-height: 72px;
-  max-width: 72rem;
-  margin: 0 auto;
-  padding: 0 1rem;
-}
-
-@media (min-width: 640px) {
-  .header-inner {
-    padding: 0 1.5rem;
-  }
-}
-
-.logo {
-  display: flex;
-  align-items: center;
-  gap: 0.625rem;
-  font-weight: 800;
-  color: var(--brand-500);
-}
-
-.logo-icon {
-  display: grid;
-  place-items: center;
-  width: 2.25rem;
-  height: 2.25rem;
-  border-radius: 0.75rem;
-  background-color: #74c878;
-  color: white;
-  font-size: 0.875rem;
-  box-shadow: 0 4px 6px rgba(67, 165, 87, 0.25);
-}
-
-.logo-name {
-  font-size: 1.125rem;
-  color: var(--brand-dark);
-}
-
-.main-nav {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: #536173;
-}
-
-@media (min-width: 640px) {
-  .main-nav {
-    gap: 1.5rem;
-    font-size: 0.875rem;
-  }
-}
-
-.main-nav a {
-  transition: color 0.15s;
-}
-.main-nav a:hover {
-  color: var(--brand-500);
-}
-.main-nav a.active {
-  color: var(--brand-500);
-}
-
-.btn-header {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 42px;
-  padding: 0 1.25rem;
-  border-radius: 0.75rem;
-  background-color: var(--brand-500);
-  color: white;
-  font-size: 0.875rem;
-  font-weight: 700;
-  box-shadow: 0 4px 6px rgba(67, 165, 87, 0.3);
-  transition: background-color 0.15s;
-}
-
-.btn-header:hover {
-  background-color: var(--brand-600);
-}
-
 /* ===== HERO SECTION ===== */
 .hero {
   position: relative;
   overflow: hidden;
+  padding-top: 4rem;
   border-bottom: 1px solid rgba(65, 150, 79, 0.1);
   background: linear-gradient(135deg, #f4fff6, white, #e8f7eb);
 }
@@ -1388,169 +1225,5 @@ ul {
 
 .btn-cta:hover {
   transform: translateY(-4px);
-}
-
-/* ===== FOOTER ===== */
-.site-footer {
-  position: relative;
-  overflow: hidden;
-  background: linear-gradient(135deg, #0f172a, #111827, #1e293b);
-  padding: 5rem 0;
-  color: white;
-}
-
-.footer-bg {
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(
-      circle at top left,
-      rgba(67, 165, 87, 0.18),
-      transparent 35%
-    ),
-    radial-gradient(
-      circle at bottom right,
-      rgba(91, 130, 237, 0.18),
-      transparent 35%
-    ),
-    radial-gradient(
-      circle at center,
-      rgba(139, 110, 232, 0.12),
-      transparent 40%
-    );
-  pointer-events: none;
-}
-
-.footer-inner {
-  position: relative;
-  max-width: 72rem;
-  margin: 0 auto;
-  padding: 0 1rem;
-}
-
-@media (min-width: 640px) {
-  .footer-inner {
-    padding: 0 1.5rem;
-  }
-}
-
-.footer-top {
-  display: flex;
-  flex-direction: column;
-  gap: 2.5rem;
-  padding-bottom: 2.5rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-@media (min-width: 1024px) {
-  .footer-top {
-    flex-direction: row;
-    align-items: flex-start;
-    justify-content: space-between;
-  }
-}
-
-.footer-brand {
-  max-width: 28rem;
-}
-
-.footer-logo {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-.footer-logo-icon {
-  display: grid;
-  place-items: center;
-  width: 3rem;
-  height: 3rem;
-  border-radius: 1rem;
-  background: linear-gradient(135deg, #43a557, #74c878);
-  font-weight: 900;
-  color: white;
-  box-shadow: 0 10px 15px rgba(67, 165, 87, 0.25);
-}
-
-.footer-logo h2 {
-  font-size: 1.5rem;
-  font-weight: 900;
-}
-
-.footer-logo p {
-  font-size: 0.875rem;
-  color: rgba(255, 255, 255, 0.6);
-}
-
-.footer-brand > p {
-  margin-top: 1.25rem;
-  line-height: 1.7;
-  color: rgba(255, 255, 255, 0.7);
-}
-
-.footer-links {
-  display: grid;
-  gap: 2.5rem;
-  grid-template-columns: repeat(3, 1fr);
-}
-
-@media (max-width: 639px) {
-  .footer-links {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-.footer-links h3 {
-  font-size: 0.875rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: white;
-}
-
-.footer-links ul {
-  margin-top: 1.25rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-  font-size: 0.875rem;
-  color: rgba(255, 255, 255, 0.7);
-}
-
-.footer-links a {
-  transition: color 0.15s;
-}
-.footer-links a:hover {
-  color: #43a557;
-}
-
-.footer-bottom {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  padding-top: 2rem;
-  font-size: 0.875rem;
-  color: rgba(255, 255, 255, 0.5);
-}
-
-@media (min-width: 640px) {
-  .footer-bottom {
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-  }
-}
-
-.footer-bottom-links {
-  display: flex;
-  align-items: center;
-  gap: 1.25rem;
-}
-
-.footer-bottom-links a {
-  transition: color 0.15s;
-}
-.footer-bottom-links a:hover {
-  color: white;
 }
 </style>
