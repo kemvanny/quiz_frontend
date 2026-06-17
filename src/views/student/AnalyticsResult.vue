@@ -110,7 +110,7 @@
                   <th style="min-width: 240px;">មតិកែលម្អ</th>
                   <th style="min-width: 160px;">ពិន្ទុ</th>
                   <th class="text-center">និទ្ទេស</th>
-                  <th class="text-end pe-4">សកម្មភាព</th>
+                  <!-- <th class="text-end pe-4">សកម្មភាព</th> -->
                 </tr>
               </thead>
               <tbody>
@@ -154,11 +154,11 @@
                       {{ result.grade || 'F' }}
                     </span>
                   </td>
-                  <td class="text-end pe-4">
+                  <!-- <td class="text-end pe-4">
                     <button class="view-btn" @click="viewCode(result.submission_id)">
                       ពិនិត្យ <i class="fas fa-arrow-right ms-1"></i>
                     </button>
-                  </td>
+                  </td> -->
 
                 </tr>
               </tbody>
