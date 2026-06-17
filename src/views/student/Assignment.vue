@@ -1,3 +1,77 @@
+<template>
+    <div style="max-width: 860px; ">
+      <!-- Tabs -->
+      <div class="tab-row">
+        <div class="tab-pills">
+          <button class="tab-pill">ការប្រឡងទាំងអស់</button>
+          <button class="tab-pill active">
+           ត្រូវធ្វើ
+            <span class="count-badge" style="background: #fef2f2; color: #dc2626">{{ todoCount }}</span>
+          </button>
+          <button class="tab-pill">បានបញ្ចប់</button>
+          
+        </div>
+        <div style="font-size: 0.8rem; color: var(--txt-mu); font-weight: 600">
+          <i class="fas fa-calendar-week me-1"></i> សប្តាហ៍ទី១៨ ខែឧសភា ឆ្នាំ២០២៦
+        </div>
+      </div>
+      <div class="section-label">បន្ទាន់ — កំណត់ត្រឹមថ្ងៃនេះ</div>
+      <div v-if="isExamLoading" class="task-card task-card-static type-exam">
+        <div class="task-icon" style="background: #fef2f2; color: #ef4444">
+          <i class="fas fa-circle-notch fa-spin"></i>
+        </div>
+        <div class="flex-grow-1">
+          <div class="task-meta">
+            <span class="meta-chip" style="background: #fef2f2; color: #dc2626"><i class="fas fa-cloud-download-alt"></i> កំពុងផ្ទុក</span>
+          </div>
+          <div class="task-title">កំពុងស្វែងរកការប្រឡង...</div>
+        </div>
+      </div>
+      <div v-else-if="examList.length > 0">
+        <a v-for="exam in examList" :key="exam.examId" href="#" class="task-card type-exam mb-3" @click.prevent>
+          <div class="task-icon" style="background: #ecfdf5; color:#059669">
+            <i class="fas fa-bolt"></i>
+          </div>
+          <div class="flex-grow-1">
+            <div class="task-meta">
+              <span class="meta-chip" style="background: #ecfdf5; color: #059669"><i class="fas fa-check-circle"></i> រួចរាល់</span>
+              <span class="meta-chip" style="background: #fff7ed; color: #c2410c"><i class="fas fa-stopwatch"></i> {{ exam.dueText }}</span>
+            </div>
+            <div class="task-title">{{ exam.title }}</div>
+            <div class="task-details">
+              <span class="task-detail" style="color:#065f46; font-weight: 400">
+                <i class="fas fa-clipboard-check"></i> ការប្រឡងរួចរាល់ អ្នកអាចចាប់ផ្តើមបានឥឡូវនេះ
+              </span>
+            </div>
+          </div>
+          <button class="task-cta cta-green" type="button" @click.stop.prevent="startExam(exam)">
+           ចាប់ផ្តើមប្រឡង
+          </button>
+        </a>
+      </div>
+      <div v-else class="task-card task-card-static type-exam">
+        <div class="task-icon" style="background: #fef2f2; color: #ef4444">
+          <i class="fas fa-triangle-exclamation"></i>
+        </div>
+        <div class="flex-grow-1">
+          <div class="task-meta">
+            <span class="meta-chip" style="background: #fef2f2; color: #dc2626"><i class="fas fa-circle-exclamation"></i> Unable to Load</span>
+          </div>
+          <div class="task-title">គ្មានការប្រឡងដែលត្រូវធ្វើទេ</div>
+          <div class="task-details">
+            <span class="task-detail" style="color: #dc2626; font-weight: 400">
+              <i class="fas fa-info-circle"></i> {{ examError || "ថ្ងៃនេះអ្នកគ្មានការប្រឡងដែលត្រូវធ្វើនោះទេ" }}
+            </span>
+          </div>
+        </div>
+        <button class="task-cta cta-red" type="button" @click="fetchStudentExams">
+          ព្យាយាមម្តងទៀត
+        </button>
+      </div>
+
+    </div>
+</template>
+
 <script setup>
 import { computed, onMounted, ref } from "vue";
 import { getUpcomingDeadlines } from "@/api/student.api"; 
@@ -39,81 +113,7 @@ function startExam(exam) {
 
 onMounted(fetchStudentExams);
 </script>
-<template>
-  <div>
-    <div style="max-width: 860px; margin: 0 auto">
-      <!-- Tabs -->
-      <div class="tab-row">
-        <div class="tab-pills">
-          <button class="tab-pill">All Exams</button>
-          <button class="tab-pill active">
-            To-Do
-            <span class="count-badge" style="background: #fef2f2; color: #dc2626">{{ todoCount }}</span>
-          </button>
-          <button class="tab-pill">Completed</button>
-          
-        </div>
-        <div style="font-size: 0.8rem; color: var(--txt-mu); font-weight: 600">
-          <i class="fas fa-calendar-week me-1"></i> Week of May 18, 2026
-        </div>
-      </div>
-      <div class="section-label">URGENT — DUE TODAY</div>
-      <div v-if="isExamLoading" class="task-card task-card-static type-exam">
-        <div class="task-icon" style="background: #fef2f2; color: #ef4444">
-          <i class="fas fa-circle-notch fa-spin"></i>
-        </div>
-        <div class="flex-grow-1">
-          <div class="task-meta">
-            <span class="meta-chip" style="background: #fef2f2; color: #dc2626"><i class="fas fa-cloud-download-alt"></i> Loading Exams</span>
-          </div>
-          <div class="task-title">Fetching upcoming exams...</div>
-        </div>
-      </div>
-      <div v-else-if="examList.length > 0">
-        <a v-for="exam in examList" :key="exam.examId" href="#" class="task-card type-exam mb-3" @click.prevent>
-          <div class="task-icon" style="background: #fef2f2; color: #ef4444">
-            <i class="fas fa-bolt"></i>
-          </div>
-          <div class="flex-grow-1">
-            <div class="task-meta">
-              <span class="meta-chip" style="background: #fef2f2; color: #dc2626"><i class="fas fa-check-circle"></i> Ready</span>
-              <span class="meta-chip" style="background: var(--em-soft); color: var(--em-dk)"><i class="fas fa-stopwatch"></i> {{ exam.dueText }}</span>
-            </div>
-            <div class="task-title">{{ exam.title }}</div>
-            <div class="task-details">
-              <span class="task-detail" style="color: #dc2626; font-weight: 400">
-                <i class="fas fa-clipboard-check"></i> Exam is ready. You can start now.
-              </span>
-            </div>
-          </div>
-          <button class="task-cta cta-red" type="button" @click.stop.prevent="startExam(exam)">
-            Start Exam
-          </button>
-        </a>
-      </div>
-      <div v-else class="task-card task-card-static type-exam">
-        <div class="task-icon" style="background: #fef2f2; color: #ef4444">
-          <i class="fas fa-triangle-exclamation"></i>
-        </div>
-        <div class="flex-grow-1">
-          <div class="task-meta">
-            <span class="meta-chip" style="background: #fef2f2; color: #dc2626"><i class="fas fa-circle-exclamation"></i> Unable to Load</span>
-          </div>
-          <div class="task-title">No exam assignment available</div>
-          <div class="task-details">
-            <span class="task-detail" style="color: #dc2626; font-weight: 400">
-              <i class="fas fa-info-circle"></i> {{ examError || "You have no upcoming exams today." }}
-            </span>
-          </div>
-        </div>
-        <button class="task-cta cta-red" type="button" @click="fetchStudentExams">
-          Retry
-        </button>
-      </div>
 
-    </div>
-  </div>
-</template>
 <style scoped>
 *,
 *::before,
@@ -290,11 +290,11 @@ a {
 }
 
 .task-card.type-exam::before {
-  background: #ef4444;
+  background: #28ba8a;
 }
 
 .task-card.type-exam:hover {
-  border-color: rgba(239, 68, 68, 0.2);
+  border-color: rgba(68, 239, 182, 0.2);
   box-shadow: 0 16px 36px rgba(239, 68, 68, 0.1);
 }
 
