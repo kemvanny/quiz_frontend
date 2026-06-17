@@ -1,3 +1,189 @@
+
+<template>
+  <section class="student-dashboard">
+
+    <div v-if="isLoading" class="text-center py-5" style="color: var(--txt-mu)">
+      <i class="fas fa-spinner fa-spin fa-2x mb-2"></i>
+      <div>កំពុងផ្ទុកទិន្នន័យ....</div>
+    </div>
+    <!-- STATS -->
+    <div class="stats">
+      <a href="#" class="stat">
+        <div class="stat-icon icon-green" >
+          <i class="bi bi-check-circle"></i>
+        </div>
+        <div>
+          <div class="stat-label">ការប្រឡងដែលបានធ្វើរួច</div>
+          <div class="stat-value">{{ dashboardData.examsDone || 0 }}</div>
+         
+        </div>
+      </a>
+
+      <a href="#" class="stat">
+        <div class="stat-icon icon-blue" >
+          <i class="bi bi-door-open"></i>
+        </div>
+        <div>
+          <div class="stat-label">បន្ទប់ដែលបានចូលរួម</div>
+          <div class="stat-value">{{ dashboardData.enrolledRooms || 0 }}</div>
+        </div>
+      </a>
+
+      <a href="#" class="stat">
+        <div class="stat-icon icon-orange" >
+          <i class="bi bi-graph-up-arrow"></i>
+        </div>
+        <div>
+          <div class="stat-label">ពិន្ទុជាមធ្យមសរុប</div>
+          <div class="stat-value">{{ dashboardData.overallAvg || '0%' }}</div>
+        </div>
+      </a>
+    </div>
+
+    <!-- GRID -->
+    <div class="grid">
+      <!-- LEFT -->
+      <div class="left-col">
+        <!-- Quick Actions -->
+        <div class="card">
+          <div class="qa-wrap">
+            <div>
+              <div class="card-title no-margin">សកម្មភាពរហ័ស</div>
+            </div>
+            <div class="qa-btns">
+              <button class="btn primary" @click="openModal">
+                <i class="bi bi-plus-lg"></i>ចូលរួមថ្នាក់រៀន
+              </button>
+              <a href="#" class="btn">
+                <i class="bi bi-clipboard-check"></i> កិច្ចការដែលត្រូវធ្វើ
+              </a>
+              <a href="#" class="btn">
+                <i class="bi bi-laptop"></i> ពិនិត្យប្រព័ន្ធសិក្សា
+              </a>
+            </div>
+           </div>
+           </div>
+
+        <!-- Performance -->
+        
+        
+          <div class="card">
+            <div class="perf-head">
+              <div>
+                <div class="card-title">លទ្ធផលសិក្សាតាមមុខវិជ្ជា</div>
+                 
+              </div>
+              <div class="gpa-block" v-if="performanceList">
+                <div class="gpa-val text-center">{{ performanceList.currentGPA }}</div>
+               
+                <div class="gpa-lbl">មធ្យមភាគប៉ាន់ស្មាន</div>
+                <a href="4.st-results.html" class="view-link" style="display: block; margin-top: 6px">របាយការណ៍លម្អិត →</a>
+              </div>
+            </div>
+
+            <div v-if="performanceList.length === 0" class="py-3 text-center text-muted">
+              មិនមានទិន្នន័យលទ្ធផលសិក្សាទេ
+            </div>
+            <div v-else v-for="(subject, index) in performanceList.subjects" :key="index" class="subj-row">
+              <div class="subj-dot" :style="{ background: getSubjectColor(index) }"></div>
+              <div class="subj-info">
+                <div class="subj-name">{{ subject.subjectName }}</div>
+              </div>
+              <div class="subj-track">
+                <div class="subj-fill" :style="{ width: subject.percentage + '%', background: getSubjectColor(index) }">
+                </div>
+              </div>
+              <div class="subj-pct">{{ subject.percentage }}%</div>
+            </div>
+
+            <div class="perf-footer">
+              ផ្អែកលើការវាយតម្លៃសិក្សាដែលបានផ្ទៀងផ្ទាត់
+            </div>
+          </div>
+        </div>
+
+        <div class="right-col">
+          <div class="card" style="border-top: 3px solid #f59e0b; border-radius: 0 0 14px 14px">
+            <div class="section-head">
+              <div>
+                <div class="card-title">កាលកំណត់ជិតដល់</div>
+              </div>
+            </div>
+
+            <div v-if="deadlineList.length === 0" class="py-4 text-center text-muted">
+              <i class="bi bi-calendar-check d-block mb-1 fs-4"></i> គ្មានកាលកំណត់សម្រាប់ថ្ងៃនេះទេ!
+              
+            </div>
+
+            <a v-else v-for="dl in deadlineList" :key="dl.examId" href="3.st-assignments.html" class="dl-item"
+              style="
+                background: var(--amber-soft);
+                border: 1px solid var(--amber-border);
+                margin-bottom: 8px;
+              ">
+              <div class="dl-icon" style="background: #fef3c7; color: #b45309">
+                <i class="bi bi-hourglass-split"></i>
+              </div>
+              <div style="flex: 1">
+                <div class="dl-name" style="color: #92400e">{{ dl.title }}</div>
+                <div class="dl-time" style="color: #b45309">{{ dl.dueText }}</div>
+              </div>
+              <i class="bi bi-chevron-right" style="color: #d97706; font-size: 15px"></i>
+            </a>
+          </div>
+
+          <div class="card">
+            <div class="section-head">
+              <div>
+                <div class="card-title">មតិកែលម្អថ្មីៗ</div>
+              </div>
+               <router-link :to="{name: 'AnalyticsResult',}" class="view-link">មើលលម្អិត</router-link>
+            </div>
+
+            <div v-if="feedbackList.length === 0" class="py-3 text-center text-muted">
+              មិនមានមតិកែលម្អលើការប្រឡងថ្មីៗទេ
+            </div>
+            <div v-else v-for="fb in feedbackList" :key="fb.id" class="fb-row">
+              <div class="fb-left">
+                <div class="fb-icon" style="background: var(--em-soft); color: var(--em)">
+                  <i class="bi bi-award"></i>
+                </div>
+                <div>
+                  <div class="fb-quiz">{{ fb.examTitle || fb.title }}</div>
+                  <div class="fb-when">Graded {{ fb.gradedAt || 'recently' }}</div>
+                </div>
+              </div>
+              <span class="badge" :class="fb.score >= 50 ? 'badge-green' : 'badge-amber'">
+                {{ fb.score }}/100
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    <div class="modal-wrap" :class="{ open: isModalOpen }" @click.self="closeModal">
+      <div class="modal-box">
+        <div class="modal-title">ចូលរួមថ្នាក់</div>
+        <div class="modal-sub">សូមបញ្ចូលកូដថ្នាក់ដែលគ្រូរបស់អ្នកបានផ្តល់ឱ្យ</div>
+        <label class="modal-label" for="classCode">កូដថ្នាក់រៀន</label>
+        <input class="modal-input" :class="{ invalid: classCodeError }" id="classCode" ref="classCodeInput"
+          v-model="classCode" type="text" placeholder="e.g. AB12-CD34" maxlength="12" autocomplete="off"
+          @input="classCodeError = false" @keyup.enter="joinClass" />
+        <div class="modal-actions">
+          <button class="btn primary" type="button" style="justify-content: center; padding: 12px; font-size: 15px"
+            @click="joinClass">
+            <i class="bi bi-door-open"></i> ចូលរួមឥឡូវនេះ
+          </button>
+          <button class="btn" type="button" style="justify-content: center; padding: 11px; color: var(--txt-mu)"
+            @click="closeModal">
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+</template>
+
 <script setup>
 import { nextTick, onMounted, ref } from "vue";
 import {
@@ -87,193 +273,6 @@ function joinClass() {
 
 onMounted(loadDashboardContent);
 </script>
-
-<template>
-  <section class="student-dashboard">
-
-    <div v-if="isLoading" class="text-center py-5" style="color: var(--txt-mu)">
-      <i class="fas fa-spinner fa-spin fa-2x mb-2"></i>
-      <div>Loading student dashboard...</div>
-    </div>
-    <!-- STATS -->
-    <div class="stats">
-      <a href="#" class="stat">
-        <div class="stat-icon icon-green" >
-          <i class="bi bi-check-circle"></i>
-        </div>
-        <div>
-          <div class="stat-label">ការប្រឡងដែលបានធ្វើរួច</div>
-          <div class="stat-value">{{ dashboardData.examsDone || 0 }}</div>
-         
-        </div>
-      </a>
-
-      <a href="#" class="stat">
-        <div class="stat-icon icon-blue" >
-          <i class="bi bi-door-open"></i>
-        </div>
-        <div>
-          <div class="stat-label">បន្ទប់ដែលបានចូលរួម</div>
-          <div class="stat-value">{{ dashboardData.enrolledRooms || 0 }}</div>
-        </div>
-      </a>
-
-      <a href="#" class="stat">
-        <div class="stat-icon icon-orange" >
-          <i class="bi bi-graph-up-arrow"></i>
-        </div>
-        <div>
-          <div class="stat-label">ពិន្ទុជាមធ្យមសរុប</div>
-          <div class="stat-value">{{ dashboardData.overallAvg || '0%' }}</div>
-        </div>
-      </a>
-    </div>
-
-    <!-- GRID -->
-    <div class="grid">
-      <!-- LEFT -->
-      <div class="left-col">
-        <!-- Quick Actions -->
-        <div class="card">
-          <div class="qa-wrap">
-            <div>
-              <div class="card-title no-margin">សកម្មភាពរហ័ស</div>
-            </div>
-            <div class="qa-btns">
-              <button class="btn primary" @click="openModal">
-                <i class="bi bi-plus-lg"></i>ចូលរួមថ្នាក់រៀន
-              </button>
-              <a href="#" class="btn">
-                <i class="bi bi-clipboard-check"></i> កិច្ចការដែលត្រូវធ្វើ
-              </a>
-              <a href="#" class="btn">
-                <i class="bi bi-laptop"></i> ពិនិត្យប្រព័ន្ធសិក្សា
-              </a>
-            </div>
-           </div>
-           </div>
-
-        <!-- Performance -->
-        
-        
-          <div class="card">
-            <div class="perf-head">
-              <div>
-                <div class="card-title">Performance by Subject</div>
-                 
-              </div>
-              <div class="gpa-block" v-if="performanceList">
-                <div class="gpa-val text-center">{{ performanceList.currentGPA }}</div>
-               
-                <div class="gpa-lbl">Current Estimate</div>
-                <a href="4.st-results.html" class="view-link" style="display: block; margin-top: 6px">Full Report →</a>
-              </div>
-            </div>
-
-            <div v-if="performanceList.length === 0" class="py-3 text-center text-muted">
-              No performance data available.
-            </div>
-            <div v-else v-for="(subject, index) in performanceList.subjects" :key="index" class="subj-row">
-              <div class="subj-dot" :style="{ background: getSubjectColor(index) }"></div>
-              <div class="subj-info">
-                <div class="subj-name">{{ subject.subjectName }}</div>
-              </div>
-              <div class="subj-track">
-                <div class="subj-fill" :style="{ width: subject.percentage + '%', background: getSubjectColor(index) }">
-                </div>
-              </div>
-              <div class="subj-pct">{{ subject.percentage }}%</div>
-            </div>
-
-            <div class="perf-footer">
-              Based on verified academic assessments
-            </div>
-          </div>
-        </div>
-
-        <div class="right-col">
-          <div class="card" style="border-top: 3px solid #f59e0b; border-radius: 0 0 14px 14px">
-            <div class="section-head">
-              <div>
-                <div class="card-title">Upcoming Deadlines</div>
-              </div>
-              <a href="3.st-assignments.html" class="view-link">View all</a>
-            </div>
-
-            <div v-if="deadlineList.length === 0" class="py-4 text-center text-muted">
-              <i class="bi bi-calendar-check d-block mb-1 fs-4"></i> No upcoming deadlines today!
-              
-            </div>
-
-            <a v-else v-for="dl in deadlineList" :key="dl.examId" href="3.st-assignments.html" class="dl-item"
-              style="
-                background: var(--amber-soft);
-                border: 1px solid var(--amber-border);
-                margin-bottom: 8px;
-              ">
-              <div class="dl-icon" style="background: #fef3c7; color: #b45309">
-                <i class="bi bi-hourglass-split"></i>
-              </div>
-              <div style="flex: 1">
-                <div class="dl-name" style="color: #92400e">{{ dl.title }}</div>
-                <div class="dl-time" style="color: #b45309">{{ dl.dueText }}</div>
-              </div>
-              <i class="bi bi-chevron-right" style="color: #d97706; font-size: 15px"></i>
-            </a>
-          </div>
-
-          <div class="card">
-            <div class="section-head">
-              <div>
-                <div class="card-title">Recent Feedback</div>
-              </div>
-              <a href="4.st-results.html" class="view-link">History</a>
-            </div>
-
-            <div v-if="feedbackList.length === 0" class="py-3 text-center text-muted">
-              No recent graded assessments.
-            </div>
-            <div v-else v-for="fb in feedbackList" :key="fb.id" class="fb-row">
-              <div class="fb-left">
-                <div class="fb-icon" style="background: var(--em-soft); color: var(--em)">
-                  <i class="bi bi-award"></i>
-                </div>
-                <div>
-                  <div class="fb-quiz">{{ fb.examTitle || fb.title }}</div>
-                  <div class="fb-when">Graded {{ fb.gradedAt || 'recently' }}</div>
-                </div>
-              </div>
-              <span class="badge" :class="fb.score >= 50 ? 'badge-green' : 'badge-amber'">
-                {{ fb.score }}/100
-              </span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-    <div class="modal-wrap" :class="{ open: isModalOpen }" @click.self="closeModal">
-      <div class="modal-box">
-        <div class="modal-title">Join a Class</div>
-        <div class="modal-sub">Enter the code provided by your instructor.</div>
-        <label class="modal-label" for="classCode">Class Code</label>
-        <input class="modal-input" :class="{ invalid: classCodeError }" id="classCode" ref="classCodeInput"
-          v-model="classCode" type="text" placeholder="e.g. AB12-CD34" maxlength="12" autocomplete="off"
-          @input="classCodeError = false" @keyup.enter="joinClass" />
-        <div class="modal-actions">
-          <button class="btn primary" type="button" style="justify-content: center; padding: 12px; font-size: 15px"
-            @click="joinClass">
-            <i class="bi bi-door-open"></i> Join Now
-          </button>
-          <button class="btn" type="button" style="justify-content: center; padding: 11px; color: var(--txt-mu)"
-            @click="closeModal">
-            Cancel
-          </button>
-        </div>
-      </div>
-    </div>
-  </section>
-</template>
-
 
 <style scoped>
 .student-dashboard {
