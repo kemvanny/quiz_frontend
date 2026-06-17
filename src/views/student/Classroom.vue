@@ -1,3 +1,70 @@
+<template>
+  <div>
+    <div class="filter-row">
+      <div class="search-pill">
+        <i class="fas fa-search" style="color: var(--txt-mu); font-size: 0.85rem"></i>
+        <input v-model="searchQuery" type="text" placeholder="ស្វែងរកវគ្គសិក្សា ឬគ្រូបង្រៀន..."
+          @input="currentPage = 1" />
+      </div>
+    </div>
+
+    <div v-if="isLoading" class="text-center py-5" style="color: var(--txt-m); font-weight: bold;">
+      <i class="fas fa-spinner fa-spin mr-2"></i> កំពុងទាញយកទិន្នន័យ...
+    </div>
+
+    <div v-else-if="errorMessage" class="text-center py-5 text-danger" style="font-weight: bold;">
+      {{ errorMessage }}
+    </div>
+
+    <div v-else-if="paginatedRooms.length === 0" class="text-center py-5"
+      style="color: var(--txt-mu); font-size: 1.1rem;">
+      មិនមានបន្ទប់សិក្សាឡើយ
+    </div>
+
+    <div v-else class="room-grid">
+      <a v-for="(room, index) in paginatedRooms" :key="room.id" href="#" class="room-card">
+        <div class="card-banner" :class="getBannerClass(index)">
+          <div class="status-chip">
+            <div class="status-dot" style="background: #10b981;"></div>
+            {{ translateStatus(room.invitation_status) }}
+          </div>
+          <div class="card-icon" style="background: linear-gradient(135deg, var(--em), var(--em-dk));">
+            <img :src="`${imgBaseUrl}${room.thumnail}`" alt=""><i class="fas fa-code"></i>
+          </div>
+        </div>
+
+        <div class="card-body">
+          <div class="card-title">{{ room.name }}</div>
+
+          <div class="card-instructor">
+            <span>បង្រៀនដោយ: {{ room.teacher_name }}</span>
+          </div>
+        </div>
+
+        <div class="card-footer">
+          <div class="footer-note">
+            <i class="far fa-calendar-alt" style="color: var(--em)"></i>
+            ចុចទីនេះដើម្បីចូលបន្ទប់សិក្សា
+          </div>
+          <i class="fas fa-arrow-right" style="color: var(--txt-mu); font-size: 0.78rem"></i>
+        </div>
+      </a>
+    </div>
+
+    <div v-if="totalPages > 1" class="pagination-container">
+      <button class="page-btn" :disabled="currentPage === 1" @click="changePage(currentPage - 1)">
+        <i class="fas fa-chevron-left"></i> ថយក្រោយ
+      </button>
+
+      <span class="page-info">ទំព័រ {{ currentPage }} នៃ {{ totalPages }}</span>
+
+      <button class="page-btn" :disabled="currentPage === totalPages" @click="changePage(currentPage + 1)">
+        បន្ទាប់ <i class="fas fa-chevron-right"></i>
+      </button>
+    </div>
+
+  </div>
+</template>
 <script setup>
 import { ref, onMounted, computed } from 'vue';
 import { getAllRoom } from '@/api/student.api';
@@ -89,75 +156,6 @@ onMounted(() => {
   fetchRooms();
 });
 </script>
-
-<template>
-  <div>
-    <div class="filter-row">
-      <div class="search-pill">
-        <i class="fas fa-search" style="color: var(--txt-mu); font-size: 0.85rem"></i>
-        <input v-model="searchQuery" type="text" placeholder="ស្វែងរកវគ្គសិក្សា ឬគ្រូបង្រៀន..."
-          @input="currentPage = 1" />
-      </div>
-    </div>
-
-    <div v-if="isLoading" class="text-center py-5" style="color: var(--txt-m); font-weight: bold;">
-      <i class="fas fa-spinner fa-spin mr-2"></i> កំពុងទាញយកទិន្នន័យ...
-    </div>
-
-    <div v-else-if="errorMessage" class="text-center py-5 text-danger" style="font-weight: bold;">
-      {{ errorMessage }}
-    </div>
-
-    <div v-else-if="paginatedRooms.length === 0" class="text-center py-5"
-      style="color: var(--txt-mu); font-size: 1.1rem;">
-      មិនមានបន្ទប់សិក្សាឡើយ
-    </div>
-
-    <div v-else class="room-grid">
-      <a v-for="(room, index) in paginatedRooms" :key="room.id" href="#" class="room-card">
-        <div class="card-banner" :class="getBannerClass(index)">
-          <div class="status-chip">
-            <div class="status-dot" style="background: #10b981;"></div>
-            {{ translateStatus(room.invitation_status) }}
-          </div>
-          <div class="card-icon" style="background: linear-gradient(135deg, var(--em), var(--em-dk));">
-            <img :src="`${imgBaseUrl}${room.thumnail}`" alt=""><i class="fas fa-code"></i>
-          </div>
-        </div>
-
-        <div class="card-body">
-          <div class="card-title">{{ room.name }}</div>
-
-          <div class="card-instructor">
-            <span>បង្រៀនដោយ: {{ room.teacher_name }}</span>
-          </div>
-        </div>
-
-        <div class="card-footer">
-          <div class="footer-note">
-            <i class="far fa-calendar-alt" style="color: var(--em)"></i>
-            ចុចទីនេះដើម្បីចូលបន្ទប់សិក្សា
-          </div>
-          <i class="fas fa-arrow-right" style="color: var(--txt-mu); font-size: 0.78rem"></i>
-        </div>
-      </a>
-    </div>
-
-    <div v-if="totalPages > 1" class="pagination-container">
-      <button class="page-btn" :disabled="currentPage === 1" @click="changePage(currentPage - 1)">
-        <i class="fas fa-chevron-left"></i> ថយក្រោយ
-      </button>
-
-      <span class="page-info">ទំព័រ {{ currentPage }} នៃ {{ totalPages }}</span>
-
-      <button class="page-btn" :disabled="currentPage === totalPages" @click="changePage(currentPage + 1)">
-        បន្ទាប់ <i class="fas fa-chevron-right"></i>
-      </button>
-    </div>
-
-  </div>
-</template>
-
 <style scoped>
 *,
 *::before,

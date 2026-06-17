@@ -1,41 +1,3 @@
-<script setup>
-import { onMounted, ref } from 'vue';
-import { useRoute } from 'vue-router';
-import { joinRoom } from '@/api/student.api.js';
-
-const route = useRoute();
-const loading = ref(true);
-const statusMessage = ref('');
-const isSuccess = ref(false);
-
-onMounted(async () => {
-    const invitationId = route.params.id;
-    const token = route.query.token;
-
-    if (!token || !invitationId) {
-        loading.value = false;
-        statusMessage.value = "ព័ត៌មានលីងសម្រាប់ចូលរួមបន្ទប់សិក្សាមិនត្រឹមត្រូវឡើយ!";
-        return;
-    }
-
-    try {
-        const response = await joinRoom(invitationId, token);
-        if (response.data.success) {
-            isSuccess.value = true;
-            statusMessage.value = response.data.message = "អ្នកបានចូលរួមបន្ទប់សិក្សាដោយជោគជ័យ!";
-        } else {
-            isSuccess.value = false;
-            statusMessage.value = response.data.error = "ការចូលរួមបន្ទប់សិក្សាត្រូវបានបដិសេធ។";
-        }
-    } catch (error) {
-        isSuccess.value = false;
-        statusMessage.value = error.response?.data?.error || "មានបញ្ហាបច្ចេកទេសក្នុងការតភ្ជាប់ទៅកាន់ Server។";
-    } finally {
-        loading.value = false;
-    }
-});
-</script>
-
 <template>
     <div class="shell">
         <header class="topbar">
@@ -127,7 +89,43 @@ onMounted(async () => {
         </footer>
     </div>
 </template>
+<script setup>
+import { onMounted, ref } from 'vue';
+import { useRoute } from 'vue-router';
+import { joinRoom } from '@/api/student.api.js';
 
+const route = useRoute();
+const loading = ref(true);
+const statusMessage = ref('');
+const isSuccess = ref(false);
+
+onMounted(async () => {
+    const invitationId = route.params.id;
+    const token = route.query.token;
+
+    if (!token || !invitationId) {
+        loading.value = false;
+        statusMessage.value = "ព័ត៌មានលីងសម្រាប់ចូលរួមបន្ទប់សិក្សាមិនត្រឹមត្រូវឡើយ!";
+        return;
+    }
+
+    try {
+        const response = await joinRoom(invitationId, token);
+        if (response.data.success) {
+            isSuccess.value = true;
+            statusMessage.value = response.data.message = "អ្នកបានចូលរួមបន្ទប់សិក្សាដោយជោគជ័យ!";
+        } else {
+            isSuccess.value = false;
+            statusMessage.value = response.data.error = "ការចូលរួមបន្ទប់សិក្សាត្រូវបានបដិសេធ។";
+        }
+    } catch (error) {
+        isSuccess.value = false;
+        statusMessage.value = error.response?.data?.error || "មានបញ្ហាបច្ចេកទេសក្នុងការតភ្ជាប់ទៅកាន់ Server។";
+    } finally {
+        loading.value = false;
+    }
+});
+</script>
 <style scoped>
 /* ── Design Tokens */
 :root {

@@ -1,11 +1,10 @@
 <template>
     <aside class="sidebar">
-        <div class="sidebar-brand">
-            <div class="brand-icon">
-                <i class="bi bi-mortarboard-fill"></i>
-            </div>
-            <div class="brand-name fw-semibold">Prolong <span class="fw-normal text-muted">Teacher</span></div>
-        </div>
+       <div class="sidebar-brand">
+      <a href="#"> <img :src="logoImage" alt="Pralong Logo" class="brand-logo" />
+      </a>
+    </div>
+
 
         <div class="sidebar-nav-container">
             <div class="d-flex flex-column gap-1 fw-normal">
@@ -70,6 +69,7 @@
 
 <script setup>
 import { ref } from 'vue';
+import logoImage from '../../../assets/images/pralong-logo.png'
 
 
 const isOpen = ref(false);
@@ -93,9 +93,9 @@ const onRoomCreated = (roomData) => {
     font-weight: 550 !important;
 }
 .nav-link.active {
-    background-color: #10b981 !important; /* ពណ៌បៃតងដូចក្នុងរូបភាព */
-    color: white !important;              /* អក្សរពណ៌ស */
-    border-radius: 8px;                   /* បើចង់ឱ្យមូលៗដូចក្នុងរូប */
+    background-color: #10b981 !important; 
+    color: white !important;              
+    border-radius: 8px;                  
     font-weight: 600;
 }
 
@@ -129,8 +129,8 @@ const onRoomCreated = (roomData) => {
   flex: 1;
   overflow-y: auto;
   padding-bottom: 20px;
-  -ms-overflow-style: none;  /* សម្រាប់ IE និង Edge */
-  scrollbar-width: none;  /* សម្រាប់ Firefox */
+  -ms-overflow-style: none;  
+  scrollbar-width: none;  
 }
 
 .dropdown-enter-active,
@@ -169,4 +169,22 @@ const onRoomCreated = (roomData) => {
 .sidebar-cta:hover {
     background: #d1fae5;
 }
+.sidebar-brand {
+  padding: 39px 20px; 
+  display: flex;
+  align-items: center; 
+  justify-content: flex-start; 
+  border-bottom: 1.5px solid var(--green-mid);
+  height: 60px; 
+  margin-bottom: 20px; 
+  gap: 0;              
+}
+
+.brand-logo {
+  max-width: 190px;   
+  height: auto; 
+  display: block;      
+ 
+}
+
 </style>

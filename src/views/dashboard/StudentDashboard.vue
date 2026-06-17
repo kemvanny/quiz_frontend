@@ -90,68 +90,72 @@ onMounted(loadDashboardContent);
 
 <template>
   <section class="student-dashboard">
+
     <div v-if="isLoading" class="text-center py-5" style="color: var(--txt-mu)">
       <i class="fas fa-spinner fa-spin fa-2x mb-2"></i>
       <div>Loading student dashboard...</div>
     </div>
+    <!-- STATS -->
+    <div class="stats">
+      <a href="#" class="stat">
+        <div class="stat-icon icon-green" >
+          <i class="bi bi-check-circle"></i>
+        </div>
+        <div>
+          <div class="stat-label">ការប្រឡងដែលបានធ្វើរួច</div>
+          <div class="stat-value">{{ dashboardData.examsDone || 0 }}</div>
+         
+        </div>
+      </a>
 
-    <div v-else>
-      <div class="stats py-4">
-        <a href="4.st-results.html" class="stat">
-          <div class="stat-icon" style="background: var(--em-soft); color: var(--em)">
-            <i class="bi bi-check-circle"></i>
-          </div>
-          <div>
-            <div class="stat-label">Exams Done</div>
-            <div class="stat-value">{{ dashboardData.examsDone || 0 }}</div>
-            <div class="stat-trend" style="color: var(--em)">↑ Active learner</div>
-          </div>
-        </a>
+      <a href="#" class="stat">
+        <div class="stat-icon icon-blue" >
+          <i class="bi bi-door-open"></i>
+        </div>
+        <div>
+          <div class="stat-label">បន្ទប់ដែលបានចូលរួម</div>
+          <div class="stat-value">{{ dashboardData.enrolledRooms || 0 }}</div>
+        </div>
+      </a>
 
-        <a href="2.st-my-rooms.html" class="stat">
-          <div class="stat-icon" style="background: var(--blue-soft); color: #3b82f6">
-            <i class="bi bi-door-open"></i>
-          </div>
-          <div>
-            <div class="stat-label">Enrolled Rooms</div>
-            <div class="stat-value">{{ dashboardData.enrolledRooms || 0 }}</div>
-            <div class="stat-trend" style="color: var(--txt-lt)">Active semester</div>
-          </div>
-        </a>
+      <a href="#" class="stat">
+        <div class="stat-icon icon-orange" >
+          <i class="bi bi-graph-up-arrow"></i>
+        </div>
+        <div>
+          <div class="stat-label">ពិន្ទុជាមធ្យមសរុប</div>
+          <div class="stat-value">{{ dashboardData.overallAvg || '0%' }}</div>
+        </div>
+      </a>
+    </div>
 
-        <a href="4.st-results.html" class="stat">
-          <div class="stat-icon" style="background: #f8fafc; color: var(--txt-mu)">
-            <i class="bi bi-graph-up-arrow"></i>
-          </div>
-          <div>
-            <div class="stat-label">Overall Avg.</div>
-            <div class="stat-value">{{ dashboardData.overallAvg || '0%' }} %</div>
-            <div class="stat-trend" style="color: #10b981">⭐ Verified score</div>
-          </div>
-        </a>
-      </div>
-
-      <div class="grid">
-        <div class="left-col">
-          <div class="card">
-            <div class="qa-wrap">
-              <div>
-                <div class="card-title no-margin">Quick Actions</div>
-              </div>
-              <div class="qa-btns">
-                <button class="btn primary" @click="openModal">
-                  <i class="bi bi-plus-lg"></i> Join a Class
-                </button>
-                <a href="3.st-assignments.html" class="btn">
-                  <i class="bi bi-clipboard-check"></i> Pending Tasks
-                </a>
-                <a href="5.st-readiness.html" class="btn">
-                  <i class="bi bi-laptop"></i> System Check
-                </a>
-              </div>
+    <!-- GRID -->
+    <div class="grid">
+      <!-- LEFT -->
+      <div class="left-col">
+        <!-- Quick Actions -->
+        <div class="card">
+          <div class="qa-wrap">
+            <div>
+              <div class="card-title no-margin">សកម្មភាពរហ័ស</div>
             </div>
-          </div>
+            <div class="qa-btns">
+              <button class="btn primary" @click="openModal">
+                <i class="bi bi-plus-lg"></i>ចូលរួមថ្នាក់រៀន
+              </button>
+              <a href="#" class="btn">
+                <i class="bi bi-clipboard-check"></i> កិច្ចការដែលត្រូវធ្វើ
+              </a>
+              <a href="#" class="btn">
+                <i class="bi bi-laptop"></i> ពិនិត្យប្រព័ន្ធសិក្សា
+              </a>
+            </div>
+           </div>
+           </div>
 
+        <!-- Performance -->
+        
+        
           <div class="card">
             <div class="perf-head">
               <div>
@@ -198,7 +202,7 @@ onMounted(loadDashboardContent);
 
             <div v-if="deadlineList.length === 0" class="py-4 text-center text-muted">
               <i class="bi bi-calendar-check d-block mb-1 fs-4"></i> No upcoming deadlines today!
-              {{ deadlineList }}
+              
             </div>
 
             <a v-else v-for="dl in deadlineList" :key="dl.examId" href="3.st-assignments.html" class="dl-item"
@@ -246,7 +250,6 @@ onMounted(loadDashboardContent);
           </div>
         </div>
       </div>
-    </div>
 
     <div class="modal-wrap" :class="{ open: isModalOpen }" @click.self="closeModal">
       <div class="modal-box">
@@ -276,19 +279,18 @@ onMounted(loadDashboardContent);
 .student-dashboard {
   --em: #10b981;
   --em-dk: #059669;
-  --em-soft: #ecfdf5;
+ --em-soft: #d1fae5;
   --em-text: #065f46;
-  --blue-soft: #eff6ff;
-  --amber-soft: #fffbeb;
+ --blue-soft: #dbeafe;
+ --amber-soft: #fef3c7;
   --amber-border: #fde68a;
   --amber-text: #b45309;
-  --red-soft: #fef2f2;
+ --red-soft: #fee2e2;
   --red-border: #fee2e2;
   --txt: #0f172a;
   --txt-mu: #64748b;
   --txt-lt: #94a3b8;
   --border: #e2e8f0;
-  /* --bg: #f1f5f9; */
   --surf: #ffffff;
   --radius: 14px;
   --radius-sm: 9px;
@@ -296,9 +298,8 @@ onMounted(loadDashboardContent);
   display: flex;
   flex-direction: column;
   gap: 20px;
-  /* background: var(--bg); */
   color: var(--txt);
-  font-family: "Inter", sans-serif;
+  font-family: "Kantumruy Pro", sans-serif;
   min-width: 0;
 }
 
@@ -326,15 +327,17 @@ onMounted(loadDashboardContent);
   grid-template-columns: repeat(3, 1fr);
   gap: 14px;
 }
-
 .stat {
   background: var(--surf);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  padding: 20px 22px;
+  padding: 24px 20px;
+
   display: flex;
-  gap: 16px;
-  align-items: center;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;          
+  
   cursor: pointer;
   transition: 0.15s;
 }
@@ -347,34 +350,42 @@ onMounted(loadDashboardContent);
 .stat-icon {
   width: 46px;
   height: 46px;
-  border-radius: 11px;
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 21px;
   flex-shrink: 0;
+  background: inherit;
+}
+.icon-green { background: var(--em-soft) !important; color: var(--em) !important; }
+.icon-blue { background: var(--blue-soft) !important; color: #3b82f6 !important; }
+.icon-orange { 
+    background: #ffedd5 !important;
+    color: #ea580c !important;     
 }
 
 .stat-label {
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--txt-lt);
+  font-size: 12.5px;
+  font-weight: 600 !important;
+  color: var(--txt-mu);
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  margin-bottom: 5px;
+  margin-bottom: 0px; 
 }
 
 .stat-value {
   font-size: 26px;
   font-weight: 700;
   line-height: 1;
-  margin-bottom: 4px;
   color: var(--txt);
+  margin-top: 15px;
 }
 
 .stat-trend {
   font-size: 12px;
   font-weight: 600;
+  margin-top: 4px;
 }
 
 /* ── GRID ── */
