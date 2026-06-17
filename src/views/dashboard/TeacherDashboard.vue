@@ -42,8 +42,6 @@
         </div>
 
         <!-- ========================================================= -->
-        <!-- 💡 ផ្នែកថ្មី៖ វិញ្ញាសារបស់ខ្ញុំ (MY QUIZZES LIST FROM BACKEND) -->
-        <!-- ========================================================= -->
         <div class="custom-card mb-4">
           <div class="d-flex justify-content-between align-items-center mb-3">
             <h5 class="section-title mb-0">វិញ្ញាសារបស់ខ្ញុំ (My Quizzes)</h5>

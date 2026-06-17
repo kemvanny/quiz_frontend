@@ -1,47 +1,8 @@
-<script setup>
-import { onMounted, ref } from 'vue';
-import { useRoute } from 'vue-router';
-import { joinRoom } from '@/api/student.api.js';
-
-const route = useRoute();
-const loading = ref(true);
-const statusMessage = ref('');
-const isSuccess = ref(false);
-
-onMounted(async () => {
-    const invitationId = route.params.id;
-    const token = route.query.token;
-
-    if (!token || !invitationId) {
-        loading.value = false;
-        statusMessage.value = "ព័ត៌មានលីងសម្រាប់ចូលរួមបន្ទប់សិក្សាមិនត្រឹមត្រូវឡើយ!";
-        return;
-    }
-
-    try {
-        const response = await joinRoom(invitationId, token);
-        if (response.data.success) {
-            isSuccess.value = true;
-            statusMessage.value = response.data.message || "អ្នកបានចូលរួមបន្ទប់សិក្សាដោយជោគជ័យ!";
-        } else {
-            isSuccess.value = false;
-            statusMessage.value = response.data.error || "ការចូលរួមបន្ទប់សិក្សាត្រូវបានបដិសេធ។";
-        }
-    } catch (error) {
-        isSuccess.value = false;
-        statusMessage.value = error.response?.data?.error || "មានបញ្ហាបច្ចេកទេសក្នុងការតភ្ជាប់ទៅកាន់ Server។";
-    } finally {
-        loading.value = false;
-    }
-});
-</script>
-
 <template>
     <div class="shell">
-        <!-- ── TOPBAR NAV ───────────────────────────────────────────── -->
         <header class="topbar">
-            <div class="logo-mark"><i class="bi bi-patch-question-fill"></i></div>
-            <span class="logo-text">Quiz<span>Pralang</span></span>
+            <div class="logo-mark"><i class="fa-solid fa-graduation-cap"></i></div>
+            <span class="logo-text">Prolang<span>Student</span></span>
             <div class="topbar-right">
                 <router-link :to="{ name: 'StudentDashboard' }" class="nav-pill">
                     <i class="bi bi-grid-1x2"></i> Dashboard
@@ -124,11 +85,47 @@ onMounted(async () => {
 
         <!-- FOOTER -->
         <footer>
-            <p>Quiz Pralang Learning Platform &nbsp;·&nbsp; Classroom Invitation &nbsp;·&nbsp; 2026</p>
+            <p>Pralang Learning Platform &nbsp;·&nbsp; Classroom Invitation &nbsp;·&nbsp; 2026</p>
         </footer>
     </div>
 </template>
+<script setup>
+import { onMounted, ref } from 'vue';
+import { useRoute } from 'vue-router';
+import { joinRoom } from '@/api/student.api.js';
 
+const route = useRoute();
+const loading = ref(true);
+const statusMessage = ref('');
+const isSuccess = ref(false);
+
+onMounted(async () => {
+    const invitationId = route.params.id;
+    const token = route.query.token;
+
+    if (!token || !invitationId) {
+        loading.value = false;
+        statusMessage.value = "ព័ត៌មានលីងសម្រាប់ចូលរួមបន្ទប់សិក្សាមិនត្រឹមត្រូវឡើយ!";
+        return;
+    }
+
+    try {
+        const response = await joinRoom(invitationId, token);
+        if (response.data.success) {
+            isSuccess.value = true;
+            statusMessage.value = response.data.message = "អ្នកបានចូលរួមបន្ទប់សិក្សាដោយជោគជ័យ!";
+        } else {
+            isSuccess.value = false;
+            statusMessage.value = response.data.error = "ការចូលរួមបន្ទប់សិក្សាត្រូវបានបដិសេធ។";
+        }
+    } catch (error) {
+        isSuccess.value = false;
+        statusMessage.value = error.response?.data?.error || "មានបញ្ហាបច្ចេកទេសក្នុងការតភ្ជាប់ទៅកាន់ Server។";
+    } finally {
+        loading.value = false;
+    }
+});
+</script>
 <style scoped>
 /* ── Design Tokens */
 :root {

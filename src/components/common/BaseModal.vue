@@ -118,7 +118,7 @@ defineEmits(["close"]);
   opacity: 1;
 }
 
-/* 💡 ប៊ូតុងខ្វែងខ្នាតតូចសម្រាប់ម៉ូដគ្មាន Header */
+
 .glass-close-minimal {
   position: absolute;
   top: 16px;
@@ -143,10 +143,10 @@ defineEmits(["close"]);
 }
 
 .glass-body {
-  padding: 24px; /* បន្ថែមគម្លាតខាងក្នុងឱ្យមើលទៅ Clean */
+  padding: 24px; 
 }
 
-/* FOOTER */
+
 .glass-footer {
   padding: 14px 20px;
   border-top: 1px solid #eef6f1;
@@ -155,7 +155,7 @@ defineEmits(["close"]);
   gap: 10px;
 }
 
-/* Animations */
+
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.25s ease;

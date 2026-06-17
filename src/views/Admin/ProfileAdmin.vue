@@ -148,25 +148,21 @@
     <div class="spinner-border text-teal" role="status"></div>
     <p>កំពុងទាញយកទិន្នន័យគណនី...</p>
   </div>
-
-  <div class="toast-wrap">
-    <div class="toast-msg" :class="{ 'show': toast.show }">
-      <i :class="toast.icon"></i>
-      <span>{{ toast.message }}</span>
-    </div>
-  </div>
 </template>
 
 <script setup>
 import { ref, reactive, computed, onMounted, watch } from 'vue'
 import { useFormValidation } from '@/composables/useFormValidation'
 import { useAuthStore } from '@/stores/authStore'
+import { getTotalUser } from '@/api/admin.api'
 
 const authStore = useAuthStore()
 const imgBaseUrl = import.meta.env.VITE_BASE_URL_FOR_IMAGE
 
 const imageRefresh = ref(Date.now())
 const fileInput = ref(null)
+
+const totalUser = ref();
 
 const triggerFileInput = () => {
   fileInput.value.click()
@@ -288,6 +284,16 @@ const saveChanges = async () => {
   }
 }
 
+//Get Total User
+const fetchTotalUser = async()=>{
+  try{
+    const res = await getTotalUser();
+    totalUser.value = res.data.data;
+  }catch(error){
+    triggerToast('មិនអាចទាញទិន្នន័យបានទេ','fa-solid fa-circle-xmark')
+  }
+}
+
 const clearErrors = () => {
   errors.value.firstName = ''
   errors.value.lastName = ''
@@ -313,6 +319,7 @@ const triggerToast = (msg, iconClass) => {
 
 onMounted(async () => {
   await authStore.fetchProfile();
+  fetchTotalUser();
 })
 </script>
 
@@ -773,7 +780,6 @@ onMounted(async () => {
   display: grid;
   grid-template-columns: 320px 1fr;
   animation: fadeUp .55s cubic-bezier(.22, .68, 0, 1.2) both;
-  position: fixed;
 }
 
 .left-panel {

@@ -4,13 +4,15 @@
         <router-link :to="{ name: 'ProfileSetting' }" class="d-flex align-items-center gap-2 p-1 pe-3 rounded-pill bg-white"
             style="border:1px solid var(--bdr);box-shadow:var(--sh-sm);">
 
-            <img :src="`${imgBaseUrl}${authStore.profile?.avatar}`"
+            <img :src="authStore.profile?.avatar && authStore.profile?.avatar !== 'default.png'?`${imgBaseUrl}${authStore.profile?.avatar}`:defaultImage"
                 style="width:34px;height:34px;border-radius:50%;border:2px solid var(--em-soft);">
 
             <div style="line-height:1.15;">
                 <div class="fw-bold" style="font-size:.83rem;">{{ authStore.profile?.lastName }} {{
                     authStore.profile?.firstName }}</div>
-                <div style="font-size:.7rem;color:var(--txt-mu);font-weight:600;">{{ authStore.profile?.role }}</div>
+                <div style="font-size:.6rem; color:var(--txt-mu); font-weight:600; text-transform: uppercase; letter-spacing: 0.5px;">
+  {{ authStore.profile?.role }}
+</div>
             </div>
         </router-link>
     </div>
@@ -22,6 +24,7 @@ import { onMounted } from "vue";
 
 const imgBaseUrl = import.meta.env.VITE_BASE_URL_FOR_IMAGE;
 const authStore = useAuthStore();
+import defaultImage from "../../assets/images/default.png";
 
 onMounted(async () => {
     await authStore.fetchProfile();

@@ -13,6 +13,8 @@ import StudentDashboard from '@/views/dashboard/StudentDashboard.vue'
 import Quizzes from '@/views/teacher/Quizzes.vue'
 import FinalExam from '@/views/teacher/FinalExam.vue'
 import RoomManagement from '@/views/teacher/RoomManagement.vue'
+import RoomDetail from '@/views/teacher/RoomDetail.vue'
+import ExamDetailView from '@/views/teacher/ExamDetailView.vue'
 import ClassStream from '@/views/teacher/ClassStream.vue'
 import StudentResults from '@/views/teacher/StudentResults.vue'
 import TeacherValidations from '@/views/teacher/TeacherValidations.vue'
@@ -28,6 +30,8 @@ import AcceptRoom from '@/views/student/AcceptRoom.vue'
 import ForgetPassword from '@/views/auth/ForgetPassword.vue'
 import ResetPassword from '@/views/auth/ResetPassword.vue'
 import CheckEmail from '@/views/auth/CheckEmail.vue'
+import TakeExam from '@/views/student/TakeExam.vue'
+import RoomManagements from '@/views/admin/RoomManagements.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -101,7 +105,12 @@ const router = createRouter({
           component: SystemHealth,
           meta: { title: "System Health" }
         },
-
+        {
+          path: 'room-managements',
+          name: 'RoomManagements',
+          component: RoomManagements,
+          meta: {title: "Room Managements"}
+        }
       ]
     },
     {
@@ -109,61 +118,72 @@ const router = createRouter({
       component: TeacherLayout,
       meta: { requiresAuth: true, role: 'teacher' },
       children: [
-        {
-          path: 'dashboard',
-          name: 'TeacherDashboard',
-          component: TeacherDashboard,
-          meta: { title: "Teacher Dashboard" }
-        },
-        {
-          path: 'quizzes',
-          name: 'Quizzes',
-          component: Quizzes,
-          meta: { title: "Quizzes", customHeader: true, fullscreen: true }
-        },
-        {
-          path: 'assignments',
-          name: 'Assignments',
-          component: Assignments,
-          meta: { title: "Assignments" }
-        },
-        {
-          path: 'final-exam',
-          name: 'FinalExam',
-          component: FinalExam,
-          meta: { title: "Final Exam" }
-        },
-        {
-          path: 'room-management',
-          name: 'RoomManagement',
-          component: RoomManagement,
-          meta: { title: "Room Management" }
-        },
-        {
-          path: 'class-stream',
-          name: 'ClassStream',
-          component: ClassStream,
-          meta: { title: "Class Stream" }
-        },
-        {
-          path: 'student-results',
-          name: 'StudentResults',
-          component: StudentResults,
-          meta: { title: "Student Results" }
-        },
-        {
-          path: 'teacher-validations',
-          name: 'TeacherValidations',
-          component: TeacherValidations,
-          meta: { title: "Teacher Validations" }
-        },
-        {
-          path: 'profile',
-          name: 'Profile',
-          component: Profile,
-          meta: { title: "Profile" }
-        }
-      ]
+      {
+        path: 'dashboard',
+        name: 'TeacherDashboard',
+        component: TeacherDashboard,
+        meta: {title: "Teacher Dashboard"}
+      },
+      {
+        path: 'quizzes',
+        name: 'Quizzes',
+        component: Quizzes,
+        meta: {title: "Quizzes", customHeader: true, fullscreen: true}
+      },
+      {
+        path: 'assignments',
+        name: 'Assignments',
+        component: Assignments,
+        meta: {title: "Assignments"}
+      },
+      {
+        path: 'final-exam',
+        name: 'FinalExam',
+        component: FinalExam,
+        meta: {title: "Final Exam"}
+      },
+      {
+        path: 'room-management',
+        name: 'RoomManagement',
+        component: RoomManagement
+      },
+      {
+        path: 'room-management/:roomId/stream',
+        name: 'ClassStream',
+        component: ClassStream,
+        props: true
+      },
+      {
+        path: 'room-management/:roomId/exams', 
+        name: 'RoomDetail',
+        component: RoomDetail,
+        props: true
+      },
+      {
+        path: 'room-management/:roomId/exams/:examId', 
+        name: 'TeacherExamDetail',
+        component: ExamDetailView,
+        props: true
+      },
+      {
+        path: 'student-results',
+        name: 'StudentResults',
+        component: StudentResults,
+        meta: {title: "Student Results"}
+      },
+      {
+        path: 'teacher-validations',
+        name: 'TeacherValidations',
+        component: TeacherValidations,
+        meta: {title: "Teacher Validations"}
+      },
+      {
+        path: 'profile',
+        name: 'Profile',
+        component: Profile,
+        meta: {title: "Profile"}
+      }
+    ]
     },
     {
       path: '/student',
@@ -210,6 +230,12 @@ const router = createRouter({
       meta: { title: 'Accept Class Invitation' }
     },
     {
+      path: '/take-exam/:codeExam',
+      name: 'TakeExam',
+      component: TakeExam,
+      meta: { title: 'Take Exam' }
+    },
+    {
       path: '/:pathMatch(.*)*',
       name: 'NotFound',
       component: NotFound
@@ -217,40 +243,6 @@ const router = createRouter({
 
   ]
 });
-
-// router.beforeEach((to, from) => {
-//   const isLoggedIn = !!sessionStorage.getItem('user_token');
-//   const userRoleId = sessionStorage.getItem('user_role'); 
-//   const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
-
-//   const requiredRole = to.meta.role; 
-
-//   const rolePaths = {
-//     '1': 'admin',
-//     '2': 'teacher',
-//     '3': 'student'
-//   };
-
-//   const userRoleName = rolePaths[userRoleId]; 
-
-//   if (requiresAuth && !isLoggedIn) {
-//     return { path: '/login' };
-//   }
-
-
-//   if (isLoggedIn) {
-
-//     if (to.path === '/login' && userRoleName) {
-//       return { path: `/${userRoleName}/dashboard` };
-//     }
-
-//     if (requiredRole && userRoleName !== requiredRole) {
-//       return { path: `/${userRoleName}/dashboard` };
-//     }
-//   }
-
-//   return true;
-// });
 
 router.beforeEach((to, from) => {
   const isLoggedIn = !!localStorage.getItem('user_token');

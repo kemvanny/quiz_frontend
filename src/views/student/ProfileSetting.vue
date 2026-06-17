@@ -2,24 +2,62 @@
   <div class="layout" v-if="authStore.profile">
     <div class="left-card">
       <div class="avatar-wrapper">
-        <img :src="`${imgBaseUrl}${authStore.profile.avatar}?t=${imageRefresh}`" alt="Profile photo"
-          class="avatar-image" />
-        <input ref="avatarInput" type="file" accept="image/*" hidden @change="uploadAvatar" />
+        <img
+          :src="
+            authStore.profile?.avatar &&
+            authStore.profile?.avatar !== 'default.png'
+              ? `${imgBaseUrl}${authStore.profile.avatar}?t=${imageRefresh}`
+              : defaultImage
+          "
+          alt="Profile photo"
+          class="avatar-image"
+        />
+        <input
+          ref="avatarInput"
+          type="file"
+          accept="image/*"
+          hidden
+          @change="uploadAvatar"
+        />
 
-        <button class="btn-upload" title="Upload photo" @click="avatarInput.click()">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
-            stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round"
-              d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M12 12V4m0 0L8 8m4-4l4 4" />
+        <button
+          class="btn-upload"
+          title="Upload photo"
+          @click="avatarInput.click()"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M12 12V4m0 0L8 8m4-4l4 4"
+            />
           </svg>
         </button>
 
-        <button class="btn-delete-avatar" title="Delete photo" :disabled="avatarDeleting || !authStore.profile.avatar"
-          @click="deleteAvatar">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
-            stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round"
-              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M1 7h22M8 7V5a2 2 0 012-2h4a2 2 0 012 2v2" />
+        <button
+          class="btn-delete-avatar"
+          title="Delete photo"
+          :disabled="avatarDeleting || !authStore.profile.avatar"
+          @click="deleteAvatar"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M1 7h22M8 7V5a2 2 0 012-2h4a2 2 0 012 2v2"
+            />
           </svg>
         </button>
       </div>
@@ -27,42 +65,58 @@
       <div class="user-name">
         {{ authStore.profile.firstName }} {{ authStore.profile.lastName }}
       </div>
-      <div class="user-email">{{ authStore.profile.email }}</div>
-      <div class="badge">{{ authStore.profile.role }}</div>
+      <div class="role-badge">
+        <i class="bi bi-mortarboard"></i>{{ authStore.profile.role }}
+      </div>
 
       <div class="action-buttons">
-        <button class="btn btn-outline" @click="openEditModal">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
-            stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round"
-              d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+        <button class="btn btn-green" @click="openEditModal">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+            />
           </svg>
           កែប្រែព័ត៌មាន
         </button>
 
         <button class="btn btn-purple" @click="openPasswordModal">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
-            stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round"
-              d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+            />
           </svg>
           ផ្លាស់ប្តូរលេខសម្ងាត់
         </button>
 
-        <button class="btn btn-green">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
-            stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round"
-              d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-          </svg>
-          ផ្លាស់អ៊ីមែល
-        </button>
-
         <button class="btn btn-danger" @click="openDeleteAccountModal">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
-            stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round"
-              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M1 7h22M8 7V5a2 2 0 012-2h4a2 2 0 012 2v2" />
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M1 7h22M8 7V5a2 2 0 012-2h4a2 2 0 012 2v2"
+            />
           </svg>
           លុបគណនី
         </button>
@@ -70,116 +124,229 @@
     </div>
 
     <div class="right-card">
-      <h2>ព័ត៌មានរបស់ខ្ញុំ</h2>
-
+      <h2 class="section-title">ព័ត៌មានរបស់ខ្ញុំ</h2>
       <div class="info-grid">
         <div class="info-item">
-          <div class="info-label">
-            <svg class="icon-green" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-              stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round"
-                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-            </svg>
-            នាមត្រកូល
+          <label class="info-label">នាមត្រកូល</label>
+          <div class="input-wrapper">
+            <i class="fa-solid fa-user field-icon input-icon"></i>
+            <input
+              type="text"
+              :value="authStore.profile.firstName || 'មិនទាន់បំពេញ'"
+              disabled
+              class="info-input"
+              :class="{ empty: !authStore.profile.firstName }"
+            />
           </div>
-          <div class="info-value">{{ authStore.profile.firstName }}</div>
         </div>
 
         <div class="info-item">
-          <div class="info-label">
-            <svg class="icon-green" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-              stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round"
-                d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-            </svg>
-            នាមខ្លួន
+          <label class="info-label">នាមខ្លួន</label>
+          <div class="input-wrapper">
+            <i class="fa-solid fa-user-tag field-icon input-icon"></i>
+            <input
+              type="text"
+              :value="authStore.profile.lastName || 'មិនទាន់បំពេញ'"
+              disabled
+              class="info-input"
+              :class="{ empty: !authStore.profile.lastName }"
+            />
           </div>
-          <div class="info-value">{{ authStore.profile.lastName }}</div>
         </div>
 
         <div class="info-item">
-          <div class="info-label">
-            <svg class="icon-green" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-              stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round"
-                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-            </svg>
-            អាសយដ្ឋាន
+          <label class="info-label">អាសយដ្ឋានអ៊ីមែល</label>
+          <div class="input-wrapper">
+            <i class="fa-solid fa-envelope field-icon input-icon"></i>
+            <input
+              type="text"
+              :value="authStore.profile.email || 'មិនទាន់បំពេញ'"
+              disabled
+              class="info-input"
+              :class="{ empty: !authStore.profile.email }"
+            />
           </div>
-          <div class="info-value">{{ authStore.profile.address }}</div>
         </div>
 
         <div class="info-item">
-          <div class="info-label">
-            <svg class="icon-green" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-              stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round"
-                d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498A1 1 0 0121 15.72V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-            </svg>
-            លេខទូរស័ព្ទ
+          <label class="info-label">លេខទូរស័ព្ទ</label>
+          <div class="input-wrapper">
+            <i class="fa-solid fa-phone field-icon input-icon"></i>
+            <input
+              type="text"
+              :value="authStore.profile.phone || 'មិនទាន់បំពេញ'"
+              disabled
+              class="info-input"
+              :class="{ empty: !authStore.profile.phone }"
+            />
           </div>
-          <div class="info-value">{{ authStore.profile.phone }}</div>
         </div>
 
         <div class="info-item">
-          <div class="info-label">
-            <svg class="icon-green" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-              stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round"
-                d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-            </svg>
-            ស្ថានភាពគណនី
+          <label class="info-label">ថ្នាក់ឆ្នាំសិក្សា</label>
+          <div class="input-wrapper">
+            <i class="fa-solid fa-graduation-cap input-icon"></i>
+            <input
+              type="text"
+              :value="authStore.profile.gradeLevel || 'មិនទាន់បំពេញ'"
+              disabled
+              class="info-input"
+              :class="{ empty: !authStore.profile.gradeLevel }"
+            />
           </div>
-          <span class="status-badge">សកម្ម</span>
+        </div>
+
+        <div class="info-item">
+          <label class="info-label">ជំនាញ</label>
+          <div class="input-wrapper">
+            <i class="fa-solid fa-book input-icon"></i>
+            <input
+              type="text"
+              :value="authStore.profile.major || 'មិនទាន់បំពេញ'"
+              disabled
+              class="info-input"
+              :class="{ empty: !authStore.profile.major }"
+            />
+          </div>
+        </div>
+
+        <div class="info-item">
+          <label class="info-label">អាសយដ្ឋាន</label>
+          <div class="input-wrapper">
+            <i class="fa-solid fa-location-dot field-icon input-icon"></i>
+            <input
+              type="text"
+              :value="authStore.profile.address || 'មិនទាន់បំពេញ'"
+              disabled
+              class="info-input"
+              :class="{ empty: !authStore.profile.address }"
+            />
+          </div>
+        </div>
+
+        <div class="info-item">
+          <label class="info-label">លេខគណនី</label>
+          <div class="input-wrapper">
+            <i class="fa-solid fa-id-badge field-icon input-icon"></i>
+            <input
+              type="text"
+              :value="authStore.profile.code || 'មិនទាន់បំពេញ'"
+              disabled
+              class="info-input"
+              :class="{ empty: !authStore.profile.code }"
+            />
+          </div>
         </div>
       </div>
     </div>
 
     <!-- modal for edit profile -->
-    <BaseModal :is-open="isEditModalOpen" title="កែប្រែព័ត៌មាន" width="500px" @close="closeEditModal">
+    <BaseModal
+      :is-open="isEditModalOpen"
+      title="កែប្រែព័ត៌មាន"
+      width="500px"
+      @close="closeEditModal"
+    >
       <div class="profile-form">
         <div class="profile-field">
           <label>នាមខ្លួន</label>
           <input v-model="editForm.firstName" type="text" />
+          <span v-if="errors.firstName" class="error-text">{{
+            errors.firstName
+          }}</span>
         </div>
 
         <div class="profile-field">
           <label>នាមត្រកូល</label>
           <input v-model="editForm.lastName" type="text" />
+          <span v-if="errors.lastName" class="error-text">{{
+            errors.lastName
+          }}</span>
         </div>
-
+        <div class="profile-field">
+          <label>ឆ្នាំសិក្សា</label>
+          <input
+            v-model="editForm.gradeLevel"
+            placeholder="មិនទាន់បំពេញ"
+            type="text"
+          />
+          <span v-if="errors.gradeLevel" class="error-text">{{
+            errors.gradeLevel
+          }}</span>
+        </div>
+        <div class="profile-field">
+          <label>ជំនាញ</label>
+          <input
+            v-model="editForm.major"
+            placeholder="មិនទាន់បំពេញ"
+            type="text"
+          />
+          <span v-if="errors.major" class="error-text">{{ errors.major }}</span>
+        </div>
         <div class="profile-field">
           <label>លេខទូរស័ព្ទ</label>
-          <input v-model="editForm.phone" type="text" />
+          <input
+            v-model="editForm.phone"
+            placeholder="មិនទាន់បំពេញ"
+            type="text"
+          />
+          <span v-if="errors.phone" class="error-text">{{ errors.phone }}</span>
         </div>
 
         <div class="profile-field">
           <label>អាសយដ្ឋាន</label>
-          <input v-model="editForm.address" type="text" />
+          <input
+            v-model="editForm.address"
+            placeholder="មិនទាន់បំពេញ"
+            type="text"
+          />
+          <span v-if="errors.address" class="error-text">{{
+            errors.address
+          }}</span>
         </div>
       </div>
 
       <template #footer>
         <button class="btn btn-outline" @click="closeEditModal">បោះបង់</button>
 
-        <button class="btn btn-green" @click="handleUpdateProfile">
+        <button
+          class="btn btn-green"
+          @click="handleUpdateProfile"
+          :disabled="isSaveDisabled"
+        >
           រក្សាទុក
         </button>
       </template>
     </BaseModal>
 
     <!-- modal for change password -->
-    <BaseModal :is-open="isPasswordModalOpen" title="ផ្លាស់ប្តូរលេខសម្ងាត់" width="500px" @close="closePasswordModal">
+    <BaseModal
+      :is-open="isPasswordModalOpen"
+      title="ផ្លាស់ប្តូរលេខសម្ងាត់"
+      width="500px"
+      @close="closePasswordModal"
+    >
       <div class="profile-field">
         <label>លេខសម្ងាត់ចាស់</label>
 
         <div class="password-input">
-          <input v-model="passwordForm.oldPassword" :type="showPassword.oldPassword ? 'text' : 'password'"
-            :class="{ 'input-error': oldPasswordError }" @input="oldPasswordError = ''" />
+          <input
+            v-model="passwordForm.oldPassword"
+            :type="showPassword.oldPassword ? 'text' : 'password'"
+            :class="{ 'input-error': oldPasswordError }"
+            @input="oldPasswordError = ''"
+          />
 
-          <button type="button" class="password-eye" @click="togglePassword('oldPassword')">
-            <i :class="showPassword.oldPassword ? 'bi bi-eye-slash' : 'bi bi-eye'
-              "></i>
+          <button
+            type="button"
+            class="password-eye"
+            @click="togglePassword('oldPassword')"
+          >
+            <i
+              :class="
+                showPassword.oldPassword ? 'bi bi-eye-slash' : 'bi bi-eye'
+              "
+            ></i>
           </button>
         </div>
 
@@ -192,12 +359,23 @@
         <label>លេខសម្ងាត់ថ្មី</label>
 
         <div class="password-input">
-          <input v-model="passwordForm.newPassword" :type="showPassword.newPassword ? 'text' : 'password'"
-            :class="{ 'input-error': newPasswordError }" @input="newPasswordError = ''" />
+          <input
+            v-model="passwordForm.newPassword"
+            :type="showPassword.newPassword ? 'text' : 'password'"
+            :class="{ 'input-error': newPasswordError }"
+            @input="newPasswordError = ''"
+          />
 
-          <button type="button" class="password-eye" @click="togglePassword('newPassword')">
-            <i :class="showPassword.newPassword ? 'bi bi-eye-slash' : 'bi bi-eye'
-              "></i>
+          <button
+            type="button"
+            class="password-eye"
+            @click="togglePassword('newPassword')"
+          >
+            <i
+              :class="
+                showPassword.newPassword ? 'bi bi-eye-slash' : 'bi bi-eye'
+              "
+            ></i>
           </button>
         </div>
 
@@ -210,12 +388,23 @@
         <label>បញ្ជាក់លេខសម្ងាត់ថ្មី</label>
 
         <div class="password-input">
-          <input v-model="passwordForm.confirmPassword" :type="showPassword.confirmPassword ? 'text' : 'password'"
-            :class="{ 'input-error': confirmPasswordError }" @input="confirmPasswordError = ''" />
+          <input
+            v-model="passwordForm.confirmPassword"
+            :type="showPassword.confirmPassword ? 'text' : 'password'"
+            :class="{ 'input-error': confirmPasswordError }"
+            @input="confirmPasswordError = ''"
+          />
 
-          <button type="button" class="password-eye" @click="togglePassword('confirmPassword')">
-            <i :class="showPassword.confirmPassword ? 'bi bi-eye-slash' : 'bi bi-eye'
-              "></i>
+          <button
+            type="button"
+            class="password-eye"
+            @click="togglePassword('confirmPassword')"
+          >
+            <i
+              :class="
+                showPassword.confirmPassword ? 'bi bi-eye-slash' : 'bi bi-eye'
+              "
+            ></i>
           </button>
         </div>
 
@@ -229,24 +418,44 @@
           បោះបង់
         </button>
 
-        <button class="btn btn-green" :disabled="passwordLoading" @click="handleChangePassword">
+        <button
+          class="btn btn-green"
+          :disabled="passwordLoading"
+          @click="handleChangePassword"
+        >
           {{ passwordLoading ? "កំពុងរក្សាទុក..." : "រក្សាទុក" }}
         </button>
       </template>
     </BaseModal>
 
     <!-- Delete account modal -->
-    <BaseModal :is-open="isDeleteAccountModalOpen" title="លុបគណនី" width="500px" @close="closeDeleteAccountModal">
+    <BaseModal
+      :is-open="isDeleteAccountModalOpen"
+      title="លុបគណនី"
+      width="500px"
+      @close="closeDeleteAccountModal"
+    >
       <div class="profile-field">
         <label>លេខសម្ងាត់</label>
 
         <div class="password-input">
-          <input v-model="deleteAccountForm.password" :type="showDeleteAccountPassword ? 'text' : 'password'"
-            :class="{ 'input-error': deleteAccountError }" @input="deleteAccountError = ''" />
+          <input
+            v-model="deleteAccountForm.password"
+            :type="showDeleteAccountPassword ? 'text' : 'password'"
+            :class="{ 'input-error': deleteAccountError }"
+            @input="deleteAccountError = ''"
+          />
 
-          <button type="button" class="password-eye" @click="showDeleteAccountPassword = !showDeleteAccountPassword">
-            <i :class="showDeleteAccountPassword ? 'bi bi-eye-slash' : 'bi bi-eye'
-              "></i>
+          <button
+            type="button"
+            class="password-eye"
+            @click="showDeleteAccountPassword = !showDeleteAccountPassword"
+          >
+            <i
+              :class="
+                showDeleteAccountPassword ? 'bi bi-eye-slash' : 'bi bi-eye'
+              "
+            ></i>
           </button>
         </div>
       </div>
@@ -258,86 +467,85 @@
           បោះបង់
         </button>
 
-        <button class="btn btn-green" :disabled="deleteAccountLoading" @click="handleDeleteAccount">
+        <button
+          class="btn btn-green"
+          :disabled="deleteAccountLoading"
+          @click="handleDeleteAccount"
+        >
           {{ deleteAccountLoading ? "កំពុងលុប..." : "លុបគណនី" }}
         </button>
       </template>
     </BaseModal>
-  </div>
-  <div class="toast-wrap">
-    <div class="toast-msg" :class="{ 'show': toast.show }">
-      <i :class="toast.icon"></i>
-      <span>{{ toast.message }}</span>
-    </div>
+
+    <ToastNotification />
   </div>
 </template>
 <script setup>
 import { useAuthStore } from "@/stores/authStore";
 import { useFormValidation } from "@/composables/useFormValidation";
-import { onMounted, ref, computed, reactive } from "vue";
+import { onMounted, ref, computed, watch } from "vue";
 import { useRouter } from "vue-router";
+import { useToast } from "@/composables/useToast";
+import ToastNotification from "@/components/common/ToastNotification.vue";
+import defaultImage from "../../assets/images/default.png";
 
 const router = useRouter();
 const authStore = useAuthStore();
+const { triggerToast } = useToast();
+
+const {
+  errors,
+  validateFirstName,
+  validateLastName,
+  validatePhone,
+  validateAddress,
+  validateGradeLevel,
+  validateMajor,
+  validatePassword,
+} = useFormValidation();
 
 const imgBaseUrl = import.meta.env.VITE_BASE_URL_FOR_IMAGE;
-
 const avatarInput = ref(null);
+const imageRefresh = ref(Date.now());
+
 const isEditModalOpen = ref(false);
-
-const toast = reactive({
-  show: false,
-  message: '',
-  icon: ''
-});
-
-const triggerToast = (msg, iconClass) => {
-  toast.message = msg;
-  toast.icon = iconClass;
-  toast.show = true;
-  setTimeout(() => {
-    toast.show = false;
-  }, 3000);
-}
-
 const isPasswordModalOpen = ref(false);
+const isDeleteAccountModalOpen = ref(false);
+
 const passwordLoading = ref(false);
+const avatarDeleting = ref(false);
+const deleteAccountLoading = ref(false);
+
 const passwordError = ref("");
 const passwordSuccess = ref("");
-
-const imageRefresh = ref(Date.now());
 
 const oldPasswordError = ref("");
 const newPasswordError = ref("");
 const confirmPasswordError = ref("");
 
-const avatarDeleting = ref(false);
-const isDeleteAccountModalOpen = ref(false);
-const deleteAccountLoading = ref(false);
+const editForm = ref({
+  firstName: "",
+  lastName: "",
+  phone: "",
+  address: "",
+  gradeLevel: "",
+  major: "",
+});
+const originalProfile = ref({});
+
+const passwordForm = ref({ oldPassword: "", newPassword: "", confirmPassword: "" });
+const deleteAccountForm = ref({ password: "" });
 const deleteAccountError = ref("");
 const showDeleteAccountPassword = ref(false);
 
-const deleteAccountForm = ref({
-  password: "",
-});
-const { errors: validationErrors, validatePassword } = useFormValidation();
+
+const showPassword = ref({ oldPassword: false, newPassword: false, confirmPassword: false });
 
 
-const showPassword = ref({
-  oldPassword: false,
-  newPassword: false,
-  confirmPassword: false,
-});
+const showValue = (val) => (val === null || val === undefined || val === "null" ? "" : val);
+const saveValue = (val) => (val?.trim() === "" ? null : val);
+const togglePassword = (field) => (showPassword.value[field] = !showPassword.value[field]);
 
-const togglePassword = (field) => {
-  showPassword.value[field] = !showPassword.value[field];
-};
-
-const passwordForm = ref({
-  oldPassword: "",
-  newPassword: "",
-  confirmPassword: "",
-});
 
 const openPasswordModal = () => {
   passwordForm.value = {
@@ -354,165 +562,239 @@ const closePasswordModal = () => {
   isPasswordModalOpen.value = false;
 };
 
+//Change Password
 const handleChangePassword = async () => {
-  passwordError.value = "";
   oldPasswordError.value = "";
   newPasswordError.value = "";
   confirmPasswordError.value = "";
 
-  if (!passwordForm.value.oldPassword) {
+  validatePassword(passwordForm.value.newPassword);
+  
+ if (errors.value.password) {
+    newPasswordError.value = errors.value.password; 
+  }
+
+  if (!passwordForm.value.oldPassword)
     oldPasswordError.value = "សូមបញ្ចូលលេខសម្ងាត់ចាស់!";
-  }
-
-  if (!passwordForm.value.newPassword) {
+  if (!passwordForm.value.newPassword)
     newPasswordError.value = "សូមបញ្ចូលលេខសម្ងាត់ថ្មី!";
-  }
-
-  if (!passwordForm.value.confirmPassword) {
+  if (!passwordForm.value.confirmPassword)
     confirmPasswordError.value = "សូមបញ្ជាក់លេខសម្ងាត់ថ្មី!";
-  }
 
   if (
     oldPasswordError.value ||
     newPasswordError.value ||
     confirmPasswordError.value
   ) {
+    triggerToast(
+      "សូមបំពេញព័ត៌មានឱ្យបានត្រឹមត្រូវ!",
+      "fa-solid fa-triangle-exclamation",
+    );
     return;
   }
 
-  validatePassword(passwordForm.value.newPassword);
-
-  if (validationErrors.value.password) {
-    newPasswordError.value = validationErrors.value.password;
-    return;
-  }
 
   if (passwordForm.value.newPassword !== passwordForm.value.confirmPassword) {
     confirmPasswordError.value = "លេខសម្ងាត់ថ្មី និងការបញ្ជាក់មិនដូចគ្នា!";
+    triggerToast("លេខសម្ងាត់មិនដូចគ្នាទេ!", "fa-solid fa-circle-xmark");
     return;
   }
 
   try {
     passwordLoading.value = true;
+    triggerToast(
+      "កំពុងផ្លាស់ប្តូរលេខសម្ងាត់...",
+      "fa-solid fa-spinner fa-spin",
+    );
 
     await authStore.changePassword(
       passwordForm.value.oldPassword,
       passwordForm.value.newPassword,
     );
 
+    triggerToast("ផ្លាស់ប្តូរលេខសម្ងាត់ជោគជ័យ!", "fa-solid fa-circle-check");
     closePasswordModal();
   } catch (err) {
     oldPasswordError.value = "លេខសម្ងាត់ចាស់មិនត្រឹមត្រូវ!";
+    triggerToast("លេខសម្ងាត់ចាស់មិនត្រឹមត្រូវ!", "fa-solid fa-circle-xmark");
   } finally {
     passwordLoading.value = false;
   }
 };
-// ===================== Upload Avatar ======================
+
+//Upload Picture
 const uploadAvatar = async (event) => {
   const file = event.target.files[0];
   if (!file) return;
 
   if (file.size > 2 * 1024 * 1024) {
-    triggerToast('ទំហំរូបភាពត្រូវតែតូចជាង 2MB', 'fa-solid fa-circle-xmark');
+    triggerToast("ទំហំរូបភាពត្រូវតែតូចជាង 2MB", "fa-solid fa-circle-xmark");
+    event.target.value = "";
     return;
   }
 
   try {
-    triggerToast('កំពុងផ្ទុកឡើងរូបភាព...', 'fa-solid fa-spinner fa-spin');
+    triggerToast("កំពុងផ្ទុកឡើងរូបភាព...", "fa-solid fa-spinner fa-spin");
 
     if (authStore.error) authStore.error = null;
 
     await authStore.uploadAvatar(file);
 
-    if (typeof authStore.fetchProfile === 'function') {
+    if (typeof authStore.fetchProfile === "function") {
       await authStore.fetchProfile();
     }
 
     imageRefresh.value = Date.now();
 
-    triggerToast('ផ្លាស់ប្តូររូបភាពប្រវត្តិរូបជោគជ័យ!', 'fa-solid fa-circle-check');
-
+    triggerToast(
+      "ផ្លាស់ប្តូររូបភាពប្រវត្តិរូបជោគជ័យ!",
+      "fa-solid fa-circle-check",
+      500,
+    );
   } catch (err) {
-    console.error("Student upload error:", err);
-    const errorMsg = err.response?.data?.msg || 'មិនអាចផ្ទុកឡើងរូបភាពបានទេ';
-    triggerToast(errorMsg, 'fa-solid fa-circle-xmark');
+    const errorMsg = err.response?.data?.msg || "មិនអាចផ្ទុកឡើងរូបភាពបានទេ";
+    triggerToast(errorMsg, "fa-solid fa-circle-xmark");
   } finally {
-    event.target.value = '';
+    event.target.value = "";
   }
 };
 
-// ===================== Delete Avatar ======================
+//Delete avatar
 const deleteAvatar = async () => {
-  if (!authStore.profile?.avatar) return;
+  const avatar = authStore.profile?.avatar;
+  if (!avatar || avatar.includes("default")) {
+    triggerToast(
+      "មិនមានរូបភាពសម្រាប់លុបទេ!",
+      "fa-solid fa-triangle-exclamation",
+    );
+    return;
+  }
 
   try {
     avatarDeleting.value = true;
+    triggerToast("កំពុងលុបរូបភាព...", "fa-solid fa-spinner fa-spin");
 
     await authStore.deleteAvatar();
+
+    if (typeof authStore.fetchProfile === "function") {
+      await authStore.fetchProfile();
+    }
 
     imageRefresh.value = Date.now();
 
     if (avatarInput.value) {
       avatarInput.value.value = "";
     }
+
+    triggerToast("លុបរូបភាពប្រវត្តិរូបជោគជ័យ!", "fa-solid fa-circle-check");
   } catch (err) {
-    console.log("Delete avatar error status:", err.response?.status);
-    console.log("Delete avatar error data:", err.response?.data);
-    console.log("Delete avatar error message:", err.message);
+    triggerToast("មានបញ្ហាក្នុងការលុបរូបភាព!", "fa-solid fa-circle-xmark");
   } finally {
     avatarDeleting.value = false;
   }
 };
 
-// ===================== Update Profile ======================
-const editForm = ref({
-  firstName: "",
-  lastName: "",
-  phone: "",
-  address: "",
-});
-
-const showValue = (value) => {
-  return value === null || value === undefined ? "null" : value;
-};
-
-const saveValue = (value) => {
-  return value === "null" || value === "" ? null : value;
-};
 
 const openEditModal = () => {
   const profile = authStore.profile;
 
-  editForm.value = {
+  originalProfile.value = {
     firstName: showValue(profile?.firstName),
     lastName: showValue(profile?.lastName),
     phone: showValue(profile?.phone),
     address: showValue(profile?.address),
+    gradeLevel: showValue(profile?.gradeLevel),
+    major: showValue(profile?.major),
   };
-
+  editForm.value = { ...originalProfile.value };
+  Object.keys(errors.value).forEach((key) => (errors.value[key] = ""));
   isEditModalOpen.value = true;
 };
 
-const closeEditModal = () => {
-  isEditModalOpen.value = false;
-};
+//Disable Button
+const isSaveDisabled = computed(() => {
+  const hasChanged =
+    JSON.stringify(editForm.value) !== JSON.stringify(originalProfile.value);
+  const isFormEmpty = !editForm.value.firstName || !editForm.value.lastName;
+  const hasError = Object.values(errors.value).some((err) => err !== "");
 
+  return !hasChanged || hasError || isFormEmpty;
+});
+
+//Update info profile
 const handleUpdateProfile = async () => {
+  validateFirstName(editForm.value.firstName);
+  validateLastName(editForm.value.lastName);
+  validatePhone(editForm.value.phone);
+  validateAddress(editForm.value.address);
+  validateGradeLevel(editForm.value.gradeLevel); 
+  validateMajor(editForm.value.major);
+
+  const hasErrors = Object.values(errors.value).some(
+    (err) => err && err.trim() !== "",
+  );
+
+  if (hasErrors) {
+    triggerToast(
+      "សូមពិនិត្យទិន្នន័យក្នុង Form ឱ្យបានត្រឹមត្រូវ!",
+      "fa-solid fa-circle-xmark",
+    );
+    return;
+  }
+
   try {
     await authStore.updateProfile({
       firstName: saveValue(editForm.value.firstName),
       lastName: saveValue(editForm.value.lastName),
       phone: saveValue(editForm.value.phone),
       address: saveValue(editForm.value.address),
+      gradeLevel: saveValue(editForm.value.gradeLevel),
+      major: saveValue(editForm.value.major),
     });
-
+    triggerToast("អាប់ដេតព័ត៌មានជោគជ័យ!", "fa-solid fa-circle-check");
     closeEditModal();
   } catch (err) {
-    console.error("Update profile failed:", err);
+    triggerToast("មានបញ្ហាក្នុងការអាប់ដេត!", "fa-solid fa-circle-xmark");
   }
 };
 
-// ===================== Delete Account ======================
+//Delete Account
+const handleDeleteAccount = async () => {
+  deleteAccountError.value = "";
+
+  if (!deleteAccountForm.value.password) {
+    deleteAccountError.value = "សូមបញ្ចូលលេខសម្ងាត់!";
+    triggerToast("សូមបញ្ចូលលេខសម្ងាត់!", "fa-solid fa-triangle-exclamation");
+    return;
+  }
+
+  try {
+    deleteAccountLoading.value = true;
+    triggerToast("កំពុងលុបគណនី...", "fa-solid fa-spinner fa-spin");
+    await authStore.deleteAccount(deleteAccountForm.value.password);
+
+    localStorage.removeItem("user_token");
+    localStorage.removeItem("user_role");
+    triggerToast("លុបគណនីជោគជ័យ!", "fa-solid fa-circle-check");
+    setTimeout(() => {
+      router.replace("/login");
+    }, 1500);
+  } catch (err) {
+    deleteAccountError.value =
+      authStore.error || err.message || "លេខសម្ងាត់មិនត្រឹមត្រូវ!";
+    triggerToast(
+      "លុបគណនីបរាជ័យ! លេខសម្ងាត់មិនត្រឹមត្រូវ។",
+      "fa-solid fa-circle-xmark",
+    );
+  } finally {
+    deleteAccountLoading.value = false;
+  }
+};
+
+const closeEditModal = () => {
+  isEditModalOpen.value = false;
+};
+
 const openDeleteAccountModal = () => {
   deleteAccountForm.value.password = "";
   deleteAccountError.value = "";
@@ -525,35 +807,43 @@ const closeDeleteAccountModal = () => {
   isDeleteAccountModalOpen.value = false;
 };
 
-const handleDeleteAccount = async () => {
-  deleteAccountError.value = "";
+watch(
+  () => editForm.value.firstName,
+  (val) => validateFirstName(val),
+);
+watch(
+  () => editForm.value.lastName,
+  (val) => validateLastName(val),
+);
+watch(
+  () => editForm.value.phone,
+  (val) => validatePhone(val),
+);
+watch(
+  () => editForm.value.address,
+  (val) => validateAddress(val),
+);
+watch(
+  () => editForm.value.gradeLevel,
+  (val) => validateGradeLevel(val),
+);
+watch(
+  () => editForm.value.major,
+  (val) => validateMajor(val),
+);
 
-  if (!deleteAccountForm.value.password) {
-    deleteAccountError.value = "សូមបញ្ចូលលេខសម្ងាត់!";
-    return;
-  }
+watch(
+  () => passwordForm.value.newPassword,
+  (val) => {
+    validatePassword(val);
 
-  try {
-    deleteAccountLoading.value = true;
-
-    await authStore.deleteAccount(deleteAccountForm.value.password);
-
-    sessionStorage.removeItem("user_token");
-    sessionStorage.removeItem("user_role");
-
-    router.replace("/login");
-  } catch (err) {
-    deleteAccountError.value =
-      authStore.error || err.message || "លេខសម្ងាត់មិនត្រឹមត្រូវ!";
-  } finally {
-    deleteAccountLoading.value = false;
-  }
-};
+    newPasswordError.value = errors.value.password;
+  },
+);
 
 onMounted(async () => {
   await authStore.fetchProfile();
 });
-
 </script>
 
 <style scoped>
@@ -579,17 +869,11 @@ onMounted(async () => {
 
   width: 100%;
   max-width: 1140px;
-  /* 🎯 Fix ទំហំទទឹងសរុបត្រឹម ១១៤០px (ទំហំស្តង់ដារពេញអេក្រង់ធំល្មម) */
   margin: 0;
-  /* ផ្អែកនៅកៀកខាងឆ្វេងជាប់ Sidebar ដដែល */
   padding: 24px;
-
   display: grid;
   grid-template-columns: 290px 810px;
-  /* 🎯 Fix ទំហំ Card ឆ្វេង ២៩០px និង Card ស្តាំ ៨១០px ជាប់ត្រឹមហ្នឹងតែម្តង */
   gap: 24px;
-  /* គម្លាតចន្លោះ Card ទាំងពីរ */
-
   align-items: start;
 }
 
@@ -664,7 +948,7 @@ onMounted(async () => {
   background: var(--card);
   border-radius: 18px;
   box-shadow: var(--shadow);
-  min-height: 560px;
+  min-height: 580px;
   padding: 28px 24px 24px;
   display: flex;
   flex-direction: column;
@@ -672,29 +956,31 @@ onMounted(async () => {
   justify-content: center;
 }
 
-/* RIGHT CARD */
-.right-card {
-  background: var(--card);
-  border-radius: 18px;
-  box-shadow: var(--shadow);
-  min-height: 580px;
-  padding: 28px 30px 32px;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-}
-
 .avatar-wrapper {
   position: relative;
   margin-bottom: 16px;
 }
 
+.role-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: linear-gradient(135deg, #39c97c, #2eb583);
+  color: white;
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  padding: 0.32rem 0.85rem;
+  border-radius: 50px;
+  box-shadow: 0 3px 10px rgba(5, 150, 105, 0.3);
+}
+
 .avatar-wrapper img {
-  width: 96px;
-  height: 96px;
+  width: 150px;
+  height: 150px;
   border-radius: 50%;
   object-fit: cover;
-  border: 4px solid #dbe7f7;
+  border: 4px solid #cbf8de;
   display: block;
 }
 
@@ -737,6 +1023,13 @@ onMounted(async () => {
   width: 14px;
   height: 14px;
   color: #475569;
+}
+
+.error-text {
+  color: red;
+  font-size: 12px;
+  margin-top: 4px;
+  display: block;
 }
 
 .btn-delete-avatar {
@@ -796,6 +1089,7 @@ onMounted(async () => {
   display: flex;
   flex-direction: column;
   gap: 10px;
+  margin-top: 20px;
 }
 
 .btn {
@@ -852,13 +1146,22 @@ onMounted(async () => {
 
 .btn-danger {
   background: transparent;
-  border: none;
-  color: var(--red);
+  border: 1.5px solid var(--red);
   margin-top: 8px;
+  color: var(--red);
 }
 
 /* RIGHT CARD */
-
+.right-card {
+  background: var(--card);
+  border-radius: 18px;
+  box-shadow: var(--shadow);
+  min-height: 580px;
+  padding: 28px 30px 32px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
 
 .right-card h2 {
   font-family: "Kantumruy Pro", "Noto Sans Khmer", sans-serif;
@@ -869,82 +1172,77 @@ onMounted(async () => {
   margin-bottom: 20px;
 }
 
+.section-title {
+  font-size: 1.5rem;
+  color: #1a202c;
+  margin-bottom: 24px;
+  border-bottom: 2px solid #edf2f7;
+  padding-bottom: 10px;
+}
+
 .info-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  margin-top: 20px;
 }
 
 .info-item {
-  min-height: 82px;
-  background: #fbfcfe;
-  border: 1px solid #e1e7f0;
-  border-radius: 14px;
-  padding: 14px 18px;
-  transition:
-    box-shadow 0.2s,
-    border-color 0.2s;
-}
-
-.info-item:hover {
-  box-shadow: var(--shadow);
-  border-color: #d6e0ec;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .info-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #4a5568;
+}
+
+.input-wrapper {
+  position: relative;
   display: flex;
   align-items: center;
-  gap: 10px;
-  font-family: "Kantumruy Pro", "Noto Sans Khmer", sans-serif;
+}
+
+.input-icon {
+  position: absolute;
+  left: 14px;
+  color: #38a169;
   font-size: 0.9rem;
-  font-weight: 700;
-  color: #6f7788;
-  line-height: 1.5;
-  margin-bottom: 8px;
+  pointer-events: none;
 }
 
-.info-label svg {
-  width: 30px;
-  height: 30px;
-  padding: 7px;
-  flex: 0 0 auto;
-  border-radius: 9px;
-  background: #eef7ef;
+.info-input {
+  width: 100%;
+  padding: 12px 16px 12px 42px;
+  border-radius: 10px;
+  border: 1px solid #e2e8f0;
+  background-color: #c3fae044;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
 }
 
-.icon-green {
-  color: var(--green);
+.info-input.empty {
+  color: #a0aec0;
+  font-style: italic;
+  border-left: 4px solid #cbd5e0;
 }
 
-.icon-blue {
-  color: var(--blue);
+@media (max-width: 600px) {
+  .info-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
-.info-value {
-  font-family: "Kantumruy Pro", "Noto Sans Khmer", sans-serif;
-  font-size: 1rem;
-  font-weight: 400;
-  line-height: 1.55;
-  color: #4b5563;
-  overflow-wrap: anywhere;
-}
-
-.status-badge {
-  display: inline-block;
-  background: var(--green-light);
-  color: var(--green);
-  border: 1px solid var(--green-border);
-  border-radius: 20px;
-  padding: 3px 14px;
-  font-family: "Kantumruy Pro", "Noto Sans Khmer", sans-serif;
-  font-size: 0.82rem;
-  font-weight: 600;
-  line-height: 1.45;
+@media (max-width: 600px) {
+  .info-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (min-width: 1280px) {
   .layout {
-    /* 🎯 បង្ខំឱ្យ Fix ទំហំដដែល ទោះជាអេក្រង់រីកធំប៉ុនណាក៏ដោយ */
     grid-template-columns: 290px 810px;
   }
 }
@@ -1071,12 +1369,14 @@ onMounted(async () => {
 
 .profile-form {
   display: grid;
-  gap: 14px;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
 }
 
 .profile-field {
-  display: grid;
-  gap: 7px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 
 .profile-field label {

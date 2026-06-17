@@ -1,55 +1,63 @@
 <template>
-  <div class="workspace">
-    
-    <div class="workspace-header mb-4 d-flex justify-content-between align-items-center gap-3">
-      <div class="search-box position-relative flex-grow-1" style="max-width: 400px;">
-        <i class="fas fa-search position-absolute top-50 translate-middle-y ms-3 text-muted"></i>
+  <div class="workspace-container">
+    <div class="workspace-toolbar mb-4">
+      <div class="search-wrapper position-relative">
+        <i class="fas fa-search search-icon"></i>
         <input 
           v-model="searchQuery" 
           type="text" 
-          class="form-control ps-5" 
+          class="form-control search-input" 
           placeholder="ស្វែងរកថ្នាក់រៀន..."
-          style="border-radius: 12px; border: 1px solid var(--bdr, #e2e8f0); padding-top: 10px; padding-bottom: 10px;"
         />
       </div>
     </div>
 
-    <div v-if="loading" class="text-center py-5">
-      <div class="spinner-border text-success" role="status"></div>
-      <p class="text-muted mt-2">កំពុងទាញទិន្នន័យ...</p>
+    <div class="w-100 py-5 my-5 text-center" v-if="loading">
+      <div class="spinner-custom"></div>
+      <p class="text-muted small mt-3 fw-medium">កំពុងទាញទិន្នន័យ...</p>
     </div>
 
-    <div v-else class="room-grid">
+    <div v-else class="classroom-grid">
       <div 
         v-for="(room, index) in filteredRooms" 
         :key="room.id || index" 
-        class="room-card"
-        @click="navigateToRoom(room.id)"
+        class="material-classroom-card"
+        @click="goToRoomDetail(room.id)"
       >
-        <div class="room-card-banner">
-          <div class="room-card-icon">
-            <i class="fas fa-graduation-cap"></i>
+        <div class="card-main-content">
+          <div class="d-flex align-items-start justify-content-between gap-3">
+            <div class="d-flex align-items-center gap-3">
+              <div class="icon-avatar-box">
+                <i class="fas fa-graduation-cap"></i>
+              </div>
+              <div class="title-overflow-block">
+                <h3 class="classroom-title-text text-truncate" :title="room.name">
+                  {{ room.name }}
+                </h3>
+                <span class="student-count-subtext">
+                  <i class="fas fa-users me-1 text-muted"></i>
+                  <strong>{{ room.student_count || 0 }}</strong> សិស្សសរុប
+                </span>
+              </div>
+            </div>
+            
+            <div class="normal-action-group d-flex align-items-center" @click.stop>
+              <button class="std-btn btn-edit-normal" @click="openUpdateModal(room)" title="កែប្រែបន្ទប់">
+                <i class="fas fa-pen"></i>
+              </button>
+              <button class="std-btn btn-delete-normal" @click="openDeleteModal(room)" title="លុបបន្ទប់">
+                <i class="fas fa-trash-alt"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-footer-tray d-flex align-items-center justify-content-between" @click.stop>
+          <div class="status-indicator-tag">
+            <span class="active-dot-pulse"></span>
+            <span class="small-text">Active</span>
           </div>
 
-          <div class="card-actions-wrapper" @click.stop>
-            <button class="action-trigger-btn" @click="openUpdateModal(room)" title="កែប្រែបន្ទប់">
-              <i class="fas fa-edit text-warning"></i>
-            </button>
-            <button class="action-trigger-btn" @click="openDeleteModal(room)" title="លុបបន្ទប់">
-              <i class="fas fa-trash-alt text-danger"></i>
-            </button>
-          </div>
-        </div>
-        
-        <div class="room-card-body">
-          <div class="room-card-title text-truncate">{{ room.name }}</div>
-        </div>
-        
-        <div class="room-card-footer d-flex justify-content-between align-items-center">
-          <div class="room-stat">
-            <i class="fas fa-users"></i> {{ room.studentCount || 0 }} students
-          </div>
-          
           <button 
             class="btn btn-sm invite-student-btn d-flex align-items-center gap-1"
             @click.stop="handleInviteStudent(room)">
@@ -61,9 +69,9 @@
     </div>
 
     <CreateRoomModal 
-    :is-open="isCreateOpen" 
-    @close="isCreateOpen = false" 
-    @created="handleRoomCreatedSuccess" 
+      :is-open="isCreateOpen" 
+      @close="isCreateOpen = false" 
+      @created="handleRoomCreatedSuccess" 
     />
 
     <UpdateRoomModal 
@@ -81,33 +89,35 @@
     />
 
     <InviteStudentModal 
-    :is-open="isInviteOpen" 
-    :room-data="selectedRoom" 
-    @close="isInviteOpen = false" 
+      :is-open="isInviteOpen" 
+      :room-data="selectedRoom" 
+      @close="isInviteOpen = false" 
     />
-
   </div>
 </template>
 
 <script setup>
-
 import { ref, computed, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import { getMyRooms } from '@/api/teacher.api'
 
+import CreateRoomModal from '@/components/teacher/CreateRoomModal.vue'
 import UpdateRoomModal from '@/components/teacher/UpdateRoomModal.vue'
 import DeleteRoomModal from '@/components/teacher/DeleteRoomModal.vue'
-import InviteStudentModal from '@/components/teacher/InviteStudentModal.vue';
+import InviteStudentModal from '@/components/teacher/InviteStudentModal.vue'
+
+const router = useRouter()
+
 
 const searchQuery = ref('')
 const rooms = ref([])
 const loading = ref(false)
-const isInviteOpen = ref(false);
+const selectedRoom = ref(null)
 
-// States សម្រាប់គ្រប់គ្រងការ បើក/បិទ Modals និងការចងទិន្នន័យបន្ទប់ដែលជ្រើសរើស
 const isCreateOpen = ref(false)
 const isUpdateOpen = ref(false)
 const isDeleteOpen = ref(false)
-const selectedRoom = ref(null)
+const isInviteOpen = ref(false)
 
 const filteredRooms = computed(() => {
   if (!searchQuery.value) return rooms.value
@@ -116,174 +126,240 @@ const filteredRooms = computed(() => {
   )
 })
 
-// [GET] ទាញយកទិន្នន័យបន្ទប់រៀនទាំងអស់
-const fetchRooms = async () => {
-  try {
-    loading.value = true
-    const response = await getMyRooms()
-    rooms.value = response.data?.data || response.data || []
-  } catch (error) {
-    console.error("Error fetching rooms:", error)
-  } finally {
-    loading.value = false
-  }
+const goToRoomDetail = (roomId) => {
+  router.push({
+    name: 'ClassStream', 
+    params: { roomId: roomId }
+  })
 }
 
-// Logic សម្រាប់បើក និងបិទ Update Modal
+  const fetchRooms = async () => {
+    try {
+      loading.value = true
+      const response = await getMyRooms()
+      rooms.value = response.data?.data || response.data || []
+    } catch (error) {
+      console.error("Error fetching rooms:", error)
+    } finally {
+      loading.value = false
+    }
+  }
+
+const handleRoomCreatedSuccess = async (newRoom) => {
+  await fetchRooms()
+  selectedRoom.value = newRoom
+  isInviteOpen.value = true
+}
+
 const openUpdateModal = (room) => {
   selectedRoom.value = room
   isUpdateOpen.value = true
 }
+
 const closeUpdateModal = () => {
   isUpdateOpen.value = false
   selectedRoom.value = null
 }
 
-const handleRoomCreatedSuccess = async (newRoom) => {
-  // ១. ទាញយកទិន្នន័យបញ្ជីបន្ទប់រៀនឡើងវិញដើម្បីបង្ហាញលើ Dashboard ក្រោយពេលបង្កើតរួច
-  await fetchRooms();
-
-  // ២. ចាប់យកទិន្នន័យបន្ទប់ដែលទើបបង្កើតថ្មី (ដែលមាន room_id ត្រឹមត្រូវពី backend) មកចងទុក
-  selectedRoom.value = newRoom;
-
-  // ៣. បាញ់បើកផ្ទាំងម៉ូដាល់អញ្ជើញសិស្ស (InviteStudentModal) ភ្លាមៗដោយស្វ័យប្រវត្តិតែម្តង!
-  isInviteOpen.value = true;
-};
-
-// Logic សម្រាប់បើក និងបិទ Delete Modal
 const openDeleteModal = (room) => {
   selectedRoom.value = room
   isDeleteOpen.value = true
 }
+
 const closeDeleteModal = () => {
   isDeleteOpen.value = false
   selectedRoom.value = null
 }
 
-// [POST] មុខងារ Invite Student តាមរយៈ API 
 const handleInviteStudent = (room) => {
-  selectedRoom.value = room; // ចាប់យក Object បន្ទប់ទាំងមូល
-  isInviteOpen.value = true;  // បើកផ្ទាំងអញ្ជើញ
-};
-
-const closeInviteModal = () => {
-  isInviteOpen.value = false;
-  selectedRoom.value = null;
-};
-const navigateToRoom = (roomId) => {
-  console.log(`Maps to /api/teacher/rooms/${roomId}`)
+  selectedRoom.value = room
+  isInviteOpen.value = true
 }
 
 onMounted(() => {
   fetchRooms()
 })
 </script>
-
 <style scoped>
-.workspace {
-  padding: 2.5rem;
+
+.workspace-container {
+  padding: 1.5rem 0.5rem;
 }
 
-.room-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 24px;
-  max-width: 1400px;
-  margin: 0 auto;
+/* Modern Minimal Search Box Styles */
+.search-wrapper {
+  max-width: 360px;
   width: 100%;
 }
-
-.room-card {
-  background: var(--surf, #ffffff); 
-  border: 1px solid var(--bdr, #e2e8f0);
-  border-radius: 16px; 
-  overflow: hidden; 
-  display: flex; 
-  flex-direction: column; 
-  text-decoration: none;
-  cursor: pointer; 
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); 
-  box-shadow: var(--sh-sm, 0 4px 12px rgba(0,0,0,0.03));
-  position: relative;
-}
-.room-card:hover { 
-  border-color: var(--em-mid, #a7f3d0); 
-  transform: translateY(-4px); 
-  box-shadow: 0 12px 24px rgba(16,185,129,0.15); 
-}
-
-.room-card-banner { 
-  height: 120px; 
-  background: linear-gradient(135deg, var(--em-soft, #ecfdf5), #d1fae5); 
-  position: relative; 
-}
-
-.room-card-icon {
-  position: absolute; bottom: -20px; left: 20px;
-  width: 54px; height: 54px; border-radius: 14px; background: var(--em, #10b981); color: #fff;
-  display: flex; align-items: center; justify-content: center; font-size: 1.5rem; border: 3px solid #fff;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-}
-
-.card-actions-wrapper {
+.search-icon {
   position: absolute;
-  top: 12px;
-  right: 12px;
-  display: flex;
-  gap: 8px;
-  z-index: 5;
+  top: 50%;
+  left: 1.15rem;
+  transform: translateY(-50%);
+  color: #64748b;
+  font-size: 0.9rem;
+}
+.search-input {
+  border: 1px solid #cbd5e1;
+  background-color: #ffffff;
+  padding: 0.65rem 1rem 0.65rem 2.75rem;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  color: #0f172a;
+  transition: all 0.2s ease;
+  box-shadow: none !important;
+}
+.search-input:focus {
+  border-color: #25eb60;
+  background-color: #ffffff;
 }
 
-.action-trigger-btn {
-  background: rgba(255, 255, 255, 0.95);
-  border: 1px solid rgba(0, 0, 0, 0.05);
-  width: 34px;
-  height: 34px;
+/* Classroom Cards Grid */
+.classroom-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
+  gap: 1.5rem;
+}
+
+/* Solid Material Card Styling Blueprint */
+.material-classroom-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease;
+}
+
+.material-classroom-card:hover {
+  border-color: #cbd5e1;
+  box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+}
+
+/* Main Upper Block Configuration */
+.card-main-content {
+  padding: 1.5rem;
+  flex-grow: 1;
+}
+
+.icon-avatar-box {
+  width: 46px;
+  height: 46px;
+  background-color: #eff6ff;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #0eba67;
+  font-size: 1.15rem;
+}
+
+.title-overflow-block {
+  max-width: 180px;
+}
+
+.classroom-title-text {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0 0 0.25rem 0;
+}
+
+.student-count-subtext {
+  font-size: 0.825rem;
+  color: #475569;
+}
+
+/* Normal Classic Action Group Utilities */
+.normal-action-group {
+  background-color: #f8fafc;
+  border: 1px solid #e2e8f0;
   border-radius: 8px;
+  padding: 2px;
+}
+
+.std-btn {
+  border: none;
+  background: transparent;
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 0.85rem;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-  transition: transform 0.15s;
+  transition: all 0.15s ease;
 }
-.action-trigger-btn:hover {
-  transform: scale(1.08);
+.btn-edit-normal {
+  color: #d97706;
 }
-
-.room-card-body { 
-  padding: 36px 20px 24px; 
-  flex: 1; 
+.btn-edit-normal:hover {
+  background-color: #fef3c7;
 }
-.room-card-title { 
-  font-size: 1.25rem; 
-  font-weight: 700; 
-  color: var(--txt, #0f172a); 
-  line-height: 1.2;
+.btn-delete-normal {
+  color: #dc2626;
+}
+.btn-delete-normal:hover {
+  background-color: #fee2e2;
 }
 
-.room-card-footer {
-  padding: 14px 20px; 
-  border-top: 1px solid var(--bdr, #e2e8f0);
-  background: #fafbfc; 
+/* Shaded Lower Operational Card Tray */
+.card-footer-tray {
+  padding: 0.85rem 1.5rem;
+  border-top: 1px solid #f1f5f9;
+  background-color: #f8fafc;
+  border-bottom-left-radius: 14px;
+  border-bottom-right-radius: 14px;
 }
-.room-stat { font-size: 0.8rem; font-weight: 600; color: #475569; display: flex; align-items: center; gap: 6px; }
 
-.invite-student-btn {
-  background: transparent;
-  border: 1px solid var(--em, #10b981);
-  color: var(--em, #10b981);
-  font-size: 0.75rem;
-  font-weight: 600;
-  padding: 5px 12px;
+.status-indicator-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.active-dot-pulse {
+  width: 7px;
+  height: 7px;
+  background-color: #10b981;
+  border-radius: 50%;
+}
+.small-text {
+  font-size: 0.775rem;
+  font-weight: 500;
+  color: #64748b;
+}
+
+/* Standard Button Invite Styles */
+.btn-standard-invite {
+  background-color: #ffffff;
+  border: 1px solid #cbd5e1;
+  color: #334155;
+  font-size: 0.8rem;
+  font-weight: 500;
+  padding: 0.4rem 0.8rem;
   border-radius: 8px;
-  transition: all 0.2s;
+  transition: all 0.15s ease;
 }
-.invite-student-btn:hover {
-  background: var(--em, #10b981);
-  color: white;
+.btn-standard-invite:hover {
+  background-color: #1e293b;
+  border-color: #1e293b;
+  color: #ffffff;
 }
-
-@keyframes fadeUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-.room-card { animation: fadeUp 0.3s ease both; }
+/* Custom CSS Loader */
+.spinner-custom {
+  width: 2rem;
+  height: 2rem;
+  border: 3px solid #e2e8f0;
+  border-top-color: #2563eb;
+  border-radius: 50%;
+  display: inline-block;
+  animation: spin 0.7s linear infinite;
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
 </style>

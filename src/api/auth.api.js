@@ -5,6 +5,8 @@ export const loginAPI = (email, password) => {
   return api.post('/auth/login', { email, password });
 };
 
+export const getProfile = () => api.get('/user/profile');
+export const logout = () => api.post('/auth/logout');
 // Logout
 export const logoutAPI = () => {
   return api.post('/auth/logout');

@@ -1,51 +1,66 @@
 <template>
-  <div class="login-container">
-    <div class="card-wrapper">
-      <div class="left-panel">
-        <div class="welcome-text">
-          <h2>កំណត់ពាក្យសម្ងាត់<br>ថ្មីរបស់អ្នក</h2>
-          <p>សូមបញ្ចូលពាក្យសម្ងាត់ថ្មីដែលអ្នកចង់ប្រើប្រាស់ ដើម្បីធានាសុវត្ថិភាពគណនីរបស់អ្នក។</p>
+    <div class="login-container">
+        <div class="card-wrapper">
+            <div class="left-panel">
+                <div class="welcome-text">
+                    <h2>កំណត់ពាក្យសម្ងាត់<br>ថ្មីរបស់អ្នក</h2>
+                    <p>សូមបញ្ចូលពាក្យសម្ងាត់ថ្មីដែលអ្នកចង់ប្រើប្រាស់ ដើម្បីធានាសុវត្ថិភាពគណនីរបស់អ្នក។</p>
+                </div>
+                <div class="product-img-area">
+                    <img src="../../assets/images/forget.png" alt="Reset Password">
+                </div>
+            </div>
+
+            <div class="right-panel">
+                <h3>បង្កើតពាក្យសម្ងាត់ថ្មី</h3>
+                <p class="subtitle">សូមបញ្ចូលពាក្យសម្ងាត់ថ្មីខាងក្រោម</p>
+
+                <form @submit.prevent="handleResetPassword">
+                    <div class="input-group-custom" :class="{ 'has-error': errors.password }">
+                        <i class="fas fa-lock"></i>
+                        <input :type="showNewPassword ? 'text' : 'password'" v-model.trim="newPassword"
+                            placeholder="ពាក្យសម្ងាត់ថ្មី"  @input="validatePassword(newPassword)">
+                        <i class="fas" :class="showNewPassword ? 'fa-eye-slash' : 'fa-eye'" @click="toggleNewPassword"
+                            style="cursor: pointer;"></i>
+                    </div>
+                    <span v-if="errors.password" class="error-text" style="color: red; font-size: 0.8rem;">{{
+                        errors.password }}</span>
+
+                    <div class="input-group-custom">
+                        <i class="fas fa-check-circle"></i>
+                        <input :type="showConfirmPassword ? 'text' : 'password'" v-model.trim="confirmPassword"
+                            placeholder="បញ្ជាក់ពាក្យសម្ងាត់ថ្មី" >
+                        <i class="fas" :class="showConfirmPassword ? 'fa-eye-slash' : 'fa-eye'"
+                            @click="toggleConfirmPassword" style="cursor: pointer;"></i>
+                    </div>
+
+                    <div v-if="backendError" class="backend-error-alert" style="color: red; margin: 10px 0;">
+                        {{ backendError }}
+                    </div>
+
+                    <button type="submit" class="btn-login" :disabled="isLoading">
+                        <span v-if="isLoading"><i class="fas fa-spinner fa-spin"></i> កំពុងផ្លាស់ប្តូរ...</span>
+                        <span v-else>ផ្លាស់ប្តូរពាក្យសម្ងាត់</span>
+                    </button>
+                </form>
+            </div>
         </div>
-        <div class="product-img-area">
-          <img src="../../assets/images/reset-password.png" alt="Reset Password">
-        </div>
-      </div>
-
-      <div class="right-panel">
-        <h3>បង្កើតពាក្យសម្ងាត់ថ្មី</h3>
-        <p class="subtitle">សូមបញ្ចូលពាក្យសម្ងាត់ថ្មីខាងក្រោម</p>
-
-        <form @submit.prevent="handleResetPassword">
-          <div class="input-group-custom">
-            <i class="fas fa-lock"></i>
-            <input type="password" v-model.trim="newPassword" placeholder="ពាក្យសម្ងាត់ថ្មី" required>
-          </div>
-
-          <div class="input-group-custom">
-            <i class="fas fa-check-circle"></i>
-            <input type="password" v-model.trim="confirmPassword" placeholder="បញ្ជាក់ពាក្យសម្ងាត់ថ្មី" required>
-          </div>
-
-          <div v-if="backendError" class="backend-error-alert">
-            <i class="fas fa-exclamation-circle me-2"></i>{{ backendError }}
-          </div>
-
-          <button type="submit" class="btn-login" :disabled="isLoading">
-            <span v-if="isLoading"><i class="fas fa-spinner fa-spin"></i> កំពុងរក្សាទុក...</span>
-            <span v-else>រក្សាទុកពាក្យសម្ងាត់ថ្មី</span>
-          </button>
-        </form>
+        <div class="toast-wrap">
+      <div class="toast-msg" :class="{ 'show': toast.show }">
+        <i :class="toast.icon"></i>
+        <span>{{ toast.message }}</span>
       </div>
     </div>
-  </div>
+    </div>
 </template>
 <script setup>
-import { ref ,onMounted} from 'vue'
+import { ref, onMounted,reactive } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { resetPassword } from '@/api/auth.api'
-import { useToast } from '@/composables/useToast'
+import { useFormValidation } from '@/composables/useFormValidation'
 
-const triggerToast = useToast();
+
+const { errors, validatePassword } = useFormValidation();
 
 const newPassword = ref('')
 const confirmPassword = ref('')
@@ -55,37 +70,60 @@ const backendError = ref('')
 const route = useRoute()
 const router = useRouter()
 
-const handleResetPassword = async () => {
-  if (newPassword.value !== confirmPassword.value) {
-    backendError.value = "ពាក្យសម្ងាត់មិនដូចគ្នាទេ!"
-    return
-  }
+const showNewPassword = ref(false)
+const showConfirmPassword = ref(false)
 
-  isLoading.value = true
-  backendError.value = ''
-  
-  try {
-    await resetPassword( route.query.token, newPassword.value )
-    triggerToast("ពាក្យសម្ងាត់ត្រូវបានកំណត់ថ្មីដោយជោគជ័យ!", 'fa-solid fa-circle-check');
-    setTimeout(() => {
-        router.push('/login');
-    }, 800);
-  } catch (err) {
-    backendError.value = err.response?.data?.message || "មិនអាចផ្លាស់ប្តូរពាក្យសម្ងាត់បានទេ"
-  } finally {
-    isLoading.value = false
-  }
+const toast = reactive({ show: false, message: '', icon: '' })
+const triggerToast = (msg, iconClass) => {
+  toast.message = msg; toast.icon = iconClass; toast.show = true
+  setTimeout(() => { toast.show = false }, 3000)
+}
+
+
+const toggleNewPassword = () => showNewPassword.value = !showNewPassword.value
+const toggleConfirmPassword = () => showConfirmPassword.value = !showConfirmPassword.value
+
+const handleResetPassword = async () => {
+ 
+    validatePassword(newPassword.value);
+
+    if (errors.value.password) return
+
+    if (newPassword.value !== confirmPassword.value) {
+        backendError.value = "ពាក្យសម្ងាត់មិនដូចគ្នាទេ!"
+        return
+    }
+
+    isLoading.value = true
+    backendError.value = ''
+
+    try {
+        await resetPassword(route.query.token, newPassword.value);
+
+        triggerToast("ពាក្យសម្ងាត់ត្រូវបានកំណត់ថ្មីដោយជោគជ័យ!", 'fa-solid fa-circle-check');
+
+        setTimeout(() => {
+            router.push('/login');
+        }, 2000);
+    } catch (err) {
+        if (err.response) {
+            backendError.value = err.response.data.message || "មិនអាចផ្លាស់ប្តូរពាក្យសម្ងាត់បានទេ";
+        } else {
+            backendError.value = "បញ្ហាខាងក្នុងកម្មវិធី៖ " + err.message;
+        }
+    } finally {
+        isLoading.value = false
+    }
 }
 
 onMounted(() => {
-  if (!route.query.token) {
-    router.push('/login')
-  }
+    if (!route.query.token) {
+        router.push('/login')
+    }
 })
 </script>
- <style scoped>
-
- .login-container {
+<style scoped>
+.login-container {
     position: fixed;
     top: 0;
     left: 0;
@@ -382,6 +420,7 @@ input:-webkit-autofill:active {
     cursor: not-allowed;
     box-shadow: none;
 }
+
 @media(max-width:850px) {
     .login-container {
         padding: 80px 20px 20px;
@@ -418,5 +457,4 @@ input:-webkit-autofill:active {
         font-size: 0.85rem;
     }
 }
-
 </style>

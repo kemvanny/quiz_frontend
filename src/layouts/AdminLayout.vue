@@ -1,7 +1,12 @@
 <template>
   <div class="app-layout">
-    <BaseSidebar roleName="Admin" :userProfile="adminProfile" :mainMenus="adminMainMenus"
-      :systemMenus="adminSystemMenus" @logout="handleLogout">
+    <BaseSidebar
+      roleName="Admin"
+      :userProfile="adminProfile"
+      :mainMenus="adminMainMenus"
+      :systemMenus="adminSystemMenus"
+      @logout="handleLogout"
+    >
       <template #main-menus>
         <div class="nav-section-label">មុខងារ</div>
       </template>
@@ -11,21 +16,37 @@
       <template #user-profile>
         <div class="profile-card">
           <div class="profile-info">
-            <img :src="`${imgBaseUrl}${adminProfile.avatar}?t=${layoutImageRefresh}`" alt="Profile"
-              class="profile-img" />
+            <img
+              :src="
+                adminProfile.avatar && adminProfile.avatar !== 'default.png'
+                  ? `${imgBaseUrl}${adminProfile.avatar}?t=${layoutImageRefresh}`
+                  : defaultImage
+              "
+              alt="Profile"
+              class="profile-img"
+            />
             <div class="profile-text">
-              <span class="profile-name">{{ adminProfile.firstName }} {{ adminProfile.lastName }}</span>
+              <span class="profile-name"
+                >{{ adminProfile.firstName }} {{ adminProfile.lastName }}</span
+              >
               <span class="profile-role">{{ adminProfile.role }}</span>
             </div>
           </div>
 
-          <button class="logout-btn" @click.prevent="isLogoutModalOpen = true" title="ចាកចេញ">
+          <button
+            class="logout-btn"
+            @click.prevent="isLogoutModalOpen = true"
+            title="ចាកចេញ"
+          >
             <i class="bi bi-box-arrow-right"></i>
           </button>
 
-          <LogoutModal :show="isLogoutModalOpen" title="Admin" @close="isLogoutModalOpen = false"
-            @confirm="handleLogout" />
-
+          <LogoutModal
+            :show="isLogoutModalOpen"
+            title="Admin"
+            @close="isLogoutModalOpen = false"
+            @confirm="handleLogout"
+          />
         </div>
       </template>
     </BaseSidebar>
@@ -36,22 +57,50 @@
           <div class="search-wrapper">
             <div class="search-wrap">
               <i class="bi bi-search"></i>
-              <input type="text" placeholder="ស្វែងរកអ្នកប្រើប្រាស់..." v-model="searchQuery"
-                @focus="isDropdownOpen = true" />
-              <span v-if="isLoading" class="spinner-border spinner-border-sm text-success search-spinner"></span>
+              <input
+                type="text"
+                placeholder="ស្វែងរកអ្នកប្រើប្រាស់..."
+                v-model="searchQuery"
+                @focus="isDropdownOpen = true"
+              />
+              <span
+                v-if="isLoading"
+                class="spinner-border spinner-border-sm text-success search-spinner"
+              ></span>
             </div>
 
-            <div v-if="isDropdownOpen && searchQuery.trim() !== ''" class="search-dropdown-result">
-              <div v-if="isLoading" class="dropdown-status">កំពុងស្វែងរក...</div>
-              <div v-else-if="usersList.length === 0" class="dropdown-status">មិនមានទិន្នន័យឡើយ 🔍</div>
+            <div
+              v-if="isDropdownOpen && searchQuery.trim() !== ''"
+              class="search-dropdown-result"
+            >
+              <div v-if="isLoading" class="dropdown-status">
+                កំពុងស្វែងរក...
+              </div>
+              <div v-else-if="usersList.length === 0" class="dropdown-status">
+                មិនមានទិន្នន័យឡើយ 🔍
+              </div>
 
               <ul v-else class="result-list">
-                <li v-for="user in usersList" :key="user.id" @click="handleSelectUser(user)" class="result-item">
-                  <img :src="user.avatar === 'default.png' ? defaultImage : `${imgBaseUrl}${user.avatar}`"
-                    class="user-avatar-sm" alt="avatar" />
+                <li
+                  v-for="user in usersList"
+                  :key="user.id"
+                  @click="handleSelectUser(user)"
+                  class="result-item"
+                >
+                  <img
+                    :src="
+                      user.avatar === 'default.png'
+                        ? defaultImage
+                        : `${imgBaseUrl}${user.avatar}`
+                    "
+                    class="user-avatar-sm"
+                    alt="avatar"
+                  />
                   <div class="user-info-meta">
                     <span class="user-name-text">{{ user.fullName }}</span>
-                    <span class="user-sub-text">{{ user.user_code }} • {{ user.email }}</span>
+                    <span class="user-sub-text"
+                      >{{ user.user_code }} • {{ user.email }}</span
+                    >
                   </div>
                   <span :class="['role-tag', user.role]">{{ user.role }}</span>
                 </li>
@@ -66,9 +115,19 @@
               <span class="dot"></span>
             </button>
             <router-link :to="{ name: 'ProfileAdmin' }" class="profile-link">
-              <img :src="`${imgBaseUrl}${adminProfile.avatar}?t=${layoutImageRefresh}`" class="avatar" alt="Admin" />
+              <img
+                :src="
+                adminProfile.avatar && adminProfile.avatar !== 'default.png'
+                  ? `${imgBaseUrl}${adminProfile.avatar}?t=${layoutImageRefresh}`
+                  : defaultImage
+              "
+                class="avatar"
+                alt="Admin"
+              />
               <div class="user-details">
-                <div class="user-name">{{ adminProfile.firstName }} {{ adminProfile.lastName }}</div>
+                <div class="user-name">
+                  {{ adminProfile.firstName }} {{ adminProfile.lastName }}
+                </div>
                 <div class="user-role">{{ adminProfile.role }}</div>
               </div>
             </router-link>
@@ -81,125 +140,155 @@
           <div class="page-body">
             <router-view />
             <div class="toast-wrap" v-if="toastState.show">
-      <div class="toast-msg show">
-        <i :class="toastState.icon"></i>
-        <span>{{ toastState.message }}</span>
-      </div>
-    </div>
+              <div class="toast-msg show">
+                <i :class="toastState.icon"></i>
+                <span>{{ toastState.message }}</span>
+              </div>
+            </div>
           </div>
         </div>
-
       </main>
     </div>
-    <UserDetailModal :user="selectedUser" :show="isUserModalOpen" @close="isUserModalOpen = false" />
+    <UserDetailModal
+      :user="selectedUser"
+      :show="isUserModalOpen"
+      @close="isUserModalOpen = false"
+    />
   </div>
-
 </template>
 <script setup>
-import { ref, onMounted, onUnmounted, watch, computed } from 'vue'
-import { useRouter } from 'vue-router'
-import { getSearchUsers, getUserByID } from '@/api/admin.api'
-import defaultImage from '../assets/images/default.png';
-import UserDetailModal from '@/components/admin/UserDetailModal.vue';
-import { useToast } from '@/composables/useToast';
+import { ref, onMounted, onUnmounted, watch, computed } from "vue";
+import { useRouter } from "vue-router";
+import { getSearchUsers, getUserByID } from "@/api/admin.api";
+import defaultImage from "../assets/images/default.png";
+import UserDetailModal from "@/components/admin/UserDetailModal.vue";
+import { useToast } from "@/composables/useToast";
 
-import { useAuthStore } from '@/stores/authStore';
+import { useAuthStore } from "@/stores/authStore";
 const authStore = useAuthStore();
 
-const {toastState}=useToast();
+const { toastState } = useToast();
 
-const router = useRouter()
+const router = useRouter();
 const imgBaseUrl = import.meta.env.VITE_BASE_URL_FOR_IMAGE;
 const isLogoutModalOpen = ref(false);
 
 const isUserModalOpen = ref(false);
 const selectedUser = ref(null);
 
-const layoutImageRefresh = ref(Date.now())
+const layoutImageRefresh = ref(Date.now());
 
-const adminProfile = computed(() => authStore.profile || { fullName: '', email: '', role: '', avatar: '' })
+const adminProfile = computed(
+  () => authStore.profile || { fullName: "", email: "", role: "", avatar: "" }
+);
 
-watch(() => authStore.profile?.avatar, () => {
-  layoutImageRefresh.value = Date.now()
-})
+watch(
+  () => authStore.profile?.avatar,
+  () => {
+    layoutImageRefresh.value = Date.now();
+  }
+);
 
 const usersList = ref([]);
 const isLoading = ref(false);
-const searchQuery = ref('');
+const searchQuery = ref("");
 const isDropdownOpen = ref(false);
-let searchTimeout = null
+let searchTimeout = null;
 
 const openLogoutModal = () => {
   isLogoutModalOpen.value = true;
-}
+};
 
 const adminMainMenus = [
-  { name: 'ផ្ទាំងគ្រប់គ្រង', routeName: 'AdminDashboard', icon: 'bi bi-grid-1x2-fill' },
-  { name: 'គ្រប់គ្រងអ្នកប្រើប្រាស់', routeName: 'UserManagement', icon: 'bi bi-people-fill' },
-  { name: 'គ្រប់គ្រងការប្រឡង', routeName: 'QuizManagement', icon: 'bi bi-journal-check' },
-  { name: 'លទ្ធផល និងការបញ្ជូន', routeName: 'ResultSubmission', icon: 'bi bi-bar-chart-fill' }
-]
+  {
+    name: "ផ្ទាំងគ្រប់គ្រង",
+    routeName: "AdminDashboard",
+    icon: "bi bi-grid-1x2-fill",
+  },
+  {
+    name: "គ្រប់គ្រងអ្នកប្រើប្រាស់",
+    routeName: "UserManagement",
+    icon: "bi bi-people-fill",
+  },
+  {
+    name: "គ្រប់គ្រងការប្រឡង",
+    routeName: "QuizManagement",
+    icon: "bi bi-journal-check",
+  },
+  {
+    name: "គ្រប់គ្រងបន្ទប់រៀន",
+    routeName: "RoomManagements",
+    icon: "bi bi-door-open-fill",
+  },
+  {
+    name: "លទ្ធផល និងការបញ្ជូន",
+    routeName: "ResultSubmission",
+    icon: "bi bi-bar-chart-fill",
+  },
+];
 
 const adminSystemMenus = [
-  { name: 'ព័ត៍មានសង្ខេប', routeName: 'ProfileAdmin', icon: 'bi bi-person-badge-fill' },
-  { name: 'ស្ថានភាពប្រព័ន្ធ', routeName: 'SystemHealth', icon: 'bi bi-shield-check' },
-]
+  {
+    name: "ព័ត៍មានសង្ខេប",
+    routeName: "ProfileAdmin",
+    icon: "bi bi-person-badge-fill",
+  },
+  {
+    name: "ស្ថានភាពប្រព័ន្ធ",
+    routeName: "SystemHealth",
+    icon: "bi bi-shield-check",
+  },
+];
 
 const handleLogout = () => {
   isLogoutModalOpen.value = false;
   localStorage.clear();
-  router.push('/login');
+  router.push("/login");
 };
 
-const fetchSearchResults = async (search = '') => {
+const fetchSearchResults = async (search = "") => {
   if (!search) {
-    usersList.value = []
-    return
+    usersList.value = [];
+    return;
   }
-  isLoading.value = true
+  isLoading.value = true;
   try {
-    const response = await getSearchUsers(search)
+    const response = await getSearchUsers(search);
 
-
-    console.log("លទ្ធផលពី Backend:", response.data)
-
+    console.log("លទ្ធផលពី Backend:", response.data);
 
     if (response.data) {
-
       if (response.data.data) {
-        usersList.value = response.data.data
-      }
-
-      else if (Array.isArray(response.data)) {
-        usersList.value = response.data
+        usersList.value = response.data.data;
+      } else if (Array.isArray(response.data)) {
+        usersList.value = response.data;
       }
     }
   } catch (error) {
-    console.error("ការស្វែងរកមានបញ្ហា:", error)
+    console.error("ការស្វែងរកមានបញ្ហា:", error);
   } finally {
-    isLoading.value = false
+    isLoading.value = false;
   }
-}
+};
 
 watch(searchQuery, (newQuery) => {
-  clearTimeout(searchTimeout)
+  clearTimeout(searchTimeout);
 
-  if (newQuery.trim() === '') {
-    usersList.value = []
-    return
+  if (newQuery.trim() === "") {
+    usersList.value = [];
+    return;
   }
 
   searchTimeout = setTimeout(() => {
-    fetchSearchResults(newQuery.trim())
-  }, 400)
-})
+    fetchSearchResults(newQuery.trim());
+  }, 400);
+});
 
 const handleSelectUser = async (user) => {
   try {
     isLoading.value = true;
 
     const res = await getUserByID(user.id);
-
 
     selectedUser.value = res.data?.data || res.data;
 
@@ -217,22 +306,21 @@ const handleSelectUser = async (user) => {
 };
 
 const handleClickOutside = (event) => {
-  const wrapper = document.querySelector('.search-wrapper')
+  const wrapper = document.querySelector(".search-wrapper");
   if (wrapper && !wrapper.contains(event.target)) {
-    isDropdownOpen.value = false
+    isDropdownOpen.value = false;
   }
-}
-
+};
 
 onMounted(async () => {
-  if (typeof authStore.fetchProfile === 'function') {
-    await authStore.fetchProfile()
+  if (typeof authStore.fetchProfile === "function") {
+    await authStore.fetchProfile();
   }
-  document.addEventListener('click', handleClickOutside)
-})
+  document.addEventListener("click", handleClickOutside);
+});
 onUnmounted(() => {
-  document.removeEventListener('click', handleClickOutside)
-})
+  document.removeEventListener("click", handleClickOutside);
+});
 </script>
 
 <style scoped>
@@ -269,8 +357,7 @@ onUnmounted(() => {
   border-radius: 12px;
 
   box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05),
-    0 8px 16px -6px rgba(0, 0, 0, 0.05),
-    0 0 1px 0 rgba(0, 0, 0, 0.1);
+    0 8px 16px -6px rgba(0, 0, 0, 0.05), 0 0 1px 0 rgba(0, 0, 0, 0.1);
 
   border: 1px solid rgba(0, 0, 0, 0.04);
   max-height: 280px;
@@ -283,13 +370,12 @@ onUnmounted(() => {
   text-align: center;
   color: #718096;
   font-size: 13px;
-  font-family: 'Kantumruy Pro', 'Hanuman', sans-serif;
+  font-family: "Kantumruy Pro", "Hanuman", sans-serif;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
 }
-
 
 .result-list {
   list-style: none;
@@ -309,7 +395,6 @@ onUnmounted(() => {
 .result-item:hover {
   background-color: #f0fdf4;
 }
-
 
 .user-avatar-sm {
   width: 34px;
@@ -337,7 +422,6 @@ onUnmounted(() => {
   font-size: 11px;
   color: #a0aec0;
 }
-
 
 .role-tag {
   font-size: 10px;

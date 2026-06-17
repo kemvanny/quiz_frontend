@@ -4,7 +4,7 @@
       <template #user-profile>
         <div class="profile-card">
         <div class="profile-info">
-          <img :src="`${imgBaseUrl}${authStore.profile?.avatar}?t=${layoutImageRefresh}`" alt="Profile" class="profile-img" />
+          <img :src="authStore.profile?.avatar && authStore.profile?.avatar !== 'default.png'?`${imgBaseUrl}${authStore.profile?.avatar}?t=${layoutImageRefresh}`:defaultImage" alt="Profile" class="profile-img" />
           <div class="profile-text">
             <span class="profile-name">{{ authStore.profile?.firstName }} {{ authStore.profile?.lastName }}</span>
             <span class="profile-role">{{ authStore.profile?.role }}</span>
@@ -44,6 +44,7 @@ import ProfilesettingNav from "@/components/layout/navbar/student/Profilesetting
 import AssignmentNav from "@/components/layout/navbar/student/AssignmentNav.vue";
 import { useRouter } from "vue-router";
 import { useAuthStore } from "@/stores/authStore";
+import defaultImage from "../assets/images/default.png";
 
 const router = useRouter()
 const authStore = useAuthStore()
@@ -93,7 +94,7 @@ const activeNavbar = computed(() => {
 });
 const handleLogout = () => {
   isLogoutModalOpen.value = false
-  sessionStorage.clear()
+  localStorage.clear()
   router.push('/login')
 }
 

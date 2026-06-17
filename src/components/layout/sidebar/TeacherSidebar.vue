@@ -1,11 +1,10 @@
 <template>
     <aside class="sidebar">
-        <div class="sidebar-brand">
-            <div class="brand-icon">
-                <i class="bi bi-mortarboard-fill"></i>
-            </div>
-            <div class="brand-name fw-semibold">Prolong <span class="fw-normal text-muted">Teacher</span></div>
-        </div>
+       <div class="sidebar-brand">
+      <a href="#"> <img :src="logoImage" alt="Pralong Logo" class="brand-logo" />
+      </a>
+    </div>
+
 
         <div class="sidebar-nav-container">
             <div class="d-flex flex-column gap-1 fw-normal">
@@ -26,12 +25,17 @@
                     </div>
                 </transition>
 
-                <router-link :to="{ name: 'RoomManagement' }" class="nav-link">
-                    <i class="fas fa-users"></i> គ្រប់គ្រងថ្នាក់រៀន
-                </router-link>
-                <router-link :to="{ name: 'ClassStream' }" class="nav-link">
+                <router-link 
+                :to="{ name: 'RoomManagement' }" 
+                class="nav-link" 
+                active-class="active"
+                :class="{ 'active': $route.name === 'ClassStream' || $route.name === 'RoomDetail' }"
+            >
+                <i class="fas fa-users"></i> គ្រប់គ្រងថ្នាក់រៀន
+            </router-link>
+                <!-- <router-link :to="{ name: 'ClassStream' }" class="nav-link">
                     <i class="fas fa-users"></i> ព័ត៌មានក្នុងថ្នាក់រៀន
-                </router-link>
+                </router-link> -->
                 <router-link :to="{ name: 'StudentResults' }" class="nav-link">
                     <i class="fas fa-chart-bar"></i> លទ្ធផលសិក្សារបស់សិស្ស
                 </router-link>
@@ -65,6 +69,7 @@
 
 <script setup>
 import { ref } from 'vue';
+import logoImage from '../../../assets/images/pralong-logo.png'
 
 
 const isOpen = ref(false);
@@ -87,7 +92,16 @@ const onRoomCreated = (roomData) => {
 .nav-link {
     font-weight: 550 !important;
 }
+.nav-link.active {
+    background-color: #10b981 !important; 
+    color: white !important;              
+    border-radius: 8px;                  
+    font-weight: 600;
+}
 
+.nav-link.active i {
+    color: white !important;
+}
 .dropdown-enter-active,
 .dropdown-leave-active {
     transition: all 0.7s ease;
@@ -111,13 +125,12 @@ const onRoomCreated = (roomData) => {
   display: none; 
 }
 
-/* លុប scrollbar សម្រាប់ IE, Edge និង Firefox */
 .sidebar-nav-container {
   flex: 1;
   overflow-y: auto;
   padding-bottom: 20px;
-  -ms-overflow-style: none;  /* សម្រាប់ IE និង Edge */
-  scrollbar-width: none;  /* សម្រាប់ Firefox */
+  -ms-overflow-style: none;  
+  scrollbar-width: none;  
 }
 
 .dropdown-enter-active,
@@ -156,4 +169,22 @@ const onRoomCreated = (roomData) => {
 .sidebar-cta:hover {
     background: #d1fae5;
 }
+.sidebar-brand {
+  padding: 39px 20px; 
+  display: flex;
+  align-items: center; 
+  justify-content: flex-start; 
+  border-bottom: 1.5px solid var(--green-mid);
+  height: 60px; 
+  margin-bottom: 20px; 
+  gap: 0;              
+}
+
+.brand-logo {
+  max-width: 190px;   
+  height: auto; 
+  display: block;      
+ 
+}
+
 </style>

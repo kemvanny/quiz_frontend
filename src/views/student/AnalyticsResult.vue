@@ -1,321 +1,514 @@
 <template>
-  <div>
-    <div class="workspace">
-      <!-- Stat strip -->
-      <div class="stat-strip">
-        <div class="stat-card">
-          <div class="arc-wrap">
-            <svg viewBox="0 0 44 44" width="50" height="50">
-              <circle class="arc-track" cx="22" cy="22" r="20" />
-              <circle class="arc-fill" cx="22" cy="22" r="20" />
-            </svg>
-            <div class="arc-label">89%</div>
-          </div>
-          <div>
-            <div class="stat-label">មធ្យមភាគសរុប</div>
-            <div class="stat-value" style="color: var(--em)">A–</div>
-            <div class="stat-sub">GPA ប្រចាំឆមាស</div>
+  <div class="container-fluid" style="max-width: 1300px;">
+
+    <!-- 1. Loading State -->
+    <div v-if="isLoading" class="state-center">
+      <div class="custom-spinner"></div>
+      <span class="state-text">កំពុងទាញយកទិន្នន័យលទ្ធផលប្រឡង...</span>
+    </div>
+
+    <!-- 2. Error State -->
+    <div v-else-if="errorMessage" class="state-center">
+      <div class="state-icon-box error-box">
+        <i class="fas fa-exclamation-triangle"></i>
+      </div>
+      <p class="state-text text-danger mt-3">{{ errorMessage }}</p>
+    </div>
+
+    <!-- 3. Empty State -->
+    <div v-else-if="examResultsList.length === 0" class="state-center">
+      <div class="state-icon-box empty-box">
+        <i class="fas fa-inbox"></i>
+      </div>
+      <p class="state-text mt-3">មិនមានទិន្នន័យលទ្ធផលប្រឡងឡើយ。</p>
+    </div>
+
+    <!-- 4. Main Content -->
+    <div v-else>
+      <div class="row g-3 mb-4">
+        <div class="col-12 col-lg-4">
+          <div class="white-flat-card h-100 p-4 d-flex align-items-center gap-3">
+            <div class="icon-pill purple">
+              <i class="fas fa-user-graduate"></i>
+            </div>
+            <div class="overflow-hidden">
+              <div class="card-label">អត្តសញ្ញាណសិស្ស</div>
+              <div class="card-value text-truncate">
+                {{ examResultsList[0]?.first_name }} {{ examResultsList[0]?.last_name }}
+              </div>
+
+            </div>
           </div>
         </div>
-        <div class="stat-card">
-          <div class="stat-icon ic-blue"><i class="fas fa-trophy"></i></div>
-          <div>
-            <div class="stat-label">ពិន្ទុខ្ពស់បំផុត</div>
-            <div class="stat-value">98%</div>
-            <div class="stat-sub" style="color: #3b82f6">ប្រឡងពាក់កណ្តាលឆមាស រូបវិទ្យា</div>
+
+        <!-- Average Score -->
+        <div class="col-12 col-md-6 col-lg-4">
+          <div class="white-flat-card h-100 p-4 d-flex align-items-center gap-3">
+            <div class="arc-ring">
+              <svg viewBox="0 0 44 44">
+                <circle class="arc-track" cx="22" cy="22" r="18" />
+                <circle class="arc-fill" cx="22" cy="22" r="18"
+                  :style="{ strokeDashoffset: calculateArc(averageScore) }" />
+              </svg>
+              <div class="arc-label">{{ averageScore.toFixed(0) }}%</div>
+            </div>
+            <div>
+              <div class="card-label">មធ្យមភាគពិន្ទុរួម</div>
+              <div class="card-value" :class="getGradeClass(averageGrade)">{{ averageGrade }}</div>
+
+            </div>
           </div>
         </div>
-        <div class="stat-card">
-          <div class="stat-icon ic-purple">
-            <i class="fas fa-check-double"></i>
-          </div>
-          <div>
-            <div class="stat-label">បានដាក់ពិន្ទុសរុប</div>
-            <div class="stat-value">34</div>
-            <div class="stat-sub" style="color: #9333ea">
-              ការប្រឡង និងកិច្ចការ
+
+        <!-- Total Exams -->
+        <div class="col-12 col-md-6 col-lg-4">
+          <div class="white-flat-card h-100 p-4 d-flex align-items-center gap-3">
+            <div class="icon-pill blue">
+              <i class="fas fa-layer-group"></i>
+            </div>
+            <div>
+              <div class="card-label">ការប្រឡងសរុប</div>
+              <div class="card-value text-dark">
+                {{ examResultsList.length }}
+                <span class="card-unit">វិញ្ញាសា</span>
+              </div>
+
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Table Card -->
+      <!-- ── TABLE CARD ── -->
       <div class="table-card">
-        <div class="table-head">
-          <h6>ពិន្ទុប្រចាំឆមាស</h6>
-          <button class="download-btn">
-            <i class="fas fa-download"></i> ប្រតិចារិក
+        <div class="table-top d-flex align-items-center justify-content-between flex-wrap gap-3 px-4 pt-4 pb-3">
+          <div>
+            <h5 class="table-heading mb-1">ប្រវត្តិនៃការប្រឡង និងមតិកែលម្អ</h5>
+
+          </div>
+          <button class="dl-btn d-flex align-items-center gap-2 px-4 py-2" @click="exportToCSV">
+            <i class="fas fa-cloud-download-alt"></i>
+            ទាញយកលទ្ធផលសរុប
+          </button>
+        </div>
+        <div class="filter-strip px-4 pb-2">
+          <button class="filter-chip active">
+            ទាំងអស់
+            <span class="chip-count">{{ examResultsList.length }}</span>
           </button>
         </div>
 
-        <div class="filter-row">
-          <button class="filter-btn active">ទាំងអស់</button>
-          <button class="filter-btn">រូបវិទ្យា</button>
-          <button class="filter-btn">អភិវឌ្ឍវេប 101</button>
-          <button class="filter-btn">ថ្នាក់ទី 12-A</button>
+        <div class="table-responsive">
+          <table class="table results-table align-middle mb-0" id="print-table">
+            <thead>
+              <tr>
+                <th class="ps-4">ឈ្មោះវិញ្ញាសា</th>
+                <th>បន្ទប់</th>
+                <th>កាលបរិច្ឆេទ</th>
+                <th style="min-width: 240px;">មតិកែលម្អ</th>
+                <th style="min-width: 160px;">ពិន្ទុ</th>
+                <th class="text-center">និទ្ទេស</th>
+
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="result in paginatedExamResults" :key="result.submission_id">
+
+                <!-- Exam Title -->
+                <td class="ps-4">
+                  <div class="d-flex align-items-center gap-3">
+                   
+                    <span class="exam-name">{{ result.exam_title }}</span>
+                  </div>
+                </td>
+                <td>
+                  <span class="room-badge">{{ result.room }}</span>
+                </td>
+                <td>
+                  <span class="date-text">{{ formatDate(result.submitted_at) }}</span>
+                </td>
+                <td>
+                  <div class="feedback-box" :class="getFeedbackBorderClass(result.grade)">
+                    <i class="fas fa-comment-dots me-1 opacity-50 small"></i>
+                    {{ result.feedback || 'មិនទាន់មានមតិកែលម្អ' }}
+                  </div>
+                </td>
+                <td>
+                  <div class="d-flex align-items-center gap-2">
+                    <div class="score-track flex-grow-1">
+                      <div class="score-fill"
+                        :style="{ width: result.score + '%', background: getProgressBarColor(result.grade) }">
+                      </div>
+                    </div>
+                    <span class="score-num" :style="{ color: getProgressBarColor(result.grade) }">
+                      {{ parseFloat(result.score).toFixed(0) }}
+                    </span>
+                  </div>
+                </td>
+                <td class="text-center">
+                  <span class="grade-badge" :class="getBadgeClass(result.grade)">
+                    {{ result.grade || 'F' }}
+                  </span>
+                </td>
+
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div
+          class="pagination-container d-flex align-items-center justify-content-between px-4 py-3 border-top border-light-subtle flex-wrap gap-2">
+          <div class="pagination-info">
+            បង្ហាញសន្លឹកកិច្ចការ <b>{{ rowRangeStart }}</b> ដល់ <b>{{ rowRangeEnd }}</b> នៃលទ្ធផលសរុប <b>{{
+              examResultsList.length }}</b>
+          </div>
+
+          <div class="d-flex align-items-center gap-1">
+            <button class="page-arrow-btn" :disabled="currentPage === 1" @click="changePage(currentPage - 1)">
+              <i class="fas fa-chevron-left"></i>
+            </button>
+
+            <button v-for="page in totalPages" :key="page" class="page-number-btn"
+              :class="{ active: currentPage === page }" @click="changePage(page)">
+              {{ page }}
+            </button>
+
+            <button class="page-arrow-btn" :disabled="currentPage === totalPages" @click="changePage(currentPage + 1)">
+              <i class="fas fa-chevron-right"></i>
+            </button>
+          </div>
         </div>
 
-        <table>
-          <thead>
-            <tr>
-              <th>ការវាយតម្លៃ</th>
-              <th>វគ្គសិក្សា</th>
-              <th>បានដាក់ស្នើ</th>
-              <th>ពិន្ទុ</th>
-              <th>និទ្ទេស</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>
-                <div class="d-flex align-items-center gap-3">
-                  <div class="assess-icon" style="background: #fef9c3; color: #a16207">
-                    <i class="fas fa-bolt"></i>
-                  </div>
-                  <div class="assess-name">សំណួរ៖ មូលដ្ឋាន Java</div>
-                </div>
-              </td>
-              <td><span class="course-tag">ថ្នាក់ទី 12-A</span></td>
-              <td style="color: var(--txt-mu)">12 តុលា 2023</td>
-              <td>
-                <div class="score-wrap" style="min-width: 120px">
-                  <div class="score-bar">
-                    <div class="score-bar-fill" style="width: 95%; background: var(--em)"></div>
-                  </div>
-                  <span class="score-num" style="color: var(--em)">95</span>
-                </div>
-              </td>
-              <td><span class="grade-badge grade-a">A</span></td>
-              <td class="text-end">
-                <button class="action-btn">ពិនិត្យមើល</button>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <div class="d-flex align-items-center gap-3">
-                  <div class="assess-icon" style="background: #e0f2fe; color: #0284c7">
-                    <i class="fas fa-code"></i>
-                  </div>
-                  <div class="assess-name">ប្លង់ HTML និង CSS</div>
-                </div>
-              </td>
-              <td><span class="course-tag">អភិវឌ្ឍវេប 101</span></td>
-              <td style="color: var(--txt-mu)">08 តុលា 2023</td>
-              <td>
-                <div class="score-wrap" style="min-width: 120px">
-                  <div class="score-bar">
-                    <div class="score-bar-fill" style="width: 88%; background: var(--em)"></div>
-                  </div>
-                  <span class="score-num" style="color: var(--em)">88</span>
-                </div>
-              </td>
-              <td><span class="grade-badge grade-a">A</span></td>
-              <td class="text-end">
-                <button class="action-btn">ពិនិត្យមើល</button>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <div class="d-flex align-items-center gap-3">
-                  <div class="assess-icon" style="background: #fee2e2; color: #dc2626">
-                    <i class="fas fa-graduation-cap"></i>
-                  </div>
-                  <div class="assess-name">ប្រឡងពាក់កណ្តាលឆមាស៖ រូបវិទ្យា</div>
-                </div>
-              </td>
-              <td><span class="course-tag">ថ្នាក់ទី 11-B</span></td>
-              <td style="color: var(--txt-mu)">25 កញ្ញា 2023</td>
-              <td>
-                <div class="score-wrap" style="min-width: 120px">
-                  <div class="score-bar">
-                    <div class="score-bar-fill" style="width: 78%; background: #f59e0b"></div>
-                  </div>
-                  <span class="score-num" style="color: #d97706">78</span>
-                </div>
-              </td>
-              <td><span class="grade-badge grade-b">B</span></td>
-              <td class="text-end">
-                <button class="action-btn">ពិនិត្យមើល</button>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <div class="d-flex align-items-center gap-3">
-                  <div class="assess-icon" style="background: #f3f4f6; color: #6b7280">
-                    <i class="fas fa-vial"></i>
-                  </div>
-                  <div class="assess-name">របាយការណ៍មន្ទីរពិសោធន៍ 1</div>
-                </div>
-              </td>
-              <td><span class="course-tag">ថ្នាក់ទី 11-B</span></td>
-              <td style="color: var(--txt-mu)">15 កញ្ញា 2023</td>
-              <td>
-                <div class="score-wrap" style="min-width: 120px">
-                  <div class="score-bar">
-                    <div class="score-bar-fill" style="width: 65%; background: #ef4444"></div>
-                  </div>
-                  <span class="score-num" style="color: #ef4444">65</span>
-                </div>
-              </td>
-              <td><span class="grade-badge grade-c">C</span></td>
-              <td class="text-end">
-                <button class="action-btn">ពិនិត្យមើល</button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
       </div>
     </div>
   </div>
+
 </template>
 
 <script setup>
+import { getAllStudentExamResult } from "@/api/student.api";
+import { ref, onMounted, computed } from "vue";
 
+
+const examResultsList = ref([]);
+const isLoading = ref(false);
+const errorMessage = ref('');
+
+/* ── PAGINATION STATES ── */
+const currentPage = ref(1);
+const itemsPerPage = ref(5);
+
+const fetchStudentAllResults = async () => {
+  isLoading.value = true;
+  errorMessage.value = '';
+  try {
+    const response = await getAllStudentExamResult();
+    if (response.data && response.data.result === true) {
+      examResultsList.value = response.data.data;
+      currentPage.value = 1;
+    } else {
+      errorMessage.value = "មិនអាចទាញយកប្រវត្តិលទ្ធផលបានឡើយ!";
+    }
+  } catch (error) {
+    errorMessage.value = "មានបញ្ហាក្នុងការតភ្ជាប់ទៅកាន់ Server!";
+  } finally {
+    isLoading.value = false;
+  }
+};
+
+/* ── PAGINATION LOGIC ── */
+const totalPages = computed(() => {
+  return Math.ceil(examResultsList.value.length / itemsPerPage.value) || 1;
+});
+
+const paginatedExamResults = computed(() => {
+  const startIndex = (currentPage.value - 1) * itemsPerPage.value;
+  const endIndex = startIndex + itemsPerPage.value;
+  return examResultsList.value.slice(startIndex, endIndex);
+});
+
+const rowRangeStart = computed(() => {
+  if (examResultsList.value.length === 0) return 0;
+  return (currentPage.value - 1) * itemsPerPage.value + 1;
+});
+
+const rowRangeEnd = computed(() => {
+  const currentEnd = currentPage.value * itemsPerPage.value;
+  return currentEnd > examResultsList.value.length ? examResultsList.value.length : currentEnd;
+});
+
+const changePage = (page) => {
+  if (page >= 1 && page <= totalPages.value) {
+    currentPage.value = page;
+  }
+};
+
+/* ── DASHBOARD LOGIC ── */
+const averageScore = computed(() => {
+  if (examResultsList.value.length === 0) return 0;
+  const total = examResultsList.value.reduce((acc, curr) => acc + (parseFloat(curr.score) || 0), 0);
+  return total / examResultsList.value.length;
+});
+
+const averageGrade = computed(() => {
+  const score = averageScore.value;
+  if (score >= 90) return 'A';
+  if (score >= 80) return 'B';
+  if (score >= 70) return 'C';
+  if (score >= 60) return 'D';
+  if (score >= 50) return 'E';
+  return 'F';
+});
+
+const calculateArc = (score) => {
+  const parsedScore = parseFloat(score) || 0;
+  const maxOffset = 113;
+  return maxOffset - (maxOffset * parsedScore) / 100;
+};
+
+const formatDate = (dateStr) => {
+  if (!dateStr) return '';
+  const date = new Date(dateStr);
+  return date.toLocaleDateString('kh-KH', { day: 'numeric', month: 'long', year: 'numeric' });
+};
+
+const getGradeClass = (grade) => {
+  if (!grade) return 'text-dark';
+  if (['A', 'B'].includes(grade)) return 'text-emerald';
+  if (['C', 'D'].includes(grade)) return 'text-amber';
+  return 'text-rose';
+};
+
+const getProgressBarColor = (grade) => {
+  if (['A', 'B'].includes(grade)) return '#10b981';
+  if (['C', 'D'].includes(grade)) return '#f59e0b';
+  return '#ef4444';
+};
+
+const getBadgeClass = (grade) => {
+  if (['A', 'B'].includes(grade)) return 'badge-success';
+  if (['C', 'D'].includes(grade)) return 'badge-warning';
+  return 'badge-danger';
+};
+
+const getFeedbackBorderClass = (grade) => {
+  if (['A', 'B'].includes(grade)) return 'fb-success';
+  if (['C', 'D'].includes(grade)) return 'fb-warning';
+  return 'fb-danger';
+};
+
+const getAssessIconStyle = (grade) => {
+  if (['A', 'B'].includes(grade)) return 'background:#ecfdf5; color:#059669';
+  if (['C', 'D'].includes(grade)) return 'background:#fffbeb; color:#d97706';
+  return 'background:#fff1f2; color:#e11d48';
+};
+
+const viewCode = (submissionId) => {
+  console.log("Viewing submission code ID:", submissionId);
+};
+
+const exportToCSV = () => {
+  
+  const headers = ["ឈ្មោះវិញ្ញាសា", "បន្ទប់", "កាលបរិច្ឆេទ", "មតិកែលម្អ", "ពិន្ទុ", "និទ្ទេស"];
+
+  const rows = examResultsList.value.map((result) => [
+    `"${result.exam_title || ''}"`, 
+    `"${result.room || ''}"`,
+    formatDate(result.submitted_at),
+    `"${(result.feedback || 'មិនទាន់មានមតិកែលម្អ').replace(/"/g, '""')}"`, 
+    parseFloat(result.score || 0).toFixed(0),
+    result.grade || 'F'
+  ]);
+
+
+  const csvContent = "\ufeff" + [headers.join(","), ...rows.map(e => e.join(","))].join("\n");
+  const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  
+  const link = document.createElement("a");
+  const dateStr = new Date().toISOString().slice(0, 10);
+  
+  link.setAttribute("href", url);
+  link.setAttribute("download", `ប្រវត្តិលទ្ធផល_${dateStr}.csv`);
+  
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+};
+
+onMounted(() => {
+  fetchStudentAllResults();
+});
 </script>
+
 <style scoped>
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-:root {
-  --em: #10b981;
-  --em-dk: #059669;
-  --em-soft: #ecfdf5;
-  --txt: #0f172a;
-  --txt-m: #475569;
-  --txt-mu: #94a3b8;
-  --surf: #ffffff;
-  --bdr: #e2e8f0;
-  --bg: #f8fafc;
-  --sh-sm: 0 4px 12px rgba(0, 0, 0, 0.03);
-  --sh-md: 0 10px 25px rgba(0, 0, 0, 0.05);
-  --sh-hover: 0 15px 35px rgba(16, 185, 129, 0.1);
-}
-
-body {
-  font-family: "Inter", sans-serif;
-  background-color: #f4f7fe;
-  background-image:
-    radial-gradient(at 0% 0%, hsla(158, 76%, 76%, 0.6) 0, transparent 50%),
-    radial-gradient(at 100% 100%, hsla(209, 43%, 80%, 0.6) 0, transparent 50%);
-  height: 100vh;
-  overflow: hidden;
-  color: var(--txt);
-}
-
-a {
-  text-decoration: none;
-  color: inherit;
-}
-
-.workspace {
-  flex: 1;
-  overflow-y: auto;
-  padding: 2rem 2.5rem;
-  font-family: "Kantumruy Pro", "Noto Sans Khmer", "Inter", sans-serif;
-}
-
-/* ── Stat Strip ── */
-.stat-strip {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
-  margin-bottom: 24px;
-}
-
-.stat-card {
-  background: #fff;
-  border: 1px solid var(--bdr);
-  border-radius: 18px;
-  padding: 22px 24px;
+.state-center {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 18px;
-  box-shadow: var(--sh-sm);
-  transition: 0.25s;
+  justify-content: center;
+  min-height: 40vh;
+  gap: 12px;
 }
 
-.stat-card:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--sh-hover);
-  border-color: rgba(16, 185, 129, 0.3);
+.custom-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid #e2e8f0;
+  border-top-color: #10b981;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
 }
 
-.stat-icon {
-  width: 50px;
-  height: 50px;
-  border-radius: 14px;
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.state-icon-box {
+  width: 64px;
+  height: 64px;
+  border-radius: 18px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.3rem;
+  font-size: 1.6rem;
+}
+
+.error-box {
+  background: #fff1f2;
+  color: #e11d48;
+}
+
+.empty-box {
+  background: #f1f5f9;
+  color: #94a3b8;
+}
+
+.state-text {
+  font-size: 0.9rem;
+  color: #64748b;
+  font-weight: 500;
+}
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+}
+
+.white-flat-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.03), 0 10px 18px rgba(15, 23, 42, 0.015);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.white-flat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.05);
+}
+
+.icon-pill {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.15rem;
   flex-shrink: 0;
 }
 
-.ic-blue {
-  background: #eff6ff;
-  color: #3b82f6;
-}
-
-.ic-purple {
+.icon-pill.purple {
   background: #f3e8ff;
-  color: #9333ea;
+  color: #7c3aed;
 }
 
-.stat-label {
-  font-size: 0.7rem;
+.icon-pill.blue {
+  background: #e0f2fe;
+  color: #0284c7;
+}
+
+.card-label {
+  font-size: 0.68rem;
   font-weight: 700;
+  letter-spacing: 0.8px;
   text-transform: uppercase;
-  letter-spacing: 0.6px;
-  color: var(--txt-mu);
-  margin-bottom: 4px;
+  color: #434444;
+  margin-bottom: 2px;
 }
 
-.stat-value {
-  font-size: 1.6rem;
-  font-weight: 800;
-  color: var(--txt);
-  line-height: 1;
+.card-value {
+  font-size: 1.3rem;
+  font-weight: 700;
+  line-height: 1.2;
+  color: #0f172a;
 }
 
-.stat-sub {
-  font-size: 0.75rem;
+.card-unit {
+  font-size: 0.8rem;
   font-weight: 600;
-  color: var(--txt-mu);
-  margin-top: 3px;
+  color: #64748b;
 }
 
-/* Progress arc for average */
-.arc-wrap {
-  width: 50px;
-  height: 50px;
+.card-sub {
+  font-size: 0.75rem;
+  font-weight: 500;
+  margin-top: 2px;
+}
+
+.purple-text {
+  color: #7c3aed;
+}
+
+.blue-text {
+  color: #0284c7;
+}
+
+.muted-text {
+  color: #94a3b8;
+}
+
+.text-emerald {
+  color: #10b981;
+}
+
+.text-amber {
+  color: #f59e0b;
+}
+
+.text-rose {
+  color: #ef4444;
+}
+
+/* ── Arc Progress ── */
+.arc-ring {
+  width: 52px;
+  height: 52px;
   position: relative;
   flex-shrink: 0;
 }
 
-.arc-wrap svg {
+.arc-ring svg {
   transform: rotate(-90deg);
+  width: 100%;
+  height: 100%;
 }
 
 .arc-track {
   fill: none;
-  stroke: var(--em-soft);
-  stroke-width: 5;
+  stroke: #f1f5f9;
+  stroke-width: 4;
 }
 
 .arc-fill {
   fill: none;
-  stroke: var(--em);
-  stroke-width: 5;
+  stroke: #10b981;
+  stroke-width: 4;
   stroke-linecap: round;
-  stroke-dasharray: 126;
-  stroke-dashoffset: 14;
-  transition: stroke-dashoffset 1s ease;
+  stroke-dasharray: 113;
+  transition: stroke-dashoffset 0.8s ease-in-out;
 }
 
 .arc-label {
@@ -324,144 +517,192 @@ a {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.7rem;
-  font-weight: 800;
-  color: var(--em-dk);
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #0f172a;
 }
 
 /* ── Table Card ── */
 .table-card {
   background: #fff;
-  border: 1px solid var(--bdr);
-  border-radius: 20px;
-  box-shadow: var(--sh-sm);
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.03), 0 10px 18px rgba(15, 23, 42, 0.015);
   overflow: hidden;
 }
 
-.table-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 22px 28px 0;
+.table-heading {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #0f172a;
 }
 
-.table-head h6 {
-  font-size: 0.95rem;
-  font-weight: 800;
-  color: var(--txt);
-  margin: 0;
-}
-
-.filter-row {
-  display: flex;
-  gap: 8px;
-  padding: 16px 28px;
-  border-bottom: 1px solid var(--bdr);
-}
-
-.filter-btn {
-  border: 1px solid var(--bdr);
-  background: var(--bg);
-  color: var(--txt-mu);
+.table-subheading {
   font-size: 0.78rem;
-  font-weight: 700;
-  padding: 6px 16px;
-  border-radius: 20px;
+  color: #94a3b8;
+}
+
+.dl-btn {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: #fff;
+  border: none;
+  border-radius: 50px;
+  font-size: 0.8rem;
+  font-weight: 600;
   cursor: pointer;
-  transition: 0.2s;
+  transition: all 0.2s;
 }
 
-.filter-btn.active,
-.filter-btn:hover {
-  border-color: var(--em);
-  color: var(--em);
-  background: var(--em-soft);
+.dl-btn:hover {
+  opacity: 0.92;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
 }
 
-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-thead th {
-  padding: 14px 20px;
-  font-size: 0.7rem;
-  font-weight: 700;
-  color: var(--txt-mu);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  background: #fafafa;
-  border-bottom: 1px solid var(--bdr);
-}
-
-tbody tr {
-  transition: background 0.15s;
-  cursor: pointer;
-}
-
-tbody tr:hover td {
-  background: #f8fffe;
-}
-
-tbody tr:not(:last-child) td {
+.filter-strip {
   border-bottom: 1px solid #f1f5f9;
 }
 
-td {
-  padding: 18px 20px;
-  font-size: 0.88rem;
+.filter-chip {
+  background: none;
+  border: 1px solid transparent;
+  border-radius: 50px;
+  padding: 4px 14px;
+  font-size: 0.78rem;
   font-weight: 600;
-  color: var(--txt);
+  color: #64748b;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.filter-chip.active {
+  background: #ecfdf5;
+  color: #059669;
+  border-color: rgba(16, 185, 129, 0.25);
+}
+
+.chip-count {
+  background: #d1fae5;
+  color: #065f46;
+  border-radius: 50px;
+  padding: 1px 7px;
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+
+/* ── Table ── */
+.results-table thead th {
+  background: #f8fafc;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: #373737;
+  padding: 14px 16px;
+  border-bottom: 1px solid #e2e8f0;
+  white-space: nowrap;
+}
+
+.results-table tbody tr {
+  border-bottom: 1px solid #f1f5f9;
+  transition: background 0.15s;
+}
+
+.results-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.results-table tbody tr:hover {
+  background: #f8fafc;
+}
+
+.results-table tbody td {
+  padding: 14px 16px;
   vertical-align: middle;
 }
 
-.assess-icon {
-  width: 34px;
-  height: 34px;
+.exam-icon {
+  width: 36px;
+  height: 36px;
   border-radius: 10px;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   font-size: 0.85rem;
   flex-shrink: 0;
 }
 
-.assess-name {
-  font-weight: 700;
-  font-size: 0.9rem;
-  color: var(--txt);
+.exam-name {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #1e293b;
 }
 
-.course-tag {
-  display: inline-block;
-  font-size: 0.72rem;
-  font-weight: 700;
-  color: var(--txt-mu);
-}
-
-/* Score bar */
-.score-wrap {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.score-bar {
-  flex: 1;
-  height: 5px;
-  border-radius: 99px;
+.room-badge {
   background: #f1f5f9;
+  color: #475569;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 3px 14px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  white-space: nowrap;
 }
 
-.score-bar-fill {
+.date-text {
+  font-size: 0.78rem;
+  color: #64748b;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.feedback-box {
+  font-size: 0.78rem;
+  font-style: italic;
+  color: #64748b;
+  line-height: 1.5;
+  padding: 8px 12px;
+  border-radius: 10px;
+  border-left: 3px solid;
+  max-width: 280px;
+}
+
+.fb-success {
+  border-color: #10b981;
+  background: #f0fdf4;
+}
+
+.fb-warning {
+  border-color: #f59e0b;
+  background: #fffbeb;
+}
+
+.fb-danger {
+  border-color: #ef4444;
+  background: #fff1f2;
+}
+
+.score-track {
+  height: 6px;
+  background: #e2e8f0;
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.score-fill {
   height: 100%;
   border-radius: 99px;
+  transition: width 1s ease;
 }
 
 .score-num {
-  font-size: 0.85rem;
-  font-weight: 800;
-  min-width: 36px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  font-family: monospace;
+  min-width: 30px;
   text-align: right;
 }
 
@@ -469,65 +710,118 @@ td {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 30px;
-  height: 30px;
-  border-radius: 8px;
-  font-size: 0.8rem;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  font-size: 0.85rem;
   font-weight: 800;
 }
 
-.grade-a {
+.badge-success {
   background: #dcfce7;
-  color: #166534;
+  color: #15803d;
 }
 
-.grade-b {
+.badge-warning {
   background: #fef9c3;
-  color: #92400e;
+  color: #a16207;
 }
 
-.grade-c {
+.badge-danger {
   background: #fee2e2;
-  color: #991b1b;
+  color: #b91c1c;
 }
 
-.action-btn {
-  opacity: 0;
-  border: 1px solid var(--bdr);
-  background: #fff;
-  color: var(--txt-m);
-  font-size: 0.75rem;
-  font-weight: 700;
-  padding: 5px 14px;
-  border-radius: 20px;
+.view-btn {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 50px;
+  padding: 6px 16px;
+  font-size: 0.76rem;
+  font-weight: 600;
+  color: #475569;
   cursor: pointer;
   transition: all 0.2s;
   white-space: nowrap;
 }
 
-tbody tr:hover .action-btn {
-  opacity: 1;
-  border-color: var(--em);
-  color: var(--em);
-  background: var(--em-soft);
-}
-
-.download-btn {
-  background: var(--em);
+.view-btn:hover {
+  background: #0f172a;
   color: #fff;
-  border: none;
-  font-size: 0.8rem;
-  font-weight: 700;
-  padding: 8px 20px;
-  border-radius: 20px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  transition: 0.2s;
+  border-color: #0f172a;
 }
 
-.download-btn:hover {
-  background: var(--em-dk);
+/* ── PAGINATION STYLES ── */
+.pagination-container {
+  background-color: #ffffff;
+}
+
+.pagination-info {
+  font-size: 0.82rem;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.pagination-info b {
+  color: #065f46;
+  font-weight: 600;
+  background: #e6f4ea;
+  padding: 2px 6px;
+  border-radius: 4px;
+  margin: 0 2px;
+}
+
+.page-arrow-btn {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  color: #10b981;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.page-arrow-btn:hover:not(:disabled) {
+  background: #e6f4ea;
+  border-color: #a7f3d0;
+  color: #059669;
+  transform: scale(1.03);
+}
+
+.page-arrow-btn:disabled {
+  opacity: 0.35;
+  color: #94a3b8;
+  border-color: #e2e8f0;
+  cursor: not-allowed;
+}
+
+.page-number-btn {
+  background: #ffffff;
+  border: 1px solid transparent;
+  color: #475569;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.page-number-btn:hover {
+  background: #e6f4ea;
+  color: #059669;
+}
+
+.page-number-btn.active {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: #ffffff;
+  border-color: #10b981;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
 }
 </style>

@@ -1,10 +1,8 @@
 <template>
   <aside class="sidebar">
     <div class="sidebar-brand">
-      <div class="brand-icon">
-        <i class="bi bi-mortarboard-fill"></i>
-      </div>
-      <div class="brand-name">Pralong <span>{{ roleName }}</span></div>
+      <a href="#"> <img :src="logoImage" alt="Pralong Logo" class="brand-logo" />
+      </a>
     </div>
 
     <template v-if="mainMenus && mainMenus.length">
@@ -32,7 +30,7 @@
 </template>
 
 <script setup>
-
+import logoImage from '../../../assets/images/pralong-logo.png';
 defineProps({
   roleName: {
     type: String,
@@ -65,38 +63,24 @@ defineProps({
   padding: 0 0 24px 0;
   box-shadow: 4px 0 18px rgba(63, 186, 127, 0.06);
 }
-
 .sidebar-brand {
+  padding: 39px 20px; 
   display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 20px 12px 20px;
+  align-items: center; 
+  justify-content: flex-start; 
   border-bottom: 1.5px solid var(--green-mid);
-  margin-bottom: 30px;
+  height: 60px; 
+  margin-bottom: 20px; 
+  gap: 0;              
 }
 
-.sidebar-brand .brand-icon {
-  width: 38px;
-  height: 38px;
-  background: var(--green-primary);
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #fff;
-  font-size: 18px;
+.brand-logo {
+  max-width: 190px;   
+  height: auto; 
+  display: block;      
+  
 }
 
-.sidebar-brand .brand-name {
-  font-size: 20px;
-  font-weight: 800;
-  color: var(--text-main);
-  letter-spacing: -0.5px;
-}
-
-.sidebar-brand .brand-name span {
-  color: var(--green-primary);
-}
 
 .nav-section-label {
   font-size: 12px;

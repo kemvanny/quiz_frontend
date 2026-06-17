@@ -475,12 +475,10 @@ input:-webkit-autofill:active {
     box-shadow: none;
 }
 
-/* Responsive */
 @media(max-width:850px) {
     .login-container {
         padding: 80px 20px 20px;
         position: absolute;
-        /* អនុញ្ញាតឱ្យរត់តាមកម្ពស់អេក្រង់ទូរស័ព្ទ */
     }
 
     .card-wrapper {
