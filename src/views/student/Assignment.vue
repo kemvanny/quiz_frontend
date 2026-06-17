@@ -1,6 +1,6 @@
 <template>
   <div>
-      <div style="max-width: 860px; margin: 0 auto">
+      <div style="max-width: 1000px; ">
         <!-- Tabs -->
         <div class="tab-row">
           <div class="tab-pills">

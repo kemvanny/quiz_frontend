@@ -2,40 +2,37 @@
   <section class="student-dashboard">
     <!-- STATS -->
     <div class="stats">
-      <a href="4.st-results.html" class="stat">
-        <div class="stat-icon" style="background: var(--em-soft); color: var(--em)">
+      <a href="#" class="stat">
+        <div class="stat-icon icon-green" >
           <i class="bi bi-check-circle"></i>
         </div>
         <div>
-          <div class="stat-label">Exams Done</div>
+          <div class="stat-label">ការប្រឡងដែលបានធ្វើរួច</div>
           <div class="stat-value">34</div>
-          <div class="stat-trend" style="color: var(--em)">↑ 3 this week</div>
+         
         </div>
       </a>
 
-      <a href="2.st-my-rooms.html" class="stat">
-        <div class="stat-icon" style="background: var(--blue-soft); color: #3b82f6">
+      <a href="#" class="stat">
+        <div class="stat-icon icon-blue" >
           <i class="bi bi-door-open"></i>
         </div>
         <div>
-          <div class="stat-label">Enrolled Rooms</div>
+          <div class="stat-label">បន្ទប់ដែលបានចូលរួម</div>
           <div class="stat-value">6</div>
-          <div class="stat-trend" style="color: var(--txt-lt)">
-            Active semester
-          </div>
         </div>
       </a>
 
-      <a href="4.st-results.html" class="stat">
-        <div class="stat-icon" style="background: #f8fafc; color: var(--txt-mu)">
+      <a href="#" class="stat">
+        <div class="stat-icon icon-orange" >
           <i class="bi bi-graph-up-arrow"></i>
         </div>
         <div>
-          <div class="stat-label">Overall Avg.</div>
+          <div class="stat-label">ពិន្ទុជាមធ្យមសរុប</div>
           <div class="stat-value">89%</div>
-          <div class="stat-trend" style="color: #ef4444">
+          <!-- <div class="stat-trend" style="color: #ef4444">
             ↓ 1.2% vs last month
-          </div>
+          </div> -->
         </div>
       </a>
     </div>
@@ -48,17 +45,17 @@
         <div class="card">
           <div class="qa-wrap">
             <div>
-              <div class="card-title no-margin">Quick Actions</div>
+              <div class="card-title no-margin">សកម្មភាពរហ័ស</div>
             </div>
             <div class="qa-btns">
               <button class="btn primary" @click="openModal">
-                <i class="bi bi-plus-lg"></i> Join a Class
+                <i class="bi bi-plus-lg"></i>ចូលរួមថ្នាក់រៀន
               </button>
-              <a href="3.st-assignments.html" class="btn">
-                <i class="bi bi-clipboard-check"></i> Pending Tasks
+              <a href="#" class="btn">
+                <i class="bi bi-clipboard-check"></i> កិច្ចការដែលត្រូវធ្វើ
               </a>
-              <a href="5.st-readiness.html" class="btn">
-                <i class="bi bi-laptop"></i> System Check
+              <a href="#" class="btn">
+                <i class="bi bi-laptop"></i> ពិនិត្យប្រព័ន្ធសិក្សា
               </a>
             </div>
           </div>
@@ -68,19 +65,19 @@
         <div class="card">
           <div class="perf-head">
             <div>
-              <div class="card-title">Performance by Subject</div>
+              <div class="card-title">លទ្ធផលសិក្សាតាមមុខវិជ្ជា</div>
             </div>
             <div class="gpa-block">
-              <div class="gpa-val">A–</div>
-              <div class="gpa-lbl">Current GPA</div>
-              <a href="4.st-results.html" class="view-link" style="display: block; margin-top: 6px">Full Report →</a>
+              <div class="gpa-val">A-</div>
+              <div class="gpa-lbl">ពិន្ទុ GPA សរុប</div>
+              <a href="#" class="view-link" style="display: block; margin-top: 6px">មើលរបាយការណ៍លម្អិត →</a>
             </div>
           </div>
 
           <div class="subj-row">
             <div class="subj-dot" style="background: #10b981"></div>
             <div class="subj-info">
-              <div class="subj-name">Java Programming</div>
+              <div class="subj-name">មុខវិជ្ជា Java</div>
             </div>
             <div class="subj-track">
               <div class="subj-fill" style="width: 95%; background: #10b981"></div>
@@ -90,7 +87,7 @@
           <div class="subj-row">
             <div class="subj-dot" style="background: #3b82f6"></div>
             <div class="subj-info">
-              <div class="subj-name">Web Development</div>
+              <div class="subj-name">មុខវិជ្ជា Web Dev</div>
             </div>
             <div class="subj-track">
               <div class="subj-fill" style="width: 92%; background: #3b82f6"></div>
@@ -100,7 +97,7 @@
           <div class="subj-row">
             <div class="subj-dot" style="background: #8b5cf6"></div>
             <div class="subj-info">
-              <div class="subj-name">Physics</div>
+              <div class="subj-name">មុខវិជ្ជា រូបវិទ្យា</div>
             </div>
             <div class="subj-track">
               <div class="subj-fill" style="width: 90%; background: #8b5cf6"></div>
@@ -110,7 +107,7 @@
           <div class="subj-row">
             <div class="subj-dot" style="background: #f59e0b"></div>
             <div class="subj-info">
-              <div class="subj-name">Biology</div>
+              <div class="subj-name">មុខវិជ្ជា ជីវវិទ្យា</div>
             </div>
             <div class="subj-track">
               <div class="subj-fill" style="width: 85%; background: #f59e0b"></div>
@@ -120,7 +117,7 @@
           <div class="subj-row">
             <div class="subj-dot" style="background: #ef4444"></div>
             <div class="subj-info">
-              <div class="subj-name">Mathematics</div>
+              <div class="subj-name">មុខវិជ្ជា គណិតវិទ្យា</div>
             </div>
             <div class="subj-track">
               <div class="subj-fill" style="width: 75%; background: #ef4444"></div>
@@ -129,8 +126,8 @@
           </div>
 
           <div class="perf-footer">
-            <span class="badge badge-green">⭐ Top 15% of class</span>
-            Based on 34 verified academic assessments
+            <span class="badge badge-green">សិស្សពូកែ ១៥% ក្នុងថ្នាក់</span>
+           គណនាផ្អែកលើការប្រឡង ៣៤ លើក
           </div>
         </div>
       </div>
@@ -141,9 +138,9 @@
         <div class="card" style="border-top: 3px solid #f59e0b; border-radius: 0 0 14px 14px">
           <div class="section-head">
             <div>
-              <div class="card-title">Upcoming Deadlines</div>
+              <div class="card-title">កិច្ចការជិតដល់ថ្ងៃកំណត់</div>
             </div>
-            <a href="3.st-assignments.html" class="view-link">View all</a>
+            <a href="3.st-assignments.html" class="view-link">មើលទាំងអស់</a>
           </div>
 
           <a href="3.st-assignments.html" class="dl-item" style="
@@ -154,8 +151,8 @@
               <i class="bi bi-hourglass-split"></i>
             </div>
             <div style="flex: 1">
-              <div class="dl-name" style="color: #92400e">Midterm — PHP</div>
-              <div class="dl-time" style="color: #b45309">Due in 2 hours</div>
+              <div class="dl-name" style="color: #92400e">ប្រឡងពាក់កណ្ដាលឆមាស — PHP</div>
+              <div class="dl-time" style="color: #b45309">នៅសល់ ២ ម៉ោងទៀត</div>
             </div>
             <i class="bi bi-chevron-right" style="color: #d97706; font-size: 15px"></i>
           </a>
@@ -169,7 +166,7 @@
             </div>
             <div style="flex: 1">
               <div class="dl-name" style="color: #991b1b">Quiz — SQL Joins</div>
-              <div class="dl-time" style="color: #dc2626">Due in 15 mins!</div>
+              <div class="dl-time" style="color: #dc2626">នៅសល់ ១៥ នាទីទៀត!</div>
             </div>
             <i class="bi bi-chevron-right" style="color: #ef4444; font-size: 15px"></i>
           </a>
@@ -179,9 +176,9 @@
         <div class="card">
           <div class="section-head">
             <div>
-              <div class="card-title">Recent Feedback</div>
+              <div class="card-title">មតិយោបល់ថ្មីៗ</div>
             </div>
-            <a href="4.st-results.html" class="view-link">History</a>
+            <a href="4.st-results.html" class="view-link">ប្រវត្តិពិន្ទុ</a>
           </div>
 
           <div class="fb-row">
@@ -191,7 +188,7 @@
               </div>
               <div>
                 <div class="fb-quiz">Java Basics Quiz</div>
-                <div class="fb-when">Graded 2 hrs ago</div>
+                <div class="fb-when">គ្រូកែ ២ ម៉ោងមុន</div>
               </div>
             </div>
             <span class="badge badge-green">95/100</span>
@@ -204,7 +201,7 @@
               </div>
               <div>
                 <div class="fb-quiz">Web Layouts Assg.</div>
-                <div class="fb-when">Graded yesterday</div>
+                <div class="fb-when">គ្រូកែម្សិលមិញ</div>
               </div>
             </div>
             <span class="badge badge-green">88/100</span>
@@ -217,7 +214,7 @@
               </div>
               <div>
                 <div class="fb-quiz">HTML Tags Quiz</div>
-                <div class="fb-when">Needs review</div>
+                <div class="fb-when">ត្រូវពិនិត្យឡើងវិញ</div>
               </div>
             </div>
             <span class="badge badge-amber">72/100</span>
@@ -290,19 +287,18 @@ function joinClass() {
 .student-dashboard {
   --em: #10b981;
   --em-dk: #059669;
-  --em-soft: #ecfdf5;
+ --em-soft: #d1fae5;
   --em-text: #065f46;
-  --blue-soft: #eff6ff;
-  --amber-soft: #fffbeb;
+ --blue-soft: #dbeafe;
+ --amber-soft: #fef3c7;
   --amber-border: #fde68a;
   --amber-text: #b45309;
-  --red-soft: #fef2f2;
+ --red-soft: #fee2e2;
   --red-border: #fee2e2;
   --txt: #0f172a;
   --txt-mu: #64748b;
   --txt-lt: #94a3b8;
   --border: #e2e8f0;
-  /* --bg: #f1f5f9; */
   --surf: #ffffff;
   --radius: 14px;
   --radius-sm: 9px;
@@ -310,9 +306,8 @@ function joinClass() {
   display: flex;
   flex-direction: column;
   gap: 20px;
-  /* background: var(--bg); */
   color: var(--txt);
-  font-family: "Inter", sans-serif;
+  font-family: "Kantumruy Pro", sans-serif;
   min-width: 0;
 }
 
@@ -340,15 +335,17 @@ function joinClass() {
   grid-template-columns: repeat(3, 1fr);
   gap: 14px;
 }
-
 .stat {
   background: var(--surf);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  padding: 20px 22px;
+  padding: 24px 20px;
+
   display: flex;
-  gap: 16px;
-  align-items: center;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;          
+  
   cursor: pointer;
   transition: 0.15s;
 }
@@ -361,34 +358,42 @@ function joinClass() {
 .stat-icon {
   width: 46px;
   height: 46px;
-  border-radius: 11px;
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 21px;
   flex-shrink: 0;
+  background: inherit;
+}
+.icon-green { background: var(--em-soft) !important; color: var(--em) !important; }
+.icon-blue { background: var(--blue-soft) !important; color: #3b82f6 !important; }
+.icon-orange { 
+    background: #ffedd5 !important;
+    color: #ea580c !important;     
 }
 
 .stat-label {
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--txt-lt);
+  font-size: 12.5px;
+  font-weight: 600 !important;
+  color: var(--txt-mu);
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  margin-bottom: 5px;
+  margin-bottom: 0px; 
 }
 
 .stat-value {
   font-size: 26px;
   font-weight: 700;
   line-height: 1;
-  margin-bottom: 4px;
   color: var(--txt);
+  margin-top: 15px;
 }
 
 .stat-trend {
   font-size: 12px;
   font-weight: 600;
+  margin-top: 4px;
 }
 
 /* ── GRID ── */
