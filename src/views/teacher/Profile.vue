@@ -380,7 +380,7 @@ const confirmSignOut = async () => {
   } catch (err) {
     console.error("Logout API Error:", err);
   } finally {
-    sessionStorage.clear();
+    localStorage.clear();
     toast.success('ចាកចេញពីប្រព័ន្ធបានជោគជ័យ!', toastConfig);
     setTimeout(() => {
       window.location.href = '/login';

@@ -780,7 +780,6 @@ onMounted(async () => {
   display: grid;
   grid-template-columns: 320px 1fr;
   animation: fadeUp .55s cubic-bezier(.22, .68, 0, 1.2) both;
-  position: fixed;
 }
 
 .left-panel {

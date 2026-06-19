@@ -1,41 +1,41 @@
+
 <template>
   <section class="student-dashboard">
+
+    <div v-if="isLoading" class="text-center py-5" style="color: var(--txt-mu)">
+      <i class="fas fa-spinner fa-spin fa-2x mb-2"></i>
+      <div>កំពុងផ្ទុកទិន្នន័យ....</div>
+    </div>
     <!-- STATS -->
     <div class="stats">
-      <a href="4.st-results.html" class="stat">
-        <div class="stat-icon" style="background: var(--em-soft); color: var(--em)">
+      <a href="#" class="stat">
+        <div class="stat-icon icon-green" >
           <i class="bi bi-check-circle"></i>
         </div>
         <div>
-          <div class="stat-label">Exams Done</div>
-          <div class="stat-value">34</div>
-          <div class="stat-trend" style="color: var(--em)">↑ 3 this week</div>
+          <div class="stat-label">ការប្រឡងដែលបានធ្វើរួច</div>
+          <div class="stat-value">{{ dashboardData.examsDone || 0 }}</div>
+         
         </div>
       </a>
 
-      <a href="2.st-my-rooms.html" class="stat">
-        <div class="stat-icon" style="background: var(--blue-soft); color: #3b82f6">
+      <a href="#" class="stat">
+        <div class="stat-icon icon-blue" >
           <i class="bi bi-door-open"></i>
         </div>
         <div>
-          <div class="stat-label">Enrolled Rooms</div>
-          <div class="stat-value">6</div>
-          <div class="stat-trend" style="color: var(--txt-lt)">
-            Active semester
-          </div>
+          <div class="stat-label">បន្ទប់ដែលបានចូលរួម</div>
+          <div class="stat-value">{{ dashboardData.enrolledRooms || 0 }}</div>
         </div>
       </a>
 
-      <a href="4.st-results.html" class="stat">
-        <div class="stat-icon" style="background: #f8fafc; color: var(--txt-mu)">
+      <a href="#" class="stat">
+        <div class="stat-icon icon-orange" >
           <i class="bi bi-graph-up-arrow"></i>
         </div>
         <div>
-          <div class="stat-label">Overall Avg.</div>
-          <div class="stat-value">89%</div>
-          <div class="stat-trend" style="color: #ef4444">
-            ↓ 1.2% vs last month
-          </div>
+          <div class="stat-label">ពិន្ទុជាមធ្យមសរុប</div>
+          <div class="stat-value">{{ dashboardData.overallAvg || '0%' }}</div>
         </div>
       </a>
     </div>
@@ -48,195 +48,131 @@
         <div class="card">
           <div class="qa-wrap">
             <div>
-              <div class="card-title no-margin">Quick Actions</div>
+              <div class="card-title no-margin">សកម្មភាពរហ័ស</div>
             </div>
             <div class="qa-btns">
               <button class="btn primary" @click="openModal">
-                <i class="bi bi-plus-lg"></i> Join a Class
+                <i class="bi bi-plus-lg"></i>ចូលរួមថ្នាក់រៀន
               </button>
-              <a href="3.st-assignments.html" class="btn">
-                <i class="bi bi-clipboard-check"></i> Pending Tasks
+              <a href="#" class="btn">
+                <i class="bi bi-clipboard-check"></i> កិច្ចការដែលត្រូវធ្វើ
               </a>
-              <a href="5.st-readiness.html" class="btn">
-                <i class="bi bi-laptop"></i> System Check
+              <a href="#" class="btn">
+                <i class="bi bi-laptop"></i> ពិនិត្យប្រព័ន្ធសិក្សា
               </a>
             </div>
-          </div>
-        </div>
+           </div>
+           </div>
 
         <!-- Performance -->
-        <div class="card">
-          <div class="perf-head">
-            <div>
-              <div class="card-title">Performance by Subject</div>
+        
+        
+          <div class="card">
+            <div class="perf-head">
+              <div>
+                <div class="card-title">លទ្ធផលសិក្សាតាមមុខវិជ្ជា</div>
+                 
+              </div>
+              <div class="gpa-block" v-if="performanceList">
+                <div class="gpa-val text-center">{{ performanceList.currentGPA }}</div>
+               
+                <div class="gpa-lbl">មធ្យមភាគប៉ាន់ស្មាន</div>
+                <a href="4.st-results.html" class="view-link" style="display: block; margin-top: 6px">របាយការណ៍លម្អិត →</a>
+              </div>
             </div>
-            <div class="gpa-block">
-              <div class="gpa-val">A–</div>
-              <div class="gpa-lbl">Current GPA</div>
-              <a href="4.st-results.html" class="view-link" style="display: block; margin-top: 6px">Full Report →</a>
+
+            <div v-if="performanceList.length === 0" class="py-3 text-center text-muted">
+              មិនមានទិន្នន័យលទ្ធផលសិក្សាទេ
             </div>
+            <div v-else v-for="(subject, index) in performanceList.subjects" :key="index" class="subj-row">
+              <div class="subj-dot" :style="{ background: getSubjectColor(index) }"></div>
+              <div class="subj-info">
+                <div class="subj-name">{{ subject.subjectName }}</div>
+              </div>
+              <div class="subj-track">
+                <div class="subj-fill" :style="{ width: subject.percentage + '%', background: getSubjectColor(index) }">
+                </div>
+              </div>
+              <div class="subj-pct">{{ subject.percentage }}%</div>
+            </div>
+
+            <div class="perf-footer">
+              ផ្អែកលើការវាយតម្លៃសិក្សាដែលបានផ្ទៀងផ្ទាត់
+            </div>
+          </div>
+        </div>
+
+        <div class="right-col">
+          <div class="card" style="border-top: 3px solid #f59e0b; border-radius: 0 0 14px 14px">
+            <div class="section-head">
+              <div>
+                <div class="card-title">កាលកំណត់ជិតដល់</div>
+              </div>
+            </div>
+
+            <div v-if="deadlineList.length === 0" class="py-4 text-center text-muted">
+              <i class="bi bi-calendar-check d-block mb-1 fs-4"></i> គ្មានកាលកំណត់សម្រាប់ថ្ងៃនេះទេ!
+              
+            </div>
+
+            <a v-else v-for="dl in deadlineList" :key="dl.examId" href="3.st-assignments.html" class="dl-item"
+              style="
+                background: var(--amber-soft);
+                border: 1px solid var(--amber-border);
+                margin-bottom: 8px;
+              ">
+              <div class="dl-icon" style="background: #fef3c7; color: #b45309">
+                <i class="bi bi-hourglass-split"></i>
+              </div>
+              <div style="flex: 1">
+                <div class="dl-name" style="color: #92400e">{{ dl.title }}</div>
+                <div class="dl-time" style="color: #b45309">{{ dl.dueText }}</div>
+              </div>
+              <i class="bi bi-chevron-right" style="color: #d97706; font-size: 15px"></i>
+            </a>
           </div>
 
-          <div class="subj-row">
-            <div class="subj-dot" style="background: #10b981"></div>
-            <div class="subj-info">
-              <div class="subj-name">Java Programming</div>
+          <div class="card">
+            <div class="section-head">
+              <div>
+                <div class="card-title">មតិកែលម្អថ្មីៗ</div>
+              </div>
+               <router-link :to="{name: 'AnalyticsResult',}" class="view-link">មើលលម្អិត</router-link>
             </div>
-            <div class="subj-track">
-              <div class="subj-fill" style="width: 95%; background: #10b981"></div>
-            </div>
-            <div class="subj-pct">95%</div>
-          </div>
-          <div class="subj-row">
-            <div class="subj-dot" style="background: #3b82f6"></div>
-            <div class="subj-info">
-              <div class="subj-name">Web Development</div>
-            </div>
-            <div class="subj-track">
-              <div class="subj-fill" style="width: 92%; background: #3b82f6"></div>
-            </div>
-            <div class="subj-pct">92%</div>
-          </div>
-          <div class="subj-row">
-            <div class="subj-dot" style="background: #8b5cf6"></div>
-            <div class="subj-info">
-              <div class="subj-name">Physics</div>
-            </div>
-            <div class="subj-track">
-              <div class="subj-fill" style="width: 90%; background: #8b5cf6"></div>
-            </div>
-            <div class="subj-pct">90%</div>
-          </div>
-          <div class="subj-row">
-            <div class="subj-dot" style="background: #f59e0b"></div>
-            <div class="subj-info">
-              <div class="subj-name">Biology</div>
-            </div>
-            <div class="subj-track">
-              <div class="subj-fill" style="width: 85%; background: #f59e0b"></div>
-            </div>
-            <div class="subj-pct">85%</div>
-          </div>
-          <div class="subj-row">
-            <div class="subj-dot" style="background: #ef4444"></div>
-            <div class="subj-info">
-              <div class="subj-name">Mathematics</div>
-            </div>
-            <div class="subj-track">
-              <div class="subj-fill" style="width: 75%; background: #ef4444"></div>
-            </div>
-            <div class="subj-pct">75%</div>
-          </div>
 
-          <div class="perf-footer">
-            <span class="badge badge-green">⭐ Top 15% of class</span>
-            Based on 34 verified academic assessments
+            <div v-if="feedbackList.length === 0" class="py-3 text-center text-muted">
+              មិនមានមតិកែលម្អលើការប្រឡងថ្មីៗទេ
+            </div>
+            <div v-else v-for="fb in feedbackList" :key="fb.id" class="fb-row">
+              <div class="fb-left">
+                <div class="fb-icon" style="background: var(--em-soft); color: var(--em)">
+                  <i class="bi bi-award"></i>
+                </div>
+                <div>
+                  <div class="fb-quiz">{{ fb.examTitle || fb.title }}</div>
+                  <div class="fb-when">Graded {{ fb.gradedAt || 'recently' }}</div>
+                </div>
+              </div>
+              <span class="badge" :class="fb.score >= 50 ? 'badge-green' : 'badge-amber'">
+                {{ fb.score }}/100
+              </span>
+            </div>
           </div>
         </div>
       </div>
 
-      <!-- RIGHT -->
-      <div class="right-col">
-        <!-- Deadlines -->
-        <div class="card" style="border-top: 3px solid #f59e0b; border-radius: 0 0 14px 14px">
-          <div class="section-head">
-            <div>
-              <div class="card-title">Upcoming Deadlines</div>
-            </div>
-            <a href="3.st-assignments.html" class="view-link">View all</a>
-          </div>
-
-          <a href="3.st-assignments.html" class="dl-item" style="
-              background: var(--amber-soft);
-              border: 1px solid var(--amber-border);
-            ">
-            <div class="dl-icon" style="background: #fef3c7; color: #b45309">
-              <i class="bi bi-hourglass-split"></i>
-            </div>
-            <div style="flex: 1">
-              <div class="dl-name" style="color: #92400e">Midterm — PHP</div>
-              <div class="dl-time" style="color: #b45309">Due in 2 hours</div>
-            </div>
-            <i class="bi bi-chevron-right" style="color: #d97706; font-size: 15px"></i>
-          </a>
-
-          <a href="3.st-assignments.html" class="dl-item" style="
-              background: var(--red-soft);
-              border: 1px solid var(--red-border);
-            ">
-            <div class="dl-icon" style="background: #fee2e2; color: #dc2626">
-              <i class="bi bi-exclamation-triangle"></i>
-            </div>
-            <div style="flex: 1">
-              <div class="dl-name" style="color: #991b1b">Quiz — SQL Joins</div>
-              <div class="dl-time" style="color: #dc2626">Due in 15 mins!</div>
-            </div>
-            <i class="bi bi-chevron-right" style="color: #ef4444; font-size: 15px"></i>
-          </a>
-        </div>
-
-        <!-- Feedback -->
-        <div class="card">
-          <div class="section-head">
-            <div>
-              <div class="card-title">Recent Feedback</div>
-            </div>
-            <a href="4.st-results.html" class="view-link">History</a>
-          </div>
-
-          <div class="fb-row">
-            <div class="fb-left">
-              <div class="fb-icon" style="background: var(--em-soft); color: var(--em)">
-                <i class="bi bi-award"></i>
-              </div>
-              <div>
-                <div class="fb-quiz">Java Basics Quiz</div>
-                <div class="fb-when">Graded 2 hrs ago</div>
-              </div>
-            </div>
-            <span class="badge badge-green">95/100</span>
-          </div>
-
-          <div class="fb-row">
-            <div class="fb-left">
-              <div class="fb-icon" style="background: var(--em-soft); color: var(--em)">
-                <i class="bi bi-check-circle"></i>
-              </div>
-              <div>
-                <div class="fb-quiz">Web Layouts Assg.</div>
-                <div class="fb-when">Graded yesterday</div>
-              </div>
-            </div>
-            <span class="badge badge-green">88/100</span>
-          </div>
-
-          <div class="fb-row">
-            <div class="fb-left">
-              <div class="fb-icon" style="background: var(--amber-soft); color: var(--amber-text)">
-                <i class="bi bi-exclamation-circle"></i>
-              </div>
-              <div>
-                <div class="fb-quiz">HTML Tags Quiz</div>
-                <div class="fb-when">Needs review</div>
-              </div>
-            </div>
-            <span class="badge badge-amber">72/100</span>
-          </div>
-        </div>
-      </div>
-    </div>
     <div class="modal-wrap" :class="{ open: isModalOpen }" @click.self="closeModal">
       <div class="modal-box">
-        <div class="modal-title">Join a Class</div>
-        <div class="modal-sub">Enter the code provided by your instructor.</div>
-        <label class="modal-label" for="classCode">Class Code</label>
+        <div class="modal-title">ចូលរួមថ្នាក់</div>
+        <div class="modal-sub">សូមបញ្ចូលកូដថ្នាក់ដែលគ្រូរបស់អ្នកបានផ្តល់ឱ្យ</div>
+        <label class="modal-label" for="classCode">កូដថ្នាក់រៀន</label>
         <input class="modal-input" :class="{ invalid: classCodeError }" id="classCode" ref="classCodeInput"
           v-model="classCode" type="text" placeholder="e.g. AB12-CD34" maxlength="12" autocomplete="off"
           @input="classCodeError = false" @keyup.enter="joinClass" />
         <div class="modal-actions">
           <button class="btn primary" type="button" style="justify-content: center; padding: 12px; font-size: 15px"
             @click="joinClass">
-            <i class="bi bi-door-open"></i> Join Now
+            <i class="bi bi-door-open"></i> ចូលរួមឥឡូវនេះ
           </button>
           <button class="btn" type="button" style="justify-content: center; padding: 11px; color: var(--txt-mu)"
             @click="closeModal">
@@ -249,60 +185,111 @@
 </template>
 
 <script setup>
-import { nextTick, ref } from "vue";
+import { nextTick, onMounted, ref } from "vue";
+import {
+  getDashboardStats,
+  getRecentFeedback,
+  getStudentPerformance,
+  getUpcomingDeadlines
+} from "@/api/student.api";
 
 const isModalOpen = ref(false);
 const classCode = ref("");
 const classCodeError = ref(false);
 const classCodeInput = ref(null);
 
+const isLoading = ref(false);
+const dashboardData = ref({ stats: {}, upcomingDeadlines: [] });
+const deadlineList = ref([]);
+const feedbackList = ref([]);
+const performanceList = ref([]);
+
+function getSubjectColor(index) {
+  const colors = ["#10b981", "#3b82f6", "#8b5cf6", "#f59e0b", "#ef4444"];
+  return colors[index % colors.length];
+}
+
+async function loadDashboardContent() {
+  try {
+    isLoading.value = true;
+
+    const [resStats, resFeedback, resPerformance, resDeadlineList] = await Promise.all([
+      getDashboardStats(),
+      getRecentFeedback(),
+      getStudentPerformance(),
+      getUpcomingDeadlines()
+    ]);
+
+    if (resStats.data?.success) {
+      dashboardData.value = resStats.data.data;
+      console.log(resStats.data.data);
+      
+    }
+
+    if (resFeedback.data?.success) {
+      feedbackList.value = resFeedback.data.data || [];
+      console.log(resFeedback);
+
+    }
+
+    if (resPerformance.data?.success) {
+      performanceList.value = resPerformance.data.data || [];
+      console.log(resPerformance);
+
+    }
+    if (resDeadlineList.data?.success) {
+      deadlineList.value = resDeadlineList.data.data || [];
+      console.log(`Upcoming Data: ${deadlineList}`);
+
+    }
+
+  } catch (error) {
+    console.error("Error loading student dashboard content:", error);
+  } finally {
+    isLoading.value = false;
+  }
+}
+
 async function openModal() {
   classCode.value = "";
   classCodeError.value = false;
   isModalOpen.value = true;
-
   await nextTick();
   classCodeInput.value?.focus();
 }
 
-function closeModal() {
-  isModalOpen.value = false;
-}
+function closeModal() { isModalOpen.value = false; }
 
 function joinClass() {
   const code = classCode.value.trim();
-
   if (!code) {
     classCodeError.value = true;
     classCodeInput.value?.focus();
     return;
   }
-
   alert("Successfully joined class: " + code.toUpperCase());
   closeModal();
 }
 
-
+onMounted(loadDashboardContent);
 </script>
-
 
 <style scoped>
 .student-dashboard {
   --em: #10b981;
   --em-dk: #059669;
-  --em-soft: #ecfdf5;
+ --em-soft: #d1fae5;
   --em-text: #065f46;
-  --blue-soft: #eff6ff;
-  --amber-soft: #fffbeb;
+ --blue-soft: #dbeafe;
+ --amber-soft: #fef3c7;
   --amber-border: #fde68a;
   --amber-text: #b45309;
-  --red-soft: #fef2f2;
+ --red-soft: #fee2e2;
   --red-border: #fee2e2;
   --txt: #0f172a;
   --txt-mu: #64748b;
   --txt-lt: #94a3b8;
   --border: #e2e8f0;
-  /* --bg: #f1f5f9; */
   --surf: #ffffff;
   --radius: 14px;
   --radius-sm: 9px;
@@ -310,9 +297,8 @@ function joinClass() {
   display: flex;
   flex-direction: column;
   gap: 20px;
-  /* background: var(--bg); */
   color: var(--txt);
-  font-family: "Inter", sans-serif;
+  font-family: "Kantumruy Pro", sans-serif;
   min-width: 0;
 }
 
@@ -340,15 +326,17 @@ function joinClass() {
   grid-template-columns: repeat(3, 1fr);
   gap: 14px;
 }
-
 .stat {
   background: var(--surf);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  padding: 20px 22px;
+  padding: 24px 20px;
+
   display: flex;
-  gap: 16px;
-  align-items: center;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;          
+  
   cursor: pointer;
   transition: 0.15s;
 }
@@ -361,34 +349,42 @@ function joinClass() {
 .stat-icon {
   width: 46px;
   height: 46px;
-  border-radius: 11px;
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 21px;
   flex-shrink: 0;
+  background: inherit;
+}
+.icon-green { background: var(--em-soft) !important; color: var(--em) !important; }
+.icon-blue { background: var(--blue-soft) !important; color: #3b82f6 !important; }
+.icon-orange { 
+    background: #ffedd5 !important;
+    color: #ea580c !important;     
 }
 
 .stat-label {
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--txt-lt);
+  font-size: 12.5px;
+  font-weight: 600 !important;
+  color: var(--txt-mu);
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  margin-bottom: 5px;
+  margin-bottom: 0px; 
 }
 
 .stat-value {
   font-size: 26px;
   font-weight: 700;
   line-height: 1;
-  margin-bottom: 4px;
   color: var(--txt);
+  margin-top: 15px;
 }
 
 .stat-trend {
   font-size: 12px;
   font-weight: 600;
+  margin-top: 4px;
 }
 
 /* ── GRID ── */
