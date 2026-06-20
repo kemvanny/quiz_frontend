@@ -1,85 +1,238 @@
 <template>
-    <div style="max-width: 860px; ">
-      <!-- Tabs -->
-      <div class="tab-row">
-        <div class="tab-pills">
-          <button class="tab-pill">ការប្រឡងទាំងអស់</button>
-          <button class="tab-pill active">
-           ត្រូវធ្វើ
-            <span class="count-badge" style="background: #fef2f2; color: #dc2626">{{ todoCount }}</span>
-          </button>
-          <button class="tab-pill">បានបញ្ចប់</button>
-          
-        </div>
-        <div style="font-size: 0.8rem; color: var(--txt-mu); font-weight: 600">
-          <i class="fas fa-calendar-week me-1"></i> សប្តាហ៍ទី១៨ ខែឧសភា ឆ្នាំ២០២៦
-        </div>
-      </div>
-      <div class="section-label">បន្ទាន់ — កំណត់ត្រឹមថ្ងៃនេះ</div>
-      <div v-if="isExamLoading" class="task-card task-card-static type-exam">
-        <div class="task-icon" style="background: #fef2f2; color: #ef4444">
-          <i class="fas fa-circle-notch fa-spin"></i>
-        </div>
-        <div class="flex-grow-1">
-          <div class="task-meta">
-            <span class="meta-chip" style="background: #fef2f2; color: #dc2626"><i class="fas fa-cloud-download-alt"></i> កំពុងផ្ទុក</span>
-          </div>
-          <div class="task-title">កំពុងស្វែងរកការប្រឡង...</div>
-        </div>
-      </div>
-      <div v-else-if="examList.length > 0">
-        <a v-for="exam in examList" :key="exam.examId" href="#" class="task-card type-exam mb-3" @click.prevent>
-          <div class="task-icon" style="background: #ecfdf5; color:#059669">
-            <i class="fas fa-bolt"></i>
-          </div>
-          <div class="flex-grow-1">
-            <div class="task-meta">
-              <span class="meta-chip" style="background: #ecfdf5; color: #059669"><i class="fas fa-check-circle"></i> រួចរាល់</span>
-              <span class="meta-chip" style="background: #fff7ed; color: #c2410c"><i class="fas fa-stopwatch"></i> {{ exam.dueText }}</span>
-            </div>
-            <div class="task-title">{{ exam.title }}</div>
-            <div class="task-details">
-              <span class="task-detail" style="color:#065f46; font-weight: 400">
-                <i class="fas fa-clipboard-check"></i> ការប្រឡងរួចរាល់ អ្នកអាចចាប់ផ្តើមបានឥឡូវនេះ
-              </span>
-            </div>
-          </div>
-          <button class="task-cta cta-green" type="button" @click.stop.prevent="startExam(exam)">
-           ចាប់ផ្តើមប្រឡង
-          </button>
-        </a>
-      </div>
-      <div v-else class="task-card task-card-static type-exam">
-        <div class="task-icon" style="background: #fef2f2; color: #ef4444">
-          <i class="fas fa-triangle-exclamation"></i>
-        </div>
-        <div class="flex-grow-1">
-          <div class="task-meta">
-            <span class="meta-chip" style="background: #fef2f2; color: #dc2626"><i class="fas fa-circle-exclamation"></i> Unable to Load</span>
-          </div>
-          <div class="task-title">គ្មានការប្រឡងដែលត្រូវធ្វើទេ</div>
-          <div class="task-details">
-            <span class="task-detail" style="color: #dc2626; font-weight: 400">
-              <i class="fas fa-info-circle"></i> {{ examError || "ថ្ងៃនេះអ្នកគ្មានការប្រឡងដែលត្រូវធ្វើនោះទេ" }}
-            </span>
-          </div>
-        </div>
-        <button class="task-cta cta-red" type="button" @click="fetchStudentExams">
-          ព្យាយាមម្តងទៀត
+  <div>
+    <div class="tab-row">
+      <div class="tab-pills">
+        <button class="tab-pill" :class="{ active: activeTab === 'all' }" @click="changeTab('all')">
+          ការប្រឡងទាំងអស់
+        </button>
+
+        <button class="tab-pill" :class="{ active: activeTab === 'todo' }" @click="changeTab('todo')">
+          ត្រូវធ្វើ
+          <span class="count-badge"
+            :style="todoCount === 0 ? 'background: #f1f5f9; color: #64748b;' : 'background: #fef2f2; color: #dc2626'">
+            {{ todoCount }}
+          </span>
+        </button>
+
+        <button class="tab-pill" :class="{ active: activeTab === 'completed' }" @click="changeTab('completed')">
+          បានបញ្ចប់
         </button>
       </div>
 
+      <div style="font-size: 0.8rem; color: var(--txt-mu); font-weight: 600">
+        <i class="fas fa-calendar-week me-1"></i> {{ currentKhmerDate }}
+      </div>
     </div>
+
+    <div class="section-label">
+      <span v-if="activeTab === 'all'">ការប្រឡងរួមទាំងអស់</span>
+      <span v-else-if="activeTab === 'todo'">បន្ទាន់ — កំណត់ត្រឹមថ្ងៃនេះ</span>
+      <span v-else>កិច្ចការដែលបានប្រឡងរួចរាល់</span>
+    </div>
+
+    <div v-if="isExamLoading">
+      <div v-for="n in 3" :key="n" class="skeleton-card mb-3">
+        <div class="skeleton-icon-box"></div>
+        <div class="skeleton-content">
+          <div class="skeleton-line short"></div>
+          <div class="skeleton-line medium"></div>
+          <div class="skeleton-line long"></div>
+        </div>
+      </div>
+    </div>
+
+    <div v-else-if="paginatedExams.length > 0">
+      <a v-for="exam in paginatedExams" :key="exam.id" href="#" class="task-card type-exam mb-3" @click.prevent>
+        <div class="task-icon"
+          :style="exam.is_completed === 1 ? 'background: #f1f5f9; color: #64748b;' : (exam.time_status === 'upcoming' ? 'background: #eff6ff; color: #2563eb;' : 'background: #ecfdf5; color:#059669')">
+          <i
+            :class="exam.is_completed === 1 ? 'fas fa-check' : (exam.time_status === 'upcoming' ? 'fas fa-clock' : 'fas fa-bolt')"></i>
+        </div>
+
+        <div class="flex-grow-1">
+          <div class="task-meta">
+            <span v-if="exam.is_completed === 1" class="meta-chip" style="background: #e2e8f0; color: #475569">
+              <i class="fas fa-check-circle"></i> បានបញ្ចប់
+            </span>
+            <span v-else-if="exam.time_status === 'upcoming'" class="meta-chip"
+              style="background: #dbeafe; color: #1e40af">
+              <i class="fas fa-hourglass-start"></i> ជិតមកដល់ (Upcoming)
+            </span>
+            <span v-else-if="exam.time_status === 'expired'" class="meta-chip"
+              style="background: #fef2f2; color: #991b1b">
+              <i class="fas fa-calendar-times"></i> ហួសកំណត់ (អត់បានប្រឡង)
+            </span>
+            <span v-else class="meta-chip" style="background: #ecfdf5; color: #059669">
+              <i class="fas fa-play-circle"></i> កំពុងដំណើរការ
+            </span>
+
+            <span class="meta-chip" style="background: #fff7ed; color: #c2410c">
+              <i class="fas fa-graduation-cap"></i> {{ exam.room_name }}
+            </span>
+          </div>
+
+          <div class="task-title">{{ exam.title }}</div>
+
+          <div class="task-details">
+            <span class="task-detail" style="color:#065f46; font-weight: 400;">
+              <i class="fas fa-calendar-alt"></i> ម៉ោងចាប់ផ្តើម៖ {{ new Date(exam.start_time).toLocaleString('kh-KH') }}
+            </span>
+          </div>
+        </div>
+
+        <button v-if="exam.is_completed === 0 && exam.time_status === 'ongoing'" class="task-cta cta-green"
+          type="button" @click.stop.prevent="startExam(exam)">
+          ចាប់ផ្តើមប្រឡង
+        </button>
+        <button v-else-if="exam.is_completed === 0 && exam.time_status === 'upcoming'" class="task-cta"
+          style="background: #eff6ff; color: #2563eb; border: 1px solid #bfdbfe;" type="button"
+          @click.stop.prevent="startExam(exam)">
+          រង់ចាំម៉ោងប្រឡង
+        </button>
+        <button v-if="exam.time_status === 'expired' && exam.is_completed === 0" class="task-cta cta-disabled"
+          type="button" disabled>
+          ហួសកំណត់ពេល
+        </button>
+        <router-link v-else-if="exam.time_status === 'completed' || exam.is_completed === 1"
+          :to="{ name:'AnalyticsResult' }" class="task-cta text-decoration-none text-center"
+          style="background: #f1f5f9; color: #1e293b; border: 1px solid #cbd5e1; display: inline-flex; align-items: center; justify-content: center;">
+          មើលលទ្ធផល
+        </router-link>
+      </a>
+
+      <div v-if="totalPages > 1" class="custom-pagination">
+        <button class="pag-btn" :disabled="currentPage === 1" @click="currentPage--">
+          <i class="fas fa-chevron-left"></i>
+        </button>
+
+        <span class="pag-info">
+          ទំព័រទី {{ currentPage }} នៃ {{ totalPages }}
+        </span>
+
+        <button class="pag-btn" :disabled="currentPage === totalPages" @click="currentPage++">
+          <i class="fas fa-chevron-right"></i>
+        </button>
+      </div>
+    </div>
+
+    <div v-else class="task-card task-card-static type-exam">
+      <div class="task-icon" style="background: #fef2f2; color: #ef4444">
+        <i class="fas fa-triangle-exclamation"></i>
+      </div>
+      <div class="flex-grow-1">
+        <div class="task-meta">
+          <span class="meta-chip" style="background: #fef2f2; color: #dc2626">
+            <i class="fas fa-circle-exclamation"></i> មិនមានទិន្នន័យ
+          </span>
+        </div>
+        <div class="task-title">
+          <span v-if="activeTab === 'todo'">គ្មានការប្រឡងដែលត្រូវធ្វើទេ</span>
+          <span v-else-if="activeTab === 'completed'">មិនទាន់មានការប្រឡងដែលបានបញ្ចប់ឡើយ</span>
+          <span v-else>មិនទាន់មានកិច្ចការប្រឡងណាមួយឡើយ</span>
+        </div>
+        <div class="task-details">
+          <span class="task-detail" style="color: #dc2626; font-weight: 400">
+            <i class="fas fa-info-circle"></i> {{ examError || "ថ្ងៃនេះអ្នកគ្មានការប្រឡងដែលត្រូវបង្ហាញនោះទេ" }}
+          </span>
+        </div>
+      </div>
+      <button class="task-cta cta-red" type="button" @click="fetchStudentExams">
+        ព្យាយាមម្តងទៀត
+      </button>
+    </div>
+  </div>
 </template>
 
 <script setup>
 import { computed, onMounted, ref } from "vue";
-import { getUpcomingDeadlines } from "@/api/student.api"; 
+import { useRouter } from "vue-router";
+import { getAllStudentExams } from "@/api/student.api";
 
-const examList = ref([]); 
+const examList = ref([]);
+const router = useRouter();
 const isExamLoading = ref(false);
 const examError = ref("");
-const todoCount = computed(() => examList.value.length);
+const activeTab = ref("all");
+
+// Pagination States
+const currentPage = ref(1);
+const itemsPerPage = ref(10);
+const processedExams = computed(() => {
+  const nowTime = new Date().getTime();
+
+  return examList.value.map(exam => {
+    let currentStatus = exam.time_status;
+    const startTime = new Date(exam.start_time).getTime();
+    let deadlineTime = exam.deadline ? new Date(exam.deadline).getTime() : null;
+    if (!deadlineTime || isNaN(deadlineTime)) {
+      deadlineTime = startTime + (12 * 60 * 60 * 1000);
+    }
+    if (exam.is_completed === 1 || exam.is_completed === true) {
+      currentStatus = 'completed';
+    } else if (nowTime < startTime) {
+      currentStatus = 'upcoming';
+    } else if (nowTime >= startTime && nowTime <= deadlineTime) {
+      currentStatus = 'ongoing';
+    } else {
+      currentStatus = 'expired';
+    }
+    return {
+      ...exam,
+      time_status: currentStatus
+    };
+  });
+});
+const currentKhmerDate = computed(() => {
+  const now = new Date();
+  const currentDay = now.getDate();
+  const weekNumber = Math.ceil(currentDay / 7);
+  const khmerMonths = [
+    "មករា", "កុម្ភៈ", "មីនា", "មេសា", "ឧសភា", "មិថុនា",
+    "កក្កដា", "សីហា", "កញ្ញា", "តុលា", "វិច្ឆិកា", "ធ្នូ"
+  ];
+  const currentMonthName = khmerMonths[now.getMonth()];
+  const englishYear = now.getFullYear().toString();
+  const khmerNumbers = {
+    '0': '០', '1': '១', '2': '២', '3': '៣', '4': '៤',
+    '5': '៥', '6': '៦', '7': '៧', '8': '៨', '9': '៩'
+  };
+  const khmerYear = englishYear.split('').map(digit => khmerNumbers[digit] || digit).join('');
+  const khmerWeek = khmerNumbers[weekNumber] || weekNumber;
+  return `សប្តាហ៍ទី${khmerWeek} នៃខែ${currentMonthName} ឆ្នាំ${khmerYear}`;
+});
+
+const todoCount = computed(() => {
+  return processedExams.value.filter(exam =>
+    exam.is_completed === 0 && (exam.time_status === 'ongoing' || exam.time_status === 'upcoming')
+  ).length;
+});
+
+const filteredExams = computed(() => {
+  if (activeTab.value === "todo") {
+    return processedExams.value.filter(exam =>
+      exam.is_completed === 0 && (exam.time_status === 'ongoing' || exam.time_status === 'upcoming')
+    );
+  }
+  if (activeTab.value === "completed") {
+    return processedExams.value.filter(exam => exam.is_completed === 1 || exam.time_status === 'completed');
+  }
+  return processedExams.value;
+});
+
+const paginatedExams = computed(() => {
+  const startIndex = (currentPage.value - 1) * itemsPerPage.value;
+  const endIndex = startIndex + itemsPerPage.value;
+  return filteredExams.value.slice(startIndex, endIndex);
+});
+
+const totalPages = computed(() => {
+  return Math.ceil(filteredExams.value.length / itemsPerPage.value);
+});
+
+function changeTab(tabName) {
+  activeTab.value = tabName;
+  currentPage.value = 1;
+}
 
 async function fetchStudentExams() {
   try {
@@ -87,28 +240,30 @@ async function fetchStudentExams() {
     examError.value = "";
     examList.value = [];
 
-    const response = await getUpcomingDeadlines();
-    if (response.data && response.data.success) {
-      examList.value = response.data.data || []; 
+    const response = await getAllStudentExams();
+    if (response.data && response.data.result) {
+      examList.value = response.data.data || [];
     } else {
-      throw new Error(response.data?.message || "Failed to fetch exam data.");
+      throw new Error(response.data?.msg || "Failed to fetch exam data.");
     }
   } catch (error) {
     examList.value = [];
-    examError.value =
-      error.response?.data?.message ||
-      error.message ||
-      "Request failed with status code 404";
+    examError.value = error.response?.data?.message || error.message || "Request failed with status code 404";
   } finally {
-    isExamLoading.value = false;
+    setTimeout(() => {
+      isExamLoading.value = false;
+    }, 450);
   }
 }
 
 function startExam(exam) {
   if (!exam) return;
-  sessionStorage.setItem("active_exam_id", exam.examId);
+  if (exam.time_status === 'upcoming') {
+    return;
+  }
+  sessionStorage.setItem("active_exam_id", exam.id);
   sessionStorage.setItem("active_exam", JSON.stringify(exam));
-  alert(`Starting ${exam.title}`);
+  router.push(`/take-exam/${exam.exam_code}`);
 }
 
 onMounted(fetchStudentExams);
@@ -252,7 +407,6 @@ a {
   cursor: pointer;
 }
 
-/* Left accent stripe */
 .task-card::before {
   content: "";
   position: absolute;
@@ -295,25 +449,6 @@ a {
 
 .task-card.type-exam:hover {
   border-color: rgba(68, 239, 182, 0.2);
-  box-shadow: 0 16px 36px rgba(239, 68, 68, 0.1);
-}
-
-.task-card.type-assign::before {
-  background: #3b82f6;
-}
-
-.task-card.type-assign:hover {
-  border-color: rgba(59, 130, 246, 0.2);
-  box-shadow: 0 16px 36px rgba(59, 130, 246, 0.1);
-}
-
-.task-card.type-done::before {
-  background: var(--em);
-}
-
-.task-card.type-done:hover {
-  border-color: rgba(16, 185, 129, 0.2);
-  box-shadow: 0 16px 36px rgba(16, 185, 129, 0.1);
 }
 
 /* Icon */
@@ -389,7 +524,7 @@ a {
   white-space: nowrap;
 }
 
-.task-cta:hover {
+.task-cta:hover:not(:disabled) {
   transform: scale(1.04);
 }
 
@@ -404,26 +539,138 @@ a {
   color: #fff;
 }
 
-.cta-blue {
-  background: #eff6ff;
-  color: #2563eb;
-  border: 1.5px solid #dbeafe;
-}
-
-.cta-blue:hover {
-  background: #3b82f6;
-  color: #fff;
-}
-
 .cta-green {
-  background: var(--em-soft);
-  color: var(--em-dk);
+  background: #ecfdf5;
+  color: #059669;
   border: 1.5px solid #bbf7d0;
 }
 
 .cta-green:hover {
-  background: var(--em);
+  background: #10b981;
   color: #fff;
+}
+
+.cta-disabled {
+  background: #f3f4f6;
+  color: #6b7280;
+  border: 1px solid #d1d5db;
+  cursor: not-allowed;
+}
+
+/* 🔢 របារគ្រប់គ្រងទំព័រ (Custom Pagination Style) */
+.custom-pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  margin-top: 24px;
+  padding: 10px;
+}
+
+.pag-btn {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  color: #059669;
+  /* ប្រើពណ៌បៃតងលំនាំដើមរបស់បង */
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+}
+
+.pag-btn:hover:not(:disabled) {
+  background: #ecfdf5;
+  border-color: #a7f3d0;
+  transform: translateY(-1px);
+}
+
+.pag-btn:disabled {
+  background: #f1f5f9;
+  color: #94a3b8;
+  cursor: not-allowed;
+  border-color: #e2e8f0;
+}
+
+.pag-info {
+  font-size: 0.83rem;
+  font-weight: 700;
+  color: #475569;
+  background: rgba(255, 255, 255, 0.8);
+  padding: 6px 18px;
+  border-radius: 20px;
+  border: 1px solid #e2e8f0;
+}
+
+/* 🔄 ស្ទីល Shimmer Skeleton Card Animation Effect */
+.skeleton-card {
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid var(--bdr);
+  border-radius: 20px;
+  padding: 20px 24px;
+  gap: 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+.skeleton-card::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.6) 50%, rgba(255, 255, 255, 0) 100%);
+  animation: shimmer-wave 1.6s infinite;
+}
+
+.skeleton-icon-box {
+  width: 52px;
+  height: 52px;
+  background: #f1f5f9;
+  border-radius: 15px;
+  flex-shrink: 0;
+}
+
+.skeleton-content {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.skeleton-line {
+  height: 12px;
+  background: #f1f5f9;
+  border-radius: 4px;
+}
+
+.skeleton-line.short {
+  width: 25%;
+}
+
+.skeleton-line.medium {
+  width: 45%;
+}
+
+.skeleton-line.long {
+  width: 75%;
+}
+
+@keyframes shimmer-wave {
+  0% {
+    transform: translateX(-100%);
+  }
+
+  100% {
+    transform: translateX(100%);
+  }
 }
 
 /* Scrollbar */
