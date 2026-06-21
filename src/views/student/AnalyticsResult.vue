@@ -130,7 +130,7 @@
               <div class="arc-label">{{ averageScore.toFixed(0) }}%</div>
             </div>
             <div>
-              <div class="card-label">មធ្យមភាគពិន្ទុរួម</div>
+              <div class="card-label">មធ្យមភាគនិទ្ទេសរួម</div>
               <div class="card-value" :class="getGradeClass(averageGrade)">{{ averageGrade }}</div>
             </div>
           </div>

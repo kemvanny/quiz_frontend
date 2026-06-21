@@ -1,5 +1,6 @@
 <template>
-  <div v-if="show" class="modal-backdrop fade show"></div>
+  <div>
+    <div v-if="show" class="modal-backdrop fade show"></div>
 
   <div v-if="show" class="modal fade show d-block" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
@@ -9,7 +10,7 @@
             <i class="bi bi-box-arrow-right" style="font-size: 3rem;"></i>
           </div>
           
-          <h5 class="fw-bold text-dark mb-2" style="font-family: 'Kantumruuy Pro', sans-serif;">ចាកចេញពីប្រព័ន្ធ?</h5>
+          <h5 class="fw-bold text-dark mb-2" >ចាកចេញពីប្រព័ន្ធ?</h5>
           <p class="text-muted small mb-4">តើបងពិតជាចង់ចាកចេញពីគណនី Pralong {{title}} នេះមែនទេ?</p>
 
           <div class="d-flex gap-2 justify-content-center">
@@ -23,6 +24,7 @@
         </div>
       </div>
     </div>
+  </div>
   </div>
 </template>
 

@@ -145,7 +145,6 @@
               <div class="gpa-block" v-if="performanceList">
                 <div class="gpa-val text-center">{{ performanceList.currentGPA }}</div>
                 <div class="gpa-lbl">មធ្យមភាគប៉ាន់ស្មាន</div>
-                <a href="4.st-results.html" class="view-link" style="display: block; margin-top: 6px">របាយការណ៍លម្អិត →</a>
               </div>
             </div>
 
