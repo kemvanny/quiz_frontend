@@ -16,20 +16,20 @@
 
       <div class="stats-strip">
         <div class="stat-box">
-          <span class="stat-num">48</span>
+          <span class="stat-num">{{ totalUser?.total_users }}</span>
           <span class="stat-label">អ្នកប្រើប្រាស់សរុប</span>
         </div>
         <div class="stat-box">
-          <span class="stat-num">312</span>
+          <span class="stat-num">{{ totalUser?.total_teachers }}</span>
           <span class="stat-label">គ្រូបង្រៀន</span>
         </div>
         <div class="stat-box">
-          <span class="stat-num">99</span>
+          <span class="stat-num">{{ totalUser?.total_students }}</span>
           <span class="stat-label">និស្សិត</span>
         </div>
         <div class="stat-box">
-          <span class="stat-num">9</span>
-          <span class="stat-label">ការប្រឡង</span>
+          <span class="stat-num">{{ totalUser?.total_rooms }}</span>
+          <span class="stat-label">បន្ទប់</span>
         </div>
       </div>
 
