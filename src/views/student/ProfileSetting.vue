@@ -2,62 +2,27 @@
   <div class="layout" v-if="authStore.profile">
     <div class="left-card">
       <div class="avatar-wrapper">
-        <img
-          :src="
-            authStore.profile?.avatar &&
+        <img :src="authStore.profile?.avatar &&
             authStore.profile?.avatar !== 'default.png'
-              ? `${imgBaseUrl}${authStore.profile.avatar}?t=${imageRefresh}`
-              : defaultImage
-          "
-          alt="Profile photo"
-          class="avatar-image"
-        />
-        <input
-          ref="avatarInput"
-          type="file"
-          accept="image/*"
-          hidden
-          @change="uploadAvatar"
-        />
+            ? `${imgBaseUrl}${authStore.profile.avatar}?t=${imageRefresh}`
+            : defaultImage
+          " alt="Profile photo" class="avatar-image" />
+        <input ref="avatarInput" type="file" accept="image/*" hidden @change="uploadAvatar" />
 
-        <button
-          class="btn-upload"
-          title="Upload photo"
-          @click="avatarInput.click()"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            stroke-width="2"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M12 12V4m0 0L8 8m4-4l4 4"
-            />
+        <button class="btn-upload" title="Upload photo" @click="avatarInput.click()">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+            stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M12 12V4m0 0L8 8m4-4l4 4" />
           </svg>
         </button>
 
-        <button
-          class="btn-delete-avatar"
-          title="Delete photo"
-          :disabled="avatarDeleting || !authStore.profile.avatar"
-          @click="deleteAvatar"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            stroke-width="2"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M1 7h22M8 7V5a2 2 0 012-2h4a2 2 0 012 2v2"
-            />
+        <button class="btn-delete-avatar" title="Delete photo" :disabled="avatarDeleting || !authStore.profile.avatar"
+          @click="deleteAvatar">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+            stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M1 7h22M8 7V5a2 2 0 012-2h4a2 2 0 012 2v2" />
           </svg>
         </button>
       </div>
@@ -71,52 +36,28 @@
 
       <div class="action-buttons">
         <button class="btn btn-green" @click="openEditModal">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            stroke-width="2"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-            />
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+            stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
           </svg>
           កែប្រែព័ត៌មាន
         </button>
 
         <button class="btn btn-purple" @click="openPasswordModal">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            stroke-width="2"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
-            />
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+            stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
           </svg>
           ផ្លាស់ប្តូរលេខសម្ងាត់
         </button>
 
         <button class="btn btn-danger" @click="openDeleteAccountModal">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            stroke-width="2"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M1 7h22M8 7V5a2 2 0 012-2h4a2 2 0 012 2v2"
-            />
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
+            stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6M1 7h22M8 7V5a2 2 0 012-2h4a2 2 0 012 2v2" />
           </svg>
           លុបគណនី
         </button>
@@ -130,13 +71,8 @@
           <label class="info-label">នាមត្រកូល</label>
           <div class="input-wrapper">
             <i class="fa-solid fa-user field-icon input-icon"></i>
-            <input
-              type="text"
-              :value="authStore.profile.firstName || 'មិនទាន់បំពេញ'"
-              disabled
-              class="info-input"
-              :class="{ empty: !authStore.profile.firstName }"
-            />
+            <input type="text" :value="authStore.profile.firstName || 'មិនទាន់បំពេញ'" disabled class="info-input"
+              :class="{ empty: !authStore.profile.firstName }" />
           </div>
         </div>
 
@@ -144,13 +80,8 @@
           <label class="info-label">នាមខ្លួន</label>
           <div class="input-wrapper">
             <i class="fa-solid fa-user-tag field-icon input-icon"></i>
-            <input
-              type="text"
-              :value="authStore.profile.lastName || 'មិនទាន់បំពេញ'"
-              disabled
-              class="info-input"
-              :class="{ empty: !authStore.profile.lastName }"
-            />
+            <input type="text" :value="authStore.profile.lastName || 'មិនទាន់បំពេញ'" disabled class="info-input"
+              :class="{ empty: !authStore.profile.lastName }" />
           </div>
         </div>
 
@@ -158,13 +89,8 @@
           <label class="info-label">អាសយដ្ឋានអ៊ីមែល</label>
           <div class="input-wrapper">
             <i class="fa-solid fa-envelope field-icon input-icon"></i>
-            <input
-              type="text"
-              :value="authStore.profile.email || 'មិនទាន់បំពេញ'"
-              disabled
-              class="info-input"
-              :class="{ empty: !authStore.profile.email }"
-            />
+            <input type="text" :value="authStore.profile.email || 'មិនទាន់បំពេញ'" disabled class="info-input"
+              :class="{ empty: !authStore.profile.email }" />
           </div>
         </div>
 
@@ -172,13 +98,8 @@
           <label class="info-label">លេខទូរស័ព្ទ</label>
           <div class="input-wrapper">
             <i class="fa-solid fa-phone field-icon input-icon"></i>
-            <input
-              type="text"
-              :value="authStore.profile.phone || 'មិនទាន់បំពេញ'"
-              disabled
-              class="info-input"
-              :class="{ empty: !authStore.profile.phone }"
-            />
+            <input type="text" :value="authStore.profile.phone || 'មិនទាន់បំពេញ'" disabled class="info-input"
+              :class="{ empty: !authStore.profile.phone }" />
           </div>
         </div>
 
@@ -186,13 +107,8 @@
           <label class="info-label">ថ្នាក់ឆ្នាំសិក្សា</label>
           <div class="input-wrapper">
             <i class="fa-solid fa-graduation-cap input-icon"></i>
-            <input
-              type="text"
-              :value="authStore.profile.gradeLevel || 'មិនទាន់បំពេញ'"
-              disabled
-              class="info-input"
-              :class="{ empty: !authStore.profile.gradeLevel }"
-            />
+            <input type="text" :value="authStore.profile.gradeLevel || 'មិនទាន់បំពេញ'" disabled class="info-input"
+              :class="{ empty: !authStore.profile.gradeLevel }" />
           </div>
         </div>
 
@@ -200,13 +116,8 @@
           <label class="info-label">ជំនាញ</label>
           <div class="input-wrapper">
             <i class="fa-solid fa-book input-icon"></i>
-            <input
-              type="text"
-              :value="authStore.profile.major || 'មិនទាន់បំពេញ'"
-              disabled
-              class="info-input"
-              :class="{ empty: !authStore.profile.major }"
-            />
+            <input type="text" :value="authStore.profile.major || 'មិនទាន់បំពេញ'" disabled class="info-input"
+              :class="{ empty: !authStore.profile.major }" />
           </div>
         </div>
 
@@ -214,13 +125,8 @@
           <label class="info-label">អាសយដ្ឋាន</label>
           <div class="input-wrapper">
             <i class="fa-solid fa-location-dot field-icon input-icon"></i>
-            <input
-              type="text"
-              :value="authStore.profile.address || 'មិនទាន់បំពេញ'"
-              disabled
-              class="info-input"
-              :class="{ empty: !authStore.profile.address }"
-            />
+            <input type="text" :value="authStore.profile.address || 'មិនទាន់បំពេញ'" disabled class="info-input"
+              :class="{ empty: !authStore.profile.address }" />
           </div>
         </div>
 
@@ -228,25 +134,15 @@
           <label class="info-label">លេខគណនី</label>
           <div class="input-wrapper">
             <i class="fa-solid fa-id-badge field-icon input-icon"></i>
-            <input
-              type="text"
-              :value="authStore.profile.code || 'មិនទាន់បំពេញ'"
-              disabled
-              class="info-input"
-              :class="{ empty: !authStore.profile.code }"
-            />
+            <input type="text" :value="authStore.profile.code || 'មិនទាន់បំពេញ'" disabled class="info-input"
+              :class="{ empty: !authStore.profile.code }" />
           </div>
         </div>
       </div>
     </div>
 
     <!-- modal for edit profile -->
-    <BaseModal
-      :is-open="isEditModalOpen"
-      title="កែប្រែព័ត៌មាន"
-      width="500px"
-      @close="closeEditModal"
-    >
+    <BaseModal :is-open="isEditModalOpen" title="កែប្រែព័ត៌មាន" width="500px" @close="closeEditModal">
       <div class="profile-form">
         <div class="profile-field">
           <label>នាមខ្លួន</label>
@@ -265,41 +161,25 @@
         </div>
         <div class="profile-field">
           <label>ឆ្នាំសិក្សា</label>
-          <input
-            v-model="editForm.gradeLevel"
-            placeholder="មិនទាន់បំពេញ"
-            type="text"
-          />
+          <input v-model="editForm.gradeLevel" placeholder="មិនទាន់បំពេញ" type="text" />
           <span v-if="errors.gradeLevel" class="error-text">{{
             errors.gradeLevel
           }}</span>
         </div>
         <div class="profile-field">
           <label>ជំនាញ</label>
-          <input
-            v-model="editForm.major"
-            placeholder="មិនទាន់បំពេញ"
-            type="text"
-          />
+          <input v-model="editForm.major" placeholder="មិនទាន់បំពេញ" type="text" />
           <span v-if="errors.major" class="error-text">{{ errors.major }}</span>
         </div>
         <div class="profile-field">
           <label>លេខទូរស័ព្ទ</label>
-          <input
-            v-model="editForm.phone"
-            placeholder="មិនទាន់បំពេញ"
-            type="text"
-          />
+          <input v-model="editForm.phone" placeholder="មិនទាន់បំពេញ" type="text" />
           <span v-if="errors.phone" class="error-text">{{ errors.phone }}</span>
         </div>
 
         <div class="profile-field">
           <label>អាសយដ្ឋាន</label>
-          <input
-            v-model="editForm.address"
-            placeholder="មិនទាន់បំពេញ"
-            type="text"
-          />
+          <input v-model="editForm.address" placeholder="មិនទាន់បំពេញ" type="text" />
           <span v-if="errors.address" class="error-text">{{
             errors.address
           }}</span>
@@ -309,44 +189,24 @@
       <template #footer>
         <button class="btn btn-outline" @click="closeEditModal">បោះបង់</button>
 
-        <button
-          class="btn btn-green"
-          @click="handleUpdateProfile"
-          :disabled="isSaveDisabled"
-        >
+        <button class="btn btn-green" @click="handleUpdateProfile" :disabled="isSaveDisabled">
           រក្សាទុក
         </button>
       </template>
     </BaseModal>
 
     <!-- modal for change password -->
-    <BaseModal
-      :is-open="isPasswordModalOpen"
-      title="ផ្លាស់ប្តូរលេខសម្ងាត់"
-      width="500px"
-      @close="closePasswordModal"
-    >
+    <BaseModal :is-open="isPasswordModalOpen" title="ផ្លាស់ប្តូរលេខសម្ងាត់" width="500px" @close="closePasswordModal">
       <div class="profile-field">
         <label>លេខសម្ងាត់ចាស់</label>
 
         <div class="password-input">
-          <input
-            v-model="passwordForm.oldPassword"
-            :type="showPassword.oldPassword ? 'text' : 'password'"
-            :class="{ 'input-error': oldPasswordError }"
-            @input="oldPasswordError = ''"
-          />
+          <input v-model="passwordForm.oldPassword" :type="showPassword.oldPassword ? 'text' : 'password'"
+            :class="{ 'input-error': oldPasswordError }" @input="oldPasswordError = ''" />
 
-          <button
-            type="button"
-            class="password-eye"
-            @click="togglePassword('oldPassword')"
-          >
-            <i
-              :class="
-                showPassword.oldPassword ? 'bi bi-eye-slash' : 'bi bi-eye'
-              "
-            ></i>
+          <button type="button" class="password-eye" @click="togglePassword('oldPassword')">
+            <i :class="showPassword.oldPassword ? 'bi bi-eye-slash' : 'bi bi-eye'
+              "></i>
           </button>
         </div>
 
@@ -359,23 +219,12 @@
         <label>លេខសម្ងាត់ថ្មី</label>
 
         <div class="password-input">
-          <input
-            v-model="passwordForm.newPassword"
-            :type="showPassword.newPassword ? 'text' : 'password'"
-            :class="{ 'input-error': newPasswordError }"
-            @input="newPasswordError = ''"
-          />
+          <input v-model="passwordForm.newPassword" :type="showPassword.newPassword ? 'text' : 'password'"
+            :class="{ 'input-error': newPasswordError }" @input="newPasswordError = ''" />
 
-          <button
-            type="button"
-            class="password-eye"
-            @click="togglePassword('newPassword')"
-          >
-            <i
-              :class="
-                showPassword.newPassword ? 'bi bi-eye-slash' : 'bi bi-eye'
-              "
-            ></i>
+          <button type="button" class="password-eye" @click="togglePassword('newPassword')">
+            <i :class="showPassword.newPassword ? 'bi bi-eye-slash' : 'bi bi-eye'
+              "></i>
           </button>
         </div>
 
@@ -388,23 +237,12 @@
         <label>បញ្ជាក់លេខសម្ងាត់ថ្មី</label>
 
         <div class="password-input">
-          <input
-            v-model="passwordForm.confirmPassword"
-            :type="showPassword.confirmPassword ? 'text' : 'password'"
-            :class="{ 'input-error': confirmPasswordError }"
-            @input="confirmPasswordError = ''"
-          />
+          <input v-model="passwordForm.confirmPassword" :type="showPassword.confirmPassword ? 'text' : 'password'"
+            :class="{ 'input-error': confirmPasswordError }" @input="confirmPasswordError = ''" />
 
-          <button
-            type="button"
-            class="password-eye"
-            @click="togglePassword('confirmPassword')"
-          >
-            <i
-              :class="
-                showPassword.confirmPassword ? 'bi bi-eye-slash' : 'bi bi-eye'
-              "
-            ></i>
+          <button type="button" class="password-eye" @click="togglePassword('confirmPassword')">
+            <i :class="showPassword.confirmPassword ? 'bi bi-eye-slash' : 'bi bi-eye'
+              "></i>
           </button>
         </div>
 
@@ -418,44 +256,24 @@
           បោះបង់
         </button>
 
-        <button
-          class="btn btn-green"
-          :disabled="passwordLoading"
-          @click="handleChangePassword"
-        >
+        <button class="btn btn-green" :disabled="passwordLoading" @click="handleChangePassword">
           {{ passwordLoading ? "កំពុងរក្សាទុក..." : "រក្សាទុក" }}
         </button>
       </template>
     </BaseModal>
 
     <!-- Delete account modal -->
-    <BaseModal
-      :is-open="isDeleteAccountModalOpen"
-      title="លុបគណនី"
-      width="500px"
-      @close="closeDeleteAccountModal"
-    >
+    <BaseModal :is-open="isDeleteAccountModalOpen" title="លុបគណនី" width="500px" @close="closeDeleteAccountModal">
       <div class="profile-field">
         <label>លេខសម្ងាត់</label>
 
         <div class="password-input">
-          <input
-            v-model="deleteAccountForm.password"
-            :type="showDeleteAccountPassword ? 'text' : 'password'"
-            :class="{ 'input-error': deleteAccountError }"
-            @input="deleteAccountError = ''"
-          />
+          <input v-model="deleteAccountForm.password" :type="showDeleteAccountPassword ? 'text' : 'password'"
+            :class="{ 'input-error': deleteAccountError }" @input="deleteAccountError = ''" />
 
-          <button
-            type="button"
-            class="password-eye"
-            @click="showDeleteAccountPassword = !showDeleteAccountPassword"
-          >
-            <i
-              :class="
-                showDeleteAccountPassword ? 'bi bi-eye-slash' : 'bi bi-eye'
-              "
-            ></i>
+          <button type="button" class="password-eye" @click="showDeleteAccountPassword = !showDeleteAccountPassword">
+            <i :class="showDeleteAccountPassword ? 'bi bi-eye-slash' : 'bi bi-eye'
+              "></i>
           </button>
         </div>
       </div>
@@ -467,11 +285,7 @@
           បោះបង់
         </button>
 
-        <button
-          class="btn btn-green"
-          :disabled="deleteAccountLoading"
-          @click="handleDeleteAccount"
-        >
+        <button class="btn btn-green" :disabled="deleteAccountLoading" @click="handleDeleteAccount">
           {{ deleteAccountLoading ? "កំពុងលុប..." : "លុបគណនី" }}
         </button>
       </template>
@@ -569,9 +383,9 @@ const handleChangePassword = async () => {
   confirmPasswordError.value = "";
 
   validatePassword(passwordForm.value.newPassword);
-  
- if (errors.value.password) {
-    newPasswordError.value = errors.value.password; 
+
+  if (errors.value.password) {
+    newPasswordError.value = errors.value.password;
   }
 
   if (!passwordForm.value.oldPassword)
@@ -727,7 +541,7 @@ const handleUpdateProfile = async () => {
   validateLastName(editForm.value.lastName);
   validatePhone(editForm.value.phone);
   validateAddress(editForm.value.address);
-  validateGradeLevel(editForm.value.gradeLevel); 
+  validateGradeLevel(editForm.value.gradeLevel);
   validateMajor(editForm.value.major);
 
   const hasErrors = Object.values(errors.value).some(

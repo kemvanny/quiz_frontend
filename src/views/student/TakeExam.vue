@@ -1,7 +1,7 @@
 <template>
     <div class="take-exam-root">
         <!-- Toast Notification -->
-        <div class="toast-container position-fixed top-0 end-0 " style="z-index: 1085;">
+        <!-- <div class="toast-container position-fixed top-0 end-0 " style="z-index: 1085;">
             <div v-if="toast.show" class="toast show align-items-center text-white border-0 shadow-lg"
                 :class="toast.type === 'success' ? 'bg-success' : toast.type === 'warning' ? 'bg-warning text-dark' : 'bg-danger'"
                 role="alert">
@@ -15,18 +15,28 @@
                         @click="toast.show = false"></button>
                 </div>
             </div>
+        </div> -->
+        <!-- 🎯 ផ្ទាំង Toast Message បែប Modern ស្លីមស្អាត -->
+        <div v-if="toast.show" class="custom-toast-wrapper" :class="toast.type">
+            <div class="toast-content-box">
+                <!-- បង្ហាញ Icon ទៅតាមប្រភេទ Message -->
+                <i v-if="toast.type === 'success'" class="fa-solid fa-circle-check toast-icon"></i>
+                <i v-else-if="toast.type === 'error'" class="fa-solid fa-circle-exclamation toast-icon"></i>
+                <i v-else class="fa-solid fa-triangle-exclamation toast-icon"></i>
+
+                <span class="toast-text">{{ toast.message }}</span>
+            </div>
+            <button class="toast-close-btn" @click="toast.show = false">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
         </div>
 
         <div class="app-background-grid"></div>
-        <nav class="navbar navbar-expand-lg navbar-custom py-3 sticky-top">
+        <nav class="navbar-custom sticky-top">
             <div class="container">
-                <div class="brand-logo d-flex align-items-center gap-3">
-                    <div class="brand-icon">
-                        <i class="fa-solid fa-graduation-cap"></i>
-                    </div>
+                <div class="d-flex align-items-center">
                     <div>
-                        <span class="fw-bold logo-text mb-0">Prolang</span>
-                        <span class="text-muted small logo-text">Student</span>
+                        <a href="#"> <img :src="logoImage" alt="Pralong Logo" class="brand-logo" /></a>
                     </div>
                 </div>
 
@@ -51,14 +61,12 @@
         </nav>
 
         <main class="container py-5 my-auto main-content-area">
-            <!-- Step 1: Loading -->
             <div v-if="currentStep === 1" class="text-center py-5 my-5">
                 <div class="spinner-border text-theme-green" role="status" style="width: 3rem; height: 3rem;"></div>
                 <h4 class="mt-4 fw-bold text-dark">កំពុងត្រួតពិនិត្យលេខកូដវិញ្ញាសា</h4>
                 <p class="text-muted">សូមរង់ចាំបន្តិច កំពុងតែដំណើរការការប្រឡង</p>
             </div>
 
-            <!-- Step 2: Lobby Form -->
             <div v-else-if="currentStep === 2" class="row align-items-center g-5" id="lobby-workspace">
                 <div class="col-lg-5 col-md-8 mx-auto">
                     <div class="lobby-form-card p-4 p-md-5 bg-white border-0">
@@ -385,6 +393,7 @@
 import { ref, computed, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { examApi } from '@/api/student.api.js';
+import logoImage from '@/assets/images/pralong-logo.png';
 
 const route = useRoute();
 const examCode = ref('');
@@ -437,25 +446,39 @@ onMounted(async () => {
         showToast('រកមិនឃើញលេខកូដវិញ្ញាសាឡើយ!', 'error');
         return;
     }
-
     try {
         const response = await examApi.checkExamCode(examCode.value);
-        const examData = response.exam.id;
-        examId.value = examData;
-        if (examData.duration) {
+        const examData = response.exam; 
+        examId.value = examData?.id;
+        if (examData?.duration) {
             totalSeconds.value = examData.duration * 60;
         }
         const roomsResponse = await examApi.getRooms();
         roomList.value = roomsResponse.data.data;
         currentStep.value = 2;
-    } catch (error) {
-        showToast('កំហុសទាញទិន្នន័យ៖ ' + (error.response?.data?.message || error.message), 'error');
+        
+    }catch (error) {
+        const rawMsg = error.response?.data?.msg || error.response?.data?.message || '';
+        let khmerMessage = '';
+
+        if (rawMsg.includes('Exam is not start.') || rawMsg.includes('yet')) {
+            khmerMessage = 'វិញ្ញាសានេះមិនទាន់ដល់ម៉ោងចាប់ផ្តើមប្រឡងឡើយ!';
+        } else if (rawMsg.includes('ended') || rawMsg.includes('expired') || rawMsg.includes('finished')) {
+            khmerMessage = 'ការប្រឡងត្រូវបានបញ្ចប់រួចរាល់ហើយ!';
+        } else if (rawMsg.includes('invalid') || rawMsg.includes('not found')) {
+            khmerMessage = 'លេខកូដវិញ្ញាសាមិនត្រឹមត្រូវ ឬរកមិនឃើញឡើយ!';
+        } else if (rawMsg) {
+            khmerMessage = `${rawMsg}`; 
+        } else {
+            khmerMessage = 'មានបញ្ហាក្នុងការតភ្ជាប់ទៅកាន់ប្រព័ន្ធ!';
+        }
+        showToast(khmerMessage, 'error');
     }
 });
 
 const startExamSession = async () => {
     if (!studentInfo.value.name.trim() || !studentInfo.value.student_code.trim() || !studentInfo.value.room) {
-        showToast('...សូមបំពេញព័ត៌មាន...', 'warning');
+        showToast('សូមបំពេញព័ត៌មានរបស់អ្នក', 'warning');
         return;
     }
     isLobbyLoading.value = true;
@@ -497,9 +520,8 @@ const showConfirmModal = () => {
     if (window.bootstrap && window.bootstrap.Modal) {
         bsModalInstance = new window.bootstrap.Modal(confirmModalRef.value);
         bsModalInstance.show();
-        } else {
-            performSubmit();
-            
+    } else {
+        performSubmit();
     }
 };
 
@@ -569,11 +591,29 @@ const startTimer = () => {
     }, 1000);
 };
 
-// const goToLobby = () => { window.location.reload(); };
+const goToLobby = () => { window.location.reload(); };
 const printResult = () => { window.print(); };
 </script>
 
 <style scoped>
+.brand-logo {
+    height: 180px;
+    width: auto;
+    object-fit: contain;
+    border-radius: 6px;
+    transition: transform 0.2s ease;
+}
+
+.brand-logo:hover {
+    transform: scale(1.04);
+}
+
+.navbar-custom {
+    background-color: #ffffff;
+    border-bottom: 1px solid rgba(220, 235, 228, 0.8);
+    box-shadow: 0 4px 12px rgba(42, 110, 80, 0.03);
+}
+
 .take-exam-root {
     font-family: 'Inter', 'Kantumruy Pro', sans-serif;
     color: #2c3e50;
@@ -596,16 +636,10 @@ const printResult = () => { window.print(); };
     pointer-events: none;
 }
 
-.navbar-custom,
 .main-content-area,
 .modal {
     position: relative;
     z-index: 10;
-}
-
-.navbar-custom {
-    background: #ffffff;
-    border-bottom: 1px solid rgba(230, 240, 235, 0.8);
 }
 
 .logo-text {
@@ -943,5 +977,85 @@ const printResult = () => { window.print(); };
     background-color: #f3f4f6;
     color: #4b5563;
     border-radius: 12px;
+}
+/* ── CUSTOM SLIM TOAST CONTAINER ── */
+.custom-toast-wrapper {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 9999;
+  min-width: 280px;
+  max-width: 380px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  box-shadow: 0 10px 25px rgba(15, 23, 42, 0.15);
+  backdrop-filter: blur(8px);
+  animation: toastSlideUp 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+.toast-content-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-grow: 1;
+}
+
+.toast-icon {
+  font-size: 1.15rem;
+  flex-shrink: 0;
+}
+
+.toast-text {
+  font-size: 0.85rem;
+  font-weight: 500;
+  line-height: 1.4;
+}
+.toast-close-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  color: inherit;
+  opacity: 0.6;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: opacity 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.toast-close-btn:hover {
+  opacity: 1;
+}
+
+/* toast msg */
+.custom-toast-wrapper.success {
+  background-color: rgba(16, 185, 129, 0.95); 
+  color: #ffffff;
+  border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+.custom-toast-wrapper.error {
+  background-color: rgba(239, 68, 68, 0.95);
+  color: #ffffff;
+  border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.custom-toast-wrapper.warning {
+  background-color: rgba(245, 158, 11, 0.95);
+  color: #ffffff;
+  border: 1px solid rgba(245, 158, 11, 0.2);
+}
+@keyframes toastSlideUp {
+  from {
+    transform: translateY(30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 </style>
