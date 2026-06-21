@@ -1,83 +1,150 @@
-
 <template>
   <section class="student-dashboard">
 
-    <div v-if="isLoading" class="text-center py-5" style="color: var(--txt-mu)">
-      <i class="fas fa-spinner fa-spin fa-2x mb-2"></i>
-      <div>កំពុងផ្ទុកទិន្នន័យ....</div>
-    </div>
-    <!-- STATS -->
-    <div class="stats">
-      <a href="#" class="stat">
-        <div class="stat-icon icon-green" >
-          <i class="bi bi-check-circle"></i>
+    <div v-if="isLoading" class="skeleton-dashboard-wrapper">
+      <div class="stats">
+        <div v-for="i in 3" :key="'stat-skey-' + i" class="stat skeleton-card">
+          <div class="skeleton-element skeleton-icon"></div>
+          <div class="w-100" style="margin-top: 15px;">
+            <div class="skeleton-element skeleton-line w-50"></div>
+            <div class="skeleton-element skeleton-line w-25" style="height: 26px; margin-top: 15px;"></div>
+          </div>
         </div>
-        <div>
-          <div class="stat-label">ការប្រឡងដែលបានធ្វើរួច</div>
-          <div class="stat-value">{{ dashboardData.examsDone || 0 }}</div>
-         
-        </div>
-      </a>
+      </div>
 
-      <a href="#" class="stat">
-        <div class="stat-icon icon-blue" >
-          <i class="bi bi-door-open"></i>
-        </div>
-        <div>
-          <div class="stat-label">បន្ទប់ដែលបានចូលរួម</div>
-          <div class="stat-value">{{ dashboardData.enrolledRooms || 0 }}</div>
-        </div>
-      </a>
-
-      <a href="#" class="stat">
-        <div class="stat-icon icon-orange" >
-          <i class="bi bi-graph-up-arrow"></i>
-        </div>
-        <div>
-          <div class="stat-label">ពិន្ទុជាមធ្យមសរុប</div>
-          <div class="stat-value">{{ dashboardData.overallAvg || '0%' }}</div>
-        </div>
-      </a>
-    </div>
-
-    <!-- GRID -->
-    <div class="grid">
-      <!-- LEFT -->
-      <div class="left-col">
-        <!-- Quick Actions -->
-        <div class="card">
-          <div class="qa-wrap">
-            <div>
-              <div class="card-title no-margin">សកម្មភាពរហ័ស</div>
+      <div class="grid">
+        <div class="left-col">
+          <div class="card skeleton-card">
+            <div class="qa-wrap">
+              <div class="skeleton-element skeleton-line w-25" style="height: 16px;"></div>
+              <div class="qa-btns">
+                <div class="skeleton-element skeleton-btn" style="width: 130px;"></div>
+                <div class="skeleton-element skeleton-btn" style="width: 150px;"></div>
+                <div class="skeleton-element skeleton-btn" style="width: 160px;"></div>
+              </div>
             </div>
-            <div class="qa-btns">
-              <button class="btn primary" @click="openModal">
-                <i class="bi bi-plus-lg"></i>ចូលរួមថ្នាក់រៀន
-              </button>
-              <a href="#" class="btn">
-                <i class="bi bi-clipboard-check"></i> កិច្ចការដែលត្រូវធ្វើ
-              </a>
-              <a href="#" class="btn">
-                <i class="bi bi-laptop"></i> ពិនិត្យប្រព័ន្ធសិក្សា
-              </a>
-            </div>
-           </div>
-           </div>
+          </div>
 
-        <!-- Performance -->
-        
-        
+          <div class="card skeleton-card">
+            <div class="perf-head">
+              <div class="w-50">
+                <div class="skeleton-element skeleton-line w-75" style="height: 16px; margin-bottom: 14px;"></div>
+              </div>
+              <div class="gpa-block" style="min-width: 100px;">
+                <div class="skeleton-element skeleton-line w-50 ms-auto" style="height: 26px; margin-bottom: 5px;"></div>
+                <div class="skeleton-element skeleton-line w-100" style="height: 12px;"></div>
+              </div>
+            </div>
+            
+            <div v-for="i in 3" :key="'perf-skey-' + i" class="subj-row align-items-center">
+              <div class="skeleton-element skeleton-circle" style="width: 8px; height: 8px;"></div>
+              <div class="subj-info">
+                <div class="skeleton-element skeleton-line w-50"></div>
+              </div>
+              <div class="subj-track">
+                <div class="skeleton-element w-100 h-100"></div>
+              </div>
+              <div class="skeleton-element skeleton-line w-10"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="right-col">
+          <div class="card skeleton-card" style="border-top: 3px solid #cbd5e1;">
+            <div class="section-head">
+              <div class="skeleton-element skeleton-line w-50" style="height: 16px;"></div>
+            </div>
+            <div v-for="i in 2" :key="'dl-skey-' + i" class="d-flex align-items-center gap-3 p-3 mb-2" style="border-radius: 10px; background: #f8fafc;">
+              <div class="skeleton-element skeleton-circle" style="width: 36px; height: 36px; border-radius: 8px;"></div>
+              <div class="flex-grow-1">
+                <div class="skeleton-element skeleton-line w-75 mb-2"></div>
+                <div class="skeleton-element skeleton-line w-50"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card skeleton-card">
+            <div class="section-head">
+              <div class="skeleton-element skeleton-line w-50" style="height: 16px;"></div>
+              <div class="skeleton-element skeleton-line w-15" style="height: 14px;"></div>
+            </div>
+            <div v-for="i in 2" :key="'fb-skey-' + i" class="fb-row">
+              <div class="fb-left w-75">
+                <div class="skeleton-element skeleton-circle" style="width: 36px; height: 36px; border-radius: 9px;"></div>
+                <div class="w-100">
+                  <div class="skeleton-element skeleton-line w-60 mb-2"></div>
+                  <div class="skeleton-element skeleton-line w-40"></div>
+                </div>
+              </div>
+              <div class="skeleton-element skeleton-line w-15" style="height: 22px; border-radius: 99px;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div v-else class="dashboard-real-content d-flex flex-column gap-4">
+      <div class="stats">
+        <a href="#" class="stat">
+          <div class="stat-icon icon-green" >
+            <i class="bi bi-check-circle"></i>
+          </div>
+          <div>
+            <div class="stat-label">ការប្រឡងដែលបានធ្វើរួច</div>
+            <div class="stat-value">{{ dashboardData.examsDone || 0 }}</div>
+          </div>
+        </a>
+
+        <a href="#" class="stat">
+          <div class="stat-icon icon-blue" >
+            <i class="bi bi-door-open"></i>
+          </div>
+          <div>
+            <div class="stat-label">បន្ទប់ដែលបានចូលរួម</div>
+            <div class="stat-value">{{ dashboardData.enrolledRooms || 0 }}</div>
+          </div>
+        </a>
+
+        <a href="#" class="stat">
+          <div class="stat-icon icon-orange" >
+            <i class="bi bi-graph-up-arrow"></i>
+          </div>
+          <div>
+            <div class="stat-label">ពិន្ទុជាមធ្យមសរុប</div>
+            <div class="stat-value">{{ dashboardData.overallAvg || '0%' }}</div>
+          </div>
+        </a>
+      </div>
+
+      <div class="grid">
+        <div class="left-col">
+          <div class="card">
+            <div class="qa-wrap">
+              <div>
+                <div class="card-title no-margin">សកម្មភាពរហ័ស</div>
+              </div>
+              <div class="qa-btns">
+                <button class="btn primary" @click="openModal">
+                  <i class="bi bi-plus-lg"></i>ចូលរួមថ្នាក់រៀន
+                </button>
+                <a href="#" class="btn">
+                  <i class="bi bi-clipboard-check"></i> កិច្ចការដែលត្រូវធ្វើ
+                </a>
+                <a href="#" class="btn">
+                  <i class="bi bi-laptop"></i> ពិនិត្យប្រព័ន្ធសិក្សា
+                </a>
+              </div>
+             </div>
+          </div>
+
           <div class="card">
             <div class="perf-head">
               <div>
                 <div class="card-title">លទ្ធផលសិក្សាតាមមុខវិជ្ជា</div>
-                 
               </div>
               <div class="gpa-block" v-if="performanceList">
                 <div class="gpa-val text-center">{{ performanceList.currentGPA }}</div>
-               
                 <div class="gpa-lbl">មធ្យមភាគប៉ាន់ស្មាន</div>
-                <a href="4.st-results.html" class="view-link" style="display: block; margin-top: 6px">របាយការណ៍លម្អិត →</a>
               </div>
             </div>
 
@@ -112,7 +179,6 @@
 
             <div v-if="deadlineList.length === 0" class="py-4 text-center text-muted">
               <i class="bi bi-calendar-check d-block mb-1 fs-4"></i> គ្មានកាលកំណត់សម្រាប់ថ្ងៃនេះទេ!
-              
             </div>
 
             <a v-else v-for="dl in deadlineList" :key="dl.examId" href="3.st-assignments.html" class="dl-item"
@@ -137,7 +203,7 @@
               <div>
                 <div class="card-title">មតិកែលម្អថ្មីៗ</div>
               </div>
-               <router-link :to="{name: 'AnalyticsResult',}" class="view-link">មើលលម្អិត</router-link>
+               <router-link :to="{name: 'AnalyticsResult'}" class="view-link">មើលលម្អិត</router-link>
             </div>
 
             <div v-if="feedbackList.length === 0" class="py-3 text-center text-muted">
@@ -160,6 +226,7 @@
           </div>
         </div>
       </div>
+    </div>
 
     <div class="modal-wrap" :class="{ open: isModalOpen }" @click.self="closeModal">
       <div class="modal-box">
@@ -212,7 +279,6 @@ function getSubjectColor(index) {
 async function loadDashboardContent() {
   try {
     isLoading.value = true;
-
     const [resStats, resFeedback, resPerformance, resDeadlineList] = await Promise.all([
       getDashboardStats(),
       getRecentFeedback(),
@@ -222,31 +288,26 @@ async function loadDashboardContent() {
 
     if (resStats.data?.success) {
       dashboardData.value = resStats.data.data;
-      console.log(resStats.data.data);
-      
     }
 
     if (resFeedback.data?.success) {
       feedbackList.value = resFeedback.data.data || [];
-      console.log(resFeedback);
-
     }
 
     if (resPerformance.data?.success) {
       performanceList.value = resPerformance.data.data || [];
-      console.log(resPerformance);
-
     }
+    
     if (resDeadlineList.data?.success) {
       deadlineList.value = resDeadlineList.data.data || [];
-      console.log(`Upcoming Data: ${deadlineList}`);
-
     }
 
   } catch (error) {
     console.error("Error loading student dashboard content:", error);
   } finally {
-    isLoading.value = false;
+    setTimeout(() => {
+      isLoading.value = false;
+    }, 450);
   }
 }
 
@@ -278,13 +339,13 @@ onMounted(loadDashboardContent);
 .student-dashboard {
   --em: #10b981;
   --em-dk: #059669;
- --em-soft: #d1fae5;
+  --em-soft: #d1fae5;
   --em-text: #065f46;
- --blue-soft: #dbeafe;
- --amber-soft: #fef3c7;
+  --blue-soft: #dbeafe;
+  --amber-soft: #fef3c7;
   --amber-border: #fde68a;
   --amber-text: #b45309;
- --red-soft: #fee2e2;
+  --red-soft: #fee2e2;
   --red-border: #fee2e2;
   --txt: #0f172a;
   --txt-mu: #64748b;
@@ -319,6 +380,62 @@ onMounted(loadDashboardContent);
   background: #cbd5e1;
   border-radius: 99px;
 }
+
+/* ── 🌟 SKELETON PULSE ANIMATION ── */
+.skeleton-dashboard-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+}
+
+@keyframes skeleton-pulse {
+  0% { background-color: #f1f5f9; }
+  50% { background-color: #e2e8f0; }
+  100% { background-color: #f1f5f9; }
+}
+
+.skeleton-element {
+  animation: skeleton-pulse 1.5s ease-in-out infinite;
+  background-color: #f1f5f9;
+  border-radius: 4px;
+}
+
+.skeleton-card {
+  cursor: default !important;
+}
+
+.skeleton-icon {
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
+}
+
+.skeleton-line {
+  height: 14px;
+  width: 100%;
+}
+
+.skeleton-btn {
+  height: 38px;
+  border-radius: var(--radius-sm);
+}
+
+.skeleton-circle {
+  border-radius: 50%;
+}
+
+/* Helper Utilities */
+.w-10 { width: 10%; }
+.w-15 { width: 15%; }
+.w-25 { width: 25%; }
+.w-40 { width: 40%; }
+.w-50 { width: 50%; }
+.w-60 { width: 60%; }
+.w-75 { width: 75%; }
+.w-100 { width: 100%; }
+.ms-auto { margin-left: auto; }
+.mb-2 { margin-bottom: 8px; }
 
 /* ── STATS ── */
 .stats {
@@ -379,12 +496,6 @@ onMounted(loadDashboardContent);
   line-height: 1;
   color: var(--txt);
   margin-top: 15px;
-}
-
-.stat-trend {
-  font-size: 12px;
-  font-weight: 600;
-  margin-top: 4px;
 }
 
 /* ── GRID ── */

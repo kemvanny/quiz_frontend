@@ -184,6 +184,7 @@ const avatarSrc = computed(() => {
       ? av
       : `${imgBaseUrl}${av}`;
 });
+
 const copyToClipboard = (txt, field) =>
   txt &&
   navigator.clipboard

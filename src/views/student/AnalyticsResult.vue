@@ -1,13 +1,94 @@
 <template>
   <div class="container-fluid" style="max-width: 1300px;">
 
-    <!-- 1. Loading State -->
-    <div v-if="isLoading" class="state-center">
-      <div class="custom-spinner"></div>
-      <span class="state-text">កំពុងទាញយកទិន្នន័យលទ្ធផលប្រឡង...</span>
+    <div v-if="isLoading">
+      <div class="row g-3 mb-4">
+        <div v-for="n in 3" :key="n" class="col-12 col-md-6 col-lg-4">
+          <div class="white-flat-card p-4 d-flex align-items-center gap-3">
+            <div class="skeleton-avatar skeleton-shimmer"></div>
+            <div class="flex-grow-1">
+              <div class="skeleton-line skeleton-shimmer mb-2" style="width: 40%; height: 12px;"></div>
+              <div class="skeleton-line skeleton-shimmer" style="width: 75%; height: 20px;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="table-card">
+        <div class="table-top d-flex align-items-center justify-content-between px-4 pt-4 pb-3">
+          <div class="skeleton-line skeleton-shimmer" style="width: 250px; height: 20px;"></div>
+          <div class="skeleton-line skeleton-shimmer" style="width: 160px; height: 36px; border-radius: 50px;"></div>
+        </div>
+        <div class="filter-strip px-4 pb-2">
+          <div class="skeleton-line skeleton-shimmer" style="width: 80px; height: 26px; border-radius: 50px;"></div>
+        </div>
+        <div class="table-responsive">
+          <table class="table results-table align-middle mb-0">
+
+            <thead>
+              <tr>
+                <th class="ps-4">
+                  <div class="skeleton-line skeleton-shimmer" style="width: 80px; height: 12px;"></div>
+                </th>
+                <th>
+                  <div class="skeleton-line skeleton-shimmer" style="width: 40px; height: 12px;"></div>
+                </th>
+                <th>
+                  <div class="skeleton-line skeleton-shimmer" style="width: 60px; height: 12px;"></div>
+                </th>
+                <th>
+                  <div class="skeleton-line skeleton-shimmer" style="width: 70px; height: 12px;"></div>
+                </th>
+                <th>
+                  <div class="skeleton-line skeleton-shimmer" style="width: 40px; height: 12px;"></div>
+                </th>
+                <th class="text-center">
+                  <div class="skeleton-line skeleton-shimmer" style="width: 40px; height: 12px; margin: 0 auto;"></div>
+                </th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr v-for="n in itemsPerPage" :key="n">
+                <td class="ps-4">
+                  <div class="skeleton-line skeleton-shimmer" style="width: 85%; height: 16px;"></div>
+                </td>
+                <td>
+                  <div class="skeleton-line skeleton-shimmer" style="width: 70px; height: 22px; border-radius: 12px;">
+                  </div>
+                </td>
+                <td>
+                  <div class="skeleton-line skeleton-shimmer" style="width: 100px; height: 14px;"></div>
+                </td>
+                <td>
+                  <div class="skeleton-line skeleton-shimmer" style="width: 90%; height: 32px; border-radius: 10px;">
+                  </div>
+                </td>
+                <td>
+                  <div class="d-flex align-items-center gap-2">
+                    <div class="skeleton-line skeleton-shimmer flex-grow-1" style="height: 6px; border-radius: 99px;">
+                    </div>
+                    <div class="skeleton-line skeleton-shimmer" style="width: 24px; height: 14px;"></div>
+                  </div>
+                </td>
+                <td>
+                  <div class="d-flex justify-content-center">
+                    <div class="skeleton-line skeleton-shimmer" style="width: 34px; height: 34px; border-radius: 10px;">
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div
+          class="pagination-container d-flex align-items-center justify-content-between px-4 py-3 border-top border-light-subtle">
+          <div class="skeleton-line skeleton-shimmer" style="width: 220px; height: 16px;"></div>
+          <div class="skeleton-line skeleton-shimmer" style="width: 140px; height: 34px; border-radius: 10px;"></div>
+        </div>
+      </div>
     </div>
 
-    <!-- 2. Error State -->
     <div v-else-if="errorMessage" class="state-center">
       <div class="state-icon-box error-box">
         <i class="fas fa-exclamation-triangle"></i>
@@ -15,15 +96,13 @@
       <p class="state-text text-danger mt-3">{{ errorMessage }}</p>
     </div>
 
-    <!-- 3. Empty State -->
     <div v-else-if="examResultsList.length === 0" class="state-center">
       <div class="state-icon-box empty-box">
         <i class="fas fa-inbox"></i>
       </div>
-      <p class="state-text mt-3">មិនមានទិន្នន័យលទ្ធផលប្រឡងឡើយ。</p>
+      <p class="state-text mt-3">មិនមានទិន្នន័យលទ្ធផលប្រឡងឡើយ។</p>
     </div>
 
-    <!-- 4. Main Content -->
     <div v-else>
       <div class="row g-3 mb-4">
         <div class="col-12 col-lg-4">
@@ -36,12 +115,10 @@
               <div class="card-value text-truncate">
                 {{ examResultsList[0]?.first_name }} {{ examResultsList[0]?.last_name }}
               </div>
-
             </div>
           </div>
         </div>
 
-        <!-- Average Score -->
         <div class="col-12 col-md-6 col-lg-4">
           <div class="white-flat-card h-100 p-4 d-flex align-items-center gap-3">
             <div class="arc-ring">
@@ -53,14 +130,12 @@
               <div class="arc-label">{{ averageScore.toFixed(0) }}%</div>
             </div>
             <div>
-              <div class="card-label">មធ្យមភាគពិន្ទុរួម</div>
+              <div class="card-label">មធ្យមភាគនិទ្ទេសរួម</div>
               <div class="card-value" :class="getGradeClass(averageGrade)">{{ averageGrade }}</div>
-
             </div>
           </div>
         </div>
 
-        <!-- Total Exams -->
         <div class="col-12 col-md-6 col-lg-4">
           <div class="white-flat-card h-100 p-4 d-flex align-items-center gap-3">
             <div class="icon-pill blue">
@@ -72,18 +147,15 @@
                 {{ examResultsList.length }}
                 <span class="card-unit">វិញ្ញាសា</span>
               </div>
-
             </div>
           </div>
         </div>
       </div>
 
-      <!-- ── TABLE CARD ── -->
       <div class="table-card">
         <div class="table-top d-flex align-items-center justify-content-between flex-wrap gap-3 px-4 pt-4 pb-3">
           <div>
             <h5 class="table-heading mb-1">ប្រវត្តិនៃការប្រឡង និងមតិកែលម្អ</h5>
-
           </div>
           <button class="dl-btn d-flex align-items-center gap-2 px-4 py-2" @click="exportToCSV">
             <i class="fas fa-cloud-download-alt"></i>
@@ -107,16 +179,12 @@
                 <th style="min-width: 240px;">មតិកែលម្អ</th>
                 <th style="min-width: 160px;">ពិន្ទុ</th>
                 <th class="text-center">និទ្ទេស</th>
-
               </tr>
             </thead>
             <tbody>
               <tr v-for="result in paginatedExamResults" :key="result.submission_id">
-
-                <!-- Exam Title -->
                 <td class="ps-4">
                   <div class="d-flex align-items-center gap-3">
-                   
                     <span class="exam-name">{{ result.exam_title }}</span>
                   </div>
                 </td>
@@ -149,11 +217,11 @@
                     {{ result.grade || 'F' }}
                   </span>
                 </td>
-
               </tr>
             </tbody>
           </table>
         </div>
+
         <div
           class="pagination-container d-flex align-items-center justify-content-between px-4 py-3 border-top border-light-subtle flex-wrap gap-2">
           <div class="pagination-info">
@@ -180,19 +248,15 @@
       </div>
     </div>
   </div>
-
 </template>
 
 <script setup>
 import { getAllStudentExamResult } from "@/api/student.api";
 import { ref, onMounted, computed } from "vue";
 
-
 const examResultsList = ref([]);
 const isLoading = ref(false);
 const errorMessage = ref('');
-
-/* ── PAGINATION STATES ── */
 const currentPage = ref(1);
 const itemsPerPage = ref(5);
 
@@ -210,11 +274,12 @@ const fetchStudentAllResults = async () => {
   } catch (error) {
     errorMessage.value = "មានបញ្ហាក្នុងការតភ្ជាប់ទៅកាន់ Server!";
   } finally {
-    isLoading.value = false;
+    setTimeout(() => {
+      isLoading.value = false;
+    }, 450);
   }
 };
 
-/* ── PAGINATION LOGIC ── */
 const totalPages = computed(() => {
   return Math.ceil(examResultsList.value.length / itemsPerPage.value) || 1;
 });
@@ -241,7 +306,6 @@ const changePage = (page) => {
   }
 };
 
-/* ── DASHBOARD LOGIC ── */
 const averageScore = computed(() => {
   if (examResultsList.value.length === 0) return 0;
   const total = examResultsList.value.reduce((acc, curr) => acc + (parseFloat(curr.score) || 0), 0);
@@ -295,40 +359,23 @@ const getFeedbackBorderClass = (grade) => {
   return 'fb-danger';
 };
 
-const getAssessIconStyle = (grade) => {
-  if (['A', 'B'].includes(grade)) return 'background:#ecfdf5; color:#059669';
-  if (['C', 'D'].includes(grade)) return 'background:#fffbeb; color:#d97706';
-  return 'background:#fff1f2; color:#e11d48';
-};
-
-const viewCode = (submissionId) => {
-  console.log("Viewing submission code ID:", submissionId);
-};
-
 const exportToCSV = () => {
-  
   const headers = ["ឈ្មោះវិញ្ញាសា", "បន្ទប់", "កាលបរិច្ឆេទ", "មតិកែលម្អ", "ពិន្ទុ", "និទ្ទេស"];
-
   const rows = examResultsList.value.map((result) => [
-    `"${result.exam_title || ''}"`, 
+    `"${result.exam_title || ''}"`,
     `"${result.room || ''}"`,
     formatDate(result.submitted_at),
-    `"${(result.feedback || 'មិនទាន់មានមតិកែលម្អ').replace(/"/g, '""')}"`, 
+    `"${(result.feedback || 'មិនទាន់មានមតិកែលម្អ').replace(/"/g, '""')}"`,
     parseFloat(result.score || 0).toFixed(0),
     result.grade || 'F'
   ]);
-
-
   const csvContent = "\ufeff" + [headers.join(","), ...rows.map(e => e.join(","))].join("\n");
   const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
   const url = URL.createObjectURL(blob);
-  
   const link = document.createElement("a");
   const dateStr = new Date().toISOString().slice(0, 10);
-  
   link.setAttribute("href", url);
   link.setAttribute("download", `ប្រវត្តិលទ្ធផល_${dateStr}.csv`);
-  
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
@@ -340,6 +387,37 @@ onMounted(() => {
 </script>
 
 <style scoped>
+.skeleton-shimmer {
+  background: linear-gradient(90deg,
+      #f1f5f9 25%,
+      #e2e8f0 37%,
+      #f1f5f9 63%);
+  background-size: 400% 100%;
+  animation: shimmer-animation 1.4s ease infinite;
+}
+
+@keyframes shimmer-animation {
+  0% {
+    background-position: 100% 0;
+  }
+
+  100% {
+    background-position: 0% 0;
+  }
+}
+
+.skeleton-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  flex-shrink: 0;
+}
+
+.skeleton-line {
+  background-color: #f1f5f9;
+  border-radius: 4px;
+}
+
 .state-center {
   display: flex;
   flex-direction: column;
@@ -347,53 +425,6 @@ onMounted(() => {
   justify-content: center;
   min-height: 40vh;
   gap: 12px;
-}
-
-.custom-spinner {
-  width: 40px;
-  height: 40px;
-  border: 3px solid #e2e8f0;
-  border-top-color: #10b981;
-  border-radius: 50%;
-  animation: spin 0.8s linear infinite;
-}
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-.state-icon-box {
-  width: 64px;
-  height: 64px;
-  border-radius: 18px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.6rem;
-}
-
-.error-box {
-  background: #fff1f2;
-  color: #e11d48;
-}
-
-.empty-box {
-  background: #f1f5f9;
-  color: #94a3b8;
-}
-
-.state-text {
-  font-size: 0.9rem;
-  color: #64748b;
-  font-weight: 500;
-}
-
-@media print {
-  .no-print {
-    display: none !important;
-  }
 }
 
 .white-flat-card {
@@ -452,24 +483,6 @@ onMounted(() => {
   color: #64748b;
 }
 
-.card-sub {
-  font-size: 0.75rem;
-  font-weight: 500;
-  margin-top: 2px;
-}
-
-.purple-text {
-  color: #7c3aed;
-}
-
-.blue-text {
-  color: #0284c7;
-}
-
-.muted-text {
-  color: #94a3b8;
-}
-
 .text-emerald {
   color: #10b981;
 }
@@ -482,7 +495,6 @@ onMounted(() => {
   color: #ef4444;
 }
 
-/* ── Arc Progress ── */
 .arc-ring {
   width: 52px;
   height: 52px;
@@ -522,7 +534,6 @@ onMounted(() => {
   color: #0f172a;
 }
 
-/* ── Table Card ── */
 .table-card {
   background: #fff;
   border-radius: 16px;
@@ -535,11 +546,6 @@ onMounted(() => {
   font-size: 1rem;
   font-weight: 700;
   color: #0f172a;
-}
-
-.table-subheading {
-  font-size: 0.78rem;
-  color: #94a3b8;
 }
 
 .dl-btn {
@@ -593,7 +599,6 @@ onMounted(() => {
   font-weight: 700;
 }
 
-/* ── Table ── */
 .results-table thead th {
   background: #f8fafc;
   font-size: 0.68rem;
@@ -622,17 +627,6 @@ onMounted(() => {
 .results-table tbody td {
   padding: 14px 16px;
   vertical-align: middle;
-}
-
-.exam-icon {
-  width: 36px;
-  height: 36px;
-  border-radius: 10px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.85rem;
-  flex-shrink: 0;
 }
 
 .exam-name {
@@ -732,26 +726,6 @@ onMounted(() => {
   color: #b91c1c;
 }
 
-.view-btn {
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
-  border-radius: 50px;
-  padding: 6px 16px;
-  font-size: 0.76rem;
-  font-weight: 600;
-  color: #475569;
-  cursor: pointer;
-  transition: all 0.2s;
-  white-space: nowrap;
-}
-
-.view-btn:hover {
-  background: #0f172a;
-  color: #fff;
-  border-color: #0f172a;
-}
-
-/* ── PAGINATION STYLES ── */
 .pagination-container {
   background-color: #ffffff;
 }
