@@ -3,7 +3,8 @@
 
     <div class="left-panel">
       <div class="avatar-ring">
-        <img :src="`${imgBaseUrl}${authStore.profile.avatar}?t=${imageRefresh}`" alt="Avatar" />
+        <img :src="authStore.profile?.avatar && authStore.profile?.avatar !== 'default.png'
+                  ?`${imgBaseUrl}${authStore.profile.avatar}?t=${imageRefresh}`:defaultImage" alt="Avatar" />
         <span class="status-dot" title="Online"></span>
       </div>
 
@@ -155,6 +156,7 @@ import { ref, reactive, computed, onMounted, watch } from 'vue'
 import { useFormValidation } from '@/composables/useFormValidation'
 import { useAuthStore } from '@/stores/authStore'
 import { getTotalUser } from '@/api/admin.api'
+import defaultImage from "../../assets/images/default.png";
 
 const authStore = useAuthStore()
 const imgBaseUrl = import.meta.env.VITE_BASE_URL_FOR_IMAGE

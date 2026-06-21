@@ -135,7 +135,7 @@ const fetchRooms = async (page = 1) => {
     try {
         const response = await getRoom({
             page: page,
-            limit: 8, // កំណត់ត្រឹម ៨
+            limit: 8, 
             search: searchQuery.value
         });
         rooms.value = response.data.data;
@@ -190,7 +190,7 @@ onMounted(() => fetchRooms())
 <style scoped>
 .room-management-page {
     padding: 1.75rem 1.5rem;
-    min-height: 100vh;
+    /* min-height: 100vh; */
     font-family: 'DM Sans', sans-serif;
     background: #f1fdf7;
     border-radius: 30px;
@@ -276,7 +276,6 @@ onMounted(() => fetchRooms())
     border: 1.5px solid #dcfce7;
     border-radius: 16px;
     overflow: hidden;
-    cursor: pointer;
     transition: transform .22s ease, box-shadow .22s ease, border-color .22s ease;
     display: flex;
     flex-direction: column;
