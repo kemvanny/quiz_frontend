@@ -3,7 +3,8 @@
 
     <div class="left-panel">
       <div class="avatar-ring">
-        <img :src="`${imgBaseUrl}${authStore.profile.avatar}?t=${imageRefresh}`" alt="Avatar" />
+        <img :src="authStore.profile?.avatar && authStore.profile?.avatar !== 'default.png'
+                  ?`${imgBaseUrl}${authStore.profile.avatar}?t=${imageRefresh}`:defaultImage" alt="Avatar" />
         <span class="status-dot" title="Online"></span>
       </div>
 
@@ -15,20 +16,20 @@
 
       <div class="stats-strip">
         <div class="stat-box">
-          <span class="stat-num">48</span>
+          <span class="stat-num">{{ totalUser?.total_users }}</span>
           <span class="stat-label">អ្នកប្រើប្រាស់សរុប</span>
         </div>
         <div class="stat-box">
-          <span class="stat-num">312</span>
+          <span class="stat-num">{{ totalUser?.total_teachers }}</span>
           <span class="stat-label">គ្រូបង្រៀន</span>
         </div>
         <div class="stat-box">
-          <span class="stat-num">99</span>
+          <span class="stat-num">{{ totalUser?.total_students }}</span>
           <span class="stat-label">និស្សិត</span>
         </div>
         <div class="stat-box">
-          <span class="stat-num">9</span>
-          <span class="stat-label">ការប្រឡង</span>
+          <span class="stat-num">{{ totalUser?.total_rooms }}</span>
+          <span class="stat-label">បន្ទប់</span>
         </div>
       </div>
 
@@ -155,6 +156,7 @@ import { ref, reactive, computed, onMounted, watch } from 'vue'
 import { useFormValidation } from '@/composables/useFormValidation'
 import { useAuthStore } from '@/stores/authStore'
 import { getTotalUser } from '@/api/admin.api'
+import defaultImage from "../../assets/images/default.png";
 
 const authStore = useAuthStore()
 const imgBaseUrl = import.meta.env.VITE_BASE_URL_FOR_IMAGE

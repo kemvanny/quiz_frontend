@@ -35,6 +35,7 @@ import ResetPassword from '@/views/auth/ResetPassword.vue'
 import CheckEmail from '@/views/auth/CheckEmail.vue'
 import TakeExam from '@/views/student/TakeExam.vue'
 import RoomManagements from '@/views/admin/RoomManagements.vue'
+import RoomDetailStudent from '@/views/student/RoomDetail.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -64,19 +65,19 @@ const router = createRouter({
       path: '/forget-password',
       name: 'ForgetPassword',
       component: ForgetPassword,
-      meta : {title: "Forget Password"}
+      meta: { title: "Forget Password" }
     },
     {
       path: '/reset-password',
       name: 'ResetPassword',
       component: ResetPassword,
-      meta : {title: "Reset Password"}
+      meta: { title: "Reset Password" }
     },
     {
       path: '/check-email',
       name: "CheckEmail",
       component: CheckEmail,
-      meta : {title: "Check Email"}
+      meta: { title: "Check Email" }
     },
     {
       path: '/admin',
@@ -123,7 +124,7 @@ const router = createRouter({
           path: 'room-managements',
           name: 'RoomManagements',
           component: RoomManagements,
-          meta: {title: "Room Managements"}
+          meta: { title: "Room Managements" }
         }
       ]
     },
@@ -132,72 +133,72 @@ const router = createRouter({
       component: TeacherLayout,
       meta: { requiresAuth: true, role: 'teacher' },
       children: [
-      {
-        path: 'dashboard',
-        name: 'TeacherDashboard',
-        component: TeacherDashboard,
-        meta: {title: "Teacher Dashboard"}
-      },
-      {
-        path: 'quizzes',
-        name: 'Quizzes',
-        component: Quizzes,
-        meta: {title: "Quizzes", customHeader: true, fullscreen: true}
-      },
-      {
-        path: 'assignments',
-        name: 'Assignments',
-        component: Assignments,
-        meta: {title: "Assignments"}
-      },
-      {
-        path: 'final-exam',
-        name: 'FinalExam',
-        component: FinalExam,
-        meta: {title: "Final Exam"}
-      },
-      {
-        path: 'room-management',
-        name: 'RoomManagement',
-        component: RoomManagement
-      },
-      {
-        path: 'room-management/:roomId/stream',
-        name: 'ClassStream',
-        component: ClassStream,
-        props: true
-      },
-      {
-        path: 'room-management/:roomId/exams', 
-        name: 'RoomDetail',
-        component: RoomDetail,
-        props: true
-      },
-      {
-        path: 'room-management/:roomId/exams/:examId', 
-        name: 'TeacherExamDetail',
-        component: ExamDetailView,
-        props: true
-      },
-      {
-        path: 'student-results',
-        name: 'StudentResults',
-        component: StudentResults,
-        meta: {title: "Student Results"}
-      },
-      {
-        path: 'teacher-validations',
-        name: 'TeacherValidations',
-        component: TeacherValidations,
-        meta: {title: "Teacher Validations"}
-      },
-      {
-        path: 'profile',
-        name: 'Profile',
-        component: Profile,
-        meta: {title: "Profile"}
-      }
-    ]
+        {
+          path: 'dashboard',
+          name: 'TeacherDashboard',
+          component: TeacherDashboard,
+          meta: { title: "Teacher Dashboard" }
+        },
+        {
+          path: 'quizzes',
+          name: 'Quizzes',
+          component: Quizzes,
+          meta: { title: "Quizzes", customHeader: true, fullscreen: true }
+        },
+        {
+          path: 'assignments',
+          name: 'Assignments',
+          component: Assignments,
+          meta: { title: "Assignments" }
+        },
+        {
+          path: 'final-exam',
+          name: 'FinalExam',
+          component: FinalExam,
+          meta: { title: "Final Exam" }
+        },
+        {
+          path: 'room-management',
+          name: 'RoomManagement',
+          component: RoomManagement
+        },
+        {
+          path: 'room-management/:roomId/stream',
+          name: 'ClassStream',
+          component: ClassStream,
+          props: true
+        },
+        {
+          path: 'room-management/:roomId/exams',
+          name: 'RoomDetail',
+          component: RoomDetail,
+          props: true
+        },
+        {
+          path: 'room-management/:roomId/exams/:examId',
+          name: 'TeacherExamDetail',
+          component: ExamDetailView,
+          props: true
+        },
+        {
+          path: 'student-results',
+          name: 'StudentResults',
+          component: StudentResults,
+          meta: { title: "Student Results" }
+        },
+        {
+          path: 'teacher-validations',
+          name: 'TeacherValidations',
+          component: TeacherValidations,
+          meta: { title: "Teacher Validations" }
+        },
+        {
+          path: 'profile',
+          name: 'Profile',
+          component: Profile,
+          meta: { title: "Profile" }
+        }
+      ]
     },
     {
       path: '/student',
@@ -233,6 +234,12 @@ const router = createRouter({
           name: 'ProfileSetting',
           component: ProfileSetting,
           meta: { title: 'ProfileSetting' }
+        },
+        {
+          path: 'room-detail/:room_id',
+          name: 'RoomDetail',
+          component: RoomDetailStudent,
+          meta: { title: 'RoomDetail' }
         }
       ]
 

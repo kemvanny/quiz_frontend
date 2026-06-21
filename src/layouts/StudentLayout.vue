@@ -3,22 +3,24 @@
     <BaseSidebar :mainMenus="studentMainMenus" roleName="Student" @logout="handleLogout">
       <template #user-profile>
         <div class="profile-card">
-        <div class="profile-info">
-          <img :src="authStore.profile?.avatar && authStore.profile?.avatar !== 'default.png'?`${imgBaseUrl}${authStore.profile?.avatar}?t=${layoutImageRefresh}`:defaultImage" alt="Profile" class="profile-img" />
-          <div class="profile-text">
-            <span class="profile-name">{{ authStore.profile?.firstName }} {{ authStore.profile?.lastName }}</span>
-            <span class="profile-role">{{ authStore.profile?.role }}</span>
+          <div class="profile-info">
+            <img
+              :src="authStore.profile?.avatar && authStore.profile?.avatar !== 'default.png' ? `${imgBaseUrl}${authStore.profile?.avatar}?t=${layoutImageRefresh}` : defaultImage"
+              alt="Profile" class="profile-img" />
+            <div class="profile-text">
+              <span class="profile-name">{{ authStore.profile?.firstName }} {{ authStore.profile?.lastName }}</span>
+              <span class="profile-role">{{ authStore.profile?.role }}</span>
+            </div>
           </div>
+
+          <button class="logout-btn" @click.prevent="isLogoutModalOpen = true" title="ចាកចេញ">
+            <i class="bi bi-box-arrow-right"></i>
+          </button>
+
+          <LogoutModal :show="isLogoutModalOpen" title="Student" @close="isLogoutModalOpen = false"
+            @confirm="handleLogout" />
+
         </div>
-
-        <button class="logout-btn" @click.prevent="isLogoutModalOpen = true" title="ចាកចេញ">
-          <i class="bi bi-box-arrow-right"></i>
-        </button>
-
-        <LogoutModal :show="isLogoutModalOpen" title="Student" @close="isLogoutModalOpen = false"
-          @confirm="handleLogout" />
-
-      </div>
       </template>
     </BaseSidebar>
     <div class="main-wrapper">
@@ -35,13 +37,14 @@
 </template>
 
 <script setup>
-import { computed ,ref,onMounted,watch} from "vue";
+import { computed, ref, onMounted, watch } from "vue";
 import { useRoute } from "vue-router";
 import DashboardNav from "@/components/layout/navbar/student/DashboardNav.vue";
 import ClassroomNav from "@/components/layout/navbar/student/ClassroomNav.vue";
 import AnalyticsResultNav from "@/components/layout/navbar/student/AnalyticsResultNav.vue";
 import ProfilesettingNav from "@/components/layout/navbar/student/ProfilesettingNav.vue";
 import AssignmentNav from "@/components/layout/navbar/student/AssignmentNav.vue";
+import RoomDetialNav from "@/components/layout/navbar/student/RoomDetialNav.vue";
 import { useRouter } from "vue-router";
 import { useAuthStore } from "@/stores/authStore";
 import defaultImage from "../assets/images/default.png";
@@ -65,7 +68,11 @@ const studentMainMenus = [
     routeName: "Classroom",
     icon: "bi bi-door-open-fill",
   },
-  { name: "ការប្រឡង", routeName: "Assignment", icon: "bi bi-list-task" },
+  {
+    name: "ការប្រឡង",
+    routeName: "Assignment", 
+    icon: "bi bi-list-task"
+  },
   {
     name: "ការវិភាគ និងលទ្ធផល",
     routeName: "AnalyticsResult",
@@ -86,6 +93,8 @@ const activeNavbar = computed(() => {
       return AssignmentNav;
     case "Classroom":
       return ClassroomNav;
+    case "RoomDetail":
+      return RoomDetialNav;
     case "AnalyticsResult":
       return AnalyticsResultNav;
     case "ProfileSetting":
@@ -103,8 +112,8 @@ watch(() => authStore.profile?.avatar, () => {
 })
 
 onMounted(async () => {
-  
- if (typeof authStore.fetchProfile === 'function') {
+
+  if (typeof authStore.fetchProfile === 'function') {
     await authStore.fetchProfile()
   }
 })
@@ -143,6 +152,7 @@ onMounted(async () => {
     radial-gradient(at 0% 0%, hsla(158, 76%, 76%, 0.6) 0, transparent 50%),
     radial-gradient(at 100% 100%, hsla(209, 43%, 80%, 0.6) 0, transparent 50%);
 }
+
 /* add new */
 
 .profile-pill {

@@ -23,14 +23,6 @@
           </select>
         </div>
 
-        <div class="col-md-3">
-          <select class="form-select" v-model="selectedRoom">
-            <option value="">បន្ទប់ទាំងអស់</option>
-            <option v-for="room in uniqueRooms" :key="room" :value="room">
-              {{ room }}
-            </option>
-          </select>
-        </div>
       </template>
     </SearchFilter>
 
@@ -39,7 +31,6 @@
         <td>{{ index + 1 }}</td>
         <td>{{ item.display_student_name }}</td>
         <td>{{ item.display_quiz_title }}</td>
-        <td>{{ item.display_room }}</td>
         <td class="fw-bold text-success">{{ item.display_score }}</td>
         <td class="text-muted">{{ item.display_total_marks }}</td>
         <td>{{ item.computed_percentage }}</td>
@@ -64,7 +55,6 @@ const { formatDate } = useDate();
 const submissions = ref([]);
 const searchQuery = ref("");
 const selectedQuiz = ref("");
-const selectedRoom = ref("");
 const isLoading = ref(false);
 
 const currentPage = ref(1);
@@ -75,7 +65,6 @@ const submissionHeaders = [
   { label: "លេខសម្គាល់", key: "id" },
   { label: "សិស្ស", key: "student" },
   { label: "វិញ្ញាសា", key: "quiz" },
-  { label: "បន្ទប់", key: "room" },
   { label: "ពិន្ទុ", key: "score" },
   { label: "ពិន្ទុសរុប", key: "total" },
   { label: "ភាគរយ", key: "percentage" },
@@ -90,11 +79,7 @@ const uniqueQuizzes = computed(() => {
   return [...new Set(quizzes)].filter(Boolean);
 });
 
-// Dropdown Filter
-const uniqueRooms = computed(() => {
-  const rooms = submissions.value.map(item => item.display_room);
-  return [...new Set(rooms)].filter(Boolean);
-});
+
 
 // Search & Filter
 const filteredSubmissions = computed(() => {
@@ -105,9 +90,9 @@ const filteredSubmissions = computed(() => {
 
     const matchesSearch = studentName.includes(search) || quizTitle.includes(search);
     const matchesQuiz = selectedQuiz.value === "" || item.display_quiz_title === selectedQuiz.value;
-    const matchesRoom = selectedRoom.value === "" || item.display_room === selectedRoom.value;
+   
 
-    return matchesSearch && matchesQuiz && matchesRoom;
+    return matchesSearch && matchesQuiz;
   });
 });
 
@@ -141,14 +126,13 @@ const fetchResultSubmission = async () => {
 
       submissions.value = rawSubmissions.map(item => {
         const currentScore = Number(item.score);
-        const maxScore = 10;
+        const maxScore = 100;
         const percentage = (currentScore / maxScore) * 100;
 
         return {
           ...item,
           display_student_name: item.student?.name || item.user_name || "មិនស្គាល់ឈ្មោះ",
           display_quiz_title: item.exam?.title || item.quiz_title || "មិនស្គាល់វិញ្ញាសា",
-          display_room: item.room_name || item.room || "បន្ទប់ទី ១",
           display_score: currentScore.toFixed(2),
           display_total_marks: maxScore.toFixed(2),
           computed_percentage: percentage.toFixed(0) + '%',
@@ -173,13 +157,12 @@ const changePage = async (newPage) => {
 };
 
 const exportToCSV = () => {
-  const headers = ["ល.រ", "ឈ្មោះសិស្ស", "វិញ្ញាសា", "បន្ទប់", "ពិន្ទុទទួលបាន", "ពិន្ទុសរុប", "ភាគរយ", "ថ្ងៃបញ្ជូនចម្លើយ", "និទ្ទេស"];
+  const headers = ["ល.រ", "ឈ្មោះសិស្ស", "វិញ្ញាសា", "ពិន្ទុទទួលបាន", "ពិន្ទុសរុប", "ភាគរយ", "ថ្ងៃបញ្ជូនចម្លើយ", "និទ្ទេស"];
 
   const rows = filteredSubmissions.value.map((item, index) => [
     index + 1,
     item.display_student_name,
     item.display_quiz_title,
-    item.display_room,
     item.display_score,
     item.display_total_marks,
     item.computed_percentage,
