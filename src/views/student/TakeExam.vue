@@ -16,7 +16,7 @@
                 </div>
             </div>
         </div> -->
-        <!-- 🎯 ផ្ទាំង Toast Message បែប Modern ស្លីមស្អាត -->
+        <!-- ផ្ទាំង Toast Message បែប Modern ស្លីមស្អាត -->
         <div v-if="toast.show" class="custom-toast-wrapper" :class="toast.type">
             <div class="toast-content-box">
                 <!-- បង្ហាញ Icon ទៅតាមប្រភេទ Message -->
@@ -34,13 +34,14 @@
         <div class="app-background-grid"></div>
         <nav class="navbar-custom sticky-top">
             <div class="container">
-                <div class="d-flex align-items-center">
+                <!-- <div class="d-flex align-items-center">
                     <div>
                         <a href="#"> <img :src="logoImage" alt="Pralong Logo" class="brand-logo" /></a>
                     </div>
-                </div>
+                </div> -->
 
                 <div v-if="currentStep > 2" class="d-flex align-items-center gap-3 ms-auto" id="header-student-profile">
+                    <img :src="logoImage" class="logo-exam-header"/>
                     <div class="live-status-badge d-inline-flex align-items-center gap-2 me-2">
                         <span class="pulse-indicator"></span>
                         កំពុងប្រឡង
@@ -73,9 +74,10 @@
                         <div class="text-center mb-4 pb-2">
                             <div class="brand-icon mx-auto mb-3"
                                 style="width: 56px; height: 56px; font-size: 1.6rem; border-radius: 16px;">
-                                <i class="fa-solid fa-graduation-cap"></i>
+                                <!-- <i class="fa-solid fa-graduation-cap"></i> -->
+                                 <img :src="logoImage" class="logo-exam"/>
                             </div>
-                            <h3 class="fw-bold text-dark mb-1" style="font-size: 1.5rem;">ចុះឈ្មោះចូលប្រឡង</h3>
+                            <h3 class="fw-semibold text-dark mb-1" style="font-size: 1.5rem;">ចុះឈ្មោះចូលប្រឡង</h3>
                             <p class="text-secondary small mb-0">បំពេញព័ត៌មានឱ្យបានត្រឹមត្រូវដើម្បីចាប់ផ្តើមការប្រឡង</p>
                         </div>
 
@@ -596,6 +598,18 @@ const printResult = () => { window.print(); };
 </script>
 
 <style scoped>
+.logo-exam{
+    width: 200px;
+    height: 200px;
+    margin-bottom: 1rem;
+}
+.logo-exam-header{
+    width: 40px;
+    height: 40px;
+    transform: scale(3.5);
+    margin-right: 5rem;
+}
+
 .brand-logo {
     height: 180px;
     width: auto;
@@ -612,6 +626,7 @@ const printResult = () => { window.print(); };
     background-color: #ffffff;
     border-bottom: 1px solid rgba(220, 235, 228, 0.8);
     box-shadow: 0 4px 12px rgba(42, 110, 80, 0.03);
+    padding: 16px 0px;
 }
 
 .take-exam-root {
@@ -648,9 +663,8 @@ const printResult = () => { window.print(); };
 }
 
 .brand-icon {
-    background-color: #eef9f4;
     color: #42b983;
-    width: 40px;
+    width: 100px;
     height: 40px;
     border-radius: 10px;
     display: flex;

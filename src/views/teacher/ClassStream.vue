@@ -103,7 +103,7 @@
                       <i class="fas fa-laptop-code text-white fa-2x"></i>
                     </div>
                     <div class="p-3 flex-grow-1">
-                      <h6 class="mb-0 fw-bold text-dark">{{ post.title }}</h6>
+                      <h6 class="mb-0 fw-bold text-dark">{{ post.title }} {{ post.exam_link ? 'Link' : '' }}</h6>
                       <small class="text-muted">Assignment • Click to open exam</small>
                     </div>
                     <div class="p-3">
