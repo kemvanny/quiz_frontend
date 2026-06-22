@@ -157,10 +157,11 @@ import { useFormValidation } from '@/composables/useFormValidation'
 import { useAuthStore } from '@/stores/authStore'
 import { getTotalUser } from '@/api/admin.api'
 import defaultImage from "../../assets/images/default.png";
+import { useToast } from '@/composables/useToast';
 
 const authStore = useAuthStore()
 const imgBaseUrl = import.meta.env.VITE_BASE_URL_FOR_IMAGE
-
+const { triggerToast } = useToast();
 const imageRefresh = ref(Date.now())
 const fileInput = ref(null)
 
@@ -308,15 +309,6 @@ const cancelEdit = () => {
   clearErrors()
   isEditMode.value = false
   triggerToast('Changes discarded.', 'fa-solid fa-rotate-left')
-}
-
-const triggerToast = (msg, iconClass) => {
-  toast.message = msg
-  toast.icon = iconClass
-  toast.show = true
-  setTimeout(() => {
-    toast.show = false
-  }, 3000)
 }
 
 onMounted(async () => {
