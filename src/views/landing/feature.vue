@@ -1,1229 +1,674 @@
 <template>
-  <!-- ក្បាលទំព័រ -->
-  <Navbar />
+  <div>
+    <NavbarLandingPage />
 
-  <main>
-    <!-- ផ្នែកដំបូង -->
-    <section class="hero">
-      <div class="hero-bg"></div>
-      <div class="hero-inner">
-        <!-- ខ្លឹមសារខាងឆ្វេង -->
-        <div>
-          <p class="hero-badge">
-            <span class="hero-badge-dot"></span>
-            រឿងរ៉ាវរបស់យើង
-          </p>
+    <header class="hero-banner">
+      <div class="hero-image-side"></div>
+      <div class="container hero-content">
+        <div class="row align-items-center">
+          <div class="col-lg-6">
+            <span
+              class="badge bg-opacity-10 border px-4 py-2 rounded-pill fw-800 uppercase tracking-widest mb-4"
+              style="
+                font-size: 11px;
+                background-color: rgba(16, 185, 129, 0.1);
+                color: #059669;
+                border-color: rgba(16, 185, 129, 0.25);
+              "
+              >VEATIKA TEST SAMOTTHAPHEAP CHHLATVAI</span
+            >
+            <h1 class="fw-semibold display-4 mb-5 mt-3">
+              <span class="mb-4">វាស់ស្ទង់ចំណេះដឹង</span><br />
+              <span style="color: #10b981;">ប្រកបដោយប្រសិទ្ធភាព</span>
+            </h1>
+            <p class="lead mb-5 fw-500 text-muted col-lg-11 lh-2">
+              បំប្លែងការរៀនសូត្រទៅជាការកំសាន្ត។ Quiz ជួយអ្នកបង្កើតកម្រងសំណួរ
+              វាយតម្លៃសមត្ថភាព
+              និងទទួលបានរបាយការណ៍លទ្ធផលភ្លាមៗតាមរយៈល្បែងកំសាន្តខួរក្បាលដ៏សម្បូរបែប។
+            </p>
 
-          <h1 class="hero-title">
-            អំពី
-            <span class="hero-title-gradient">Prolong</span>
-          </h1>
-
-          <p class="hero-desc">
-            យើងជួយសាលារៀនឆ្លងផុតការងារក្រដាស និងភាពច្របូកច្របល់
-            ដោយបង្កើតការប្រឡងឌីជីថលសម័យថ្មីដែលមានសុវត្ថិភាព និងសាមញ្ញសម្រាប់គ្រូ
-            សិស្ស និងអ្នកគ្រប់គ្រង។
-          </p>
-
-          <div class="hero-buttons">
-            <a href="#features" class="btn-primary">ស្វែងយល់ពីមុខងារ</a>
-            <a href="#workflow" class="btn-secondary">មើលលំហូរការងារ</a>
+            <div class="d-flex gap-3">
+              <router-link
+                to="/login"
+                class="btn-modern d-inline-flex align-items-center gap-2"
+              >
+                ចាប់ផ្តើមប្រឡងឥឡូវនេះ
+                <i class="bi bi-arrow-right-short fs-4"></i>
+              </router-link>
+            </div>
           </div>
-        </div>
-
-        <!-- រូបភាពខាងស្តាំ -->
-        <div class="hero-image-wrap">
-          <div class="hero-image-glow"></div>
-
-          <img
-            src="@/assets/images/imageLanding.png"
-            alt="សិស្សកំពុងសិក្សាតាមអនឡាញ"
-            class="hero-image"
-          />
-
-          <div class="hero-card-trust">
-            <div class="hero-card-trust-inner">
-              <div class="hero-card-icon" aria-hidden="true">
-                <i class="fa-solid fa-check"></i>
+          <div class="col-lg-5 offset-lg-1 d-none d-lg-block">
+            <div class="floating-container">
+              <div class="floating-node node-1">
+                <i class="fas fa-trophy"></i> ចំណាត់ថ្នាក់លេខ ១
               </div>
-              <div>
-                <p>សាលារៀនទុកចិត្ត</p>
-                <p>លំហូរការប្រឡងមានសុវត្ថិភាព និងងាយស្រួល</p>
+              <div class="floating-node node-2">
+                <i class="fas fa-clock"></i> ពេលដែលនៅសល់៖ ០៥ នាទី
+              </div>
+              <div class="floating-node node-3">
+                <i class="fas fa-star"></i> ពិន្ទុ +១៥០
+              </div>
+
+              <div class="floating-mockup">
+                <div
+                  class="d-flex justify-content-between align-items-center mb-4"
+                >
+                  <div class="fw-800 text-dark">សំណួរប្រឡងបច្ចុប្បន្ន</div>
+                  <i class="fas fa-graduation-cap text-muted"></i>
+                </div>
+
+                <div class="mockup-item">
+                  <div class="check-box">A</div>
+                  <div class="flex-grow-1">
+                    <div class="fw-700 small">ជម្រើសទីមួយ (ខុស)</div>
+                  </div>
+                </div>
+
+                <div class="mockup-item active">
+                  <div class="check-box"><i class="fas fa-check"></i></div>
+                  <div class="flex-grow-1">
+                    <div class="fw-700 small">ចម្លើយត្រឹមត្រូវបំផុត</div>
+                    <div class="x-small text-muted">+៥០ ពិន្ទុបន្ថែម</div>
+                  </div>
+                  <span class="badge rounded-pill bg-success x-small"
+                    >True</span
+                  >
+                </div>
+
+                <div class="mockup-item">
+                  <div class="check-box">C</div>
+                  <div class="flex-grow-1">
+                    <div class="fw-700 small">ជម្រើសទីបី (ខុស)</div>
+                  </div>
+                </div>
+
+                <div
+                  class="mt-4 pt-3 border-top d-flex justify-content-between align-items-center"
+                >
+                  <div class="x-small fw-800" style="color: #059669">
+                    ឆ្លើយបាន ៨/១០ សំណួរ
+                  </div>
+                  <div class="d-flex">
+                    <div
+                      style="
+                        width: 25px;
+                        height: 25px;
+                        background: #e2e8f0;
+                        border-radius: 50%;
+                        border: 2px solid white;
+                        margin-right: -10px;
+                      "
+                    ></div>
+                    <div
+                      style="
+                        width: 25px;
+                        height: 25px;
+                        background: #10b981;
+                        border-radius: 50%;
+                        border: 2px solid white;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        color: white;
+                        font-size: 8px;
+                      "
+                    >
+                      +12
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
+        </div>
+      </div>
+    </header>
 
-          <div class="hero-card-stats">
-            <p>សកម្មភាពផ្ទាល់</p>
-            <p>12k+</p>
-            <p>សិស្សកំពុងសកម្ម</p>
+    <section class="container feature-container">
+      <div class="row g-4 flex-wrap">
+        <div class="col-lg-8 animate-on-scroll">
+          <div class="bento-card">
+            <div
+              class="icon-circle"
+              style="background: #f0fdf4; color: #10b981"
+            >
+              <i class="fas fa-cubes"></i>
+            </div>
+            <h3 class="fw-semibold mb-3">របៀបបង្កើតកម្រងសំណួរកម្រិតខ្ពស់</h3>
+            <p class="text-muted fw-500 mb-4">
+              QuizApp ផ្ដល់នូវឧបករណ៍ងាយស្រួលក្នុងការបង្កើត
+              និងគ្រប់គ្រងរាល់ទម្រង់សំណួរ ដើម្បីបំពេញតម្រូវការសិក្សា
+              និងការកំសាន្ត៖
+            </p>
+
+            <div class="row g-3">
+              <div class="col-md-6">
+                <div class="p-4 bg-light rounded-4 h-100">
+                  <span
+                    class="x-small fw-semibold uppercase d-block mb-3"
+                    style="color: #059669"
+                    >ទម្រង់សំណួរចម្រុះ</span
+                  >
+                  <div class="d-flex flex-column gap-3 small fw-700 text-muted">
+                    <div>
+                      <i
+                        class="fas fa-check-circle me-2"
+                        style="color: #10b981"
+                      ></i>
+                      Multiple Choice (រើសចម្លើយ)
+                    </div>
+                    <div>
+                      <i
+                        class="fas fa-check-circle me-2"
+                        style="color: #10b981"
+                      ></i>
+                      True/False (ខុស ឬត្រូវ)
+                    </div>
+                    <div>
+                      <i
+                        class="fas fa-check-circle me-2"
+                        style="color: #10b981"
+                      ></i>
+                      Short Answer (សំណួរខ្លី)
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div
+                  class="p-4 bg-light rounded-4 h-100 d-flex flex-column justify-content-between"
+                >
+                  <div>
+                    <span
+                      class="x-small fw-semibold uppercase d-block mb-3"
+                      style="color: #059669"
+                      >ប្រព័ន្ធគ្រប់គ្រងសំណួរ (CRUD)</span
+                    >
+                    <p class="x-small text-muted mb-0 lh-base">
+                      អ្នកអាច បង្កើត មើល កែប្រែ ឬលុប
+                      កម្រងសំណួរបានភ្លាមៗក្នុងពេលជាក់ស្តែង។
+                      ប្រព័ន្ធរក្សាទុកស្វ័យប្រវត្តិនូវរាល់ការផ្លាស់ប្តូររបស់អ្នក។
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-4 animate-on-scroll">
+          <div
+            class="bento-card highlight-card"
+            style="background: #f0fdf4; border-color: #dcfce7"
+          >
+            <div class="icon-circle text-white" style="background: #059669">
+              <i class="fas fa-history"></i>
+            </div>
+            <h4 class="fw-semibold">កំណត់ពេលវេលាច្បាស់លាស់</h4>
+            <p class="text-muted small">
+              បង្កើតការប្រកួតប្រជែងដ៏ជក់ចិត្ត។ អ្នកអាចកំណត់ការរាប់ថយក្រោយ
+              (Timer) សម្រាប់សំណួរនីមួយៗ ឬសម្រាប់ Quiz
+              ទាំងមូលដើម្បីវាស់ស្ទង់ភាពរហ័សរហួន។
+            </p>
+
+            <div
+              class="alert-bubble mt-auto shadow-sm border"
+              style="
+                background: rgba(16, 185, 129, 0.1);
+                color: #059669;
+                border-color: rgba(16, 185, 129, 0.25);
+              "
+            >
+              <i class="fas fa-stopwatch fs-4 me-2" style="color: #10b981"></i>
+              <div>
+                <p class="mb-0 fw-semibold x-small">ប្រព័ន្ធម៉ោងរាប់ថយក្រោយ</p>
+                <p class="mb-0 x-small opacity-75">
+                  ប្រយ័ត្ន៖ សល់ពេលត្រឹមតែ ៣០ វិនាទីចុងក្រោយប៉ុណ្ណោះ!
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-4 animate-on-scroll">
+          <div class="bento-card">
+            <div
+              class="icon-circle"
+              style="background: #f0fdf4; color: #10b981"
+            >
+              <i class="fas fa-chalkboard-teacher"></i>
+            </div>
+            <h4 class="fw-semibold">គ្រប់គ្រងបន្ទប់សិក្សាឆ្លាតវៃ</h4>
+            <p class="text-muted small mb-4">
+              ប្រព័ន្ធគ្រប់គ្រងសាលា និងថ្នាក់រៀនដ៏ទូលំទូលាយ。 Admin អាចបង្កើតគណនីគ្រូ និងសិស្ស 
+              ហើយគ្រូអាចបង្កើតបន្ទប់សិក្សា (Room) បង្កើត Quiz និងបញ្ចូលសិស្សដោយផ្ទាល់។
+            </p>
+            <div
+              class="mt-auto p-3 border border-dashed rounded-4 bg-light"
+            >
+              <div class="d-flex align-items-center gap-2 mb-2">
+                <i class="fas fa-user-shield x-small" style="color: #059669"></i>
+                <span class="x-small fw-800 text-dark">Admin: បង្កើតគ្រូ & សិស្ស</span>
+              </div>
+              <div class="d-flex align-items-center gap-2">
+                <i class="fas fa-door-open x-small" style="color: #10b981"></i>
+                <span class="x-small fw-700 text-muted">គ្រូ: បង្កើតបន្ទប់សិក្សា & បញ្ចូលសិស្ស</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-4 animate-on-scroll">
+          <div class="bento-card">
+            <div
+              class="icon-circle"
+              style="background: #f0fdf4; color: #10b981"
+            >
+              <i class="fas fa-chart-bar"></i>
+            </div>
+            <h4 class="fw-semibold">វិភាគលទ្ធផលភ្លាមៗ</h4>
+            <p class="text-muted small mb-4">
+              មើលឃើញការរីកចម្រើនរបស់អ្នក។ ប្រព័ន្ធនឹងបង្ហាញក្រាហ្វិកស្ថិតិ
+              អត្រាឆ្លើយត្រូវ និងពិន្ទុសរុបភ្លាមៗបន្ទាប់ពីបញ្ចប់។
+            </p>
+            <div class="progress-hud mt-auto">
+              <div class="d-flex justify-content-between x-small fw-800 mb-2">
+                <span>អត្រាឆ្លើយត្រូវ (Accuracy)</span>
+                <span style="color: #059669">៨៥%</span>
+              </div>
+              <div class="bar-container">
+                <div class="bar-fill" style="background: #10b981"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-4 animate-on-scroll">
+          <div class="bento-card">
+            <div
+              class="icon-circle"
+              style="background: #f0fdf4; color: #10b981"
+            >
+              <i class="fas fa-user-graduate"></i>
+            </div>
+            <h4 class="fw-semibold">ប្រវត្តិ និងគណនីផ្ទាល់ខ្លួន</h4>
+            <p class="text-muted small">
+              រក្សាទុករាល់សមិទ្ធផលដែលអ្នកសម្រេចបាន។ តាមដានប្រវត្តិនៃការលេង Quiz
+              ពិន្ទុខ្ពស់បំផុត និងមេដាយកិត្តិយសដែលអ្នកធ្លាប់ទទួលបាន។
+            </p>
+            <div
+              class="mt-auto pt-3 border-top d-flex align-items-center gap-2"
+            >
+              <div
+                class="badge bg-success bg-opacity-10 text-success rounded-pill px-3 py-2 x-small fw-800"
+              >
+                <i class="fas fa-medal me-1"></i> Level 12 Verified
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- មុខងារស្នូល -->
-    <section id="features" class="section-py scroll-mt">
-      <div class="container">
-        <div class="max-w-2xl text-center">
-          <p class="section-label">មុខងារស្នូល</p>
-          <h2 class="section-title">
-            អ្វីៗគ្រប់យ៉ាងសម្រាប់ដំណើរការប្រឡងពីដើមដល់ចប់
-          </h2>
-          <p class="section-desc">
-            ឧបករណ៍មានថាមពលដែលរចនាសម្រាប់សិស្ស គ្រូ និងអ្នកគ្រប់គ្រង។
-          </p>
-        </div>
-
-        <div class="card-grid-3">
-          <article class="card card-green">
-            <span class="card-icon" aria-hidden="true"
-              ><i class="fa-solid fa-clipboard-list"></i
-            ></span>
-            <h3>បង្កើតបន្ទប់ប្រឡង</h3>
-            <p>រៀបចំសំណួរ កំណត់ពេល និងច្បាប់ចូលប្រើក្នុងប៉ុន្មាននាទី។</p>
-          </article>
-
-          <article class="card card-blue">
-            <span class="card-icon" aria-hidden="true"
-              ><i class="fa-solid fa-lock"></i
-            ></span>
-            <h3>កូដចូលប្រើមានសុវត្ថិភាព</h3>
-            <p>ចែករំលែកកូដ តាមដានអ្នកចូលរួម និងគ្រប់គ្រងការដាក់ស្នើ។</p>
-          </article>
-
-          <article class="card card-purple">
-            <span class="card-icon" aria-hidden="true"
-              ><i class="fa-solid fa-stopwatch"></i
-            ></span>
-            <h3>ការត្រួតពិនិត្យជាពេលវេលាពិត</h3>
-            <p>មើលវឌ្ឍនភាព និងសកម្មភាពការប្រឡងនៅពេលវាកំពុងកើតឡើង។</p>
-          </article>
-
-          <article class="card card-yellow">
-            <span class="card-icon" aria-hidden="true"
-              ><i class="fa-solid fa-chart-column"></i
-            ></span>
-            <h3>លទ្ធផល និងការវិភាគ</h3>
-            <p>ពិន្ទុភ្លាមៗ និន្នាការ និងការយល់ដឹងអំពីសមិទ្ធផល។</p>
-          </article>
-
-          <article class="card card-green">
-            <span class="card-icon" aria-hidden="true"
-              ><i class="fa-solid fa-comments"></i
-            ></span>
-            <h3>មតិកែលម្អសម្រាប់សិស្ស</h3>
-            <p>មតិយោបល់ ពិន្ទុ និងការណែនាំលើចម្លើយនីមួយៗ។</p>
-          </article>
-
-          <article class="card card-blue">
-            <span class="card-icon" aria-hidden="true"
-              ><i class="fa-solid fa-mobile-screen-button"></i
-            ></span>
-            <h3>ដំណើរការលើឧបករណ៍គ្រប់ប្រភេទ</h3>
-            <p>គាំទ្រទូរស័ព្ទ ថេប្លេត Chromebook និងកុំព្យូទ័រលើតុ។</p>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <!-- គ្រូ -->
-    <section id="teachers" class="section-py bg-white scroll-mt">
-      <div class="container">
-        <div class="section-head">
-          <div class="max-w-xl">
-            <p class="section-label section-label-blue">សម្រាប់គ្រូ</p>
-            <h2 class="section-title">សន្សំពេលវេលា បង្រៀនបានកាន់តែប្រសើរ</h2>
-            <p class="section-desc">
-              ឧបករណ៍ដែលរចនាតាមរបៀបដែលអ្នកអប់រំដំណើរការការវាយតម្លៃពិតប្រាកដ។
-            </p>
-          </div>
-          <span class="section-badge badge-blue">គ</span>
-        </div>
-
-        <div class="card-grid-2">
-          <div class="card card-blue">
-            <span
-              class="card-icon-sm"
-              style="background-color: #5b82ed"
-              aria-hidden="true"
-              ><i class="fa-solid fa-bolt"></i
-            ></span>
-            <h3>រៀបចំបានរហ័ស</h3>
-            <p>បើកបន្ទប់ប្រឡង និងប្រមូលការដាក់ស្នើក្នុងប៉ុន្មាននាទី។</p>
-          </div>
-
-          <div class="card card-purple">
-            <span
-              class="card-icon-sm"
-              style="background-color: #8b6ee8"
-              aria-hidden="true"
-              ><i class="fa-solid fa-users"></i
-            ></span>
-            <h3>គ្រប់គ្រងក្រុម</h3>
-            <p>រៀបចំថ្នាក់ និងកំណត់ការប្រឡងទៅកាន់សិស្សដែលត្រឹមត្រូវ។</p>
-          </div>
-
-          <div class="card card-yellow">
-            <span
-              class="card-icon-sm"
-              style="background-color: #e6a817"
-              aria-hidden="true"
-              ><i class="fa-solid fa-chart-line"></i
-            ></span>
-            <h3>របាយការណ៍លម្អិត</h3>
-            <p>នាំចេញលទ្ធផល និងនិន្នាការសម្រាប់កិច្ចប្រជុំ និងកំណត់ត្រា។</p>
-          </div>
-
-          <div class="card card-green">
-            <span
-              class="card-icon-sm"
-              style="background-color: #43a557"
-              aria-hidden="true"
-              ><i class="fa-solid fa-rotate"></i
-            ></span>
-            <h3>គំរូអាចប្រើឡើងវិញ</h3>
-            <p>
-              រក្សាទុកការប្រឡង ហើយប្រើឡើងវិញសម្រាប់វគ្គសិក្សា និងថ្នាក់ផ្សេងៗ។
-            </p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- សិស្ស -->
-    <section id="students" class="section-py scroll-mt">
-      <div class="container">
-        <div class="section-head">
-          <div class="max-w-xl">
-            <p class="section-label section-label-green">សម្រាប់សិស្ស</p>
-            <h2 class="section-title">វិធីល្អជាងមុនក្នុងការធ្វើការប្រឡង</h2>
-            <p class="section-desc">
-              សាមញ្ញ ច្បាស់លាស់ និងគ្មានសម្ពាធចាប់ពីចូលរួមដល់ដាក់ស្នើ។
-            </p>
-          </div>
-          <span class="section-badge badge-green">សិ</span>
-        </div>
-
-        <div class="card-grid-2">
-          <div class="card card-green">
-            <span
-              class="card-icon-sm"
-              style="background-color: #43a557"
-              aria-hidden="true"
-              ><i class="fa-solid fa-wand-magic-sparkles"></i
-            ></span>
-            <h3>ចូលរួមបានសាមញ្ញ</h3>
-            <p>
-              បញ្ចូលកូដ រង់ចាំចាប់ផ្តើម ហើយចាប់ផ្តើមធ្វើ
-              ដោយមិនចាំបាច់ចូលប្រើស្មុគស្មាញ។
-            </p>
-          </div>
-
-          <div class="card card-blue">
-            <span
-              class="card-icon-sm"
-              style="background-color: #5b82ed"
-              aria-hidden="true"
-              ><i class="fa-solid fa-clock"></i
-            ></span>
-            <h3>ពេលវេលាច្បាស់លាស់</h3>
-            <p>មើលឃើញពេលវេលានៅសល់មុនដាក់ស្នើជានិច្ច។</p>
-          </div>
-
-          <div class="card card-purple">
-            <span
-              class="card-icon-sm"
-              style="background-color: #8b6ee8"
-              aria-hidden="true"
-              ><i class="fa-solid fa-file-lines"></i
-            ></span>
-            <h3>សេចក្តីណែនាំច្បាស់លាស់</h3>
-            <p>សំណួរនីមួយៗត្រូវបានរៀបចំឱ្យងាយអាន និងឆ្លើយ។</p>
-          </div>
-
-          <div class="card card-yellow">
-            <span
-              class="card-icon-sm"
-              style="background-color: #e6a817"
-              aria-hidden="true"
-              ><i class="fa-solid fa-envelope-open-text"></i
-            ></span>
-            <h3>ការបញ្ជាក់ភ្លាមៗ</h3>
-            <p>ដឹងថាការប្រឡងរបស់អ្នកបានដាក់ស្នើ និងពេលណាលទ្ធផលរួចរាល់។</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- អ្នកគ្រប់គ្រង -->
-    <section id="admins" class="section-py bg-white scroll-mt">
-      <div class="container">
-        <div class="section-head">
-          <div class="max-w-xl">
-            <p class="section-label section-label-purple">
-              សម្រាប់អ្នកគ្រប់គ្រង
-            </p>
-            <h2 class="section-title">ការបញ្ជា និងត្រួតពិនិត្យកណ្តាល</h2>
-            <p class="section-desc">
-              គ្រប់គ្រងអ្នកប្រើ សុវត្ថិភាព និងការមើលឃើញទូទាំងស្ថាប័ន។
-            </p>
-          </div>
-          <span class="section-badge badge-purple">អ</span>
-        </div>
-
-        <div class="card-grid-2">
-          <div class="card card-purple">
-            <span
-              class="card-icon-sm"
-              style="background-color: #8b6ee8"
-              aria-hidden="true"
-              ><i class="fa-solid fa-user-gear"></i
-            ></span>
-            <h3>គ្រប់គ្រងអ្នកប្រើ</h3>
-            <p>បង្កើតគណនី កំណត់តួនាទី និងគ្រប់គ្រងសិទ្ធិ។</p>
-          </div>
-
-          <div class="card card-blue">
-            <span
-              class="card-icon-sm"
-              style="background-color: #5b82ed"
-              aria-hidden="true"
-              ><i class="fa-solid fa-shield-halved"></i
-            ></span>
-            <h3>ការគ្រប់គ្រងសុវត្ថិភាព</h3>
-            <p>គោលការណ៍ ការរក្សាទុក និងការអនុលោមតាមសម្រាប់ស្ថាប័នរបស់អ្នក។</p>
-          </div>
-
-          <div class="card card-yellow">
-            <span
-              class="card-icon-sm"
-              style="background-color: #e6a817"
-              aria-hidden="true"
-              ><i class="fa-solid fa-chart-pie"></i
-            ></span>
-            <h3>ការវិភាគប្រព័ន្ធ</h3>
-            <p>តាមដានការប្រើប្រាស់ អត្រាបញ្ចប់ និងនិន្នាការទូទាំងសាលា។</p>
-          </div>
-
-          <div class="card card-green">
-            <span
-              class="card-icon-sm"
-              style="background-color: #43a557"
-              aria-hidden="true"
-              ><i class="fa-solid fa-screwdriver-wrench"></i
-            ></span>
-            <h3>ការកំណត់រចនាសម្ព័ន្ធ</h3>
-            <p>ប្ដូរការកំណត់ និងលំហូរការងារសម្រាប់សាលារបស់អ្នក។</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- លំហូរការងារ -->
-    <section id="workflow" class="section-py scroll-mt">
-      <div class="container">
-        <div class="max-w-2xl text-center">
-          <p class="section-label">លំហូរការងារ</p>
-          <h2 class="section-title">បួនជំហានពីការរៀបចំដល់លទ្ធផល</h2>
-          <p class="section-desc">
-            ដំណើរការរលូនដែលបង្កើតឡើងសម្រាប់គ្រូ សិស្ស និងអ្នកគ្រប់គ្រង។
-          </p>
-        </div>
-
-        <div class="card-grid-4">
-          <article class="card card-green card-workflow">
-            <span class="workflow-num workflow-num-green">1</span>
-            <h3>បង្កើត</h3>
-            <p>បង្កើតបន្ទប់ប្រឡង និងភ្ជាប់សំណួររបស់អ្នក។</p>
-            <span class="workflow-tag tag-green">រៀបចំ</span>
-          </article>
-
-          <article class="card card-blue card-workflow">
-            <span class="workflow-num workflow-num-blue">2</span>
-            <h3>អញ្ជើញ</h3>
-            <p>ចែករំលែកការចូលប្រើទៅកាន់ក្រុមសិស្សដែលត្រឹមត្រូវ។</p>
-            <span class="workflow-tag tag-blue">ចូលប្រើ</span>
-          </article>
-
-          <article class="card card-purple card-workflow">
-            <span class="workflow-num workflow-num-purple">3</span>
-            <h3>តាមដាន</h3>
-            <p>តាមដានវឌ្ឍនភាពផ្ទាល់ និងសញ្ញាសុវត្ថិភាព។</p>
-            <span class="workflow-tag tag-purple">ផ្ទាល់</span>
-          </article>
-
-          <article class="card card-yellow card-workflow">
-            <span class="workflow-num workflow-num-yellow">4</span>
-            <h3>ពិនិត្យ</h3>
-            <p>ប្រមូលលទ្ធផល មតិកែលម្អ និងកំណត់ត្រា។</p>
-            <span class="workflow-tag tag-yellow">លទ្ធផល</span>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <!-- ការអំពាវនាវ -->
-    <section id="auth" class="cta-section">
-      <div class="cta-box">
-        <div class="cta-bg-radial"></div>
-        <div class="cta-glow-left"></div>
-        <div class="cta-glow-right"></div>
-
-        <div class="cta-inner">
-          <div class="max-w-xl">
-            <p class="cta-label">ចាប់ផ្តើមថ្ងៃនេះ</p>
-            <h2 class="cta-title">
-              បើកផតថលប្រឡងរបស់អ្នក ហើយគ្រប់គ្រងការវាយតម្លៃដោយទំនុកចិត្ត។
-            </h2>
-            <p class="cta-desc">
-              ចូលរួមជាមួយសាលារៀនដែលកំពុងប្រើ Prolong
-              ដើម្បីដំណើរការការប្រឡងអនឡាញប្រកបដោយសុវត្ថិភាព និងរៀបចំបានល្អ។
-            </p>
-          </div>
-          <a class="btn-cta" href="#">ចាប់ផ្តើមឥឡូវនេះ</a>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <!-- បាតទំព័រ -->
-  <Footer />
-
+    <Footer />
+  </div>
 </template>
 
 <script setup>
-  import Navbar from "@/components/layout/navbar/landing/LandingPageNavebar.vue";
-  import Footer from "@/components/layout/navbar/landing/FooterLandingPage.vue";
+import Footer from "@/components/layout/navbar/landing/FooterLandingPage.vue";
+import NavbarLandingPage from "@/components/layout/navbar/landing/LandingPageNavebar.vue";
 </script>
 
 <style scoped>
-/* ===== CSS VARIABLES ===== */
-:root {
-  --font-sans: "Noto Sans Khmer", "Inter", system-ui, sans-serif;
 
-  --brand-50: #f4faf6;
-  --brand-100: #e8f5ec;
-  --brand-500: #43a557;
-  --brand-600: #3a9349;
-  --brand-700: #2d7a3e;
-  --brand-dark: #102117;
 
-  --green-border: #b8e8c4;
-  --green-bg-from: #f4fff6;
-  --green-bg-to: #d4f0dc;
-  --green-text-dark: #1a4d27;
-  --green-text-mid: #2d6b3a;
-
-  --blue-border: #adc8f5;
-  --blue-bg-from: #f5f9ff;
-  --blue-bg-to: #d6e4f9;
-  --blue-accent: #5b82ed;
-  --blue-text-dark: #1a2f6b;
-  --blue-text-mid: #2d4a9e;
-
-  --purple-border: #c4aef5;
-  --purple-bg-from: #faf7ff;
-  --purple-bg-to: #e5dcf9;
-  --purple-accent: #8b6ee8;
-  --purple-text-dark: #3b1a7a;
-  --purple-text-mid: #5a3aaa;
-
-  --yellow-border: #f5cc6e;
-  --yellow-bg-from: #fff8e7;
-  --yellow-bg-to: #fde8a0;
-  --yellow-accent: #e6a817;
-  --yellow-text-dark: #5a3d00;
-  --yellow-text-mid: #7a5500;
-
-  --text-muted: #536173;
+.lh-2 {
+  line-height: 1.8;
 }
-
-/* ===== GLOBAL ===== */
-
-a {
-  text-decoration: none;
-  color: inherit;
-}
-
-img {
-  display: block;
-  max-width: 100%;
-}
-
-ul {
-  list-style: none;
-}
-
-/* ===== LAYOUT UTILITIES ===== */
-.container {
-  max-width: 72rem; /* 1152px */
-  margin-left: auto;
-  margin-right: auto;
-  padding-left: 1rem;
-  padding-right: 1rem;
-}
-
-@media (min-width: 640px) {
-  .container {
-    padding-left: 1.5rem;
-    padding-right: 1.5rem;
-  }
-}
-
-/* ===== HERO SECTION ===== */
-.hero {
-  position: relative;
-  overflow: hidden;
-  padding-top: 4rem;
-  border-bottom: 1px solid rgba(65, 150, 79, 0.1);
-  background: linear-gradient(135deg, #f4fff6, white, #e8f7eb);
-}
-
-.hero-bg {
-  pointer-events: none;
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(
-      circle at top left,
-      rgba(67, 165, 87, 0.16),
-      transparent 35%
-    ),
-    radial-gradient(
-      circle at bottom right,
-      rgba(91, 130, 237, 0.12),
-      transparent 35%
-    );
-}
-
-.hero-inner {
-  position: relative;
-  max-width: 72rem;
-  margin: 0 auto;
-  padding: 4rem 1rem;
-  display: grid;
-  gap: 3.5rem;
-  align-items: center;
-}
-
-@media (min-width: 640px) {
-  .hero-inner {
-    padding: 4rem 1.5rem;
-  }
-}
-
-@media (min-width: 768px) {
-  .hero-inner {
-    padding: 6rem 1.5rem;
-  }
-}
-
-@media (min-width: 1024px) {
-  .hero-inner {
-    grid-template-columns: 1fr 1fr;
-  }
-}
-
-.hero-badge {
+.pill-tag {
   display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem 1rem;
-  border-radius: 9999px;
-  border: 1px solid #b8e8c4;
-  background-color: white;
-  font-size: 0.75rem;
+  padding: 8px 20px;
+  background: var(--primary-soft);
+  color: #10b981;
+  border-radius: 100px;
   font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--brand-500);
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  font-size: 0.85rem;
+  margin-bottom: 24px;
 }
-
-.hero-badge-dot {
-  width: 0.5rem;
-  height: 0.5rem;
-  border-radius: 9999px;
-  background-color: #43a557;
-  flex-shrink: 0;
-}
-
-.hero-title {
-  margin-top: 1.25rem;
-  font-size: clamp(1.9rem, 3.2vw, 2.8rem);
-  font-weight: 900;
-  line-height: 1.1;
-  letter-spacing: -0.02em;
-  color: var(--brand-dark);
-}
-
-.hero-title-gradient {
-  background: linear-gradient(to right, #43a557, #74c878);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.hero-desc {
-  margin-top: 1.5rem;
-  max-width: 36rem;
-  font-size: 1.125rem;
-  line-height: 1.7;
-  color: #536173;
-}
-
-.hero-buttons {
-  margin-top: 2rem;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-}
-
-.btn-primary {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 1rem 1.75rem;
-  border-radius: 1rem;
-  background: linear-gradient(to right, #43a557, #5cc56f);
+.btn-modern {
+  background: linear-gradient(135deg, #10b981, #059669);
   color: white;
-  font-size: 0.875rem;
+  padding: 16px 36px;
+  border-radius: 18px;
   font-weight: 700;
-  box-shadow: 0 10px 15px rgba(67, 165, 87, 0.25);
-  transition: transform 0.2s;
+  border: none;
+  transition: var(--transition);
+  text-decoration: none;
 }
 
-.btn-primary:hover {
-  transform: translateY(-4px);
-}
-
-.btn-secondary {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 1rem 1.75rem;
-  border-radius: 1rem;
-  border: 1px solid #dbe7df;
-  background-color: white;
-  color: #1a4d27;
-  font-size: 0.875rem;
-  font-weight: 700;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-  transition:
-    border-color 0.15s,
-    background-color 0.15s;
-}
-
-.btn-secondary:hover {
-  border-color: rgba(67, 165, 87, 0.3);
-  background-color: #f4fff6;
-}
-
-/* ===== HERO IMAGE ===== */
-.hero-image-wrap {
+/* --- Refined Banner Style --- */
+.hero-banner {
   position: relative;
-}
-
-.hero-image-glow {
-  position: absolute;
-  inset: 1.5rem;
-  border-radius: 2rem;
-  background: linear-gradient(
-    135deg,
-    rgba(116, 200, 120, 0.25),
-    rgba(91, 130, 237, 0.2)
+  background: radial-gradient(
+    circle at 20% 50%,
+    #f0fdf4 0%,
+    rgba(16, 185, 129, 0.1) 100%
   );
-  filter: blur(3rem);
+  min-height: 95vh;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  border-radius: 0 0 80px 80px;
+  padding-top: 5%;
 }
 
-.hero-image {
+.hero-banner::after {
+  content: "";
+  position: absolute;
+  top: -10%;
+  right: -5%;
+  width: 40%;
+  height: 120%;
+  background: #10b981;
+  opacity: 0.03;
+  filter: blur(100px);
+  transform: rotate(-15deg);
+}
+
+.hero-image-side {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 45%;
+  height: 100%;
+  background: url("https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=2070&auto=format&fit=crop") center/cover no-repeat;
+  z-index: 1;
+  mask-image: linear-gradient(to right, transparent, black 40%);
+  -webkit-mask-image: linear-gradient(to right, transparent, black 40%);
+}
+
+.hero-image-side::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to right, #f0fdf4 0%, rgba(240, 253, 244, 0) 60% );
+  z-index: 2;
+}
+
+.hero-content {
   position: relative;
   z-index: 10;
-  width: 100%;
-  aspect-ratio: 4/3;
-  border-radius: 2rem;
-  object-fit: cover;
-  box-shadow: 0 25px 50px rgba(67, 165, 87, 0.15);
-  outline: 1px solid rgba(255, 255, 255, 0.7);
+  padding: 120px 0;
 }
 
-.hero-card-trust {
+/* --- Main Floating Card --- */
+.floating-container {
+  position: relative;
+  perspective: 1200px;
+}
+
+.floating-mockup {
+  background: #ffffff;
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  border-radius: 28px;
+  padding: 24px;
+  box-shadow: 0 40px 80px -15px rgba(16, 185, 129, 0.25);
+  transform: rotateY(-15deg) rotateX(5deg);
+  animation: floatMain 6s ease-in-out infinite;
+  max-width: 400px;
+  position: relative;
+  z-index: 5;
+}
+
+/* Secondary Floating Elements */
+.floating-node {
   position: absolute;
-  bottom: -1.25rem;
-  left: 1.25rem;
-  z-index: 20;
-  border-radius: 1rem;
-  border: 1px solid #b8e8c4;
-  background-color: white;
-  padding: 1rem;
-  box-shadow: 0 20px 25px rgba(0, 0, 0, 0.1);
-}
-
-.hero-card-trust-inner {
+  background: white;
+  padding: 10px 18px;
+  border-radius: 14px;
+  font-size: 11px;
+  font-weight: 800;
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(16, 185, 129, 0.1);
+  z-index: 10;
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 8px;
+  animation: floatNode 8s ease-in-out infinite;
 }
 
-.hero-card-icon {
-  display: grid;
-  place-items: center;
-  width: 2.75rem;
-  height: 2.75rem;
-  border-radius: 0.75rem;
-  background-color: #43a557;
+.node-1 {
+  top: -20px;
+  right: -40px;
+  animation-delay: 0s;
+  color: #10b981;
+}
+
+.node-2 {
+  bottom: 40px;
+  left: -60px;
+  animation-delay: -2s;
+  color: #f43f5e;
+}
+
+.node-3 {
+  top: 120px;
+  right: -80px;
+  animation-delay: -4s;
+  color: #10b981;
+}
+
+@keyframes floatMain {
+  0%,
+  100% {
+    transform: rotateY(-15deg) rotateX(5deg) translateY(0);
+  }
+  50% {
+    transform: rotateY(-10deg) rotateX(3deg) translateY(-25px);
+  }
+}
+
+@keyframes floatNode {
+  0%,
+  100% {
+    transform: translateY(0) translateX(0);
+  }
+  33% {
+    transform: translateY(-15px) translateX(10px);
+  }
+  66% {
+    transform: translateY(10px) translateX(-10px);
+  }
+}
+
+.mockup-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 12px;
+  background: #f8fafc;
+  border-radius: 16px;
+  margin-bottom: 12px;
+  border: 1px solid #f1f5f9;
+  transition: 0.3s;
+}
+
+.mockup-item.active {
+  border-color: #10b981;
+  background: #f0fdf4;
+}
+
+.check-box {
+  width: 22px;
+  height: 22px;
+  border: 2px solid #cbd5e1;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  color: #94a3b8;
+}
+
+.mockup-item.active .check-box {
+  background: #10b981;
+  border-color: #10b981;
   color: white;
-  flex-shrink: 0;
 }
 
-.hero-card-icon i {
-  line-height: 1;
+/* --- Navigation --- */
+.nav-glass {
+  position: fixed;
+  top: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  max-width: 1200px;
+  background: var(--glass);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border2);
+  border-radius: 30px;
+  padding: 12px 30px;
+  z-index: 2000;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
 }
 
-.hero-card-trust p:first-child {
-  font-size: 0.875rem;
+.nav-link-custom {
+  color: var(--text-main);
+  text-decoration: none;
+  font-size: 14px;
   font-weight: 700;
-  color: #1a4d27;
+  opacity: 0.7;
+  transition: 0.3s;
 }
 
-.hero-card-trust p:last-child {
-  font-size: 0.75rem;
-  color: #536173;
+.nav-link-custom:hover {
+  opacity: 1;
+  color: #10b981;
 }
 
-.hero-card-stats {
-  position: absolute;
-  top: 1.5rem;
-  right: -1rem;
+/* --- Bento Feature Grid Style --- */
+.feature-container {
+  margin-top: -60px;
+  padding-bottom: 60px;
+  position: relative;
   z-index: 20;
-  border-radius: 1rem;
-  border: 1px solid #adc8f5;
-  background-color: white;
-  padding: 1rem;
-  box-shadow: 0 20px 25px rgba(0, 0, 0, 0.1);
 }
 
-.hero-card-stats p:first-child {
-  font-size: 0.75rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  color: #5b82ed;
+.bento-card {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 24px;
+  padding: 35px;
+  box-shadow: 0 10px 30px -15px rgba(0, 0, 0, 0.05);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  position: relative;
+  overflow: hidden;
 }
 
-.hero-card-stats p:nth-child(2) {
-  margin-top: 0.25rem;
-  font-size: 1.5rem;
-  font-weight: 900;
-  color: #1a2f6b;
+.bento-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px -15px rgba(16, 185, 129, 0.15);
+  border-color: #10b981;
 }
 
-.hero-card-stats p:last-child {
-  font-size: 0.75rem;
-  color: #536173;
+.highlight-card {
+  background: #f0fdf4;
+  border-color: #dcfce7;
 }
 
-/* ===== SECTION SHARED ===== */
-.section-py {
-  padding-top: 5rem;
-  padding-bottom: 5rem;
-}
-
-@media (min-width: 768px) {
-  .section-py {
-    padding-top: 6rem;
-    padding-bottom: 6rem;
-  }
-}
-
-.section-label {
-  font-size: 0.75rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--brand-500);
-}
-
-.section-title {
-  margin-top: 0.75rem;
-  font-size: 1.875rem;
-  font-weight: 900;
-  letter-spacing: -0.02em;
-  color: var(--brand-dark);
-}
-
-@media (min-width: 768px) {
-  .section-title {
-    font-size: 2.25rem;
-  }
-}
-
-.section-desc {
-  margin-top: 1rem;
-  color: var(--text-muted);
-}
-
-.text-center {
-  text-align: center;
-}
-.max-w-2xl {
-  max-width: 42rem;
-  margin-left: auto;
-  margin-right: auto;
-}
-.max-w-xl {
-  max-width: 36rem;
-}
-
-/* ===== CARD GRID ===== */
-.card-grid-3 {
-  margin-top: 3rem;
-  display: grid;
-  gap: 1.25rem;
-}
-
-@media (min-width: 640px) {
-  .card-grid-3 {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (min-width: 1024px) {
-  .card-grid-3 {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
-
-.card-grid-2 {
-  margin-top: 2.5rem;
-  display: grid;
-  gap: 1.25rem;
-}
-
-@media (min-width: 640px) {
-  .card-grid-2 {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-.card-grid-4 {
-  margin-top: 3rem;
-  display: grid;
-  gap: 1.5rem;
-}
-
-@media (min-width: 640px) {
-  .card-grid-4 {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (min-width: 1024px) {
-  .card-grid-4 {
-    grid-template-columns: repeat(4, 1fr);
-  }
-}
-
-/* ===== FEATURE CARD BASE ===== */
-.card {
-  border-radius: 1rem;
-  padding: 1.5rem;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-  transition:
-    transform 0.3s,
-    box-shadow 0.3s;
-}
-
-.card:hover {
-  transform: translateY(-4px);
-}
-
-.card-icon {
-  display: inline-flex;
+.icon-circle {
+  width: 54px;
+  height: 54px;
+  background: #f0fdf4;
+  color: #10b981;
+  border-radius: 16px;
+  display: flex;
   align-items: center;
   justify-content: center;
-  width: 3rem;
-  height: 3rem;
-  border-radius: 0.75rem;
-  font-size: 1.25rem;
-  color: white;
+  font-size: 20px;
+  margin-bottom: 20px;
+  transition: transform 0.5s ease;
 }
 
-.card-icon-sm {
-  display: inline-flex;
+.bento-card:hover .icon-circle {
+  transform: scale(1.05);
+}
+
+.alert-bubble {
+  padding: 14px 18px;
+  border-radius: 16px;
+  display: flex;
   align-items: center;
-  justify-content: center;
-  width: 2.75rem;
-  height: 2.75rem;
-  border-radius: 0.75rem;
-  color: white;
-  margin-bottom: 1rem;
+  gap: 12px;
 }
 
-.card-icon i,
-.card-icon-sm i {
+.progress-hud {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  padding: 16px;
+  border-radius: 16px;
+}
+
+.bar-container {
+  background: #e2e8f0;
+  height: 8px;
+  border-radius: 100px;
+  overflow: hidden;
+}
+
+.bar-fill {
+  height: 100%;
+  background: #10b981;
+  width: 85%;
+}
+
+.display-large {
+  font-weight: 800;
+  letter-spacing: -3px;
   line-height: 1;
+  color: var(--text-main);
 }
 
-.card h3 {
-  margin-top: 1.25rem;
-  font-size: 1.125rem;
-  font-weight: 700;
+.gradient-accent {
+  background: linear-gradient(135deg, #10b981, #059669);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
-.card-icon-sm + h3 {
-  margin-top: 0;
-}
-
-.card p {
-  margin-top: 0.5rem;
-  font-size: 0.875rem;
+.lh-base {
   line-height: 1.6;
 }
 
-/* ===== GREEN CARD ===== */
-.card-green {
-  border: 1px solid var(--green-border);
-  background: linear-gradient(135deg, var(--green-bg-from), var(--green-bg-to));
-}
-
-.card-green:hover {
-  box-shadow: 0 10px 15px rgba(67, 165, 87, 0.2);
-}
-.card-green .card-icon,
-.card-green .card-icon-sm {
-  background-color: var(--brand-500);
-}
-.card-green h3 {
-  color: var(--green-text-dark);
-}
-.card-green p {
-  color: var(--green-text-mid);
-}
-
-/* ===== BLUE CARD ===== */
-.card-blue {
-  border: 1px solid var(--blue-border);
-  background: linear-gradient(135deg, var(--blue-bg-from), var(--blue-bg-to));
-}
-
-.card-blue:hover {
-  box-shadow: 0 10px 15px rgba(91, 130, 237, 0.2);
-}
-.card-blue .card-icon,
-.card-blue .card-icon-sm {
-  background-color: var(--blue-accent);
-}
-.card-blue h3 {
-  color: var(--blue-text-dark);
-}
-.card-blue p {
-  color: var(--blue-text-mid);
-}
-
-/* ===== PURPLE CARD ===== */
-.card-purple {
-  border: 1px solid var(--purple-border);
-  background: linear-gradient(
-    135deg,
-    var(--purple-bg-from),
-    var(--purple-bg-to)
-  );
-}
-
-.card-purple:hover {
-  box-shadow: 0 10px 15px rgba(139, 110, 232, 0.2);
-}
-.card-purple .card-icon,
-.card-purple .card-icon-sm {
-  background-color: var(--purple-accent);
-}
-.card-purple h3 {
-  color: var(--purple-text-dark);
-}
-.card-purple p {
-  color: var(--purple-text-mid);
-}
-
-/* ===== YELLOW CARD ===== */
-.card-yellow {
-  border: 1px solid var(--yellow-border);
-  background: linear-gradient(
-    135deg,
-    var(--yellow-bg-from),
-    var(--yellow-bg-to)
-  );
-}
-
-.card-yellow:hover {
-  box-shadow: 0 10px 15px rgba(230, 168, 23, 0.2);
-}
-.card-yellow .card-icon,
-.card-yellow .card-icon-sm {
-  background-color: var(--yellow-accent);
-}
-.card-yellow h3 {
-  color: var(--yellow-text-dark);
-}
-.card-yellow p {
-  color: var(--yellow-text-mid);
-}
-
-/* ===== SECTION HEADER WITH BADGE ===== */
-.section-head {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-@media (min-width: 640px) {
-  .section-head {
-    flex-direction: row;
-    align-items: flex-end;
-    justify-content: space-between;
+/* --- Added Scroll Animation Logic --- */
+@keyframes revealOnScroll {
+  from {
+    opacity: 0;
+    transform: translateY(50px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
   }
 }
 
-.section-badge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 3.5rem;
-  height: 3.5rem;
-  border-radius: 1rem;
-  font-size: 1.125rem;
-  font-weight: 900;
-  color: white;
-  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
-  flex-shrink: 0;
-}
-
-.badge-blue {
-  background: linear-gradient(135deg, #5b82ed, #7ea0ff);
-  box-shadow: 0 10px 15px rgba(91, 130, 237, 0.2);
-}
-.badge-green {
-  background: linear-gradient(135deg, #43a557, #74c878);
-  box-shadow: 0 10px 15px rgba(67, 165, 87, 0.2);
-}
-.badge-purple {
-  background: linear-gradient(135deg, #8b6ee8, #b39bff);
-  box-shadow: 0 10px 15px rgba(139, 110, 232, 0.2);
-}
-
-.section-label-blue {
-  color: #5b82ed;
-}
-.section-label-green {
-  color: #43a557;
-}
-.section-label-purple {
-  color: #8b6ee8;
-}
-
-/* ===== WORKFLOW CARD (centered) ===== */
-.card-workflow {
-  text-align: center;
-}
-
-.workflow-num {
-  margin: 0 auto;
-  display: grid;
-  place-items: center;
-  width: 3.5rem;
-  height: 3.5rem;
-  border-radius: 1rem;
-  font-size: 1.125rem;
-  font-weight: 900;
-  color: white;
-  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.15);
-}
-
-.workflow-num-green {
-  background-color: var(--brand-500);
-  box-shadow: 0 10px 15px rgba(67, 165, 87, 0.25);
-}
-.workflow-num-blue {
-  background-color: var(--blue-accent);
-  box-shadow: 0 10px 15px rgba(91, 130, 237, 0.25);
-}
-.workflow-num-purple {
-  background-color: var(--purple-accent);
-  box-shadow: 0 10px 15px rgba(139, 110, 232, 0.25);
-}
-.workflow-num-yellow {
-  background-color: var(--yellow-accent);
-  box-shadow: 0 10px 15px rgba(230, 168, 23, 0.25);
-}
-
-.workflow-tag {
-  display: inline-block;
-  margin-top: 1rem;
-  padding: 0.25rem 0.75rem;
-  border-radius: 9999px;
-  font-size: 0.75rem;
-  font-weight: 700;
-}
-
-.tag-green {
-  background-color: #e8f7eb;
-  color: var(--brand-500);
-}
-.tag-blue {
-  background-color: #eff5ff;
-  color: var(--blue-accent);
-}
-.tag-purple {
-  background-color: #ede8ff;
-  color: var(--purple-accent);
-}
-.tag-yellow {
-  background-color: #fff1cc;
-  color: var(--yellow-accent);
-}
-
-/* ===== BG WHITE ===== */
-.bg-white {
-  background-color: white;
-}
-
-/* ===== SCROLL MARGIN ===== */
-.scroll-mt {
-  scroll-margin-top: 6rem;
-}
-
-/* ===== CTA SECTION ===== */
-.cta-section {
-  padding: 0 1rem 5rem;
-}
-
-@media (min-width: 640px) {
-  .cta-section {
-    padding: 0 1.5rem 6rem;
-  }
-}
-
-.cta-box {
-  position: relative;
-  max-width: 72rem;
-  margin: 5rem auto 0;
-  overflow: hidden;
-  border-radius: 1.5rem;
-  border: 1px solid rgba(157, 217, 170, 0.5);
-  background: linear-gradient(135deg, #b9efc4, #d8f8df, #cfe4ff);
-  padding: 4rem 2rem;
-  text-align: center;
-  box-shadow: 0 25px 50px rgba(67, 165, 87, 0.15);
-}
-
-@media (min-width: 768px) {
-  .cta-box {
-    padding: 3.5rem;
-    text-align: left;
-  }
-}
-
-.cta-bg-radial {
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(
-      circle at top left,
-      rgba(67, 165, 87, 0.3),
-      transparent 35%
-    ),
-    radial-gradient(
-      circle at bottom right,
-      rgba(91, 130, 237, 0.18),
-      transparent 35%
-    );
-  pointer-events: none;
-}
-
-.cta-glow-left {
-  position: absolute;
-  top: 0;
-  left: -4rem;
-  width: 20rem;
-  height: 20rem;
-  border-radius: 9999px;
-  background-color: rgba(67, 165, 87, 0.25);
-  filter: blur(3rem);
-  pointer-events: none;
-}
-
-.cta-glow-right {
-  position: absolute;
-  bottom: 0;
-  right: -2.5rem;
-  width: 18rem;
-  height: 18rem;
-  border-radius: 9999px;
-  background-color: rgba(91, 130, 237, 0.15);
-  filter: blur(3rem);
-  pointer-events: none;
-}
-
-.cta-inner {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2rem;
-}
-
-@media (min-width: 768px) {
-  .cta-inner {
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-  }
-}
-
-.cta-label {
-  font-size: 0.75rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: #2f8c42;
-}
-
-.cta-title {
-  margin-top: 0.75rem;
-  font-size: 1.5rem;
-  font-weight: 900;
-  line-height: 1.3;
-  color: #163522;
-}
-
-@media (min-width: 768px) {
-  .cta-title {
-    font-size: 1.875rem;
-  }
-}
-
-.cta-desc {
-  margin-top: 0.75rem;
-  font-size: 0.875rem;
-  color: #4c5f57;
-}
-
-.btn-cta {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 50px;
-  flex-shrink: 0;
-  padding: 0 2rem;
-  border-radius: 0.75rem;
-  background: linear-gradient(to right, #43a557, #5fc972);
-  color: white;
-  font-weight: 700;
-  box-shadow: 0 10px 15px rgba(67, 165, 87, 0.25);
-  transition: transform 0.2s;
-}
-
-.btn-cta:hover {
-  transform: translateY(-4px);
+.animate-on-scroll {
+  /* Using native scroll-driven view timelines */
+  view-timeline-name: --card-reveal;
+  view-timeline-axis: block;
+  animation-timeline: --card-reveal;
+  animation-name: revealOnScroll;
+  animation-range: entry 10% cover 40%;
+  animation-fill-mode: both;
 }
 </style>
