@@ -3,6 +3,7 @@
     <div class="main-col">
       <div class="workspace">
 
+        <!-- Banner -->
         <div class="class-banner">
           <div class="class-banner-content">
             <h1 class="class-title">{{ roomData?.name || 'Loading...' }}</h1>
@@ -15,31 +16,34 @@
           </div>
         </div>
 
+        <!-- Tabs -->
         <div class="class-tabs-container d-flex align-items-center justify-content-between">
           <div class="class-tabs">
             <div class="class-tab" :class="{ active: currentTab === 'stream' }" @click="currentTab = 'stream'">
               <i class="fas fa-stream"></i> Stream
             </div>
             <div class="class-tab" :class="{ active: currentTab === 'people' }" @click="currentTab = 'people'">
-              <i class="fas fa-users"></i> All Student 
+              <i class="fas fa-users"></i> All Student
               <span class="badge-count ms-2">({{ roomData?.students?.length || 0 }})</span>
             </div>
             <div class="class-tab" :class="{ active: currentTab === 'results' }" @click="currentTab = 'results'">
               <i class="fas fa-chart-bar"></i> Student Result
             </div>
           </div>
-<RouterLink
-  :to="`/teacher/room-management/${props.roomId}/exams`"
-  class="btn-exams-link"
->
-  <i class="fas fa-file-alt me-2"></i> View All Exams
-</RouterLink>
+          <RouterLink
+            :to="`/teacher/room-management/${props.roomId}/exams`"
+            class="btn-exams-link"
+          >
+            <i class="fas fa-file-alt me-2"></i> View All Exams
+          </RouterLink>
         </div>
 
+        <!-- Tab: Stream -->
         <div v-if="currentTab === 'stream'" class="tab-pane active">
           <div class="stream-grid">
+
             <div class="side-panel">
-               <div class="d-flex align-items-center justify-content-between mb-2">
+              <div class="d-flex align-items-center justify-content-between mb-2">
                 <span style="font-size: 0.7rem; font-weight: 700; color: var(--txt-mu); text-transform: uppercase; letter-spacing: 1px;">Class Overview</span>
                 <button class="btn btn-sm text-muted p-0"><i class="fas fa-chart-line"></i></button>
               </div>
@@ -76,11 +80,11 @@
                       <img :src="authStore.avatarUrl" class="avatar-img me-2" alt="avatar" style="width: 40px; height: 40px; border-radius: 50%;">
                       <div>
                         <h6 class="mb-0">
-                          {{ authStore.fullName }} 
+                          {{ authStore.fullName }}
                           <span class="role-badge">Teacher</span>
                         </h6>
                         <small class="text-muted">
-                          {{ new Date(post.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) }}, 
+                          {{ new Date(post.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) }},
                           {{ new Date(post.created_at).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true }) }}
                         </small>
                       </div>
@@ -100,7 +104,12 @@
                     <p>{{ post.message }}</p>
                   </div>
 
-                  <a :href="post.exam_link" target="_blank" rel="noopener noreferrer" class="assignment-card-link d-flex align-items-center border rounded-3 shadow-sm overflow-hidden mt-3 mb-2">
+                  
+                    <a :href="post.exam_link"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="assignment-card-link d-flex align-items-center border rounded-3 shadow-sm overflow-hidden mt-3 mb-2"
+                    >
                     <div class="d-flex align-items-center justify-content-center" style="width: 80px; height: 80px; background-color: #f6993f; flex-shrink: 0;">
                       <i class="fas fa-laptop-code text-white fa-2x"></i>
                     </div>
@@ -115,19 +124,23 @@
                 </div>
               </div>
             </div>
+
           </div>
         </div>
 
+        <!-- Tab: People -->
         <div v-if="currentTab === 'people'" class="tab-pane active">
           <div class="roster-container">
             <div class="roster-header">
-              <h3>Student Roster ({{ students.length }})</h3>
+              <h3>Student Roster ({{ roomData?.students?.length || 0 }})</h3>
               <button class="btn btn-sm btn-emerald">Invite</button>
             </div>
             <table class="roster-table">
-              <thead><tr><th>Student</th></tr></thead>
+              <thead>
+                <tr><th>Student</th></tr>
+              </thead>
               <tbody>
-                <tr v-for="(student, sIdx) in roomData?.students" :key="student.id">
+                <tr v-for="student in roomData?.students" :key="student.id">
                   <td>
                     <div class="student-info">
                       <img :src="student.avatar || 'default-avatar-url.jpg'" alt="">
@@ -146,54 +159,71 @@
           </div>
         </div>
 
-        <div v-if="currentTab === 'results'" class="tab-pane active">
-          <div class="roster-container">
-            <div class="roster-header">
-              <h3>Student Results</h3>
-              <div class="d-flex align-items-center gap-4">
-                <span class="small-meta-lbl"><i class="fas fa-users me-1"></i>28 / 32 Submissions</span>
-                <span class="small-meta-lbl"><i class="fas fa-chart-line me-1"></i>Avg: <strong class="text-emerald">76%</strong></span>
-              </div>
-            </div>
-            <div class="result-grid-container">
-              <div class="rg-header">
-                <div>Student</div><div>Status</div><div>Submitted</div><div>Duration</div><div>Score</div><div class="text-end">Action</div>
-              </div>
-              <div class="rg-row" v-for="(res, rIdx) in studentResults" :key="rIdx">
-                <div class="student-info">
-                  <img :src="res.avatar" class="student-avatar" alt="">
-                  <div>
-                    <div class="student-name">{{ res.name }}</div>
-                    <div class="student-id">{{ res.id }}</div>
-                  </div>
-                </div>
-                <div>
-                  <span class="badge-status" :class="'badge-' + res.statusType">{{ res.status }}</span>
-                </div>
-                <div class="time-text">{{ res.submitted }}</div>
-                <div class="time-muted">{{ res.duration }}</div>
-                <div class="score-val" :class="'score-' + res.scoreColor">{{ res.score }}</div>
-                <div class="text-end">
-                  <button class="btn-row-action" :class="{ 'btn-row-review': res.statusType === 'review' }">
-                    {{ res.statusType === 'review' ? 'Review' : 'View' }}
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+<div v-if="currentTab === 'results'" class="tab-pane active">
+  <div v-if="loading" class="text-center p-5">កំពុងផ្ទុកទិន្នន័យ...</div>
+  
+  <div v-else-if="studentResults.length === 0" class="text-center p-5">
+    <p>មិនមានលទ្ធផលសម្រាប់សិស្សទេ។</p>
+  </div>
+
+  <div v-else class="table-responsive">
+    <table class="table align-middle table-hover">
+      <thead class="table-light">
+        <tr>
+          <th>Student</th>
+          <th>Exam</th>
+          <th>Score</th>
+          <th>Date</th>
+          <th>Feedback</th>
+          <th class="text-center">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="res in studentResults" :key="res.submission_id">
+          <td>
+            <div class="fw-bold">{{ res.first_name }} {{ res.last_name }}</div>
+            <small class="text-muted">{{ res.student_code }}</small>
+          </td>
+          <td>{{ res.exam_title }}</td>
+          <td>
+            <span class="badge bg-success bg-opacity-10 text-success fw-bold">
+              {{ res.score }} / 100
+            </span>
+          </td>
+          <td>{{ new Date(res.submitted_at).toLocaleDateString() }}</td>
+          <td style="min-width: 200px;">
+            <textarea
+              class="form-control form-control-sm"
+              v-model="res.feedback"
+              placeholder="មតិយោបល់..."
+              rows="2"
+            ></textarea>
+          </td>
+          <td class="text-center">
+            <button
+              class="btn btn-sm btn-emerald"
+              @click="sendFeedback(res.submission_id, res.feedback)"
+            >
+              <i class="fas fa-paper-plane"></i>
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
       </div>
     </div>
   </div>
 
+  <!-- Edit Modal -->
   <div class="modal-overlay" v-if="isEditModalOpen" @click.self="isEditModalOpen = false">
     <div class="edit-modal">
       <h6>Edit Post</h6>
       <input v-model="editPost.title" class="form-control mb-2" placeholder="ចំណងជើង..." />
       <textarea v-model="editPost.message" class="form-control mb-2" rows="3" placeholder="សរសេរការប្រកាស..."></textarea>
-      
-      <input v-model="editPost.exam_link" type="hidden" /> 
-      
+      <input v-model="editPost.exam_link" type="hidden" />
       <div class="d-flex justify-content-end gap-2 mt-3">
         <button class="btn-cancel" @click="isEditModalOpen = false">Cancel</button>
         <button class="btn-post" @click="handleUpdate">Save</button>
@@ -201,7 +231,8 @@
     </div>
   </div>
 
-  <RemoveStudentModal 
+  <!-- Remove Student Modal -->
+  <RemoveStudentModal
     :is-open="isDeleteModalOpen"
     :student="studentToDelete"
     :loading="loading"
@@ -215,6 +246,7 @@ import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useToast } from 'vue-toastification'
 import { useAuthStore } from '@/stores/auth'
+import { getStudentResultsByExam,addFeedback } from '@/api/exam.api'
 
 import {
   getOneRoom,
@@ -248,6 +280,7 @@ const isEditModalOpen = ref(false)
 const studentToDelete = ref(null)
 
 const activeMenu = ref(null)
+const studentResults = ref([])
 
 //new post
 const newPost = ref({
@@ -264,27 +297,8 @@ const editPost = ref({
   exam_link: ''
 })
 
-//students
-const students = ref([
-  {
-    name: 'Chloe Navarro',
-    id: 'STU-9202',
-    online: true,
-    date: 'Sep 01, 2024',
-    avatar: 'https://i.pravatar.cc/150?img=47'
-  }
-])
 
-//results
-const studentResults = ref([
-  {
-    name: 'James Reyes',
-    id: 'STU-9201',
-    status: 'Needs Grading',
-    statusType: 'review',
-    score: '— / 100'
-  }
-])
+
 
 //fetch room
 const fetchRoomData = async () => {
@@ -422,6 +436,54 @@ const openExamLink = (url) => {
   window.open(fullUrl, '_blank')
 }
 
+const fetchStudentResults = async () => {
+  loading.value = true;
+  console.log("កំពុងសាកល្បងហៅលទ្ធផលតាម Exam ID: 86");
+
+  try {
+    // យើងហៅទៅកាន់ Endpoint ដែលរំពឹងទុក examId
+    const res = await getStudentResultsByExam(86); 
+    
+    // បង្ហាញលទ្ធផលក្នុង Console
+    console.log("ទិន្នន័យទទួលបាន:", res.data);
+    
+    // កំណត់ទិន្នន័យ (ដាក់ក្នុង array ព្រោះ UI ប្រើ loop)
+    studentResults.value = res.data.data ? [res.data.data] : [];
+    
+  } catch (err) {
+    console.error("កំហុសក្នុងការហៅ API:", err);
+  } finally {
+    loading.value = false;
+  }
+}
+
+const sendFeedback = async (subId, feedbackText) => {
+  try {
+    await addFeedback(subId, feedbackText);
+    toast.success("បានផ្ញើ Feedback ជោគជ័យ!");
+  } catch (err) {
+    console.error(err);
+    toast.error("មានកំហុសក្នុងការផ្ញើ Feedback");
+  }
+}
+const handleTabChange = (tab) => {
+  currentTab.value = tab
+  if (tab === 'results' && examId) {
+    fetchStudentResults(examId)
+  }
+}
+
+// បើសិនអ្នកចង់ទាញយកលទ្ធផលនៃវិញ្ញាសាទាំងអស់ក្នុងថ្នាក់
+const loadAllResultsFromPosts = async () => {
+  // 1. យក examId ពី posts (សន្មតថាអ្នកមាន field examId ក្នុង post object)
+  // បើមិនមាន សូមពិនិត្យមើលថាតើ post.exam_link មានផ្ទុក ID ដែរឬទេ
+  const examIds = posts.value.map(p => p.examId).filter(id => id);
+  
+  if (examIds.length > 0) {
+    // ហៅសម្រាប់វិញ្ញាសាដំបូងបង្អស់ជាគំរូ
+    await fetchStudentResults(examIds[0]);
+  }
+}
 // //go exams
 // const goToExams = () => {
 //   router.push({
@@ -436,6 +498,7 @@ const openExamLink = (url) => {
 onMounted(() => {
   fetchRoomData()
   fetchPosts()
+  fetchStudentResults()
   authStore.fetchUserProfile()
 })
 </script>

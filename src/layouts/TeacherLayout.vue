@@ -42,7 +42,7 @@ const activeNavbar = computed(() => {
       return TeacherClassstreamNav;
     case "RoomManagement":
       return TeacherRoommanagementNav;
-    case "RoomDetail": 
+    case "RoomDetails": 
       return TeacherRoomDetail;
     case "TeacherExamDetail":
       return "TeacherExamDetail.vue"
