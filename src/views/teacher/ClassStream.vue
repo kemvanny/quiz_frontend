@@ -28,10 +28,12 @@
               <i class="fas fa-chart-bar"></i> Student Result
             </div>
           </div>
-
-          <button class="btn-exams-link" @click="goToExams">
-            <i class="fas fa-file-alt me-2"></i> View All Exams
-          </button>
+<RouterLink
+  :to="`/teacher/room-management/${props.roomId}/exams`"
+  class="btn-exams-link"
+>
+  <i class="fas fa-file-alt me-2"></i> View All Exams
+</RouterLink>
         </div>
 
         <div v-if="currentTab === 'stream'" class="tab-pane active">
@@ -189,7 +191,9 @@
       <h6>Edit Post</h6>
       <input v-model="editPost.title" class="form-control mb-2" placeholder="ចំណងជើង..." />
       <textarea v-model="editPost.message" class="form-control mb-2" rows="3" placeholder="សរសេរការប្រកាស..."></textarea>
-      <input v-model="editPost.exam_link" class="form-control mb-2" placeholder="Link ការប្រឡង..." />
+      
+      <input v-model="editPost.exam_link" type="hidden" /> 
+      
       <div class="d-flex justify-content-end gap-2 mt-3">
         <button class="btn-cancel" @click="isEditModalOpen = false">Cancel</button>
         <button class="btn-post" @click="handleUpdate">Save</button>
@@ -323,9 +327,7 @@ const handleCreatePost = async () => {
       message: '',
       examLink: ''
     }
-
     await fetchPosts()
-
   } catch (err) {
     console.error("កំហុស:", err.response?.data)
     toast.error('មានកំហុស')
@@ -346,20 +348,22 @@ const handleDelete = async (postId) => {
 //update post
 const handleUpdate = async () => {
   try {
-    await updatePost(editPost.value.id, {
+    const payload = {
       title: editPost.value.title,
-      message: editPost.value.message,
-      examLink: editPost.value.exam_link
-    })
+      message: editPost.value.message
+    }
+    await updatePost(editPost.value.id, payload)
 
     toast.success('បានកែប្រែជោគជ័យ!')
     isEditModalOpen.value = false
     await fetchPosts()
 
   } catch (err) {
+    console.error("កំហុស:", err.response?.data)
     toast.error('មិនអាចកែប្រែបាន')
   }
 }
+
 
 //open delete modal
 const openDeleteModal = (student) => {
@@ -401,9 +405,8 @@ const openEditModal = (post) => {
     id: post.id,
     title: post.title,
     message: post.message,
-    exam_link: post.exam_link
+    exam_link: post.exam_link 
   }
-
   isEditModalOpen.value = true
   activeMenu.value = null
 }
@@ -419,15 +422,15 @@ const openExamLink = (url) => {
   window.open(fullUrl, '_blank')
 }
 
-//go exams
-const goToExams = () => {
-  router.push({
-    name: 'RoomDetail',
-    params: {
-      roomId: props.roomId
-    }
-  })
-}
+// //go exams
+// const goToExams = () => {
+//   router.push({
+//     name: 'RoomDetail',
+//     params: {
+//       room_id: props.roomId  
+//     }
+//   })
+// }
 
 //mounted
 onMounted(() => {

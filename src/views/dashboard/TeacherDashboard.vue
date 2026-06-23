@@ -27,7 +27,7 @@
 
         <!-- Quick Actions -->
         <div class="custom-card mb-4">
-          <h5 class="section-title mb-3">សកម្មភាពរហ័ស (Quick Actions)</h5>
+          <h5 class="section-title mb-3">សកម្មភាពរហ័ស</h5>
           <div class="d-flex flex-wrap gap-3">
             <button class="btn-emerald" @click="goToCreateExam">
               <i class="fas fa-plus me-2"></i> Create Quiz
@@ -44,7 +44,7 @@
         <!-- ========================================================= -->
         <div class="custom-card mb-4">
           <div class="d-flex justify-content-between align-items-center mb-3">
-            <h5 class="section-title mb-0">វិញ្ញាសារបស់ខ្ញុំ (My Quizzes)</h5>
+            <h5 class="section-title mb-0">វិញ្ញាសារបស់ខ្ញុំ</h5>
             <span class="badge bg-success bg-opacity-10 text-success rounded-pill px-3" style="font-size: 0.75rem; font-weight: 700;">
               សរុប៖ {{ examList.length }} វិញ្ញាសា
             </span>
@@ -63,11 +63,10 @@
           </div>
 
           <!-- 3. បង្ហាញបញ្ជីកាតវិញ្ញាសា (Data Grid Grid) -->
-          <div v-else class="row g-3">
-            <div class="col-12 col-md-6" v-for="exam in examList" :key="exam.id">
+         <div v-else class="row g-3">
+            <div class="col-12 col-md-6" v-for="exam in paginatedExams" :key="exam.id">
               <div class="p-3 rounded-3 border bg-white h-100 d-flex flex-column" style="transition: 0.2s; border-color: var(--bdr) !important;">
                 
-                <!-- Status & Time Border -->
                 <div class="d-flex justify-content-between align-items-center mb-2">
                   <span class="badge rounded-pill px-2.5 py-1" style="font-size: 0.7rem; font-weight: 700;"
                         :class="exam.status === 'active' ? 'bg-success bg-opacity-10 text-success' : 'bg-warning bg-opacity-10 text-warning'">
@@ -78,11 +77,9 @@
                   </span>
                 </div>
 
-                <!-- Title -->
                 <h6 class="fw-bold text-dark mb-1 text-truncate" style="font-size: 0.92rem;">{{ exam.title }}</h6>
                 <div class="text-muted small mb-3" style="font-size: 0.75rem;">Type: <span class="text-uppercase fw-bold">{{ exam.type }}</span></div>
                 
-                <!-- Points and Actions -->
                 <div class="d-flex justify-content-between align-items-center mt-auto pt-2 border-top border-light">
                   <span class="fw-bold text-success" style="font-size: 0.82rem;">ពិន្ទុ៖ {{ exam.total_points }}pt</span>
                   
@@ -91,9 +88,27 @@
                     <button class="btn btn-sm btn-light text-danger py-1 px-2 rounded-2" style="font-size: 0.75rem;"><i class="fas fa-trash-alt"></i></button>
                   </div>
                 </div>
-
+                
               </div>
             </div>
+          </div>
+
+          <div v-if="totalPages > 1" class="d-flex justify-content-center align-items-center gap-3 mt-4">
+            <button 
+              class="btn btn-sm btn-outline-success" 
+              :disabled="currentPage === 1" 
+              @click="currentPage--">
+              <i class="fas fa-chevron-left"></i> មុន
+            </button>
+            
+            <span class="small fw-bold">ទំព័រ {{ currentPage }} / {{ totalPages }}</span>
+            
+            <button 
+              class="btn btn-sm btn-outline-success" 
+              :disabled="currentPage === totalPages" 
+              @click="currentPage++">
+              បន្ទាប់ <i class="fas fa-chevron-right"></i>
+            </button>
           </div>
         </div>
         <!-- ========================================================= -->
@@ -151,7 +166,7 @@
       <!-- Right Sidebar (Rooms, Expiring, Security) -->
       <div class="col-12 col-lg-4">
         <div class="custom-card d-flex flex-column" style="min-height: 380px;">
-          <h5 class="section-title mb-3">Assessment Rooms</h5>
+          <h5 class="section-title mb-3">បន្ទប់សិក្សា</h5>
           
           <div v-if="loadingRooms" class="text-center py-4 flex-grow-1 d-flex align-items-center justify-content-center">
             <div class="spinner-border text-success spinner-border-sm" role="status"></div>
@@ -184,24 +199,12 @@
           </button>
         </div>
 
-        <!-- Expiring Soon -->
-        <div class="custom-card">
-          <h5 class="section-title mb-3">Expiring Soon</h5>
-          <div class="d-flex align-items-center gap-2 mb-3" v-for="(item, idx) in expiringItems" :key="idx">
-            <div class="rounded-circle" :class="item.bgClass" style="width:8px; height:8px; flex-shrink: 0;"></div>
-            <div>
-              <p class="mb-0 text-dark room-name" style="font-size: 0.9rem;">{{ item.title }}</p>
-              <small :class="item.textClass" style="font-size: 0.78rem; font-weight: 700;">{{ item.timeText }}</small>
-            </div>
-          </div>
-        </div>
-
         <!-- Security Guard Info Box -->
-        <div class="custom-card text-center p-4" style="background: var(--emerald-soft);">
+        <!-- <div class="custom-card text-center p-4" style="background: var(--emerald-soft);">
           <h6 class="text-success mb-2" style="font-size: 1rem; font-weight: 700;">Secure Mode Active</h6>
           <p class="text-muted small mb-4" style="font-size: 0.78rem; line-height: 1.4; font-weight: 600;">Tab-switching and screenshot protections are enabled system-wide.</p>
           <router-link to="/teacher/teacher-validations" class="btn btn-white w-100 border border-2 rounded-4 py-2.5 small bg-white text-success text-decoration-none d-block" style="font-size: 0.88rem; font-weight: 700;">Security Settings</router-link>
-        </div>
+        </div> -->
       </div>
     </div>
   </div>
@@ -228,6 +231,9 @@ const loadingRooms = ref(false);
 const examList = ref([])      
 const isLoading = ref(false)   
 const toast = useToast() 
+
+const currentPage = ref(1)
+const itemsPerPage = 4 
 
 const fetchBackendRooms = async () => {
   try {
@@ -362,6 +368,15 @@ const expiringItems = ref([
     textClass: 'text-danger'
   }
 ])
+
+
+const paginatedExams = computed(() => {
+  const start = (currentPage.value - 1) * itemsPerPage
+  const end = start + itemsPerPage
+  return examList.value.slice(start, end)
+})
+
+const totalPages = computed(() => Math.ceil(examList.value.length / itemsPerPage))
 </script>
 
 <style scoped>
