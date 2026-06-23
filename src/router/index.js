@@ -272,21 +272,35 @@ router.beforeEach((to, from) => {
   };
 
   const userRoleName = rolePaths[userRoleId];
+
   if (to.name === 'AcceptInvitation') {
     return true;
   }
+
   if (requiresAuth && !isLoggedIn) {
     return { path: '/login' };
   }
+
   if (isLoggedIn) {
     if (to.path === '/login' && userRoleName) {
       return { path: `/${userRoleName}/dashboard` };
     }
+
     if (requiredRole && userRoleName !== requiredRole) {
       return { path: `/${userRoleName}/dashboard` };
     }
   }
 
   return true;
+});
+
+router.afterEach((to) => {
+  const pageName = to.meta.title || to.name || 'Unknown Page';
+
+  document.title = `${pageName} | PraLong`;
+
+  localStorage.setItem('current_page', pageName);
+
+  console.log('Current Page:', pageName);
 });
 export default router
