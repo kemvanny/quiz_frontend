@@ -1,7 +1,7 @@
 <template>
     <div class="login-container">
 
-        <router-link to="" class="floating-back-btn">
+        <router-link :to="{name: 'Home'}" class="floating-back-btn">
             <i class="fas fa-arrow-left"></i>
             <span>Back to Homepage</span>
         </router-link>

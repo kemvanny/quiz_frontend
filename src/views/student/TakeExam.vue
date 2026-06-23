@@ -17,24 +17,46 @@
         <div class="app-background-grid"></div>
         <nav class="navbar-custom sticky-top">
             <div class="container d-flex">
-                <div class="d-flex align-items-center">
-                    <div class="sidebar-brand">
-                        <a href="#"> <img :src="logoImage" alt="Pralong Logo" class="brand-logo" />
-                        </a>
-                    </div>
+                <div class="sidebar-brand">
+                    <a href="#"> <img :src="logoImage" alt="Pralong Logo" class="brand-logo" />
+                    </a>
                 </div>
 
                 <div v-if="currentStep > 2" class="d-flex align-items-center gap-3 ms-auto" id="header-student-profile">
+                    <!-- <img :src="logoImage" class="logo-exam-header" /> -->
                     <div class="live-status-badge d-inline-flex align-items-center gap-2 me-2">
                         <span class="pulse-indicator"></span>
                         កំពុងប្រឡង
                     </div>
+                    <div class="d-flex align-items-center gap-3 timer-container-box px-3 py-2 border border-light">
+                        <div class="text-end">
+                            <span class="text-muted d-block"
+                                style="font-size: 10px; font-weight: 600; text-transform: uppercase;">ពេលវេលានៅសល់</span>
+                            <span class="h5 fw-bold text-dark mb-0"
+                                :class="{ 'text-danger-custom': totalSeconds < 120 }">
+                                {{ formattedTime }}
+                            </span>
+                        </div>
+                        <div class="progress-ring-container">
+                            <svg width="50" height="50">
+                                <circle class="text-light" stroke-width="3.5" stroke="#f1f5f9" fill="transparent" r="21"
+                                    cx="25" cy="25" />
+                                <circle class="progress-ring-circle" stroke-width="3.5"
+                                    :stroke="totalSeconds < 120 ? '#ef4444' : '#5cb85c'" fill="transparent" r="21"
+                                    cx="25" cy="25" :style="{ strokeDashoffset: timerStrokeDashoffset * (42 / 52) }" />
+                            </svg>
+                            <div class="progress-timer-text"
+                                :class="totalSeconds < 120 ? 'text-danger' : 'text-success'">{{
+                                    timerPercent }}%
+                            </div>
+                        </div>
+                    </div>
                     <div class="d-flex align-items-center border-start ps-3 gap-2">
                         <div class="text-end">
                             <span class="fw-semibold text-dark d-block" style="font-size: 0.9rem;">{{ studentInfo.name
-                            }}</span>
+                                }}</span>
                             <small class="text-muted d-block" style="font-size: 11px;">ID: {{ studentInfo.student_code
-                            }}</small>
+                                }}</small>
                         </div>
                         <div class="user-avatar-circle d-flex align-items-center justify-content-center border">
                             <i class="fa-regular fa-user"></i>
@@ -58,8 +80,9 @@
                             <div class="brand-icon mx-auto mb-3"
                                 style="width: 56px; height: 56px; font-size: 1.6rem; border-radius: 16px;">
                                 <i class="fa-solid fa-graduation-cap"></i>
+                                <!-- <img :src="logoImage" class="logo-exam"/> -->
                             </div>
-                            <h3 class="fw-bold text-dark mb-1" style="font-size: 1.5rem;">ចុះឈ្មោះចូលប្រឡង</h3>
+                            <h3 class="fw-semibold text-dark mb-1" style="font-size: 1.5rem;">ចុះឈ្មោះចូលប្រឡង</h3>
                             <p class="text-secondary small mb-0">បំពេញព័ត៌មានឱ្យបានត្រឹមត្រូវដើម្បីចាប់ផ្តើមការប្រឡង</p>
                         </div>
 
@@ -83,7 +106,7 @@
                                     <i class="fa-solid fa-id-card input-icon-left"></i>
                                 </div>
                                 <div v-if="errors.student_code" class="invalid-feedback-custom">{{ errors.student_code
-                                    }}</div>
+                                }}</div>
                             </div>
                             <div class="input-group-custom mb-4">
                                 <label class="form-label-small">បន្ទប់រៀន</label>
@@ -161,30 +184,6 @@
                                 <i class="fa-solid fa-circle-notch fa-spin"></i> ដំណើរការប្រឡង
                             </span>
                             <h4 class="fw-bold text-dark mt-1 mb-0">បន្ទប់៖ {{ studentInfo.room }}</h4>
-                        </div>
-
-                        <div class="d-flex align-items-center gap-3 timer-container-box px-3 py-2 border border-light">
-                            <div class="text-end">
-                                <span class="text-muted d-block"
-                                    style="font-size: 10px; font-weight: 600; text-transform: uppercase;">ពេលវេលានៅសល់</span>
-                                <span class="h5 fw-bold text-dark mb-0"
-                                    :class="{ 'text-danger-custom': totalSeconds < 120 }">
-                                    {{ formattedTime }}
-                                </span>
-                            </div>
-                            <div class="progress-ring-container">
-                                <svg width="50" height="50">
-                                    <circle class="text-light" stroke-width="3.5" stroke="#f1f5f9" fill="transparent"
-                                        r="21" cx="25" cy="25" />
-                                    <circle class="progress-ring-circle" stroke-width="3.5"
-                                        :stroke="totalSeconds < 120 ? '#ef4444' : '#5cb85c'" fill="transparent" r="21"
-                                        cx="25" cy="25"
-                                        :style="{ strokeDashoffset: timerStrokeDashoffset * (42 / 52) }" />
-                                </svg>
-                                <div class="progress-timer-text"
-                                    :class="totalSeconds < 120 ? 'text-danger' : 'text-success'">{{ timerPercent }}%
-                                </div>
-                            </div>
                         </div>
                     </div>
 
@@ -353,7 +352,7 @@
                                             class="fa-solid fa-circle-check text-success me-1.5"></i>
                                         ចំនួនឆ្លើយរួច</span>
                                     <strong class="text-success">{{ answeredCount }} / {{ examQuestions.length
-                                    }}</strong>
+                                        }}</strong>
                                 </div>
                                 <div class="d-flex justify-content-between pt-1">
                                     <span class="text-secondary"><i
@@ -523,7 +522,7 @@ const startExamSession = async () => {
         currentStep.value = 3;
         startTimer();
     } catch (error) {
-        showToast('មិនអាចចាប់ផ្តើមបានទេ! ' + (error.response?.data?.message || error.message), 'error');
+        showToast('មិនអាចចាប់ផ្តើមបានទេ! ' , 'error');
     } finally {
         isLobbyLoading.value = false;
     }
@@ -561,7 +560,7 @@ const performSubmit = async () => {
         }
         currentStep.value = 4;
     } catch (error) {
-        showToast('មានបញ្ហាក្នុងការបញ្ជូនចម្លើយ៖ ' + (error.response?.data?.message || error.message), 'error');
+        showToast('មានបញ្ហាក្នុងការបញ្ជូនចម្លើយ!' ,'error');
     } finally {
         isSubmitting.value = false;
     }
@@ -611,26 +610,54 @@ const printResult = () => { window.print(); };
 <style scoped>
 .form-control-custom.is-invalid,
 .form-select-custom.is-invalid {
-  border-color: #ef4444 !important;
-  background-color: rgba(239, 68, 68, 0.02) !important;
+    border-color: #ef4444 !important;
+    background-color: rgba(239, 68, 68, 0.02) !important;
 }
+
 .invalid-feedback-custom {
-  color: #ef4444;
-  font-size: 11px;
-  margin-top: 5px;
-  font-weight: 500;
-  display: block;
-  animation: fadeInError 0.2s ease-in-out;
+    color: #ef4444;
+    font-size: 11px;
+    margin-top: 5px;
+    font-weight: 500;
+    display: block;
+    animation: fadeInError 0.2s ease-in-out;
+}
+
+.sidebar-brand {
+    padding: 15px 10px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    border-bottom: none !important;
+    height: 30px;
+    margin: 15px !important;
+    gap: 0;
+}
+
+.brand-logo {
+    max-width: 190px;
+    height: auto;
+    display: block;
+
 }
 
 @keyframes fadeInError {
-  from { opacity: 0; transform: translateY(-4px); }
-  to { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(-4px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
+
 .navbar-custom {
     background-color: #ffffff;
     border-bottom: 1px solid rgba(220, 235, 228, 0.8);
     box-shadow: 0 4px 12px rgba(42, 110, 80, 0.03);
+    padding: 16px 0px;
 }
 
 .take-exam-root {
@@ -667,9 +694,8 @@ const printResult = () => { window.print(); };
 }
 
 .brand-icon {
-    background-color: #eef9f4;
     color: #42b983;
-    width: 40px;
+    width: 100px;
     height: 40px;
     border-radius: 10px;
     display: flex;
@@ -1082,23 +1108,5 @@ const printResult = () => { window.print(); };
         transform: translateY(0);
         opacity: 1;
     }
-}
-
-.sidebar-brand {
-    padding: 20px 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-bottom: none !important;
-    height: 60px;
-    margin: 15px;
-    gap: 0;
-}
-
-.brand-logo {
-    max-width: 190px;
-    height: auto;
-    display: block;
-
 }
 </style>

@@ -25,7 +25,10 @@ import Classroom from '@/views/student/Classroom.vue'
 import Assignment from '@/views/student/Assignment.vue'
 import Assignments from '@/views/teacher/Assignments.vue'
 import ProfileAdmin from '@/views/admin/ProfileAdmin.vue'
-import NotFound from '@/views/NotFound.vue'
+import homeScreen from '@/views/landing/homepage.vue'
+import aboutScreen from '@/views/landing/aboutUs.vue'
+import featuresScreen from '@/views/landing/feature.vue'
+import NotFound from '@/views/landing/NotFound.vue'
 import AcceptRoom from '@/views/student/AcceptRoom.vue'
 import ForgetPassword from '@/views/auth/ForgetPassword.vue'
 import ResetPassword from '@/views/auth/ResetPassword.vue'
@@ -39,7 +42,18 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      redirect: '/login'
+      name: 'Home',
+      component: homeScreen,
+    },
+    {
+      path: '/about',
+      name: 'About',
+      component: aboutScreen,
+    },
+    {
+      path: '/features',
+      name: 'Features',
+      component: featuresScreen,
     },
     {
       path: '/login',
