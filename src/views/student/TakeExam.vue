@@ -1,25 +1,8 @@
 <template>
     <div class="take-exam-root">
         <!-- Toast Notification -->
-        <!-- <div class="toast-container position-fixed top-0 end-0 " style="z-index: 1085;">
-            <div v-if="toast.show" class="toast show align-items-center text-white border-0 shadow-lg"
-                :class="toast.type === 'success' ? 'bg-success' : toast.type === 'warning' ? 'bg-warning text-dark' : 'bg-danger'"
-                role="alert">
-                <div class="d-flex">
-                    <div class="toast-body d-flex align-items-center gap-2 fs-6">
-                        <i
-                            :class="toast.type === 'success' ? 'fa-solid fa-circle-check' : 'fa-solid fa-circle-exclamation'"></i>
-                        {{ toast.message }}
-                    </div>
-                    <button type="button" class="btn-close btn-close-white ms-auto me-2 m-auto"
-                        @click="toast.show = false"></button>
-                </div>
-            </div>
-        </div> -->
-        <!-- 🎯 ផ្ទាំង Toast Message បែប Modern ស្លីមស្អាត -->
         <div v-if="toast.show" class="custom-toast-wrapper" :class="toast.type">
             <div class="toast-content-box">
-                <!-- បង្ហាញ Icon ទៅតាមប្រភេទ Message -->
                 <i v-if="toast.type === 'success'" class="fa-solid fa-circle-check toast-icon"></i>
                 <i v-else-if="toast.type === 'error'" class="fa-solid fa-circle-exclamation toast-icon"></i>
                 <i v-else class="fa-solid fa-triangle-exclamation toast-icon"></i>
@@ -33,24 +16,47 @@
 
         <div class="app-background-grid"></div>
         <nav class="navbar-custom sticky-top">
-            <div class="container">
-                <div class="d-flex align-items-center">
-                    <div>
-                        <a href="#"> <img :src="logoImage" alt="Pralong Logo" class="brand-logo" /></a>
-                    </div>
+            <div class="container d-flex">
+                <div class="sidebar-brand">
+                    <a href="#"> <img :src="logoImage" alt="Pralong Logo" class="brand-logo" />
+                    </a>
                 </div>
 
                 <div v-if="currentStep > 2" class="d-flex align-items-center gap-3 ms-auto" id="header-student-profile">
+                    <!-- <img :src="logoImage" class="logo-exam-header" /> -->
                     <div class="live-status-badge d-inline-flex align-items-center gap-2 me-2">
                         <span class="pulse-indicator"></span>
                         កំពុងប្រឡង
                     </div>
+                    <div class="d-flex align-items-center gap-3 timer-container-box px-3 py-2 border border-light">
+                        <div class="text-end">
+                            <span class="text-muted d-block"
+                                style="font-size: 10px; font-weight: 600; text-transform: uppercase;">ពេលវេលានៅសល់</span>
+                            <span class="h5 fw-bold text-dark mb-0"
+                                :class="{ 'text-danger-custom': totalSeconds < 120 }">
+                                {{ formattedTime }}
+                            </span>
+                        </div>
+                        <div class="progress-ring-container">
+                            <svg width="50" height="50">
+                                <circle class="text-light" stroke-width="3.5" stroke="#f1f5f9" fill="transparent" r="21"
+                                    cx="25" cy="25" />
+                                <circle class="progress-ring-circle" stroke-width="3.5"
+                                    :stroke="totalSeconds < 120 ? '#ef4444' : '#5cb85c'" fill="transparent" r="21"
+                                    cx="25" cy="25" :style="{ strokeDashoffset: timerStrokeDashoffset * (42 / 52) }" />
+                            </svg>
+                            <div class="progress-timer-text"
+                                :class="totalSeconds < 120 ? 'text-danger' : 'text-success'">{{
+                                    timerPercent }}%
+                            </div>
+                        </div>
+                    </div>
                     <div class="d-flex align-items-center border-start ps-3 gap-2">
                         <div class="text-end">
                             <span class="fw-semibold text-dark d-block" style="font-size: 0.9rem;">{{ studentInfo.name
-                            }}</span>
+                                }}</span>
                             <small class="text-muted d-block" style="font-size: 11px;">ID: {{ studentInfo.student_code
-                            }}</small>
+                                }}</small>
                         </div>
                         <div class="user-avatar-circle d-flex align-items-center justify-content-center border">
                             <i class="fa-regular fa-user"></i>
@@ -74,34 +80,39 @@
                             <div class="brand-icon mx-auto mb-3"
                                 style="width: 56px; height: 56px; font-size: 1.6rem; border-radius: 16px;">
                                 <i class="fa-solid fa-graduation-cap"></i>
+                                <!-- <img :src="logoImage" class="logo-exam"/> -->
                             </div>
-                            <h3 class="fw-bold text-dark mb-1" style="font-size: 1.5rem;">ចុះឈ្មោះចូលប្រឡង</h3>
+                            <h3 class="fw-semibold text-dark mb-1" style="font-size: 1.5rem;">ចុះឈ្មោះចូលប្រឡង</h3>
                             <p class="text-secondary small mb-0">បំពេញព័ត៌មានឱ្យបានត្រឹមត្រូវដើម្បីចាប់ផ្តើមការប្រឡង</p>
                         </div>
 
-                        <form @submit.prevent="startExamSession">
+                        <form @submit.prevent="startExamSession" novalidate>
                             <div class="input-group-custom mb-3">
                                 <label class="form-label-small">ឈ្មោះពេញ</label>
                                 <div class="position-relative">
-                                    <input type="text" v-model="studentInfo.name" placeholder="បញ្ចូលឈ្មោះពេញរបស់អ្នក"
-                                        required class="form-control-custom">
+                                    <input type="text" v-model="studentInfo.name" @input="clearError('name')"
+                                        placeholder="បញ្ចូលឈ្មោះពេញរបស់អ្នក" class="form-control-custom"
+                                        :class="{ 'is-invalid': errors.name }">
                                     <i class="fa-regular fa-user input-icon-left"></i>
                                 </div>
+                                <div v-if="errors.name" class="invalid-feedback-custom">{{ errors.name }}</div>
                             </div>
-
                             <div class="input-group-custom mb-3">
                                 <label class="form-label-small">លេខកូដសិស្ស</label>
                                 <div class="position-relative">
                                     <input type="text" v-model="studentInfo.student_code"
-                                        placeholder="បញ្ចូលលេខកូដសិស្ស" required class="form-control-custom">
+                                        @input="clearError('student_code')" placeholder="បញ្ចូលលេខកូដសិស្ស"
+                                        class="form-control-custom" :class="{ 'is-invalid': errors.student_code }">
                                     <i class="fa-solid fa-id-card input-icon-left"></i>
                                 </div>
+                                <div v-if="errors.student_code" class="invalid-feedback-custom">{{ errors.student_code
+                                }}</div>
                             </div>
-
                             <div class="input-group-custom mb-4">
                                 <label class="form-label-small">បន្ទប់រៀន</label>
                                 <div class="position-relative">
-                                    <select v-model="studentInfo.room" required class="form-select-custom">
+                                    <select v-model="studentInfo.room" @change="clearError('room')"
+                                        class="form-select-custom" :class="{ 'is-invalid': errors.room }">
                                         <option value="" disabled selected>ជ្រើសរើសបន្ទប់រៀន</option>
                                         <option v-for="room in roomList" :key="room.id" :value="room.name">
                                             {{ room.name }}
@@ -109,8 +120,8 @@
                                     </select>
                                     <i class="fa-solid fa-door-open input-icon-left"></i>
                                 </div>
+                                <div v-if="errors.room" class="invalid-feedback-custom">{{ errors.room }}</div>
                             </div>
-
                             <button type="submit"
                                 class="btn btn-theme-submit w-100 py-3 d-flex align-items-center justify-content-center gap-2"
                                 :disabled="isLobbyLoading">
@@ -173,30 +184,6 @@
                                 <i class="fa-solid fa-circle-notch fa-spin"></i> ដំណើរការប្រឡង
                             </span>
                             <h4 class="fw-bold text-dark mt-1 mb-0">បន្ទប់៖ {{ studentInfo.room }}</h4>
-                        </div>
-
-                        <div class="d-flex align-items-center gap-3 timer-container-box px-3 py-2 border border-light">
-                            <div class="text-end">
-                                <span class="text-muted d-block"
-                                    style="font-size: 10px; font-weight: 600; text-transform: uppercase;">ពេលវេលានៅសល់</span>
-                                <span class="h5 fw-bold text-dark mb-0"
-                                    :class="{ 'text-danger-custom': totalSeconds < 120 }">
-                                    {{ formattedTime }}
-                                </span>
-                            </div>
-                            <div class="progress-ring-container">
-                                <svg width="50" height="50">
-                                    <circle class="text-light" stroke-width="3.5" stroke="#f1f5f9" fill="transparent"
-                                        r="21" cx="25" cy="25" />
-                                    <circle class="progress-ring-circle" stroke-width="3.5"
-                                        :stroke="totalSeconds < 120 ? '#ef4444' : '#5cb85c'" fill="transparent" r="21"
-                                        cx="25" cy="25"
-                                        :style="{ strokeDashoffset: timerStrokeDashoffset * (42 / 52) }" />
-                                </svg>
-                                <div class="progress-timer-text"
-                                    :class="totalSeconds < 120 ? 'text-danger' : 'text-success'">{{ timerPercent }}%
-                                </div>
-                            </div>
                         </div>
                     </div>
 
@@ -365,7 +352,7 @@
                                             class="fa-solid fa-circle-check text-success me-1.5"></i>
                                         ចំនួនឆ្លើយរួច</span>
                                     <strong class="text-success">{{ answeredCount }} / {{ examQuestions.length
-                                    }}</strong>
+                                        }}</strong>
                                 </div>
                                 <div class="d-flex justify-content-between pt-1">
                                     <span class="text-secondary"><i
@@ -420,6 +407,16 @@ const studentInfo = ref({
     student_code: '',
     room: ''
 });
+const errors = ref({
+    name: '',
+    student_code: '',
+    room: ''
+});
+const clearError = (field) => {
+    if (errors.value[field]) {
+        errors.value[field] = '';
+    }
+};
 
 const examQuestions = ref([]);
 const currentIdx = ref(0);
@@ -448,7 +445,7 @@ onMounted(async () => {
     }
     try {
         const response = await examApi.checkExamCode(examCode.value);
-        const examData = response.exam; 
+        const examData = response.exam;
         examId.value = examData?.id;
         if (examData?.duration) {
             totalSeconds.value = examData.duration * 60;
@@ -456,8 +453,8 @@ onMounted(async () => {
         const roomsResponse = await examApi.getRooms();
         roomList.value = roomsResponse.data.data;
         currentStep.value = 2;
-        
-    }catch (error) {
+
+    } catch (error) {
         const rawMsg = error.response?.data?.msg || error.response?.data?.message || '';
         let khmerMessage = '';
 
@@ -468,7 +465,7 @@ onMounted(async () => {
         } else if (rawMsg.includes('invalid') || rawMsg.includes('not found')) {
             khmerMessage = 'លេខកូដវិញ្ញាសាមិនត្រឹមត្រូវ ឬរកមិនឃើញឡើយ!';
         } else if (rawMsg) {
-            khmerMessage = `${rawMsg}`; 
+            khmerMessage = `${rawMsg}`;
         } else {
             khmerMessage = 'មានបញ្ហាក្នុងការតភ្ជាប់ទៅកាន់ប្រព័ន្ធ!';
         }
@@ -477,10 +474,25 @@ onMounted(async () => {
 });
 
 const startExamSession = async () => {
-    if (!studentInfo.value.name.trim() || !studentInfo.value.student_code.trim() || !studentInfo.value.room) {
+    if (!studentInfo.value.name.trim() && !studentInfo.value.student_code.trim() && !studentInfo.value.room) {
         showToast('សូមបំពេញព័ត៌មានរបស់អ្នក', 'warning');
         return;
     }
+    errors.value = { name: '', student_code: '', room: '' };
+    let hasError = false;
+    if (!studentInfo.value.name.trim()) {
+        errors.value.name = 'សូមបញ្ចូលឈ្មោះពេញរបស់អ្នក!';
+        hasError = true;
+    }
+    if (!studentInfo.value.student_code.trim()) {
+        errors.value.student_code = 'សូមបញ្ចូលលេខកូដសិស្សរបស់អ្នក!';
+        hasError = true;
+    }
+    if (!studentInfo.value.room) {
+        errors.value.room = 'សូមជ្រើសរើសបន្ទប់រៀនរបស់អ្នក!';
+        hasError = true;
+    }
+    if (hasError) return;
     isLobbyLoading.value = true;
     const nameParts = studentInfo.value.name.trim().split(/\s+/);
     let firstName = nameParts[0] || '';
@@ -510,18 +522,9 @@ const startExamSession = async () => {
         currentStep.value = 3;
         startTimer();
     } catch (error) {
-        showToast('មិនអាចចាប់ផ្តើមបានទេ៖ ' + (error.response?.data?.message || error.message), 'error');
+        showToast('មិនអាចចាប់ផ្តើមបានទេ! ' , 'error');
     } finally {
         isLobbyLoading.value = false;
-    }
-};
-
-const showConfirmModal = () => {
-    if (window.bootstrap && window.bootstrap.Modal) {
-        bsModalInstance = new window.bootstrap.Modal(confirmModalRef.value);
-        bsModalInstance.show();
-    } else {
-        performSubmit();
     }
 };
 
@@ -557,9 +560,18 @@ const performSubmit = async () => {
         }
         currentStep.value = 4;
     } catch (error) {
-        showToast('មានបញ្ហាក្នុងការបញ្ជូនចម្លើយ៖ ' + (error.response?.data?.message || error.message), 'error');
+        showToast('មានបញ្ហាក្នុងការបញ្ជូនចម្លើយ!' ,'error');
     } finally {
         isSubmitting.value = false;
+    }
+};
+
+const showConfirmModal = () => {
+    if (window.bootstrap && window.bootstrap.Modal) {
+        bsModalInstance = new window.bootstrap.Modal(confirmModalRef.value);
+        bsModalInstance.show();
+    } else {
+        performSubmit();
     }
 };
 
@@ -596,22 +608,56 @@ const printResult = () => { window.print(); };
 </script>
 
 <style scoped>
-.brand-logo {
-    height: 180px;
-    width: auto;
-    object-fit: contain;
-    border-radius: 6px;
-    transition: transform 0.2s ease;
+.form-control-custom.is-invalid,
+.form-select-custom.is-invalid {
+    border-color: #ef4444 !important;
+    background-color: rgba(239, 68, 68, 0.02) !important;
 }
 
-.brand-logo:hover {
-    transform: scale(1.04);
+.invalid-feedback-custom {
+    color: #ef4444;
+    font-size: 11px;
+    margin-top: 5px;
+    font-weight: 500;
+    display: block;
+    animation: fadeInError 0.2s ease-in-out;
+}
+
+.sidebar-brand {
+    padding: 15px 10px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    border-bottom: none !important;
+    height: 30px;
+    margin: 15px !important;
+    gap: 0;
+}
+
+.brand-logo {
+    max-width: 190px;
+    height: auto;
+    display: block;
+
+}
+
+@keyframes fadeInError {
+    from {
+        opacity: 0;
+        transform: translateY(-4px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .navbar-custom {
     background-color: #ffffff;
     border-bottom: 1px solid rgba(220, 235, 228, 0.8);
     box-shadow: 0 4px 12px rgba(42, 110, 80, 0.03);
+    padding: 16px 0px;
 }
 
 .take-exam-root {
@@ -648,9 +694,8 @@ const printResult = () => { window.print(); };
 }
 
 .brand-icon {
-    background-color: #eef9f4;
     color: #42b983;
-    width: 40px;
+    width: 100px;
     height: 40px;
     border-radius: 10px;
     display: flex;
@@ -978,84 +1023,90 @@ const printResult = () => { window.print(); };
     color: #4b5563;
     border-radius: 12px;
 }
+
 /* ── CUSTOM SLIM TOAST CONTAINER ── */
 .custom-toast-wrapper {
-  position: fixed;
-  bottom: 24px;
-  right: 24px;
-  z-index: 9999;
-  min-width: 280px;
-  max-width: 380px;
-  padding: 12px 16px;
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  box-shadow: 0 10px 25px rgba(15, 23, 42, 0.15);
-  backdrop-filter: blur(8px);
-  animation: toastSlideUp 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 9999;
+    min-width: 280px;
+    max-width: 380px;
+    padding: 12px 16px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    box-shadow: 0 10px 25px rgba(15, 23, 42, 0.15);
+    backdrop-filter: blur(8px);
+    animation: toastSlideUp 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
 }
+
 .toast-content-box {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-grow: 1;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-grow: 1;
 }
 
 .toast-icon {
-  font-size: 1.15rem;
-  flex-shrink: 0;
+    font-size: 1.15rem;
+    flex-shrink: 0;
 }
 
 .toast-text {
-  font-size: 0.85rem;
-  font-weight: 500;
-  line-height: 1.4;
+    font-size: 0.85rem;
+    font-weight: 500;
+    line-height: 1.4;
 }
+
 .toast-close-btn {
-  background: none;
-  border: none;
-  padding: 0;
-  color: inherit;
-  opacity: 0.6;
-  font-size: 0.85rem;
-  cursor: pointer;
-  transition: opacity 0.2s;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+    background: none;
+    border: none;
+    padding: 0;
+    color: inherit;
+    opacity: 0.6;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: opacity 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
+
 .toast-close-btn:hover {
-  opacity: 1;
+    opacity: 1;
 }
 
 /* toast msg */
 .custom-toast-wrapper.success {
-  background-color: rgba(16, 185, 129, 0.95); 
-  color: #ffffff;
-  border: 1px solid rgba(16, 185, 129, 0.2);
+    background-color: rgba(16, 185, 129, 0.95);
+    color: #ffffff;
+    border: 1px solid rgba(16, 185, 129, 0.2);
 }
 
 .custom-toast-wrapper.error {
-  background-color: rgba(239, 68, 68, 0.95);
-  color: #ffffff;
-  border: 1px solid rgba(239, 68, 68, 0.2);
+    background-color: rgba(239, 68, 68, 0.95);
+    color: #ffffff;
+    border: 1px solid rgba(239, 68, 68, 0.2);
 }
 
 .custom-toast-wrapper.warning {
-  background-color: rgba(245, 158, 11, 0.95);
-  color: #ffffff;
-  border: 1px solid rgba(245, 158, 11, 0.2);
+    background-color: rgba(245, 158, 11, 0.95);
+    color: #ffffff;
+    border: 1px solid rgba(245, 158, 11, 0.2);
 }
+
 @keyframes toastSlideUp {
-  from {
-    transform: translateY(30px);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
+    from {
+        transform: translateY(30px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
 }
 </style>

@@ -85,7 +85,7 @@
           <div class="dash-card">
             <div class="d-flex justify-content-between align-items-center mb-3">
               <div>
-                <div class="section-title mb-0">ការបញ្ជូនចម្លើយប្រចាំខែ</div>
+                <div class="section-title mb-0">{{ monthlyData?.title || 'ការបញ្ជូនចម្លើយប្រចាំខែ' }}</div>
                 <div style="
                     font-size: 28px;
                     font-weight: 800;
