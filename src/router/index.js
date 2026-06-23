@@ -101,12 +101,6 @@ const router = createRouter({
           meta: { title: "Profile Admin" }
         },
         {
-          path: 'system-health',
-          name: 'SystemHealth',
-          component: SystemHealth,
-          meta: { title: "System Health" }
-        },
-        {
           path: 'room-managements',
           name: 'RoomManagements',
           component: RoomManagements,
