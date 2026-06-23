@@ -29,7 +29,7 @@
               <div class="btn-group-wrap d-flex flex-wrap gap-3 mb-5">
                 <router-link
                   :to="{ name: 'Login' }"
-                  class="btn btn-signup-modern py-3 px-5 fs-5"
+                  class="btn btn-signup-modern py-3 px-5 fs-5 fw-semibold"
                   >ចាប់ផ្តើមប្រឡង <i class="bi bi-arrow-right-short fs-4"></i></router-link
                 >
               </div>
@@ -542,7 +542,6 @@ template {
   border: none;
   padding: 14px 32px;
   border-radius: 18px;
-  font-weight: 700;
   transition: all 0.3s ease;
   box-shadow: 0 6px 20px rgba(16, 185, 129, 0.25);
 }
