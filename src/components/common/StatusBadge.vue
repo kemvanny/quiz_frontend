@@ -25,6 +25,7 @@ const badgeConfig = computed(() => {
     confirmed: { class: 'status-confirmed', text: 'បានបញ្ជាក់' },
     pending: { class: 'status-pending', text: 'រង់ចាំពិនិត្យ' },
     graded:{class: 'status-graded', text: 'កែរួចរាល់'},
+    submitted: { class: 'status-submitted', text: 'បានបញ្ជូន' },
     // Role
     admin: { class: 'role-admin', text: 'អ្នកគ្រប់គ្រង' },
     teacher: { class: 'role-teacher', text: 'គ្រូបង្រៀន' },
@@ -37,7 +38,7 @@ const badgeConfig = computed(() => {
 
 <style scoped>
 .badge-custom {
-  padding: 4px 12px;
+  /* padding: 4px 12px; */
   border-radius: 50px;
   font-weight: 600;
   font-size: 12px;
@@ -47,7 +48,7 @@ const badgeConfig = computed(() => {
   backdrop-filter: blur(4px);
 }
 
-.status-active { 
+.status-active ,.status-submitted { 
   background: linear-gradient(135deg, rgba(232, 245, 233, 0.4) 0%, rgba(200, 230, 201, 0.4) 100%); 
   color: #2e7d32;
 }

@@ -36,7 +36,7 @@
             <div class="icon-wrap ic-teal">
               <i class="bi bi-door-open-fill"></i>
             </div>
-            <div class="stat-label">សរុបបន្ទប់</div>
+            <div class="stat-label">បន្ទប់សរុប</div>
             <div class="stat-value">
               <span v-if="isLoadingDashboard" class="skeleton skeleton-text"></span>
               <span v-else>{{ dashboardTotal?.total_rooms?.count }}</span>
@@ -299,7 +299,7 @@ const limit = ref(5);
 const totalRecords = ref(0);
 const recentActivitiesList = ref([]);
 const currentPageExam = ref(1);
-const limitExam = ref(7);
+const limitExam = ref(5);
 const totalRecordsExam = ref(0);
 
 const healthBars = ref([]);
@@ -311,7 +311,7 @@ const changePage = async (newPage) => {
 };
 const changePageExam = async (newPage) => {
   currentPageExam.value = newPage;
-  await fetchResultSubmission();
+  await  fetchAllSubmissions();
 };
 
 const getBarColor = (label, value) => {
@@ -508,6 +508,7 @@ onMounted(() => {
   fetchMonthlySubmissions();
   fetchHealthData();
   fetchAllSubmissions();
+  
 });
 </script>
 
@@ -626,7 +627,7 @@ onMounted(() => {
 .dash-card {
   background: var(--white);
   border-radius: var(--card-radius);
-  padding: 22px;
+  padding: 11px;
   box-shadow: var(--shadow-sm);
   border: 1.5px solid transparent;
 }
