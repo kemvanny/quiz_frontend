@@ -233,11 +233,6 @@ const adminSystemMenus = [
     routeName: "ProfileAdmin",
     icon: "bi bi-person-badge-fill",
   },
-  {
-    name: "ស្ថានភាពប្រព័ន្ធ",
-    routeName: "SystemHealth",
-    icon: "bi bi-shield-check",
-  },
 ];
 
 const handleLogout = () => {
@@ -347,7 +342,9 @@ onUnmounted(() => {
   display: flex;
   align-items: center;
 }
-
+.notif-btn {
+  pointer-events: none !important;
+}
 .search-dropdown-result {
   position: absolute;
   top: calc(100% + 8px);

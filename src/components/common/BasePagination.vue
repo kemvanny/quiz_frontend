@@ -1,7 +1,7 @@
 <template>
   <div class="d-flex flex-column flex-sm-row justify-content-between align-items-center gap-3 pt-3 px-2 border-top w-100">
     
-    <div class="text-muted text-center text-sm-start" style="font-size: 13px;">
+    <div class="text-muted text-center text-sm-start" style="font-size: 13px; ">
       បង្ហាញ <b>{{ startRecord }}</b> ដល់ <b>{{ endRecord }}</b> នៃទិន្នន័យសរុប <b>{{ total }}</b>
     </div>
 

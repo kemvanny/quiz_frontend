@@ -2,7 +2,11 @@
   <div class="app-layout">
     <TeacherSidebar />
     <div class="main-wrapper">
-      <component :is="activeNavbar" />
+      <component 
+        :is="activeNavbar" 
+        v-model="searchQuery" 
+      />
+      
       <main class="content-body">
         <div class="main-content">
           <div class="page-body">
@@ -13,8 +17,9 @@
     </div>
   </div>
 </template>
+
 <script setup>
-import { computed } from "vue";
+import { computed, ref, provide } from "vue";
 import { useRoute } from "vue-router";
 
 import TeacherSidebar from "@/components/layout/sidebar/TeacherSidebar.vue";
@@ -32,30 +37,24 @@ import TeacherExamDetail from "@/components/layout/navbar/teacher/TeacherExamDet
 
 const route = useRoute();
 
+const searchQuery = ref('');
+
+provide('searchQuery', searchQuery);
+
 const activeNavbar = computed(() => {
   switch (route.name) {
-    case "TeacherDashboard":
-      return TeacherDashboardNav;
-    case "Assignments":
-      return TeacherAssignmentNav;
-    case "ClassStream":
-      return TeacherClassstreamNav;
-    case "RoomManagement":
-      return TeacherRoommanagementNav;
-    case "RoomDetails": 
-      return TeacherRoomDetail;
-    case "TeacherExamDetail":
-      return "TeacherExamDetail.vue"
-    case "Quizzes":
-      return TeacherQuizNav;
-    case "FinalExam":
-      return TeacherFinalexamNav;
-    case "StudentResults":
-      return TeacherResultaNav;
-    case "Profile":
-      return TeacherProfileNav;
-    case "TeacherValidations":
-      return TeacherValidationNav;
+    case "TeacherDashboard": return TeacherDashboardNav;
+    case "Assignments": return TeacherAssignmentNav;
+    case "ClassStream": return TeacherClassstreamNav;
+    case "RoomManagement": return TeacherRoommanagementNav;
+    case "RoomDetails": return TeacherRoomDetail;
+    case "TeacherExamDetail": return TeacherExamDetail;
+    case "Quizzes": return TeacherQuizNav;
+    case "FinalExam": return TeacherFinalexamNav;
+    case "StudentResults": return TeacherResultaNav;
+    case "Profile": return TeacherProfileNav;
+    case "TeacherValidations": return TeacherValidationNav;
+    default: return null;
   }
 });
 </script>
