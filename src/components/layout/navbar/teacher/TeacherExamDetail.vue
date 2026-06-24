@@ -16,14 +16,15 @@
               <div class="crumb">
                 <router-link to="/teacher/room-management">គ្រប់គ្រងថ្នាក់រៀន</router-link>
                 <i class="fas fa-chevron-right"></i>
-                <span class="text-truncate" style="max-width: 150px;">{{ roomName }}</span>
+                <span class="text-truncate" style="max-width: 150px;">{{ examStore.currentRoomName || '...' }}</span>
                 <i class="fas fa-chevron-right"></i>
-                <span class="crumb-cur">{{ currentTabLabel }}</span>
+                <span class="crumb-cur">វិញ្ញាសា</span>
               </div>
-              <div class="page-title">{{ pageTitle }} <span class="title-dot">.</span></div>
+              <div class="page-title">{{ examStore.currentExamTitle || 'កំពុងផ្ទុក...' }} <span class="title-dot">.</span></div>
             </div>
           </div>
-          <span v-if="showCount" class="hd-count">{{ examCount }} សំណួរ</span>
+          
+          <span class="hd-count">{{ examStore.currentQuestionCount }} សំណួរ</span>
         </div>
       </div>
 
@@ -32,30 +33,15 @@
 </template>
 
 <script setup>
-import { onMounted } from 'vue';
 import { useRouter } from 'vue-router';
-import { useAuthStore } from '@/stores/auth'; 
+import { useExamStore } from '@/stores/examStore';
 
-const props = defineProps({
-  roomName: { type: String, default: '...' },
-  currentTabLabel: { type: String, default: 'វិញ្ញាសា' },
-  pageTitle: { type: String, default: '...' }, 
-  examCount: { type: Number, default: 0 },
-  showCount: { type: Boolean, default: true }
-});
-
+const examStore = useExamStore();
 const router = useRouter();
-const authStore = useAuthStore();
 
 const goBack = () => {
-  router.go(-1);
+  router.push('/teacher/room-management');
 };
-
-onMounted(() => {
-  if (!authStore.fullName) {
-    authStore.fetchUserProfile();
-  }
-});
 </script>
 
 <style scoped>
@@ -65,18 +51,23 @@ onMounted(() => {
   justify-content: space-between;
   padding: 14px 24px;
   background: #ffffff;
-  border-bottom: 1px solid var(--bdr, #e2e8f0);
+  border-bottom: 1px solid #e2e8f0;
+  width: 100%; /* បង្ខំឱ្យពេញទទឹង */
+  box-sizing: border-box; /* ធានាថា padding មិនធ្វើឱ្យវាហួសទំហំ */
 }
 
-.topbar-exam-detail  {
+.topbar-exam-detail {
   width: 100%;
+  display: block; /* ត្រូវតែជា block */
 }
 
 .room-hd {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  width: 100%; /* បន្ថែមបន្ទាត់នេះ ដើម្បីឱ្យវាពង្រីកពេញ */
 }
+
 .room-hd-left {
   display: flex;
   align-items: center;
@@ -108,27 +99,11 @@ onMounted(() => {
   margin-bottom: 2px;
   font-weight: 500;
 }
-.crumb a { 
-  color: #64748b; 
-  text-decoration: none; 
-}
-.crumb i { 
-  font-size: 8px; 
-  color: #cbd5e1; 
-}
-.crumb-cur { 
-  color: #334155; 
-  font-weight: 600; 
-}
-.page-title { 
-  font-size: 18px; 
-  font-weight: 700; 
-  color: #1e293b; 
-  line-height: 1.2; 
-}
-.title-dot { 
-  color: #f15a24; 
-}
+.crumb a { color: #64748b; text-decoration: none; }
+.crumb i { font-size: 8px; color: #cbd5e1; }
+.crumb-cur { color: #334155; font-weight: 600; }
+.page-title { font-size: 18px; font-weight: 700; color: #1e293b; line-height: 1.2; }
+.title-dot { color: #f15a24; }
 .hd-count {
   font-size: 11px;
   font-weight: 600;
@@ -136,35 +111,5 @@ onMounted(() => {
   background: #e2e8f0;
   border-radius: 20px;
   padding: 3px 10px;
-}
-
-.profile-dropdown-trigger {
-  border: 1px solid var(--bdr, #e2e8f0); 
-  background: #ffffff; 
-  cursor: pointer; 
-  transition: all 0.2s ease; 
-  box-shadow: var(--sh-sm, 0 1px 2px rgba(0,0,0,0.05));
-}
-.profile-dropdown-trigger:hover {
-  border-color: #cbd5e1;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-}
-.avatar-image {
-  width: 32px; 
-  height: 32px; 
-  border-radius: 50%; 
-  object-fit: cover;
-}
-.text-container {
-  line-height: 1.1;
-}
-.profile-name {
-  font-size: .8rem; 
-  color: var(--txt, #1e293b);
-}
-.profile-role {
-  font-size: .65rem; 
-  color: var(--txt-mu, #64748b); 
-  font-weight: 500;
 }
 </style>

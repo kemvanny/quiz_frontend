@@ -3,69 +3,101 @@
     <div class="app-shell flex-grow-1 overflow-hidden">
       <div class="main-col">
         <div class="workspace">
-          
+
+          <!-- Left Panel: Question List -->
           <div class="panel d-flex flex-column" style="height: 100%; max-height: calc(100vh - 120px);">
             <div class="panel-head flex-shrink-0">
               <span class="panel-lbl">Question List</span>
               <span class="panel-count" id="qCountLabel">{{ questions.length }} Q</span>
             </div>
-            
-            <div class="q-nav-scroll flex-grow-1 overflow-y-auto" ref="qNavScrollRef" style="max-height: calc(100% - 100px);">
-              <div v-for="(q, idx) in questions" 
-                   :key="idx"
-                   :id="`qnav-${idx}`"
-                   class="q-nav-item slide-in" 
-                   :class="{ active: selectedQuestionIndex === idx }"
-                   @click="selectQuestion(idx)">
+
+            <div
+              class="q-nav-scroll flex-grow-1 overflow-y-auto"
+              ref="qNavScrollRef"
+              style="max-height: calc(100% - 100px);"
+            >
+              <div
+                v-for="(q, idx) in questions"
+                :key="idx"
+                :id="`qnav-${idx}`"
+                class="q-nav-item slide-in"
+                :class="{ active: selectedQuestionIndex === idx }"
+                @click="selectQuestion(idx)"
+              >
                 <span>សំណួរទី {{ getKhmerNumber(idx + 1) }}</span>
                 <span class="q-badge">{{ q.pts }}pt</span>
               </div>
             </div>
 
             <div class="p-2 border-top bg-white flex-shrink-0">
-              <button class="btn btn-sm fw-bold rounded-3 border-0 add-q-btn w-100 py-2"
-                style="border:1.5px dashed rgba(16,185,129,.35)!important; background:rgba(16,185,129,.04); color:var(--em); font-size:.78rem;"
-                @click="addNewQuestion">
+              <button
+                class="btn btn-sm fw-bold rounded-3 border-0 add-q-btn w-100 py-2"
+                style="border: 1.5px dashed rgba(16,185,129,.35) !important; background: rgba(16,185,129,.04); color: var(--em); font-size: .78rem;"
+                @click="addNewQuestion"
+              >
                 <i class="fas fa-plus-circle me-1"></i> បន្ថែមសំណួរថ្មី
               </button>
             </div>
           </div>
 
+          <!-- Center Feed Column -->
           <div class="feed-col" id="questionFeed">
-            <div class="flex-shrink-0 mb-2 p-3 position-relative overflow-hidden quiz-info-header">
-              <div class="position-absolute decoration-circle"></div>
-              <div class="position-relative z-1 d-flex flex-column gap-1">
-                <div class="d-flex align-items-center gap-2 mb-1">
-                  <div class="d-flex align-items-center justify-content-center rounded-circle icon-circle">
-                    <i class="fas fa-feather-alt" style="font-size: .6rem;"></i>
-                  </div>
-                  <div class="quiz-info-lbl">Quiz Info</div>
-                </div>
-                <input type="text" v-model="quizTitle" class="w-100 border-0 fw-bold p-0 text-dark quiz-title-input" onfocus="this.style.color='var(--em)'" onblur="this.style.color='var(--txt)'" placeholder="Please Input Quiz Title...">
-                <textarea v-model="quizInstructions" class="w-100 border-0 p-0 m-0 quiz-desc-input" rows="1" placeholder="Provide optional instructions..." @input="autoGrowTextarea"></textarea>
-                <div class="form-group">
-                  <label class="fw-bold" style="font-size: .7rem; color: var(--txt-mu);">ជ្រើសរើសថ្នាក់រៀន៖</label>
-                <select v-model="selectedRoomId" class="form-control">
-                  <option value="" disabled selected>-- ជ្រើសរើសថ្នាក់រៀន --</option>
+
+            <!-- Quiz Info Card -->
+            <div
+              class="quiz-info-card p-4 rounded-4 border-0 mb-4"
+              style="background-color: #f8fafc; border: 1px solid #e2e8f0;"
+            >
+              <h5 class="fw-bold text-dark mb-3 d-flex align-items-center">
+                <i class="fas fa-edit me-2" style="color: var(--em);"></i> ព័ត៌មានវិញ្ញាសា
+              </h5>
+
+              <div class="mb-3">
+                <label class="form-label fw-bold small text-uppercase text-muted">ចំណងជើងវិញ្ញាសា</label>
+                <input
+                  type="text"
+                  v-model="quizTitle"
+                  class="form-control rounded-3 py-2 px-3 border-0 shadow-sm"
+                  placeholder="ឧទាហរណ៍៖ ប្រឡងឆមាសទី១ មុខវិជ្ជាគណិតវិទ្យា"
+                >
+              </div>
+
+              <div class="mb-3">
+                <label class="form-label fw-bold small text-uppercase text-muted">ការណែនាំ</label>
+                <textarea
+                  v-model="quizInstructions"
+                  class="form-control rounded-3 py-2 px-3 border-0 shadow-sm"
+                  rows="2"
+                  placeholder="សូមសរសេរការណែនាំខ្លីៗសម្រាប់សិស្ស..."
+                ></textarea>
+              </div>
+
+              <div>
+                <label class="form-label fw-bold small text-uppercase text-muted">ជ្រើសរើសថ្នាក់រៀន</label>
+                <select v-model="selectedRoomId" class="form-select rounded-3 py-2 px-3 border-0 shadow-sm">
+                  <option value="" disabled>-- ជ្រើសរើសថ្នាក់រៀន --</option>
                   <option v-for="room in allRooms" :key="room.id" :value="room.id">
                     {{ room.name }}
                   </option>
                 </select>
-                </div>
               </div>
             </div>
 
-            <div v-for="(q, qIdx) in questions" 
-                 :key="qIdx" 
-                 :id="`qcard-${qIdx}`"
-                 class="q-card slide-in" 
-                 :class="{ 'active-card': selectedQuestionIndex === qIdx }"
-                 @click="selectedQuestionIndex = qIdx">
-              
+            <!-- Question Cards -->
+            <div
+              v-for="(q, qIdx) in questions"
+              :key="qIdx"
+              :id="`qcard-${qIdx}`"
+              class="q-card slide-in"
+              :class="{ 'active-card': selectedQuestionIndex === qIdx }"
+              @click="selectedQuestionIndex = qIdx"
+            >
               <div class="d-flex align-items-center justify-content-between px-3 py-2 border-bottom bg-light">
                 <div class="d-flex align-items-center gap-2">
                   <div class="q-num-badge">{{ qIdx + 1 }}</div>
-                  <span class="fw-bold" style="font-size:.85rem;color:var(--txt)">សំណួរទី {{ getKhmerNumber(qIdx + 1) }}</span>
+                  <span class="fw-bold" style="font-size: .85rem; color: var(--txt);">
+                    សំណួរទី {{ getKhmerNumber(qIdx + 1) }}
+                  </span>
                 </div>
                 <div class="pts-pill">
                   <label>pts</label>
@@ -75,25 +107,38 @@
 
               <div class="p-3 d-flex flex-column gap-2">
                 <textarea v-model="q.text" class="q-field" rows="3" placeholder="Type your question here…"></textarea>
-                <div class="text-uppercase fw-bold text-muted" style="font-size:.6rem;letter-spacing:1.1px">Answers &amp; Choices</div>
-                
+                <div class="text-uppercase fw-bold text-muted" style="font-size: .6rem; letter-spacing: 1.1px;">
+                  Answers &amp; Choices
+                </div>
+
                 <div class="d-flex flex-column gap-2">
-                  <div v-for="(choice, cIdx) in q.choices" 
-                       :key="cIdx" 
-                       class="choice-row" 
-                       :class="{ 'correct-highlight': choice.isCorrect }">
+                  <div
+                    v-for="(choice, cIdx) in q.choices"
+                    :key="cIdx"
+                    class="choice-row"
+                    :class="{ 'correct-highlight': choice.isCorrect }"
+                  >
                     <div class="choice-lbl">{{ getKhmerAlphabet(cIdx) }}</div>
-                    <input type="text" v-model="choice.text" class="choice-input" placeholder="បញ្ចូលខ្លឹមសារចម្លើយ…">
-                    
+                    <input
+                      type="text"
+                      v-model="choice.text"
+                      class="choice-input"
+                      placeholder="បញ្ចូលខ្លឹមសារចម្លើយ…"
+                    >
+
                     <div class="d-flex align-items-center gap-2 flex-shrink-0">
                       <span class="text-muted correct-label">Correct?</span>
-                      <input class="form-check-input cr shadow-none m-0" 
-                             type="radio" 
-                             :name="`q_correct_${qIdx}`" 
-                             :checked="choice.isCorrect"
-                             @change="setCorrectChoice(qIdx, cIdx)">
-                      <button class="btn btn-sm p-1 text-secondary border-0 remove-choice-btn" 
-                              @click="removeChoice(qIdx, cIdx)">
+                      <input
+                        class="form-check-input cr shadow-none m-0"
+                        type="radio"
+                        :name="`q_correct_${qIdx}`"
+                        :checked="choice.isCorrect"
+                        @change="setCorrectChoice(qIdx, cIdx)"
+                      >
+                      <button
+                        class="btn btn-sm p-1 text-secondary border-0 remove-choice-btn"
+                        @click="removeChoice(qIdx, cIdx)"
+                      >
                         <i class="fas fa-times-circle"></i>
                       </button>
                     </div>
@@ -102,56 +147,81 @@
               </div>
 
               <div class="d-flex align-items-center justify-content-between px-3 pb-3">
-                <button class="btn btn-sm fw-bold rounded-3 border-0 bg-transparent text-emerald" style="color:var(--em);font-size:.76rem" @click="addChoice(qIdx)">
+                <button
+                  class="btn btn-sm fw-bold rounded-3 border-0 bg-transparent"
+                  style="color: var(--em); font-size: .76rem;"
+                  @click="addChoice(qIdx)"
+                >
                   <i class="fas fa-plus-circle me-1"></i> បន្ថែមជម្រើស
                 </button>
-                <button v-if="questions.length > 1" class="btn btn-sm btn-outline-danger rounded-3 fw-bold" style="font-size:.72rem" @click.stop="removeQuestion(qIdx)">
+                <button
+                  v-if="questions.length > 1"
+                  class="btn btn-sm btn-outline-danger rounded-3 fw-bold"
+                  style="font-size: .72rem;"
+                  @click.stop="removeQuestion(qIdx)"
+                >
                   <i class="fas fa-trash-alt me-1"></i> Remove
                 </button>
               </div>
             </div>
           </div>
 
+          <!-- Right Panel: Quiz Progress -->
           <div class="panel">
             <div class="panel-head">
               <span class="panel-lbl">Quiz Progress</span>
             </div>
-            <div class="flex-grow-1 overflow-y-auto p-3 d-flex flex-column gap-3" style="padding:16px 14px">
+
+            <div class="flex-grow-1 overflow-y-auto p-3 d-flex flex-column gap-3" style="padding: 16px 14px;">
               <div class="d-flex justify-content-center">
-                <div style="position:relative;width:120px;height:120px">
+                <div style="position: relative; width: 120px; height: 120px;">
                   <svg width="120" height="120" viewBox="0 0 120 120" class="svg-ring">
                     <circle cx="60" cy="60" r="50" class="ring-bg"/>
-                    <circle cx="60" cy="60" r="50" class="ring-fill" :style="{ strokeDashoffset: circleStrokeDashoffset, stroke: progressColor }"/>
+                    <circle
+                      cx="60" cy="60" r="50"
+                      class="ring-fill"
+                      :style="{ strokeDashoffset: circleStrokeDashoffset, stroke: progressColor }"
+                    />
                   </svg>
                   <div class="position-absolute top-50 start-50 translate-middle text-center">
-                    <div class="fw-bold" :style="{ color: progressColor }" style="font-size:1.4rem;line-height:1">{{ totalPoints }}</div>
-                    <div style="font-size:.62rem;font-weight:700;color:var(--txt-mu)">/ 100 PT</div>
+                    <div class="fw-bold" :style="{ color: progressColor }" style="font-size: 1.4rem; line-height: 1;">
+                      {{ totalPoints }}
+                    </div>
+                    <div style="font-size: .62rem; font-weight: 700; color: var(--txt-mu);">/ 100 PT</div>
                   </div>
                 </div>
               </div>
 
               <div class="text-center">
-                <div class="fw-bold" style="font-size:.88rem;color:var(--txt)">Quiz Progress</div>
-                <div class="text-muted" style="font-size:.7rem;line-height:1.5">Accumulated points across all questions.</div>
+                <div class="fw-bold" style="font-size: .88rem; color: var(--txt);">Quiz Progress</div>
+                <div class="text-muted" style="font-size: .7rem; line-height: 1.5;">
+                  Accumulated points across all questions.
+                </div>
               </div>
 
               <hr class="my-1"/>
 
               <div class="d-flex flex-column gap-2 mb-2">
                 <div class="d-flex justify-content-between align-items-center">
-                  <span style="font-size:.73rem;font-weight:600;color:var(--txt-mu)"><i class="fas fa-layer-group me-1" style="color:var(--em)"></i>Questions</span>
-                  <span class="fw-bold" style="font-size:.77rem;color:var(--txt)">{{ questions.length }}</span>
+                  <span style="font-size: .73rem; font-weight: 600; color: var(--txt-mu);">
+                    <i class="fas fa-layer-group me-1" style="color: var(--em);"></i>Questions
+                  </span>
+                  <span class="fw-bold" style="font-size: .77rem; color: var(--txt);">{{ questions.length }}</span>
                 </div>
                 <div class="d-flex justify-content-between align-items-center">
-                  <span style="font-size:.73rem;font-weight:600;color:var(--txt-mu)"><i class="fas fa-star me-1" style="color:var(--em)"></i>Total Pts</span>
-                  <span class="fw-bold" style="font-size:.77rem;color:var(--txt)">{{ totalPoints }} / 100</span>
+                  <span style="font-size: .73rem; font-weight: 600; color: var(--txt-mu);">
+                    <i class="fas fa-star me-1" style="color: var(--em);"></i>Total Pts
+                  </span>
+                  <span class="fw-bold" style="font-size: .77rem; color: var(--txt);">{{ totalPoints }} / 100</span>
                 </div>
               </div>
-              <button class="btn btn-outline-secondary btn-sm rounded-3 fw-bold w-100" @click="openPreviewModal">
-                <i class="fas fa-eye me-1"></i> Preview
-              </button>
-              
-              <button class="btn btn-sm rounded-3 fw-bold text-white w-100 save-publish-btn" style="background:linear-gradient(135deg,var(--em),var(--em-dk));box-shadow:0 4px 14px rgba(16,185,129,.3)" @click="finalizePublish" :disabled="isSubmitting">
+
+              <button
+                class="btn btn-sm rounded-3 fw-bold text-white w-100 save-publish-btn"
+                style="background: linear-gradient(135deg, var(--em), var(--em-dk)); box-shadow: 0 4px 14px rgba(16,185,129,.3);"
+                @click="finalizePublish"
+                :disabled="isSubmitting"
+              >
                 <span v-if="isSubmitting" class="spinner-border spinner-border-sm me-1"></span>
                 <i v-else class="fas fa-paper-plane me-1"></i> Publish
               </button>
@@ -162,37 +232,52 @@
       </div>
     </div>
 
+    <!-- Preview Modal -->
     <div class="modal-overlay" v-if="showPreviewModal" @click.self="showPreviewModal = false">
       <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
-        <div class="modal-content border-0 rounded-4 shadow-lg overflow-hidden" style="background: #f8fafc;">
+        <div
+          class="modal-content border-0 rounded-4 shadow-lg overflow-hidden"
+          style="background: #f8fafc;"
+        >
           <div style="height: 6px; background: linear-gradient(90deg, var(--em), var(--em-dk));"></div>
+
           <div class="modal-header border-0 pb-0 px-4 pt-4">
             <h5 class="modal-title fw-bold text-dark d-flex align-items-center gap-2">
               <i class="fas fa-eye" style="color: var(--em);"></i> Student Preview
             </h5>
             <button type="button" class="btn-close shadow-none" @click="showPreviewModal = false"></button>
           </div>
-          <div class="modal-body p-4" style="user-select: none; -webkit-user-select: none; max-height: 60vh; overflow-y: auto;">
+
+          <div
+            class="modal-body p-4"
+            style="user-select: none; -webkit-user-select: none; max-height: 60vh; overflow-y: auto;"
+          >
             <div class="mb-4 pb-3 border-bottom text-center">
               <h3 class="fw-bold" style="color: var(--txt);">{{ quizTitle || 'Untitled Quiz' }}</h3>
               <p class="text-muted small mb-1" v-if="quizInstructions">{{ quizInstructions }}</p>
               <p class="text-muted small mb-0">This is exactly how students will see the exam.</p>
             </div>
+
             <div v-if="questions.length === 0" class="text-center py-5 text-muted">
               <i class="fas fa-inbox fa-3x mb-3 opacity-50"></i>
               <p>No questions added yet.</p>
             </div>
+
             <div v-else>
               <div v-for="(q, index) in questions" :key="index" class="mb-4">
                 <div class="d-flex justify-content-between align-items-center mb-3">
                   <span class="badge bg-secondary text-white rounded-pill px-3 py-2">Question {{ index + 1 }}</span>
                   <span class="text-muted fw-bold" style="font-size: .85rem;">{{ q.pts }} Points</span>
                 </div>
-                <h5 class="fw-bold mb-3" style="color: var(--txt); line-height: 1.5;">{{ q.text || '(Empty Question)' }}</h5>
+                <h5 class="fw-bold mb-3" style="color: var(--txt); line-height: 1.5;">
+                  {{ q.text || '(Empty Question)' }}
+                </h5>
                 <div class="options-container">
-                  <div v-for="(choice, cIdx) in q.choices" 
-                       :key="cIdx" 
-                       class="p-3 mb-2 bg-white rounded-3 shadow-sm border option-preview-row">
+                  <div
+                    v-for="(choice, cIdx) in q.choices"
+                    :key="cIdx"
+                    class="p-3 mb-2 bg-white rounded-3 shadow-sm border option-preview-row"
+                  >
                     <div class="form-check m-0 d-flex align-items-center gap-2">
                       <input class="form-check-input mt-0 shadow-none" type="radio" :name="`preview_q${index}`">
                       <label class="form-check-label w-100" style="color: var(--txt); font-size: .95rem;">
@@ -201,31 +286,61 @@
                     </div>
                   </div>
                 </div>
-                <hr v-if="index < questions.length - 1" class="my-4" style="border-color: var(--bdr); opacity: 1;"/>
+                <hr
+                  v-if="index < questions.length - 1"
+                  class="my-4"
+                  style="border-color: var(--bdr); opacity: 1;"
+                />
               </div>
             </div>
           </div>
-          <div class="modal-footer border-0 pt-0 pb-4 px-4 bg-white" style="border-top: 1px solid var(--bdr) !important;">
-            <button class="btn btn-light rounded-3 fw-bold px-4" @click="showPreviewModal = false">Exit Preview</button>
-            <button class="btn text-white rounded-3 fw-bold px-4 disabled" style="background: var(--em);">Submit Exam</button>
+
+          <div
+            class="modal-footer border-0 pt-0 pb-4 px-4 bg-white"
+            style="border-top: 1px solid var(--bdr) !important;"
+          >
+            <button class="btn btn-light rounded-3 fw-bold px-4" @click="showPreviewModal = false">
+              Exit Preview
+            </button>
+            <button class="btn text-white rounded-3 fw-bold px-4 disabled" style="background: var(--em);">
+              Submit Exam
+            </button>
           </div>
         </div>
       </div>
     </div>
 
-    <div v-if="showCodeModal" class="modal-backdrop-custom d-flex align-items-center justify-content-center" @click.self="showCodeModal = false">
-      <div class="modal-dialog-custom p-4 bg-white rounded-4 shadow-lg text-center slide-in" style="width: 100%; max-width: 480px; z-index: 9999;">
-        
-        <div class="success-icon-wrapper mb-3 mx-auto d-flex align-items-center justify-content-center rounded-circle bg-success bg-opacity-10 text-success" style="width: 56px; height: 56px;">
+    <!-- Success / Code Modal -->
+    <div
+      v-if="showCodeModal"
+      class="modal-backdrop-custom d-flex align-items-center justify-content-center"
+      @click.self="showCodeModal = false"
+    >
+      <div
+        class="modal-dialog-custom p-4 bg-white rounded-4 shadow-lg text-center slide-in"
+        style="width: 100%; max-width: 480px; z-index: 9999;"
+      >
+        <div
+          class="success-icon-wrapper mb-3 mx-auto d-flex align-items-center justify-content-center rounded-circle bg-success bg-opacity-10 text-success"
+          style="width: 56px; height: 56px;"
+        >
           <i class="fas fa-check-circle fa-2x"></i>
         </div>
 
         <h4 class="fw-bold text-dark mb-1">បង្កើតវិញ្ញាសាជោគជ័យ!</h4>
-        <p class="text-muted small mb-4">វិញ្ញាសារបស់អ្នកត្រូវបានដាក់ផ្សាយជាផ្លូវការរួចរាល់ហើយ។ សូមចម្លងតំណភ្ជាប់ខាងក្រោមដើម្បីផ្ញើជូនសិស្សានុសិស្ស៖</p>
+        <p class="text-muted small mb-4">
+          វិញ្ញាសារបស់អ្នកត្រូវបានដាក់ផ្សាយជាផ្លូវការរួចរាល់ហើយ។ សូមចម្លងតំណភ្ជាប់ខាងក្រោមដើម្បីផ្ញើជូនសិស្សានុសិស្ស៖
+        </p>
 
         <div class="d-flex align-items-center justify-content-between p-2.5 mb-4 rounded-3 border bg-light text-start">
-          <span class="text-dark text-truncate me-2 fw-medium" style="font-size: 0.88rem; max-width: 320px;">{{ generatedExamLink }}</span>
-          <button class="btn btn-sm btn-dark rounded-2 px-3 fw-bold d-flex align-items-center gap-1 flex-shrink-0" @click="copyLinkToClipboard">
+          <span
+            class="text-dark text-truncate me-2 fw-medium"
+            style="font-size: 0.88rem; max-width: 320px;"
+          >{{ generatedExamLink }}</span>
+          <button
+            class="btn btn-sm btn-dark rounded-2 px-3 fw-bold d-flex align-items-center gap-1 flex-shrink-0"
+            @click="copyLinkToClipboard"
+          >
             <i class="far fa-copy"></i> Copy Link
           </button>
         </div>
@@ -235,13 +350,11 @@
             បិទផ្ទាំងនេះ (Close)
           </button>
         </div>
-
       </div>
     </div>
 
   </div>
 </template>
-
 
 <script setup>
 import { ref, computed, nextTick, onMounted } from 'vue'
@@ -395,26 +508,33 @@ const openPreviewModal = () => {
 const getAllRooms = async () => {
   try {
     const res = await getMyRooms(); 
-    allRooms.value = res.data.data;
+    // FIX: បានបន្ថែម ?. ដើម្បីកុំឱ្យ Crash នៅពេល API ឆ្លើយតបយឺត
+    allRooms.value = res?.data?.data || [];
   } catch (err) {
     console.error("មិនអាចទាញយកបញ្ជីថ្នាក់រៀនបានទេ:", err);
-    toast.error("មានបញ្ហាក្នុងការផ្ទុកទិន្នន័យថ្នាក់រៀន");
+    // ខ្ញុំបាន Comment toast.error នេះចោល ដើម្បីកុំឱ្យវា Alert គ្រប់ពេលដែល Error
+    // toast.error("មានបញ្ហាក្នុងការផ្ទុកទិន្នន័យថ្នាក់រៀន");
   }
 };
 
 const finalizePublish = async () => {
-  if (!quizTitle.value.trim()) return toast.error("សូមបញ្ចូលចំណងជើងវិញ្ញាសា!")
-  if (!selectedRoomId.value) return toast.error("សូមជ្រើសរើសថ្នាក់រៀនសិន!")
+  if (isSubmitting.value) return;
+  // 1. Validation ក្នុង Frontend
+  if (!quizTitle.value.trim()) return toast.error("សូមបញ្ចូលចំណងជើងវិញ្ញាសា!");
+  if (!selectedRoomId.value) return toast.error("សូមជ្រើសរើសថ្នាក់រៀនសិន!");
 
-  // Validate Questions
   for (let i = 0; i < questions.value.length; i++) {
-    const q = questions.value[i]
-    if (!q.text.trim()) return toast.error(`សូមបំពេញសំណួរទី ${i + 1}`)
-    if (!q.choices.some(c => c.isCorrect)) return toast.error(`សូមជ្រើសរើសចម្លើយត្រឹមត្រូវសម្រាប់សំណួរទី ${i + 1}`)
+    const q = questions.value[i];
+    if (!q.text.trim()) return toast.error(`សូមបំពេញសំណួរទី ${i + 1}`);
+    
+    // ពិនិត្យថាគ្រប់ Choices បានបំពេញអក្សរ
+    if (q.choices.some(c => !c.text.trim())) return toast.error(`សូមបំពេញជម្រើសចម្លើយក្នុងសំណួរទី ${i + 1}`);
+    
+    if (!q.choices.some(c => c.isCorrect)) return toast.error(`សូមជ្រើសរើសចម្លើយត្រឹមត្រូវសម្រាប់សំណួរទី ${i + 1}`);
   }
 
   try {
-    isSubmitting.value = true
+    isSubmitting.value = true;
     
     const examPayload = {
       room_id: parseInt(selectedRoomId.value), 
@@ -426,10 +546,12 @@ const finalizePublish = async () => {
       status: 'active',
       start_time: new Date().toISOString().split('T')[0],
       end_time: new Date(Date.now() + 7 * 86400000).toISOString().split('T')[0]
-    }
+    };
 
-    const createRes = await createExam(examPayload)
-    const examId = createRes.data?.data?.examId
+    const createRes = await createExam(examPayload);
+    const examId = createRes.data?.data?.examId || createRes.data?.id;
+
+    if (!examId) throw new Error("មិនទទួលបាន Exam ID ពី Server");
 
     for (const q of questions.value) {
       await createQuestion({
@@ -439,20 +561,25 @@ const finalizePublish = async () => {
         options: q.choices.map(c => c.text),
         correct_answer: [q.choices.find(c => c.isCorrect)?.text],
         points: q.pts
-      })
+      });
     }
 
-    generatedExamLink.value = createRes.data?.data?.link
-    showCodeModal.value = true
-    toast.success("វិញ្ញាសាត្រូវបានដាក់ផ្សាយជោគជ័យ!")
-  } catch (err) {
-    toast.error("ការផ្សព្វផ្សាយវិញ្ញាសាបានបរាជ័យ!")
-  } finally {
-    isSubmitting.value = false
-  }
-}
+    generatedExamLink.value = createRes.data?.data?.link || '';
+    showCodeModal.value = true;
+    toast.success("វិញ្ញាសាត្រូវបានដាក់ផ្សាយជោគជ័យ!");
 
-// មុខងារចម្លងតំណភ្ជាប់វិញ្ញាសាទៅកាន់ Clipboard
+  } catch (err) {
+    // ជួសជុល៖ បង្ហាញ Error លម្អិតក្នុង Console
+    console.error("កំហុសលម្អិតពី Server:", err.response?.data || err);
+    
+    // បង្ហាញសារ Error ដែលមានន័យជាងមុន
+    const errorMsg = err.response?.data?.message || "មានកំហុសក្នុងការផ្សព្វផ្សាយវិញ្ញាសា!";
+    toast.error(errorMsg);
+  } finally {
+    isSubmitting.value = false;
+  }
+};
+
 const copyLinkToClipboard = async () => {
   try {
     await navigator.clipboard.writeText(generatedExamLink.value)
@@ -462,7 +589,6 @@ const copyLinkToClipboard = async () => {
   }
 }
 
-// ពង្រីកទំហំ Textarea ស្វ័យប្រវត្តទៅតាមខ្លឹមសារអក្សរ
 const autoGrowTextarea = (event) => {
   const el = event.target
   el.style.height = 'auto'
@@ -470,18 +596,17 @@ const autoGrowTextarea = (event) => {
 }
 
 onMounted(async () => {
-  try {
-    const res = await getAllRooms(); 
-    allRooms.value = res.data.data;
-  } catch (err) {
-    toast.error("មិនអាចផ្ទុកបញ្ជីថ្នាក់រៀនបានទេ");
-  }
+  // កុំហៅ Validation ក្នុង onMounted បើមិនចាំបាច់
+  await getAllRooms(); 
   
   if (!authStore.user) {
     authStore.fetchUserProfile();
   }
 });
 </script>
+
+
+
 <style scoped>
 .quiz-builder-container {
   --em:      #10b981;
@@ -543,6 +668,17 @@ onMounted(async () => {
     grid-template-columns: 220px 1fr 190px;
     overflow: hidden;
   }
+}
+.quiz-info-card .form-control, 
+.quiz-info-card .form-select {
+  background-color: #ffffff;
+  transition: all 0.3s ease;
+}
+
+.quiz-info-card .form-control:focus, 
+.quiz-info-card .form-select:focus {
+  border: 1px solid var(--em) !important;
+  box-shadow: 0 0 0 0.2rem rgba(16, 185, 129, 0.15) !important;
 }
 
 @media (max-width: 991px) {
