@@ -188,9 +188,9 @@
               </div>
 
               <div class="text-center">
-                <div class="fw-bold" style="font-size: .88rem; color: var(--txt);">Quiz Points</div>
+                <div class="fw-bold" style="font-size: .88rem; color: var(--txt);">ពិន្ទុតេស្ត</div>
                 <div class="text-muted" style="font-size: .7rem; line-height: 1.5;">
-                  Accumulated total score dynamic base for this exam.
+                  ពិន្ទុសរុបដែលគណនាបង្កើតដោយស្វ័យប្រវត្តិផ្អែកតាមវិញ្ញាសា
                 </div>
               </div>
 
@@ -199,13 +199,13 @@
               <div class="d-flex flex-column gap-2 mb-2">
                 <div class="d-flex justify-content-between align-items-center">
                   <span style="font-size: .73rem; font-weight: 600; color: var(--txt-mu);">
-                    <i class="fas fa-layer-group me-1" style="color: var(--em);"></i>Questions
+                    <i class="fas fa-layer-group me-1" style="color: var(--em);"></i>សំណួរ
                   </span>
                   <span class="fw-bold" style="font-size: .77rem; color: var(--txt);">{{ questions.length }}</span>
                 </div>
                 <div class="d-flex justify-content-between align-items-center">
                   <span style="font-size: .73rem; font-weight: 600; color: var(--txt-mu);">
-                    <i class="fas fa-star me-1" style="color: var(--em);"></i>Total Value
+                    <i class="fas fa-star me-1" style="color: var(--em);"></i>ពិន្ទុសរុប
                   </span>
                   <span class="fw-bold" style="font-size: .77rem; color: var(--txt);">{{ totalPoints }} Pts</span>
                 </div>

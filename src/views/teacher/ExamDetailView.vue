@@ -9,71 +9,161 @@
     />
 
     <div class="app-shell flex-grow-1 overflow-hidden">
-      <div v-if="loading" class="text-center py-5">កំពុងផ្ទុកទិន្នន័យ...</div>
+      <!-- Loading State -->
+      <div v-if="loading" class="text-center py-5">
+        <div class="spinner-border text-success" role="status"></div>
+        <p class="mt-3 text-muted small">កំពុងផ្ទុកទិន្នន័យ...</p>
+      </div>
       
+      <!-- Main Workspace -->
       <div v-else-if="questions.length > 0" class="workspace">
         
+        <!-- Left Panel: Question Navigation -->
         <div class="panel d-flex flex-column">
           <div class="panel-head">
-            <span class="panel-lbl">Question List</span>
-            <span class="panel-count">{{ questions.length }} Q</span>
+            <span class="panel-lbl">បញ្ជីសំណួរ</span>
+            <span class="panel-count">{{ questions.length }} សំណួរ</span>
           </div>
           <div class="q-nav-scroll overflow-y-auto">
-            <div v-for="(q, idx) in questions" :key="q.id"
-                 class="q-nav-item" :class="{ active: selectedQuestionIndex === idx }" 
-                 @click="selectQuestion(idx)">
+            <div 
+              v-for="(q, idx) in questions" 
+              :key="q.id"
+              class="q-nav-item" 
+              :class="{ active: selectedQuestionIndex === idx }" 
+              @click="selectQuestion(idx)"
+            >
               <span>សំណួរទី {{ getKhmerNumber(idx + 1) }}</span>
+              <span class="q-nav-pts-badge">{{ q.pts || 0 }} ភ.</span>
             </div>
           </div>
         </div>
 
+        <!-- Center Column: Editable Question Feed -->
         <div class="feed-col">
-          <div v-for="(q, qIdx) in questions" :key="q.id" 
-               class="q-card" :class="{ 'active-card': selectedQuestionIndex === qIdx }"
-               @click="selectedQuestionIndex = qIdx">
-            
-            <div class="d-flex justify-content-between px-3 py-2 border-bottom bg-light">
-              <span class="fw-bold">សំណួរទី {{ getKhmerNumber(qIdx + 1) }}</span>
-              <div class="pts-pill">
-                <label>pts</label>
-                <input type="number" v-model.number="q.pts" class="pts-input">
+          <div 
+            v-for="(q, qIdx) in questions" 
+            :key="q.id" 
+            class="q-card" 
+            :class="{ 'active-card': selectedQuestionIndex === qIdx }"
+            @click="selectedQuestionIndex = qIdx"
+          >
+            <!-- Card Header -->
+            <div class="q-card-header d-flex justify-content-between align-items-center px-4 py-3 border-bottom bg-light bg-opacity-50">
+              <span class="fw-extrabold text-dark fs-6">សំណួរទី {{ getKhmerNumber(qIdx + 1) }}</span>
+              
+              <div class="pts-pill ">
+                <label>ពិន្ទុ</label>
+                <input type="number" v-model.number="q.pts" class="pts-input" min="0">
               </div>
             </div>
 
-            <div class="p-3">
-              <textarea v-model="q.text" class="q-field" rows="3"></textarea>
-              <div class="d-flex flex-column gap-2 mt-2">
-                <div v-for="(choice, cIdx) in q.choices" :key="cIdx" class="choice-row">
-                  <input type="radio" :name="`q_${q.id}`" :checked="choice.isCorrect" @change="setCorrectChoice(qIdx, cIdx)">
-                  <input type="text" v-model="choice.text" class="choice-input">
-                  <button class="btn btn-sm text-danger" @click="removeChoice(qIdx, cIdx)"><i class="fas fa-trash"></i></button>
+            <!-- Card Body -->
+            <div class="p-4">
+              <!-- Question Input Field -->
+              <div class="mb-3 text-start">
+                <label class="form-label small fw-bold text-muted mb-2">ខ្លឹមសារសំណួរ</label>
+                <textarea v-model="q.text" class="q-field" rows="3" placeholder="សរសេរសំណួររបស់អ្នកនៅទីនេះ..."></textarea>
+              </div>
+
+              <!-- Multiple Choice List -->
+              <div class="mb-2 text-start">
+                <label class="form-label small fw-bold text-muted mb-2">ជម្រើសចម្លើយ</label>
+                <div class="d-flex flex-column gap-3">
+                  <div 
+                    v-for="(choice, cIdx) in q.choices" 
+                    :key="cIdx" 
+                    class="choice-row"
+                    :class="{ 'correct-highlight': choice.isCorrect }"
+                  >
+                    <!-- Choice Index Badge (A, B, C, D) -->
+                    <div class="choice-lbl">
+                      {{ String.fromCharCode(65 + cIdx) }}
+                    </div>
+
+                    <!-- Custom Styled Radio Selector -->
+                    <input 
+                      type="radio" 
+                      :name="`q_${q.id}`" 
+                      class="form-check-input cr"
+                      :checked="choice.isCorrect" 
+                      @change="setCorrectChoice(qIdx, cIdx)"
+                    >
+
+                    <!-- Choice Text Input -->
+                    <input type="text" v-model="choice.text" class="choice-input" placeholder="សរសេរចម្លើយ...">
+                    
+                    <!-- Delete Choice Button -->
+                    <button class="remove-choice-btn text-muted" @click="removeChoice(qIdx, cIdx)" title="លុបចម្លើយ">
+                      <i class="fas fa-trash-alt"></i>
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
 
-            <div class="px-3 pb-3 d-flex justify-content-end gap-2">
-              <button class="btn btn-sm btn-outline-danger" @click="handleDeleteQuestion(q.id, qIdx)">Delete</button>
-              <button class="btn btn-sm btn-success" @click="handleSingleQuestionSave(qIdx)">Update</button>
+            <!-- Card Footer Controls -->
+            <div class="px-4 pb-4 pt-2 d-flex justify-content-end gap-2 border-top border-light-subtle">
+              <button class="btn btn-sm btn-action-delete" @click="handleDeleteQuestion(q.id, qIdx)">
+                <i class="fas fa-trash-alt me-1"></i> លុបសំណួរ
+              </button>
+              <button class="btn btn-sm btn-action-update" @click="handleSingleQuestionSave(qIdx)">
+                <i class="fas fa-save me-1"></i> ធ្វើបច្ចុប្បន្នភាព
+              </button>
             </div>
           </div>
         </div>
 
-       <div class="panel p-3 d-flex flex-column" style="height: fit-content; background: #fff; border: 1px solid #e2e8f0; border-radius: 12px;">
-  <div class="panel-head mb-3 border-0 pb-0">Exam Overview</div>
-  
-  <div class="progress-circle mx-auto mb-3">
-    <h4 class="mb-0 fw-bold">{{ totalPoints }}</h4>
-    <small class="text-muted">/ {{ examData.total_points || 100 }} PT</small>
+        <!-- Right Panel: Exam Overview Card -->
+<!-- Right Panel: Exam Overview Card -->
+<div class="panel overview-panel p-4 d-flex flex-column">
+  <div class="panel-head border-0 pb-0 pt-0 px-0">
+    <span class="panel-lbl">
+      <i class="fas fa-chart-pie me-2 text-success"></i> ទិដ្ឋភាពទូទៅនៃវិញ្ញាសា
+    </span>
   </div>
   
-  <p class="text-muted small text-center mb-4">Sum of points across current items.</p>
-  
+  <!-- Dynamic SVG Circular Progress Gauge -->
+  <div class="gauge-container mx-auto my-4">
+    <svg class="svg-ring" viewBox="0 0 120 120">
+      <circle class="ring-bg" cx="60" cy="60" r="50" />
+      <circle 
+        class="ring-fill" 
+        cx="60" 
+        cy="60" 
+        r="50" 
+        :style="{ strokeDashoffset: strokeDashoffset }" 
+      />
+    </svg>
+    <div class="gauge-label-content">
+      <h3 class="mb-0 fw-extrabold text-dark">{{ totalPoints }}</h3>
+      <span class="gauge-denominator text-muted">/ {{ examData.total_points || 100 }} pts</span>
+    </div>
+  </div>
+
+  <!-- Detailed Metric Grid -->
+  <div class="metrics-grid mb-4">
+    <div class="metric-box">
+      <span class="metric-label">ចំនួនសំណួរ</span>
+      <span class="metric-value">{{ questions.length }} សំណួរ</span>
+    </div>
+    <div class="metric-box">
+      <span class="metric-label">ពិន្ទុមធ្យម/សំណួរ</span>
+      <span class="metric-value">
+        {{ questions.length > 0 ? (totalPoints / questions.length).toFixed(1) : 0 }} pts
+      </span>
+    </div>
+  </div>
+
+  <!-- Soft Callout Banner -->
+  <div class="info-callout mb-4">
+    <i class="fas fa-info-circle text-success me-2 mt-1"></i>
+    <span>ពិន្ទុសរុបនឹងត្រូវគណនាជាក់ស្តែងផ្អែកលើសំណួរដែលបានបញ្ចូល។</span>
+  </div>
+
+  <!-- Back Action Button -->
   <div class="d-flex flex-column gap-2 mt-auto">
-    <button class="btn btn-outline-success w-100 fw-bold" @click="openPreviewModal">
-      <i class="fas fa-eye me-1"></i> Preview
-    </button>
-    <button class="btn btn-outline-secondary w-100 fw-bold" @click="goBack">
-      <i class="fas fa-arrow-left me-1"></i> Back
+    <button class="btn btn-outline-back w-100 fw-bold" @click="goBack">
+      <i class="fas fa-arrow-left me-1"></i> ត្រឡប់ក្រោយ
     </button>
   </div>
 </div>
@@ -82,6 +172,7 @@
     </div>
   </div>
 </template>
+
 <script setup>
 import { ref, computed, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
@@ -90,24 +181,48 @@ import api from '@/api/axiosInstance';
 import { useExamStore } from '@/stores/examStore';
 import { getQuestionsForTeacher, updateQuestion, deleteQuestion } from '@/api/exam.api';
 
+// Router & Route
 const route = useRoute();
 const router = useRouter();
 const examStore = useExamStore();
 const toast = useToast();
 const examId = route.params.examId;
 
+// State Variables
 const examData = ref({});
 const questions = ref([]);
 const loading = ref(false);
 const selectedQuestionIndex = ref(0);
 
-// បន្ថែមមុខងារនេះត្រឡប់ទៅក្នុង script setup វិញ
+// Dynamic SVG progress offset calculation (base circumference = 314)
+const strokeDashoffset = computed(() => {
+  const maxPoints = Number(examData.value.total_points) || 100;
+  const ratio = Math.min(1, totalPoints.value / maxPoints);
+  const circumference = 314;
+  return circumference - (ratio * circumference);
+});
+// Khmer numbering converter
 const getKhmerNumber = (num) => {
   const khmerNumbers = ["១", "២", "៣", "៤", "៥", "៦", "៧", "៨", "៩", "១០"];
   return khmerNumbers[num - 1] || num.toString();
 };
 
-// 1. Fetch Data
+// Choice Handlers
+const setCorrectChoice = (qIdx, cIdx) => {
+  questions.value[qIdx].choices.forEach((c, idx) => {
+    c.isCorrect = idx === cIdx;
+  });
+};
+
+const removeChoice = (qIdx, cIdx) => {
+  if (questions.value[qIdx].choices.length <= 2) {
+    toast.warning("សំណួរត្រូវតែមានចម្លើយយ៉ាងហោចណាស់ពីរ!");
+    return;
+  }
+  questions.value[qIdx].choices.splice(cIdx, 1);
+};
+
+// Fetch API Data
 const fetchAll = async () => {
   loading.value = true;
   try {
@@ -121,11 +236,10 @@ const fetchAll = async () => {
     
     examData.value = data;
     
-    // បញ្ជូនទិន្នន័យទៅ Store តែម្តងគត់នៅទីនេះ
     if (data) {
-        examStore.setExamTitle(data.title || 'គ្មានចំណងជើង');
-        examStore.setRoomName(data.room_name || 'ថ្នាក់រៀន');
-        examStore.setQuestionCount(rawData.length);
+      examStore.setExamTitle(data.title || 'គ្មានចំណងជើង');
+      examStore.setRoomName(data.room_name || 'ថ្នាក់រៀន');
+      examStore.setQuestionCount(rawData.length);
     }
     
     questions.value = rawData.map(q => {
@@ -154,11 +268,11 @@ const fetchAll = async () => {
   }
 };
 
-// 2. Computed & Helpers
+// Computed Points Sum
 const totalPoints = computed(() => questions.value.reduce((sum, q) => sum + (Number(q.pts) || 0), 0));
 const selectQuestion = (idx) => { selectedQuestionIndex.value = idx; };
 
-// 3. Actions
+// Action: Update Question
 const handleSingleQuestionSave = async (idx) => {
   const q = questions.value[idx];
   try {
@@ -176,14 +290,19 @@ const handleSingleQuestionSave = async (idx) => {
   }
 };
 
+// Action: Delete Question
 const handleDeleteQuestion = async (qId, idx) => {
   if (!confirm("តើអ្នកប្រាកដជាចង់លុបសំណួរនេះមែនទេ?")) return;
   try {
     await deleteQuestion(qId);
     questions.value.splice(idx, 1);
-    // Update ចំនួនសំណួរក្នុង Store វិញក្រោយលុប
     examStore.setQuestionCount(questions.value.length);
     toast.success("បានលុបសំណួរជោគជ័យ!");
+    
+    // Safety check selection range
+    if (selectedQuestionIndex.value >= questions.value.length) {
+      selectedQuestionIndex.value = Math.max(0, questions.value.length - 1);
+    }
   } catch (e) { 
     toast.error("បរាជ័យក្នុងការលុប!"); 
   }
@@ -194,212 +313,499 @@ const goBack = () => router.push('/teacher/room-management');
 onMounted(fetchAll);
 </script>
 
-
 <style scoped>
+/* Main Container & Page Flow */
 .quiz-builder-container {
   --em:      #10b981;
   --em-dk:   #059669;
   --em-soft: #ecfdf5;
-  --em-mid:  rgba(16,185,129,.25);
-  --txt:     #1e293b;
+  --em-mid:  rgba(16,185,129,.12);
+  --txt:     #0f172a;
   --txt-m:   #334155;
   --txt-mu:  #64748b;
   --surf:    #ffffff;
   --bdr:     #e2e8f0;
-  --r-md:    10px;
-  --r-lg:    14px;
+  --r-md:    12px;
+  --r-lg:    16px;
   --r-xl:    20px;
-  --sh-sm:   0 2px 8px rgba(0,0,0,.04);
-  --sh-md:   0 8px 24px rgba(0,0,0,.08);
+  --sh-sm:   0 4px 18px rgba(0,0,0,.03);
+  --sh-md:   0 8px 24px rgba(0,0,0,.06);
 
   display: flex;
   flex-direction: column;
-  height: 100%;
+  height: 100vh;
   width: 100%;
   overflow: hidden;
-  font-family: "Kantumruy Pro", "Poppins", sans-serif;
+  font-family: "Kantumruy Pro", "Inter", sans-serif;
   color: var(--txt);
+  background-color: #f8fafc;
 }
-.quiz-builder-container { height: 100vh; display: flex; flex-direction: column; width: 100%; }
-.app-shell { flex: 1; overflow: hidden; }
-.workspace { display: grid; grid-template-columns: 240px 1fr 260px; gap: 16px; padding: 16px; height: 100%; overflow: hidden; }
-.feed-col { overflow-y: auto; display: flex; flex-direction: column; gap: 16px; }
-.q-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 10px; cursor: pointer; }
-.q-card.active-card { border-color: #10b981; box-shadow: 0 0 0 2px rgba(16,185,129,0.2); }
-.panel { background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; }
-.q-nav-item { padding: 10px; border-bottom: 1px solid #f1f5f9; cursor: pointer; }
-.q-nav-item.active { background: #ecfdf5; color: #10b981; }
-.choice-row { display: flex; align-items: center; gap: 8px; }
-.pts-input { width: 50px; border: 1px solid #ddd; border-radius: 4px; text-align: center; }
-.q-field { width: 100%; border: 1px solid #ddd; padding: 8px; border-radius: 8px; }
 
-/* 🎯 បន្ថែម CSS នេះដើម្បីទប់ Layout */
+.app-shell {
+  display: flex;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* Three-column Dashboard Grid */
 .workspace {
   flex: 1;
   display: grid;
-  grid-template-columns: 240px 1fr 260px;
+  grid-template-columns: 250px 1fr 280px;
   gap: 16px;
   padding: 24px;
-  height: calc(100vh - 70px); /* កំណត់កម្ពស់ត្រឹមផ្ទៃខាងក្រោម Header ប៉ុណ្ណោះ */
+  height: calc(100vh - 70px);
   overflow: hidden;
 }
 
-.app-shell { display: flex; height: 100%; overflow: hidden; }
-.main-col { flex: 1; min-width: 0; display: flex; flex-direction: column; height: 100%; overflow: hidden; }
-
-.workspace {
-  flex: 1; 
-  min-height: 0;
-  display: flex; 
-  flex-direction: column;
-  gap: 16px;
-  padding: 24px;
-  height: 100%;
-}
-
-@media (min-width: 992px) {
-  .workspace {
-    display: grid;
-    grid-template-columns: 240px 1fr 260px;
-    height: 100%;
-  }
-}
-
-/* Panels */
+/* Left & Right Sidebar Panels */
 .panel {
   background: var(--surf);
   border: 1px solid var(--bdr);
   border-radius: var(--r-xl);
   box-shadow: var(--sh-sm);
-  display: flex; 
+  display: flex;
   flex-direction: column;
   height: 100%;
-  min-height: 0;
+  overflow: hidden;
 }
+
 .panel-head {
   flex-shrink: 0;
-  padding: 14px;
+  padding: 16px;
   border-bottom: 1px solid var(--bdr);
-  display: flex; 
-  align-items: center; 
+  display: flex;
+  align-items: center;
   justify-content: space-between;
 }
-.panel-lbl { font-size: .62rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.2px; color: var(--txt-mu); }
-.panel-count { font-size: .65rem; font-weight: 700; color: var(--em); }
 
-.q-nav-scroll { flex: 1; min-height: 0; overflow-y: auto; padding: 10px; display: flex; flex-direction: column; gap: 6px; }
+.panel-lbl {
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  color: var(--txt-mu);
+}
+
+.panel-count {
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: var(--em-dk);
+  background: var(--em-soft);
+  padding: 3px 10px;
+  border-radius: 20px;
+}
+
+/* Question Selection List */
+.q-nav-scroll {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
 .q-nav-item {
-  padding: 10px 14px; 
+  padding: 10px 14px;
   border-radius: var(--r-md);
-  border: 1.5px solid var(--bdr); 
-  background: #fafafa;
-  cursor: pointer; 
-  display: flex; 
-  align-items: center; 
+  border: 1px solid var(--bdr);
+  background: #fdfdfd;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
   justify-content: space-between;
-  font-size: .82rem; 
-  font-weight: 600; 
+  font-size: 0.82rem;
+  font-weight: 700;
   color: var(--txt-m);
-  transition: .15s; 
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   flex-shrink: 0;
 }
-.q-nav-item:hover { border-color: var(--em-mid); background: var(--em-soft); color: var(--em); }
-.q-nav-item.active { background: linear-gradient(135deg, var(--em), var(--em-dk)); border-color: transparent; color: #fff; box-shadow: 0 4px 12px rgba(16,185,129,.22); }
-.q-badge { font-size: .65rem; font-weight: 700; padding: 2px 7px; border-radius: 999px; background: rgba(255,255,255,.2); color: #fff; }
-.q-nav-item:not(.active) .q-badge { background: var(--em-soft); color: var(--em); }
 
-/* 🎯 FIXED UI: Center feed លាតពេញ និង Scroll រលូន */
-.feed-col { 
+.q-nav-item:hover {
+  border-color: var(--em-mid);
+  background: var(--em-soft);
+  color: var(--em-dk);
+}
+
+.q-nav-item.active {
+  background: linear-gradient(135deg, var(--em), var(--em-dk));
+  border-color: transparent;
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.22);
+}
+
+.q-nav-pts-badge {
+  font-size: 0.68rem;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 20px;
+  background: var(--em-soft);
+  color: var(--em);
+}
+
+.q-nav-item.active .q-nav-pts-badge {
+  background: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+}
+
+/* Center Column: Questions Feed */
+.feed-col {
   flex: 1;
-  min-height: 0; 
-  overflow-y: auto; 
-  display: flex; 
-  flex-direction: column; 
-  gap: 16px; 
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
   padding-right: 4px;
 }
-.feed-col::-webkit-scrollbar { width: 5px; }
-.feed-col::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-
-.q-card { background: var(--surf); border: 1px solid var(--bdr); border-radius: var(--r-xl); box-shadow: var(--sh-sm); overflow: hidden; flex-shrink: 0; transition: box-shadow .17s; cursor: pointer; }
-.q-card:hover { box-shadow: var(--sh-md); }
-.q-card.active-card { border-color: var(--em-mid); box-shadow: 0 0 0 3px rgba(16,185,129,.08), var(--sh-md); }
-
-.q-num-badge { width: 28px; height: 28px; border-radius: 8px; background: linear-gradient(135deg, var(--em), var(--em-dk)); color: #fff; font-weight: 800; font-size: .72rem; display: flex; align-items: center; justify-content: center; box-shadow: 0 3px 8px rgba(16,185,129,.28); }
-.pts-pill { display: flex; align-items: center; gap: 6px; background: var(--em-soft); border-radius: 8px; padding: 5px 10px; }
-.pts-pill label { font-size: .65rem; font-weight: 700; color: var(--em); margin: 0; }
-
-.q-field:focus { border-color: var(--em); background: #fff; box-shadow: 0 0 0 3px rgba(16,185,129,.08); }
-
-.choice-row { display: flex; align-items: center; gap: 8px; padding: 10px 14px; border: 1px solid var(--bdr); border-radius: var(--r-md); background: #fafbfc; transition: .13s; }
-.choice-row:hover { border-color: var(--em-mid); background: #fff; }
-.choice-row.correct-highlight { border-color: var(--em); background: var(--em-soft); }
-.choice-lbl { width: 28px; height: 28px; flex-shrink: 0; border-radius: 7px; background: var(--em-soft); color: var(--em); font-weight: 800; font-size: .74rem; display: flex; align-items: center; justify-content: center; }
-.choice-input { flex: 1; border: none; background: transparent; font-size: .85rem; font-weight: 500; color: var(--txt); outline: none; }
-.form-check-input.cr { width: 17px; height: 17px; cursor: pointer; border: 2px solid #cbd5e1; }
-.form-check-input.cr:checked { background-color: var(--em) !important; border-color: var(--em) !important; }
-
-.svg-ring { transform: rotate(-90deg); overflow: visible; }
-.ring-bg { fill: none; stroke: #f1f5f9; stroke-width: 9; }
-.ring-fill { fill: none; stroke-width: 9; stroke-linecap: round; stroke-dasharray: 314; transition: stroke-dashoffset .45s ease, stroke .3s ease; }
-
-@keyframes slideUp { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
-.slide-in { animation: slideUp .22s ease; }
-
-.quiz-info-header { background: rgba(255, 255, 255, 0.6); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border-radius: var(--r-xl); border: 1px solid rgba(255, 255, 255, 0.8); box-shadow: 0 4px 15px rgba(0,0,0,.02); }
-.decoration-circle { width: 100px; height: 100px; background: radial-gradient(circle, var(--em-soft) 0%, transparent 70%); top: -30px; right: -20px; z-index: 0; pointer-events: none; }
-.icon-circle { width: 20px; height: 20px; background: var(--em-soft); color: var(--em); }
-.quiz-info-lbl { font-size: .6rem; font-weight: 800; color: var(--em); letter-spacing: 1px; text-transform: uppercase; }
-.quiz-title-input { font-size: 1.3rem; letter-spacing: -0.3px; outline: none; background: transparent; transition: color .2s; }
-
-.modal-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(15, 23, 42, 0.4); backdrop-filter: blur(4px); z-index: 2000; display: flex; align-items: center; justify-content: center; padding: 20px; }
-.modal-dialog { width: 100%; max-width: 550px; margin: 0; }
-.modal-dialog-scrollable { max-height: 90vh; display: flex; flex-direction: column; }
-.modal-content { background: #ffffff; }
-.correct-label { font-size:.65rem; font-weight:700; }
-.remove-choice-btn { font-size:.85rem; background: transparent; border: none; }
-.remove-choice-btn:hover { color: #ef4444 !important; }
-.option-preview-row:hover { border-color: var(--em) !important; background: var(--em-soft) !important; }
-.content-body:has(.quiz-builder-container) {
-  padding: 0 !important;
-  overflow: hidden !important;
-  height: calc(100vh - 70px) !important;
-  background-color: #f4f7fe;
+/* Circular Gauge Styling */
+.gauge-container {
+  position: relative;
+  width: 130px;
+  height: 130px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
-.content-body:has(.quiz-builder-container) .page-body { padding: 0 !important; height: 100% !important; }
-.content-body:has(.quiz-builder-container) .main-content { height: 100% !important; }
-.panel {
-  background: #fff;
-  border: 1px solid #e2e8f0;
+
+.svg-ring {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+  overflow: visible;
+}
+
+.ring-bg {
+  fill: none;
+  stroke: #f1f5f9;
+  stroke-width: 9;
+}
+
+.ring-fill {
+  fill: none;
+  stroke: var(--em);
+  stroke-width: 9;
+  stroke-linecap: round;
+  stroke-dasharray: 314; /* 2 * PI * r (50) ≈ 314 */
+  transition: stroke-dashoffset 0.45s ease;
+}
+
+.gauge-label-content {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  line-height: 1.1;
+  user-select: none;
+}
+
+.gauge-label-content h3 {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--txt);
+}
+
+.gauge-denominator {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--txt-mu);
+  margin-top: 2px;
+}
+
+/* Metadata breakdowns grid */
+.metrics-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.metric-box {
+  background: #f8fafc;
+  border: 1px solid var(--bdr);
   border-radius: 12px;
-  overflow: hidden;
-  display: flex; /* ត្រូវមាន display flex */
-  flex-direction: column; /* ត្រូវដាក់ជា column */
-  height: 100%; /* ត្រូវដាក់ height 100% ដើម្បីឱ្យស្មើនឹង Panel ខាងឆ្វេង */
+  padding: 10px 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
-.panel-head {
-  padding: 14px;
-  border-bottom: 1px solid #e2e8f0;
+.metric-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: var(--txt-mu);
+  margin-bottom: 4px;
+}
+
+.metric-value {
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: var(--txt-m);
+}
+
+/* Info Banner callout */
+.info-callout {
+  background: var(--em-soft);
+  border: 1px solid rgba(16, 185, 129, 0.15);
+  border-radius: 12px;
+  padding: 10px 14px;
+  font-size: 0.74rem;
   font-weight: 600;
+  color: #065f46;
+  display: flex;
+  align-items: flex-start;
+  text-align: start;
+  line-height: 1.4;
+}
+
+/* Back Button styling */
+.btn-outline-back {
+  border: 1px solid var(--bdr);
+  background: #ffffff;
+  color: var(--txt-m);
+  font-size: 0.8rem;
+  font-weight: 700;
+  border-radius: 10px;
+  padding: 8px 16px;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-outline-back:hover {
+  background-color: #f1f5f9;
+  border-color: #cbd5e1;
+  color: var(--txt);
+}
+
+.feed-col::-webkit-scrollbar {
+  width: 5px;
+}
+
+.feed-col::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+/* Question Editor Cards */
+.q-card {
+  background: var(--surf);
+  border: 1px solid var(--bdr);
+  border-radius: var(--r-xl);
+  box-shadow: var(--sh-sm);
+  overflow: hidden;
   flex-shrink: 0;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
 }
 
-.workspace { display: grid; grid-template-columns: 240px 1fr 260px; gap: 16px; padding: 16px; height: 100%; overflow: hidden; }
-.progress-circle { 
-  width: 120px; height: 120px; border-radius: 50%; border: 8px solid #e2e8f0; 
-  display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 0 auto;
+.q-card.active-card {
+  border-color: var(--em-dk);
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.08), var(--sh-md);
 }
-.q-card { background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; margin-bottom: 16px; }
-.panel { background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; display: flex; flex-direction: column; }
-.feed-col { overflow-y: auto; }
 
-.progress-circle { 
-  width: 110px; height: 110px; border-radius: 50%; border: 6px solid #ecfdf5; 
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  color: #059669; background: #f0fdf4;
+/* Editable Points Pill Wrapper */
+.pts-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--em-soft);
+  border-radius: 8px;
+  padding: 4px 10px;
+  border: 1px solid rgba(16, 185, 129, 0.15);
 }
-.btn-outline-success { border-color: #10b981; color: #10b981; }
-.btn-outline-success:hover { background: #10b981; color: #fff; }
+
+.pts-pill label {
+  font-size: 0.68rem;
+  font-weight: 800;
+  color: var(--em-dk);
+  margin: 0;
+}
+
+.pts-input {
+  width: 36px;
+  border: none;
+  background: transparent;
+  font-weight: 700;
+  color: var(--em-dk);
+  text-align: center;
+  outline: none;
+  font-size: 14px;
+}
+
+/* Textareas & Inputs */
+.q-field {
+  width: 100%;
+  border: 1px solid var(--bdr);
+  padding: 10px 14px;
+  border-radius: var(--r-md);
+  outline: none;
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: var(--txt);
+  background: #fafbfc;
+  transition: all 0.2s ease;
+}
+
+.q-field:focus {
+  border-color: var(--em);
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.08);
+}
+
+/* Choice Rows */
+.choice-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 12px;
+  border: 1px solid var(--bdr);
+  border-radius: var(--r-md);
+  background: #fafbfc;
+  transition: all 0.18s ease;
+}
+
+.choice-row:hover {
+  border-color: var(--em-mid);
+  background: #ffffff;
+}
+
+.choice-row.correct-highlight {
+  border-color: var(--em);
+  background: var(--em-soft);
+}
+
+.choice-lbl {
+  width: 26px;
+  height: 26px;
+  flex-shrink: 0;
+  border-radius: 6px;
+  background: var(--em-soft);
+  color: var(--em-dk);
+  font-weight: 800;
+  font-size: 0.72rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.choice-row.correct-highlight .choice-lbl {
+  background: var(--em-dk);
+  color: #ffffff;
+}
+
+.choice-input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--txt);
+  outline: none;
+  padding: 2px 4px;
+}
+
+.form-check-input.cr {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  border: 2px solid #cbd5e1;
+  border-radius: 50%;
+  transition: all 0.15s ease;
+  margin: 0;
+}
+
+.form-check-input.cr:checked {
+  background-color: var(--em-dk) !important;
+  border-color: var(--em-dk) !important;
+}
+
+.remove-choice-btn {
+  font-size: 0.85rem;
+  background: transparent;
+  border: none;
+  color: var(--txt-mu);
+  cursor: pointer;
+  transition: color 0.15s ease;
+  padding: 4px;
+}
+
+.remove-choice-btn:hover {
+  color: #ef4444 !important;
+}
+
+/* Action Buttons */
+.btn-action-delete {
+  background-color: #fff;
+  border: 1px solid #fee2e2;
+  color: #ef4444;
+  font-weight: 700;
+  font-size: 0.78rem;
+  border-radius: 8px;
+  padding: 6px 14px;
+  transition: all 0.2s;
+}
+
+.btn-action-delete:hover {
+  background-color: #fef2f2;
+}
+
+.btn-action-update {
+  background: linear-gradient(135deg, var(--em), var(--em-dk));
+  color: #ffffff;
+  border: none;
+  font-weight: 700;
+  font-size: 0.78rem;
+  border-radius: 8px;
+  padding: 6px 16px;
+  transition: all 0.2s;
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.15);
+}
+
+.btn-action-update:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
+}
+
+/* Right Overview Card Circular Progress */
+.overview-panel {
+  height: fit-content;
+}
+
+.progress-circle {
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  border: 6px solid var(--em-soft);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: var(--em-dk);
+  background: var(--em-soft);
+  box-shadow: inset 0 2px 6px rgba(16, 185, 129, 0.05);
+}
+
+.btn-outline-back {
+  border: 1px solid var(--bdr);
+  background: #ffffff;
+  color: var(--txt-m);
+  font-size: 0.8rem;
+  border-radius: 10px;
+  padding: 8px 16px;
+  transition: all 0.2s;
+}
+
+.btn-outline-back:hover {
+  background-color: #f1f5f9;
+  border-color: #cbd5e1;
+}
+
+/* Adaptive Screens rulesets */
+@media (max-width: 992px) {
+  .workspace {
+    grid-template-columns: 1fr;
+    height: auto;
+    overflow-y: auto;
+  }
+}
 </style>
-

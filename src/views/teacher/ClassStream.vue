@@ -20,21 +20,21 @@
         <div class="class-tabs-container d-flex align-items-center justify-content-between">
           <div class="class-tabs">
             <div class="class-tab" :class="{ active: currentTab === 'stream' }" @click="currentTab = 'stream'">
-              <i class="fas fa-stream"></i> Stream
+              <i class="fas fa-stream"></i> ថ្នាក់រៀន
             </div>
             <div class="class-tab" :class="{ active: currentTab === 'people' }" @click="currentTab = 'people'">
-              <i class="fas fa-users"></i> All Student
+              <i class="fas fa-users"></i> សិស្ស​ សរុប
               <span class="badge-count ms-2">({{ roomData?.students?.length || 0 }})</span>
             </div>
             <div class="class-tab" :class="{ active: currentTab === 'results' }" @click="currentTab = 'results'">
-              <i class="fas fa-chart-bar"></i> Student Result
+              <i class="fas fa-chart-bar"></i> លទ្ធផលសិស្ស
             </div>
           </div>
           <RouterLink
             :to="`/teacher/room-management/${props.roomId}/exams`"
             class="btn-exams-link"
           >
-            <i class="fas fa-file-alt me-2"></i> View All Exams
+            <i class="fas fa-file-alt me-2"></i>មើលការប្រឡងទាំងអស់
           </RouterLink>
         </div>
 
@@ -44,21 +44,21 @@
 
             <div class="side-panel">
               <div class="d-flex align-items-center justify-content-between mb-2">
-                <span style="font-size: 0.7rem; font-weight: 700; color: var(--txt-mu); text-transform: uppercase; letter-spacing: 1px;">Class Overview</span>
+                <span style="font-size: 0.7rem; font-weight: 700; color: var(--txt-mu); text-transform: uppercase; letter-spacing: 1px;">ទិដ្ឋភាពទូទៅនៃថ្នាក់រៀន</span>
                 <button class="btn btn-sm text-muted p-0"><i class="fas fa-chart-line"></i></button>
               </div>
               <div class="d-flex gap-2 mt-2">
                 <div class="text-center flex-fill">
                   <div style="font-weight: 700; color: var(--txt); font-size: 1.2rem;">{{ roomData?.students?.length || 0 }}</div>
-                  <div style="font-size: 0.65rem; color: var(--txt-mu); font-weight: 600;">Students</div>
+                  <div style="font-size: 0.65rem; color: var(--txt-mu); font-weight: 600;">សិស្ស</div>
                 </div>
                 <div class="text-center flex-fill border-start border-end">
-                  <div style="font-weight: 700; color: var(--em); font-size: 1.2rem;">86%</div>
-                  <div style="font-size: 0.65rem; color: var(--txt-mu); font-weight: 600;">Avg Grade</div>
+                  <div style="font-weight: 700; color: var(--em); font-size: 1.2rem;">{{ averageGrade }}%</div>
+                  <div style="font-size: 0.65rem; color: var(--txt-mu); font-weight: 600;">មធ្យមភាគ</div>
                 </div>
                 <div class="text-center flex-fill">
-                  <div style="font-weight: 700; color: var(--txt); font-size: 1.2rem;"></div>
-                  <div style="font-size: 0.65rem; color: var(--txt-mu); font-weight: 600;">Posts</div>
+                  <div style="font-weight: 700; color: var(--txt); font-size: 1.2rem;">{{posts?.length || 0 }}</div>
+                  <div style="font-size: 0.65rem; color: var(--txt-mu); font-weight: 600;">ដាក់ផ្សាយ</div>
                 </div>
               </div>
             </div>
@@ -114,10 +114,10 @@
                     </div>
                     <div class="p-3 flex-grow-1">
                       <h6 class="mb-0 fw-bold text-dark">{{ post.title }}</h6>
-                      <small class="text-muted">Assignment • Click to open exam</small>
+                      <small class="text-muted">តេស្ត • ចុចដើម្បីបើកវិញ្ញាសា</small>
                     </div>
                     <div class="p-3">
-                      <span class="btn btn-sm px-3 rounded-pill" style="background-color: #e6fffa; color: #38b2ac; font-weight: 600;">View Details</span>
+                      <span class="btn btn-sm px-3 rounded-pill" style="background-color: #e6fffa; color: #38b2ac; font-weight: 600;">មើលលម្អិត</span>
                     </div>
                   </a>
                 </div>
@@ -131,12 +131,12 @@
         <div v-if="currentTab === 'people'" class="tab-pane active">
           <div class="roster-container">
             <div class="roster-header">
-              <h3>Student Roster ({{ roomData?.students?.length || 0 }})</h3>
-              <button class="btn btn-sm btn-emerald">Invite</button>
+              <h3>សិស្សសរុប ({{ roomData?.students?.length || 0 }})</h3>
+              <!-- <button class="btn btn-sm btn-emerald">Invite</button> -->
             </div>
             <table class="roster-table">
               <thead>
-                <tr><th>Student</th></tr>
+                <tr><th>សិស្ស</th></tr>
               </thead>
               <tbody>
                 <tr v-for="student in roomData?.students" :key="student.id">
@@ -150,7 +150,7 @@
                     </div>
                   </td>
                   <td class="text-end">
-                    <button class="btn-remove-student" @click="openDeleteModal(student)">Remove</button>
+                    <button class="btn-remove-student" @click="openDeleteModal(student)">លុបចេញ</button>
                   </td>
                 </tr>
               </tbody>
@@ -424,6 +424,20 @@ const prevPage = () => {
     currentPage.value--
   }
 }
+
+// Calculate the dynamic average grade based on student results
+const averageGrade = computed(() => {
+  if (!studentResults.value || studentResults.value.length === 0) {
+    return 0
+  }
+  
+  const totalScore = studentResults.value.reduce((sum, res) => {
+    return sum + Number(res.score || 0)
+  }, 0)
+  
+  // Return rounded average
+  return Math.round(totalScore / studentResults.value.length)
+})
 
 const nextPage = () => {
   if (currentPage.value < totalPages.value) {

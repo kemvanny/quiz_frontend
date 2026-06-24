@@ -80,28 +80,32 @@
             <p>មិនទាន់មានវិញ្ញាសាណាមួយត្រូវបានបង្កើតឡើយ។</p>
           </div>
 
-          <div v-if="searchQuery.length > 0" class="exam-list mb-4">
+          <div v-if="searchQuery.length > 0" class="search-results-list mb-4">
             <div
               v-for="exam in paginatedExams"
               :key="exam.id"
-              class="exam-list-item mb-2 p-3 border rounded-3 bg-white"
+              class="search-row"
             >
-              <div class="d-flex justify-content-between align-items-center">
-                <div>
-                  <h6 class="fw-bold mb-0 text-dark">{{ exam.title }}</h6>
-                  <small
-                    class="text-muted text-uppercase fw-bold"
-                    style="font-size: 0.7rem"
-                    >{{ exam.type }}</small
-                  >
-                </div>
-                <router-link
-                  :to="`/teacher/room-management/${exam.room_id || '0'}/exams/${exam.id}`"
-                  class="btn btn-sm btn-outline-success rounded-pill px-3"
-                >
-                  មើលវិញ្ញាសា
-                </router-link>
+              <div class="search-row-icon" :class="exam.status === 'active' ? 'sr-active' : 'sr-draft'">
+                <i class="fas fa-file-alt"></i>
               </div>
+
+              <div class="search-row-main">
+                <span class="search-row-title">{{ exam.title }}</span>
+                <span class="search-row-type">{{ exam.type }}</span>
+              </div>
+
+              <div class="search-row-meta">
+                <span class="search-row-pts"><i class="far fa-clock me-1"></i>{{ exam.duration }} នាទី</span>
+                <span class="sr-badge" :class="exam.status === 'active' ? 'srb-active' : 'srb-draft'">{{ exam.status }}</span>
+              </div>
+
+              <router-link
+                :to="`/teacher/room-management/${exam.room_id || '0'}/exams/${exam.id}`"
+                class="search-row-link"
+              >
+                <i class="fas fa-arrow-right"></i>
+              </router-link>
             </div>
           </div>
 
@@ -230,7 +234,7 @@
                 <small
                   class="text-muted"
                   style="font-size: 0.78rem; font-weight: 600"
-                  >{{ room.student_count || room.count || 0 }} Students
+                  >{{ room.student_count || room.count || 0 }} សិស្ស
                   Joined</small
                 >
               </div>
@@ -238,7 +242,7 @@
                 to="/teacher/room-management"
                 class="text-success text-decoration-none small"
                 style="font-size: 0.85rem; font-weight: 700"
-                >Manage</router-link
+                >មើលលម្អិត</router-link
               >
             </div>
           </div>
@@ -248,7 +252,7 @@
             class="text-center small text-decoration-none fw-bold text-success py-2 border-top border-light-subtle d-block style-all-rooms-link"
             style="font-size: 0.85rem"
           >
-            មើលបន្ទប់ទាំងអស់ (See All Rooms)
+            មើលបន្ទប់ទាំងអស់ 
             <i class="fas fa-arrow-right ms-1" style="font-size: 0.75rem"></i>
           </router-link>
 
@@ -302,7 +306,7 @@ const isLoading = ref(false);
 const toast = useToast();
 
 const currentPage = ref(1);
-const itemsPerPage = 4;
+const itemsPerPage = 10;
 
 const searchQuery = inject("searchQuery");
 
@@ -684,5 +688,114 @@ span i,
 }
 .cursor-pointer {
   cursor: pointer;
+}
+.search-results-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.search-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  transition: all 0.2s ease;
+}
+
+.search-row:hover {
+  border-color: #10b981;
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.08);
+}
+
+.search-row-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  flex-shrink: 0;
+}
+
+.sr-active { background: rgba(16, 185, 129, 0.08); color: #10b981; }
+.sr-draft  { background: #f1f5f9; color: #94a3b8; }
+
+.search-row-main {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.search-row-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: #1e293b;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.search-row-type {
+  font-size: 10px;
+  font-weight: 700;
+  color: #10b981;
+  background: rgba(16, 185, 129, 0.08);
+  padding: 1px 7px;
+  border-radius: 5px;
+  text-transform: uppercase;
+  flex-shrink: 0;
+}
+
+.search-row-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.search-row-pts {
+  font-size: 11px;
+  color: #94a3b8;
+  font-weight: 600;
+}
+
+.sr-badge {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 9px;
+  border-radius: 20px;
+  text-transform: uppercase;
+}
+
+.srb-active { background: rgba(16, 185, 129, 0.1); color: #047857; }
+.srb-draft  { background: #f1f5f9; color: #64748b; }
+
+.search-row-link {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  background: #f8fafc;
+  color: #94a3b8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  text-decoration: none;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+
+.search-row-link:hover {
+  background: #10b981;
+  border-color: #10b981;
+  color: #fff;
 }
 </style>
