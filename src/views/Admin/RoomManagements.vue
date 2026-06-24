@@ -188,6 +188,9 @@ onMounted(() => fetchRooms())
 </script>
 
 <style scoped>
+.form-control{
+    font-family: 'Kantumruy Pro' !important;
+}
 .room-management-page {
     padding: 1.75rem 1.5rem;
     font-family: 'DM Sans', sans-serif;
@@ -230,6 +233,7 @@ onMounted(() => fetchRooms())
     padding-left: 2.4rem;
     padding-right: 2.4rem;
     border-radius: 8px;
+    font-family: 'Kantumruy Pro';
     border: 1.5px solid #dcfce7;
     background: #f0fdf4;
     font-size: 0.875rem;
