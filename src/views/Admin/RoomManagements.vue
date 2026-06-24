@@ -59,7 +59,7 @@
             </div>
 
             <!-- Room Cards Grid -->
-            <div v-else class="row g-4 room-grid">
+            <div v-else class="row g-4 room-grid mb-4">
                 <div v-for="(room,index) in rooms" :key="room.id" class="col-12 col-sm-6 col-lg-4 col-xl-3">
                     <div class="room-card h-100">
                         <div class="card-accent" :style="getAccentColor(index)">
@@ -111,7 +111,7 @@
                 </div>
             </div>
 
-            <BasePagination v-if="pagination.total > 0" :current-page="pagination.page" :limit="8"
+            <BasePagination class="font" v-if="pagination.total > 0" :current-page="pagination.page" :limit="8"
                 :total="pagination.total" @update:page="fetchRooms" />
 
         </div>
@@ -190,12 +190,14 @@ onMounted(() => fetchRooms())
 <style scoped>
 .room-management-page {
     padding: 1.75rem 1.5rem;
-    /* min-height: 100vh; */
     font-family: 'DM Sans', sans-serif;
     background: #f1fdf7;
     border-radius: 30px;
 }
 
+.font{
+    font-family: 'Kantumruy Pro';
+}
 
 .page-subtitle {
     font-size: 0.82rem;
@@ -421,6 +423,7 @@ onMounted(() => fetchRooms())
     color: #9ca3af;
     text-transform: uppercase;
     letter-spacing: 0.4px;
+    font-family: "Poppins", "Kantumruy Pro", "Inter", sans-serif;
 }
 
 /* Footer row */
