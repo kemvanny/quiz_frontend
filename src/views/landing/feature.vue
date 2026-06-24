@@ -15,16 +15,16 @@
                 color: #059669;
                 border-color: rgba(16, 185, 129, 0.25);
               "
-              >VEATIKA TEST SAMOTTHAPHEAP CHHLATVAI</span
+              >វេទិកាវាយតម្លៃចំណេះដឹងឆ្លាតវៃ</span
             >
             <h1 class="fw-semibold display-4 mb-5 mt-3">
               <span class="mb-4">វាស់ស្ទង់ចំណេះដឹង</span><br />
               <span style="color: #10b981;">ប្រកបដោយប្រសិទ្ធភាព</span>
             </h1>
             <p class="lead mb-5 fw-500 text-muted col-lg-11 lh-2">
-              បំប្លែងការរៀនសូត្រទៅជាការកំសាន្ត។ Quiz ជួយអ្នកបង្កើតកម្រងសំណួរ
+              បំប្លែងការរៀនសូត្រទៅជាការកំសាន្ត។ Pralong ជួយអ្នកបង្កើតកម្រងសំណួរ
               វាយតម្លៃសមត្ថភាព
-              និងទទួលបានរបាយការណ៍លទ្ធផលភ្លាមៗតាមរយៈល្បែងកំសាន្តខួរក្បាលដ៏សម្បូរបែប។
+              និងទទួលបានរបាយការណ៍លទ្ធផលភ្លាមៗតាមរយៈល្បែងកំសាន្តខួរក្បាលដ៏សម្បូរបែប
             </p>
 
             <div class="d-flex gap-3">
@@ -60,7 +60,7 @@
                 <div class="mockup-item">
                   <div class="check-box">A</div>
                   <div class="flex-grow-1">
-                    <div class="fw-700 small">ជម្រើសទីមួយ (ខុស)</div>
+                    <div class="fw-700 small">ជម្រើសទីមួយ</div>
                   </div>
                 </div>
 
@@ -78,7 +78,7 @@
                 <div class="mockup-item">
                   <div class="check-box">C</div>
                   <div class="flex-grow-1">
-                    <div class="fw-700 small">ជម្រើសទីបី (ខុស)</div>
+                    <div class="fw-700 small">ជម្រើសទីបី</div>
                   </div>
                 </div>
 
@@ -136,7 +136,7 @@
             </div>
             <h3 class="fw-semibold mb-3">របៀបបង្កើតកម្រងសំណួរកម្រិតខ្ពស់</h3>
             <p class="text-muted fw-500 mb-4">
-              QuizApp ផ្ដល់នូវឧបករណ៍ងាយស្រួលក្នុងការបង្កើត
+              Pralong Wep ផ្ដល់នូវឧបករណ៍ងាយស្រួលក្នុងការបង្កើត
               និងគ្រប់គ្រងរាល់ទម្រង់សំណួរ ដើម្បីបំពេញតម្រូវការសិក្សា
               និងការកំសាន្ត៖
             </p>
@@ -155,21 +155,21 @@
                         class="fas fa-check-circle me-2"
                         style="color: #10b981"
                       ></i>
-                      Multiple Choice (រើសចម្លើយ)
+                      Multiple Choice
                     </div>
                     <div>
                       <i
                         class="fas fa-check-circle me-2"
                         style="color: #10b981"
                       ></i>
-                      True/False (ខុស ឬត្រូវ)
+                      True/False
                     </div>
                     <div>
                       <i
                         class="fas fa-check-circle me-2"
                         style="color: #10b981"
                       ></i>
-                      Short Answer (សំណួរខ្លី)
+                      Short Answer
                     </div>
                   </div>
                 </div>
@@ -182,7 +182,7 @@
                     <span
                       class="x-small fw-semibold uppercase d-block mb-3"
                       style="color: #059669"
-                      >ប្រព័ន្ធគ្រប់គ្រងសំណួរ (CRUD)</span
+                      >ប្រព័ន្ធគ្រប់គ្រងសំណួរ</span
                     >
                     <p class="x-small text-muted mb-0 lh-base">
                       អ្នកអាច បង្កើត មើល កែប្រែ ឬលុប
@@ -207,7 +207,7 @@
             <h4 class="fw-semibold">កំណត់ពេលវេលាច្បាស់លាស់</h4>
             <p class="text-muted small">
               បង្កើតការប្រកួតប្រជែងដ៏ជក់ចិត្ត។ អ្នកអាចកំណត់ការរាប់ថយក្រោយ
-              (Timer) សម្រាប់សំណួរនីមួយៗ ឬសម្រាប់ Quiz
+             សម្រាប់សំណួរនីមួយៗ ឬសម្រាប់ Quiz
               ទាំងមូលដើម្បីវាស់ស្ទង់ភាពរហ័សរហួន។
             </p>
 
@@ -241,7 +241,7 @@
             <h4 class="fw-semibold">គ្រប់គ្រងបន្ទប់សិក្សាឆ្លាតវៃ</h4>
             <p class="text-muted small mb-4">
               ប្រព័ន្ធគ្រប់គ្រងសាលា និងថ្នាក់រៀនដ៏ទូលំទូលាយ。 Admin អាចបង្កើតគណនីគ្រូ និងសិស្ស 
-              ហើយគ្រូអាចបង្កើតបន្ទប់សិក្សា (Room) បង្កើត Quiz និងបញ្ចូលសិស្សដោយផ្ទាល់។
+              ហើយគ្រូអាចបង្កើតបន្ទប់សិក្សា  បង្កើត Quiz និងបញ្ចូលសិស្សដោយផ្ទាល់
             </p>
             <div
               class="mt-auto p-3 border border-dashed rounded-4 bg-light"
@@ -269,11 +269,11 @@
             <h4 class="fw-semibold">វិភាគលទ្ធផលភ្លាមៗ</h4>
             <p class="text-muted small mb-4">
               មើលឃើញការរីកចម្រើនរបស់អ្នក។ ប្រព័ន្ធនឹងបង្ហាញក្រាហ្វិកស្ថិតិ
-              អត្រាឆ្លើយត្រូវ និងពិន្ទុសរុបភ្លាមៗបន្ទាប់ពីបញ្ចប់។
+              អត្រាឆ្លើយត្រូវ និងពិន្ទុសរុបភ្លាមៗបន្ទាប់ពីបញ្ចប់
             </p>
             <div class="progress-hud mt-auto">
               <div class="d-flex justify-content-between x-small fw-800 mb-2">
-                <span>អត្រាឆ្លើយត្រូវ (Accuracy)</span>
+                <span>អត្រាឆ្លើយត្រូវ</span>
                 <span style="color: #059669">៨៥%</span>
               </div>
               <div class="bar-container">
@@ -294,7 +294,7 @@
             <h4 class="fw-semibold">ប្រវត្តិ និងគណនីផ្ទាល់ខ្លួន</h4>
             <p class="text-muted small">
               រក្សាទុករាល់សមិទ្ធផលដែលអ្នកសម្រេចបាន។ តាមដានប្រវត្តិនៃការលេង Quiz
-              ពិន្ទុខ្ពស់បំផុត និងមេដាយកិត្តិយសដែលអ្នកធ្លាប់ទទួលបាន។
+              ពិន្ទុខ្ពស់បំផុត និងមេដាយកិត្តិយសដែលអ្នកធ្លាប់ទទួលបាន
             </p>
             <div
               class="mt-auto pt-3 border-top d-flex align-items-center gap-2"
@@ -302,7 +302,7 @@
               <div
                 class="badge bg-success bg-opacity-10 text-success rounded-pill px-3 py-2 x-small fw-800"
               >
-                <i class="fas fa-medal me-1"></i> Level 12 Verified
+                <i class="fas fa-medal me-1"></i> Level 12 បានផ្ទៀងផ្ទាត់
               </div>
             </div>
           </div>
