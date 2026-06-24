@@ -17,7 +17,6 @@ import RoomDetails from '@/views/teacher/RoomDetail.vue'
 import ExamDetailView from '@/views/teacher/ExamDetailView.vue'
 import ClassStream from '@/views/teacher/ClassStream.vue'
 import StudentResults from '@/views/teacher/StudentResults.vue'
-import TeacherValidations from '@/views/teacher/TeacherValidations.vue'
 import Profile from '@/views/teacher/Profile.vue'
 import AnalyticsResult from '@/views/student/AnalyticsResult.vue'
 import ProfileSetting from '@/views/student/ProfileSetting.vue'
@@ -179,12 +178,6 @@ const router = createRouter({
           name: 'StudentResults',
           component: StudentResults,
           meta: { title: "Student Results" }
-        },
-        {
-          path: 'teacher-validations',
-          name: 'TeacherValidations',
-          component: TeacherValidations,
-          meta: { title: "Teacher Validations" }
         },
         {
           path: 'profile',
