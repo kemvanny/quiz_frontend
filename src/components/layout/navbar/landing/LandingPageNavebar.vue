@@ -31,7 +31,7 @@
     <div class="navbar-main">
 
       <!-- LOGO -->
-      <router-link class="logo-link" to="/">
+      <router-link class="logo-link" to="/" @click="scrollToTop">
         <img
           :src="logo"
           alt="Logo"
@@ -43,21 +43,21 @@
       <!-- DESKTOP NAV -->
       <nav class="desktop-nav">
 
-        <router-link
+        <router-link  @click="scrollToTop"
           class="nav-item"
           to="/"
         >
           ទំព័រដើម
         </router-link>
 
-        <router-link
+        <router-link  @click="scrollToTop"
           class="nav-item"
           to="/features"
         >
           មុខងារសំខាន់ៗ
         </router-link>
 
-        <router-link
+        <router-link  @click="scrollToTop"
           class="nav-item"
           to="/about"
         >
@@ -139,6 +139,13 @@ const isMobileOpen = ref(false);
 
 const closeMenu = () => {
   isMobileOpen.value = false;
+};
+
+const scrollToTop = () => {
+  window.scrollTo({
+    top: 0,
+    behavior: 'smooth' 
+  });
 };
 </script>
 
