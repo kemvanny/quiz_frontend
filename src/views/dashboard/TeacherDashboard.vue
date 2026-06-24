@@ -27,75 +27,91 @@
 
         <!-- Quick Actions -->
         <div class="custom-card mb-4">
-          <h5 class="section-title mb-3">សកម្មភាពរហ័ស (Quick Actions)</h5>
+          <h5 class="section-title mb-3">សកម្មភាពរហ័ស</h5>
           <div class="d-flex flex-wrap gap-3">
             <button class="btn-emerald" @click="goToCreateExam">
               <i class="fas fa-plus me-2"></i> Create Quiz
             </button>
-            <button class="btn-emerald-outline" @click="goToAssignment">
+            <!-- <button class="btn-emerald-outline" @click="goToAssignment">
               <i class="fas fa-file-upload me-2"></i> Create Assignment
             </button>
             <button class="btn-emerald-outline" @click="goToFinalExam">
               <i class="fas fa-graduation-cap me-2"></i> Create Final Exam
-            </button>
+            </button> -->
           </div>
         </div>
 
         <!-- ========================================================= -->
-        <div class="custom-card mb-4">
-          <div class="d-flex justify-content-between align-items-center mb-3">
-            <h5 class="section-title mb-0">វិញ្ញាសារបស់ខ្ញុំ (My Quizzes)</h5>
-            <span class="badge bg-success bg-opacity-10 text-success rounded-pill px-3" style="font-size: 0.75rem; font-weight: 700;">
-              សរុប៖ {{ examList.length }} វិញ្ញាសា
-            </span>
-          </div>
+          <div class="custom-card mb-4">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <h5 class="section-title mb-0">វិញ្ញាសារបស់ខ្ញុំ</h5>
+              <span class="badge bg-success bg-opacity-10 text-success rounded-pill px-3" style="font-size: 0.75rem; font-weight: 700;">
+                {{ examList.length }} វិញ្ញាសា
+              </span>
+            </div>
 
-          <!-- 1. បង្ហាញពេលកំពុងទាញទិន្នន័យ (Loading State) -->
-          <div v-if="isLoading" class="text-center py-4">
-            <div class="spinner-border text-success spinner-border-sm" role="status"></div>
-            <p class="text-muted small mt-2 mb-0">កំពុងទាញយកទិន្នន័យវិញ្ញាសា...</p>
-          </div>
+            <div v-if="isLoading" class="text-center py-4">
+              <div class="spinner-border text-success spinner-border-sm" role="status"></div>
+            </div>
 
-          <!-- 2. បង្ហាញពេលអត់ទាន់មានវិញ្ញាសាសោះ (Empty State) -->
-          <div v-else-if="examList.length === 0" class="text-center py-4 text-muted small">
-            <i class="fas fa-folder-open fa-2x mb-2 opacity-50"></i>
-            <p class="mb-0">មិនទាន់មានវិញ្ញាសាណាមួយត្រូវបានបង្កើតឡើយ។</p>
-          </div>
+            <div v-else-if="examList.length === 0" class="text-center py-4 text-muted small">
+              <p>មិនទាន់មានវិញ្ញាសាណាមួយត្រូវបានបង្កើតឡើយ។</p>
+            </div>
 
-          <!-- 3. បង្ហាញបញ្ជីកាតវិញ្ញាសា (Data Grid Grid) -->
-          <div v-else class="row g-3">
-            <div class="col-12 col-md-6" v-for="exam in examList" :key="exam.id">
-              <div class="p-3 rounded-3 border bg-white h-100 d-flex flex-column" style="transition: 0.2s; border-color: var(--bdr) !important;">
-                
-                <!-- Status & Time Border -->
-                <div class="d-flex justify-content-between align-items-center mb-2">
-                  <span class="badge rounded-pill px-2.5 py-1" style="font-size: 0.7rem; font-weight: 700;"
-                        :class="exam.status === 'active' ? 'bg-success bg-opacity-10 text-success' : 'bg-warning bg-opacity-10 text-warning'">
-                    {{ exam.status === 'active' ? 'Active' : 'Draft' }}
-                  </span>
-                  <span class="text-muted small" style="font-size: 0.78rem; font-weight: 600;">
-                    <i class="far fa-clock me-1"></i>{{ exam.duration }} នាទី
-                  </span>
-                </div>
-
-                <!-- Title -->
-                <h6 class="fw-bold text-dark mb-1 text-truncate" style="font-size: 0.92rem;">{{ exam.title }}</h6>
-                <div class="text-muted small mb-3" style="font-size: 0.75rem;">Type: <span class="text-uppercase fw-bold">{{ exam.type }}</span></div>
-                
-                <!-- Points and Actions -->
-                <div class="d-flex justify-content-between align-items-center mt-auto pt-2 border-top border-light">
-                  <span class="fw-bold text-success" style="font-size: 0.82rem;">ពិន្ទុ៖ {{ exam.total_points }}pt</span>
-                  
-                  <div class="d-flex gap-1">
-                    <button class="btn btn-sm btn-light text-primary py-1 px-2 rounded-2" style="font-size: 0.75rem;"><i class="fas fa-edit"></i></button>
-                    <button class="btn btn-sm btn-light text-danger py-1 px-2 rounded-2" style="font-size: 0.75rem;"><i class="fas fa-trash-alt"></i></button>
+            <div v-if="searchQuery.length > 0" class="exam-list mb-4">
+              <div v-for="exam in paginatedExams" :key="exam.id" class="exam-list-item mb-2 p-3 border rounded-3 bg-white">
+                <div class="d-flex justify-content-between align-items-center">
+                  <div>
+                    <h6 class="fw-bold mb-0 text-dark">{{ exam.title }}</h6>
+                    <small class="text-muted text-uppercase fw-bold" style="font-size: 0.7rem;">{{ exam.type }}</small>
                   </div>
+                  <router-link :to="`/teacher/room-management/${exam.room_id || '0'}/exams/${exam.id}`" 
+                              class="btn btn-sm btn-outline-success rounded-pill px-3">
+                    មើលវិញ្ញាសា
+                  </router-link>
                 </div>
-
               </div>
             </div>
-          </div>
+
+            <div v-else class="row g-3">
+    <div class="col-12 col-md-6" v-for="exam in paginatedExams" :key="exam.id">
+      <router-link :to="`/teacher/room-management/${exam.room_id || '0'}/exams/${exam.id}`"
+        class="p-3 rounded-3 border bg-white h-100 d-flex flex-column text-decoration-none" 
+        style="transition: 0.2s; border-color: var(--bdr) !important; color: inherit; display: block;"
+      >
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <span class="badge rounded-pill px-2.5 py-1" :class="exam.status === 'active' ? 'bg-success bg-opacity-10 text-success' : 'bg-warning bg-opacity-10 text-warning'">
+            {{ exam.status === 'active' ? 'Active' : 'Draft' }}
+          </span>
+          <span class="text-muted small fw-bold">
+            <i class="far fa-clock me-1"></i>{{ exam.duration }} នាទី
+          </span>
         </div>
+        <h6 class="fw-bold text-dark mb-1 text-truncate">{{ exam.title }}</h6>
+        <div class="text-muted small mb-3">Type: <span class="text-uppercase fw-bold">{{ exam.type }}</span></div>
+        <div class="d-flex justify-content-between align-items-center mt-auto pt-2 border-top border-light">
+          <span class="fw-bold text-success" style="font-size: 0.82rem;">ពិន្ទុ៖ {{ exam.total_points }}pt</span>
+        </div>
+      </router-link>
+    </div>
+  </div>
+
+            <div v-if="totalPages > 1" class="d-flex justify-content-center align-items-center gap-2 mt-4">
+              <button class="btn btn-sm btn-light border" :disabled="currentPage === 1" @click="currentPage--">
+                <i class="fas fa-chevron-left"></i>
+              </button>
+              <div class="d-flex gap-1">
+                <button v-for="page in totalPages" :key="page" class="btn btn-sm"
+                        :class="currentPage === page ? 'btn-emerald text-white' : 'btn-light border'"
+                        @click="currentPage = page" style="min-width: 32px;">
+                  {{ page }}
+                </button>
+              </div>
+              <button class="btn btn-sm btn-light border" :disabled="currentPage === totalPages" @click="currentPage++">
+                <i class="fas fa-chevron-right"></i>
+              </button>
+            </div>
+          </div>
         <!-- ========================================================= -->
 
         <!-- Class Performance Overview -->
@@ -151,7 +167,7 @@
       <!-- Right Sidebar (Rooms, Expiring, Security) -->
       <div class="col-12 col-lg-4">
         <div class="custom-card d-flex flex-column" style="min-height: 380px;">
-          <h5 class="section-title mb-3">Assessment Rooms</h5>
+          <h5 class="section-title mb-3">បន្ទប់សិក្សា</h5>
           
           <div v-if="loadingRooms" class="text-center py-4 flex-grow-1 d-flex align-items-center justify-content-center">
             <div class="spinner-border text-success spinner-border-sm" role="status"></div>
@@ -184,24 +200,12 @@
           </button>
         </div>
 
-        <!-- Expiring Soon -->
-        <div class="custom-card">
-          <h5 class="section-title mb-3">Expiring Soon</h5>
-          <div class="d-flex align-items-center gap-2 mb-3" v-for="(item, idx) in expiringItems" :key="idx">
-            <div class="rounded-circle" :class="item.bgClass" style="width:8px; height:8px; flex-shrink: 0;"></div>
-            <div>
-              <p class="mb-0 text-dark room-name" style="font-size: 0.9rem;">{{ item.title }}</p>
-              <small :class="item.textClass" style="font-size: 0.78rem; font-weight: 700;">{{ item.timeText }}</small>
-            </div>
-          </div>
-        </div>
-
         <!-- Security Guard Info Box -->
-        <div class="custom-card text-center p-4" style="background: var(--emerald-soft);">
+        <!-- <div class="custom-card text-center p-4" style="background: var(--emerald-soft);">
           <h6 class="text-success mb-2" style="font-size: 1rem; font-weight: 700;">Secure Mode Active</h6>
           <p class="text-muted small mb-4" style="font-size: 0.78rem; line-height: 1.4; font-weight: 600;">Tab-switching and screenshot protections are enabled system-wide.</p>
           <router-link to="/teacher/teacher-validations" class="btn btn-white w-100 border border-2 rounded-4 py-2.5 small bg-white text-success text-decoration-none d-block" style="font-size: 0.88rem; font-weight: 700;">Security Settings</router-link>
-        </div>
+        </div> -->
       </div>
     </div>
   </div>
@@ -218,6 +222,7 @@
 import { ref, computed, onMounted } from 'vue' 
 import { useRouter } from 'vue-router'
 import { useToast } from 'vue-toastification' 
+import { inject } from 'vue';
 import { getMyRooms } from '@/api/teacher.api';
 import { getExams } from '@/api/exam.api'
 
@@ -228,6 +233,11 @@ const loadingRooms = ref(false);
 const examList = ref([])      
 const isLoading = ref(false)   
 const toast = useToast() 
+
+const currentPage = ref(1)
+const itemsPerPage = 4 
+
+const searchQuery = inject('searchQuery');
 
 const fetchBackendRooms = async () => {
   try {
@@ -362,6 +372,27 @@ const expiringItems = ref([
     textClass: 'text-danger'
   }
 ])
+
+
+const paginatedExams = computed(() => {
+  // ត្រងយកវិញ្ញាសាណាដែលមានចំណងជើងត្រូវនឹងអក្សរដែលវាយ
+  const filtered = examList.value.filter(exam => 
+    exam.title.toLowerCase().includes(searchQuery.value.toLowerCase())
+  );
+
+  // បន្ទាប់មកទើបធ្វើការកាត់ (Pagination) តាមទំព័រ
+  const start = (currentPage.value - 1) * itemsPerPage;
+  const end = start + itemsPerPage;
+  return filtered.slice(start, end);
+});
+
+// ៣. កែសម្រួល totalPages ឱ្យស្របតាមលទ្ធផលដែលរកឃើញ
+const totalPages = computed(() => {
+  const filtered = examList.value.filter(exam => 
+    exam.title.toLowerCase().includes(searchQuery.value.toLowerCase())
+  );
+  return Math.ceil(filtered.length / itemsPerPage);
+});
 </script>
 
 <style scoped>
@@ -451,7 +482,31 @@ span i,
 .trend-text {
   font-weight: 700 !important;
 }
+/* កែលម្អប៊ូតុង Pagination */
+.btn-emerald {
+  background-color: var(--emerald, #10b981) !important;
+  border-color: var(--emerald, #10b981) !important;
+}
 
+.btn-light.border {
+  border-color: #e2e8f0 !important;
+  color: #64748b;
+}
+
+.btn-light.border:hover {
+  background-color: #f1f5f9;
+}
+
+/* រចនាប័ទ្មសម្រាប់កាតវិញ្ញាសាដើម្បីឱ្យស្អាត (Clean Design) */
+.p-3.rounded-3.border.bg-white {
+  box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+  border: 1px solid #e2e8f0 !important;
+}
+
+.p-3.rounded-3.border.bg-white:hover {
+  border-color: var(--emerald) !important;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.1);
+}
 /* ពង្រីកទំហំប៊ូតុង និងអក្សរលើប៊ូតុង */
 .btn-emerald { 
   background: var(--emerald); 
@@ -465,6 +520,20 @@ span i,
 }
 .btn-emerald:hover {
   background: #059669;
+}
+.exam-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.exam-list-item {
+  padding: 15px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+}
+.exam-list-item:hover {
+  border-color: var(--emerald);
 }
 
 .btn-emerald-outline { 
