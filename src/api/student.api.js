@@ -66,7 +66,6 @@ export default {
   getRoomDetail(roomId) {
     return api.get(`/exams/student/rooms/${roomId}`);
   },
-  // ហៅ API ទី ២ ព័ត៌មាន Posts
   getRoomPosts(roomId) {
     return api.get(`/exams/student/rooms/${roomId}/posts`);
   }

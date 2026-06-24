@@ -7,7 +7,8 @@
           <div class="white-flat-card p-4 d-flex align-items-center gap-3">
             <div class="skeleton-avatar skeleton-shimmer"></div>
             <div class="flex-grow-1">
-              <div class="skeleton-line skeleton-shimmer mb-2" style="width: 40%; height: 12px;"></div>
+              <div class="skeleton-line skeleton-shimmer m
+              b-2" style="width: 40%; height: 12px;"></div>
               <div class="skeleton-line skeleton-shimmer" style="width: 75%; height: 20px;"></div>
             </div>
           </div>
