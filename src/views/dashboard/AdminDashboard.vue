@@ -514,15 +514,17 @@ onMounted(() => {
 
 <style>
 .page-title {
-  font-size: 22px;
-  font-weight: 800;
-  letter-spacing: -0.5px;
+  font-size: 30px;
+  font-weight: 600;
+  letter-spacing: -0.3px;
+  margin-bottom: 4px;
 }
 
 .page-subtitle {
   font-size: 15px;
   color: var(--text-muted);
   font-weight: 500;
+  margin-bottom: 10px;
 }
 
 /* ── STAT CARDS ── */

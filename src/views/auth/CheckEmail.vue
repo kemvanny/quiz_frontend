@@ -100,7 +100,7 @@ p {
   display: inline-block;
   padding: 14px 30px;
   background: #f3f7fb;
-  color: #3cbfae;
+  color: #10b981;
   text-decoration: none;
   border-radius: 50px;
   font-weight: 700;
@@ -108,7 +108,7 @@ p {
 }
 
 .btn-back:hover {
-  background: #3cbfae;
+  background: #059669;
   color: #fff;
   transform: translateY(-2px);
   box-shadow: 0 5px 15px rgba(60, 191, 174, 0.2);

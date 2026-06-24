@@ -246,7 +246,7 @@ input:-webkit-autofill:active {
 
 .left-panel {
     width: 45%;
-    background: linear-gradient(135deg, #3cbfae, #2fa898);
+    background: linear-gradient(135deg, #10b981, #059669);
     padding: 50px 40px 230px;
     position: relative;
     overflow: hidden;
@@ -399,7 +399,7 @@ input:-webkit-autofill:active {
     border: none;
     padding: 14px;
     border-radius: 50px;
-    background: linear-gradient(135deg, #3cbfae, #2fa898);
+    background: linear-gradient(135deg, #10b981, #059669);
     color: #fff;
     font-weight: 800;
     font-size: 0.95rem;
