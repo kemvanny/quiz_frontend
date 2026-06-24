@@ -134,114 +134,142 @@
             </div>
 
             <!-- Step 3: Exam Workspace -->
-            <div v-else-if="currentStep === 3" class="row" id="exam-workspace">
-                <div class="col-lg-3 mb-4">
-                    <div class="sidebar-card p-4 h-100 d-flex flex-column justify-content-between bg-white border-0">
-                        <div>
-                            <div class="d-flex align-items-center justify-content-between mb-3">
-                                <h6 class="fw-bold text-dark mb-0">បញ្ជីសំណួរ</h6>
-                                <span class="badge-count-status">
-                                    {{ answeredCount }} / {{ examQuestions.length }}
-                                </span>
+            <div v-else-if="currentStep === 3" class="row position-relative" id="exam-workspace">
+
+                <div class="exam-container-wrapper d-flex flex-column flex-lg-row w-100 gap-1 p-0"
+                    :class="{ 'screen-blurred': isScreenLocked }">
+
+                    <div class="col-lg-3 mb-4">
+                        <div
+                            class="sidebar-card p-4 h-100 d-flex flex-column justify-content-between bg-white border-0">
+                            <div>
+                                <div class="d-flex align-items-center justify-content-between mb-3">
+                                    <h6 class="fw-bold text-dark mb-0">បញ្ជីសំណួរ</h6>
+                                    <span class="badge-count-status">
+                                        {{ answeredCount }} / {{ examQuestions.length }}
+                                    </span>
+                                </div>
+
+                                <div class="d-grid gap-2" style="grid-template-columns: repeat(5, 1fr);">
+                                    <button v-for="(q, idx) in examQuestions" :key="q.id" :id="`nav-btn-${idx}`"
+                                        class="question-nav-btn"
+                                        :class="{ 'active': currentIdx === idx, 'answered': userAnswers[q.id] }"
+                                        @click="loadQuestion(idx)">
+                                        {{ idx + 1 }}
+                                    </button>
+                                </div>
                             </div>
 
-                            <div class="d-grid gap-2" style="grid-template-columns: repeat(5, 1fr);">
-                                <button v-for="(q, idx) in examQuestions" :key="q.id" :id="`nav-btn-${idx}`"
-                                    class="question-nav-btn"
-                                    :class="{ 'active': currentIdx === idx, 'answered': userAnswers[q.id] }"
-                                    @click="loadQuestion(idx)">
-                                    {{ idx + 1 }}
+                            <div>
+                                <hr class="my-4" style="border-color: #f0f0f0;">
+                                <div class="legend-box mb-1">
+                                    <div class="d-flex align-items-center gap-2 mb-2">
+                                        <span class="legend-dot active-dot"></span>
+                                        <span class="small text-secondary">កំពុងមើល</span>
+                                    </div>
+                                    <div class="d-flex align-items-center gap-2 mb-2">
+                                        <span class="legend-dot answered-dot"></span>
+                                        <span class="small text-secondary">បានឆ្លើយ</span>
+                                    </div>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <span class="legend-dot unanswered-dot"></span>
+                                        <span class="small text-secondary">មិនទាន់ឆ្លើយ</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-9">
+                        <div
+                            class="exam-header-card p-4 mb-4 d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3 bg-white border-0">
+                            <div>
+                                <span class="text-theme-green fw-bold text-uppercase d-flex align-items-center gap-1"
+                                    style="font-size: 0.75rem; letter-spacing: 0.5px;">
+                                    <i class="fa-solid fa-circle-notch fa-spin"></i> ដំណើរការប្រឡង
+                                </span>
+                                <h4 class="fw-bold text-dark mt-1 mb-0">បន្ទប់៖ {{ studentInfo.room }}</h4>
+                            </div>
+                        </div>
+
+                        <div class="question-display-card p-4 p-md-5 mb-4 bg-white border-0 position-relative"
+                            v-if="currentQuestion">
+
+                            <div class="watermark-overlay" :style="watermarkStyle"></div>
+
+                            <div class="d-flex justify-content-between align-items-center mb-4">
+                                <span class="badge-type-question">
+                                    {{ currentQuestion.question_type === 'multiple_choice' ? 'ពហុជ្រើសរើស (MultipleChoice)' : 'សំណួរវិញ្ញាសា' }}
+                                </span>
+                                <span class="text-secondary fw-semibold" style="font-size: 0.9rem;">ពិន្ទុ: {{
+                                    currentQuestion.points }}</span>
+                            </div>
+
+                            <div class="question-content mb-4">
+                                <h4 class="fw-bold text-dark question-title">{{ currentIdx + 1 }}. {{
+                                    currentQuestion.question }}</h4>
+                                <p class="text-muted small mb-0"><i class="fa-solid fa-circle-info me-1"></i>
+                                    សូមជ្រើសរើសចម្លើយដែលត្រឹមត្រូវតែមួយគត់</p>
+                            </div>
+
+                            <div class="choices-list-wrapper">
+                                <div v-for="(opt, idx) in currentQuestion.options" :key="idx" class="choice-item-card"
+                                    :class="{ 'selected': userAnswers[currentQuestion.id] === opt }"
+                                    @click="selectOption(currentQuestion.id, opt)">
+                                    <div class="choice-prefix-badge">{{ String.fromCharCode(65 + idx) }}</div>
+                                    <div class="choice-main-text fw-medium">{{ opt }}</div>
+                                    <div class="ms-auto d-flex align-items-center">
+                                        <div class="custom-radio-indicator"
+                                            :class="{ 'checked': userAnswers[currentQuestion.id] === opt }"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="d-flex justify-content-between align-items-center mt-5 pt-4 border-top"
+                                style="border-color: #f5f5f5 !important;">
+                                <button class="btn btn-action-outline px-4" :disabled="currentIdx === 0"
+                                    @click="changeQuestion(-1)">
+                                    <i class="fa-solid fa-arrow-left me-2"></i> ថយក្រោយ
+                                </button>
+                                <button class="btn btn-action-outline px-4"
+                                    :disabled="currentIdx === examQuestions.length - 1" @click="changeQuestion(1)">
+                                    បន្ទាប់ <i class="fa-solid fa-arrow-right ms-2"></i>
                                 </button>
                             </div>
                         </div>
 
-                        <div>
-                            <hr class="my-4" style="border-color: #f0f0f0;">
-                            <div class="legend-box mb-1">
-                                <div class="d-flex align-items-center gap-2 mb-2">
-                                    <span class="legend-dot active-dot"></span>
-                                    <span class="small text-secondary">កំពុងមើល</span>
-                                </div>
-                                <div class="d-flex align-items-center gap-2 mb-2">
-                                    <span class="legend-dot answered-dot"></span>
-                                    <span class="small text-secondary">បានឆ្លើយ</span>
-                                </div>
-                                <div class="d-flex align-items-center gap-2">
-                                    <span class="legend-dot unanswered-dot"></span>
-                                    <span class="small text-secondary">មិនទាន់ឆ្លើយ</span>
-                                </div>
+                        <div
+                            class="submit-trigger-card p-4 d-flex flex-column flex-md-row justify-content-between align-items-center gap-3 bg-white border-0">
+                            <div class="text-center text-md-start">
+                                <h6 class="fw-bold text-dark mb-1">តើបានរួចរាល់ក្នុងការបញ្ជូនចម្លើយហើយឬនៅ?</h6>
+                                <p class="text-secondary small mb-0">
+                                    សូមពិនិត្យឡើងវិញឲ្យបានច្បាស់លាស់មុននឹងចុចបញ្ជូនវិញ្ញាសា។</p>
                             </div>
+                            <button class="btn btn-theme-submit px-5 py-3 shadow-none border-0"
+                                @click="showConfirmModal">
+                                <i class="fa-solid fa-paper-plane me-2"></i> បញ្ជូនវិញ្ញាសា
+                            </button>
                         </div>
                     </div>
                 </div>
 
-                <div class="col-lg-9">
-                    <div
-                        class="exam-header-card p-4 mb-4 d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3 bg-white border-0">
-                        <div>
-                            <span class="text-theme-green fw-bold text-uppercase d-flex align-items-center gap-1"
-                                style="font-size: 0.75rem; letter-spacing: 0.5px;">
-                                <i class="fa-solid fa-circle-notch fa-spin"></i> ដំណើរការប្រឡង
-                            </span>
-                            <h4 class="fw-bold text-dark mt-1 mb-0">បន្ទប់៖ {{ studentInfo.room }}</h4>
-                        </div>
-                    </div>
+                <div v-if="isScreenLocked" class="security-lock-overlay">
+                    <div class="lock-card text-center p-4 shadow-lg">
+                        <i class="fa-solid fa-triangle-exclamation text-danger mb-3" style="font-size: 3rem;"></i>
+                        <h5 class="fw-bold text-dark mb-2">អេក្រង់ត្រូវបានចាក់សោជាបណ្តោះអាសន្ន!</h5>
+                        <p class="text-muted small mb-4">
+                            ប្រព័ន្ធរកឃើញសកម្មភាពមិនប្រក្រតី (ការថតអេក្រង់ ឬចាកចេញពីផ្ទាំងប្រឡង)។<br>
+                            ការល្មើសវិន័យលើសពី <span class="text-danger fw-bold">៣ ដង</span>
+                            នឹងត្រូវបញ្ជូនចម្លើយស្វ័យប្រវត្តិ។
+                        </p>
 
-                    <!-- Question Card -->
-                    <div class="question-display-card p-4 p-md-5 mb-4 bg-white border-0" v-if="currentQuestion">
-                        <div class="d-flex justify-content-between align-items-center mb-4">
-                            <span class="badge-type-question">
-                                {{ currentQuestion.question_type === 'multiple_choice' ? 'ពហុជ្រើសរើស (Multiple Choice)'
-                                    : 'សំណួរវិញ្ញាសា' }}
-                            </span>
-                            <span class="text-secondary fw-semibold" style="font-size: 0.9rem;">ពិន្ទុ: {{
-                                currentQuestion.points }}</span>
-                        </div>
-
-                        <div class="question-content mb-4">
-                            <h4 class="fw-bold text-dark question-title">{{ currentIdx + 1 }}. {{
-                                currentQuestion.question }}</h4>
-                            <p class="text-muted small mb-0"><i class="fa-solid fa-circle-info me-1"></i>
-                                សូមជ្រើសរើសចម្លើយដែលត្រឹមត្រូវតែមួយគត់</p>
-                        </div>
-
-                        <div class="choices-list-wrapper">
-                            <div v-for="(opt, idx) in currentQuestion.options" :key="idx" class="choice-item-card"
-                                :class="{ 'selected': userAnswers[currentQuestion.id] === opt }"
-                                @click="selectOption(currentQuestion.id, opt)">
-                                <div class="choice-prefix-badge">{{ String.fromCharCode(65 + idx) }}</div>
-                                <div class="choice-main-text fw-medium">{{ opt }}</div>
-                                <div class="ms-auto d-flex align-items-center">
-                                    <div class="custom-radio-indicator"
-                                        :class="{ 'checked': userAnswers[currentQuestion.id] === opt }"></div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="d-flex justify-content-between align-items-center mt-5 pt-4 border-top"
-                            style="border-color: #f5f5f5 !important;">
-                            <button class="btn btn-action-outline px-4" :disabled="currentIdx === 0"
-                                @click="changeQuestion(-1)">
-                                <i class="fa-solid fa-arrow-left me-2"></i> ថយក្រោយ
-                            </button>
-                            <button class="btn btn-action-outline px-4"
-                                :disabled="currentIdx === examQuestions.length - 1" @click="changeQuestion(1)">
-                                បន្ទាប់ <i class="fa-solid fa-arrow-right ms-2"></i>
-                            </button>
-                        </div>
-                    </div>
-
-                    <div
-                        class="submit-trigger-card p-4 d-flex flex-column flex-md-row justify-content-between align-items-center gap-3 bg-white border-0">
-                        <div class="text-center text-md-start">
-                            <h6 class="fw-bold text-dark mb-1">តើបានរួចរាល់ក្នុងការបញ្ជូនចម្លើយហើយឬនៅ?</h6>
-                            <p class="text-secondary small mb-0">
-                                សូមពិនិត្យឡើងវិញឲ្យបានច្បាស់លាស់មុននឹងចុចបញ្ជូនវិញ្ញាសា។</p>
-                        </div>
-
-                        <button class="btn btn-theme-submit px-5 py-3 shadow-none border-0" @click="showConfirmModal">
-                            <i class="fa-solid fa-paper-plane me-2"></i> បញ្ជូនវិញ្ញាសា
+                        <button v-if="warningCount <= 3" @click="unlockScreen" class="btn btn-danger px-4 py-2">
+                            ខ្ញុំយល់ព្រម និងបន្តការប្រឡង (ដងទី {{ warningCount }})
                         </button>
+                        <div v-else class="text-danger fw-semibold">
+                            <i class="fa-solid fa-spinner fa-spin me-2"></i> ល្មើសវិន័យលើកទី ៤ ហើយ!
+                            ប្រព័ន្ធកំពុងបញ្ជូនចម្លើយស្វ័យប្រវត្តិ។
+                        </div>
                     </div>
                 </div>
             </div>
@@ -377,7 +405,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, onMounted, onUnmounted } from 'vue'; 
 import { useRoute } from 'vue-router';
 import { examApi } from '@/api/student.api.js';
 import logoImage from '@/assets/images/pralong-logo.png';
@@ -431,6 +459,77 @@ const timerPercent = ref(100);
 const timerStrokeDashoffset = ref(0);
 let intervalId = null;
 
+const warningCount = ref(0);
+const isScreenLocked = ref(false);
+const unlockScreen = () => {
+    isScreenLocked.value = false;
+};
+
+const watermarkStyle = computed(() => {
+    const name = studentInfo.value?.name || 'Student';
+    const code = studentInfo.value?.student_code || '';
+    const text = `${name} (${code})`;
+    const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='260' height='160' viewBox='0 0 260 160'><text fill='%23000000' fill-opacity='0.06' font-size='13' font-family='sans-serif' font-weight='600' transform='rotate(-25 130 80)' text-anchor='middle'>${text}</text></svg>`;
+
+    return {
+        backgroundImage: `url("data:image/svg+xml;utf8,${encodeURIComponent(svg)}")`
+    };
+});
+
+const setupExamSecurity = () => {
+    const handleViolation = (message) => {
+        if (isScreenLocked.value) return;
+
+        warningCount.value++;
+        if (warningCount.value > 3) {
+            isScreenLocked.value = true; 
+            showToast('អ្នកបានល្មើសវិន័យលើសពី ៣ ដងហើយ! ប្រព័ន្ធនឹងបញ្ជូនចម្លើយឥឡូវនេះ។', 'error');
+            setTimeout(() => {
+                performSubmit();
+            }, 1500);
+            return;
+        }
+        showToast(`ព្រមានលើកទី ${warningCount.value}៖ ${message}`, 'warning');
+        isScreenLocked.value = true;
+    };
+    const handleVisibilityChange = () => {
+        if (document.hidden) {
+            handleViolation('សូមកុំចាកចេញពីទំព័រប្រឡង ឬលួចថតរូបអេក្រង់!');
+        }
+    };
+    const handleWindowBlur = () => {
+        handleViolation('ប្រព័ន្ធរកឃើញថាអ្នកបានចាកចេញពីផ្ទាំងប្រឡង!');
+    };
+    const handleKeyDown = (e) => {
+        if (e.key === 'PrintScreen' || e.key === 'Snapshot') {
+            navigator.clipboard.writeText(''); 
+            handleViolation('មិនអនុញ្ញាតឱ្យថតរូបអេក្រង់ឡើយ!');
+            e.preventDefault();
+        }
+        if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J'))) {
+            e.preventDefault();
+        }
+        if (e.ctrlKey && (e.key === 'c' || e.key === 'C' || e.key === 'u' || e.key === 'U')) {
+            handleViolation('មិនអនុញ្ញាតឱ្យលួចចម្លងសំណួរឡើយ!');
+            e.preventDefault();
+        }
+    };
+    const handleContextMenu = (e) => {
+        e.preventDefault();
+    };
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    window.addEventListener('blur', handleWindowBlur);
+    window.addEventListener('keydown', handleKeyDown);
+    document.addEventListener('contextmenu', handleContextMenu);
+    return () => {
+        document.removeEventListener('visibilitychange', handleVisibilityChange);
+        window.removeEventListener('blur', handleWindowBlur);
+        window.removeEventListener('keydown', handleKeyDown);
+        document.removeEventListener('contextmenu', handleContextMenu);
+    };
+};
+
+let clearSecurityEvents = null;
 onMounted(async () => {
     let code = route.params.examCode;
     if (!code) {
@@ -471,6 +570,10 @@ onMounted(async () => {
         }
         showToast(khmerMessage, 'error');
     }
+});
+
+onUnmounted(() => {
+    if (clearSecurityEvents) clearSecurityEvents();
 });
 
 const startExamSession = async () => {
@@ -520,9 +623,11 @@ const startExamSession = async () => {
 
         examQuestions.value = questionsArray;
         currentStep.value = 3;
+        clearSecurityEvents = setupExamSecurity();
+
         startTimer();
     } catch (error) {
-        showToast('មិនអាចចាប់ផ្តើមបានទេ! ' , 'error');
+        showToast('មិនអាចចាប់ផ្តើមបានទេ! ', 'error');
     } finally {
         isLobbyLoading.value = false;
     }
@@ -560,7 +665,7 @@ const performSubmit = async () => {
         }
         currentStep.value = 4;
     } catch (error) {
-        showToast('មានបញ្ហាក្នុងការបញ្ជូនចម្លើយ!' ,'error');
+        showToast('មានបញ្ហាក្នុងការបញ្ជូនចម្លើយ!', 'error');
     } finally {
         isSubmitting.value = false;
     }
@@ -606,8 +711,40 @@ const startTimer = () => {
 const goToLobby = () => { window.location.reload(); };
 const printResult = () => { window.print(); };
 </script>
-
 <style scoped>
+.exam-container-wrapper {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    transition: filter 0.3s ease-in-out;
+}
+
+.exam-container-wrapper.screen-blurred {
+    filter: blur(25px) !important;
+    pointer-events: none;
+}
+
+.security-lock-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(30, 41, 59, 0.45);
+    z-index: 1050;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.lock-card {
+    background: #ffffff;
+    border-radius: 16px;
+    max-width: 500px;
+    width: 90%;
+    border: none;
+}
+
 .form-control-custom.is-invalid,
 .form-select-custom.is-invalid {
     border-color: #ef4444 !important;
