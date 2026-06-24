@@ -210,10 +210,6 @@ const fetchExamsData = async () => {
   try {
     loading.value = true
     const res = await getExamsInRoom(route.params.roomId);
-    
-    console.log("URL ដែលហៅទៅ:", `/exams/teacher/rooms/${route.params.roomId}`);
-    console.log("ទិន្នន័យដែលទទួលបាន:", res.data);
-
     allExams.value = res.data?.data || [];
   } catch (err) {
     console.error("កំហុស API:", err);
@@ -265,10 +261,6 @@ const submitUpdateExam = async () => {
       start_time: start_date_formatted,
       end_time: end_date_formatted
     }
-
-    console.log("Payload ដែលរុញទៅ Update លើ Server:", fullUpdatePayload)
-
-    // call tv API  /api/exams/update/:id
     await updateExam(selectedExamId.value, fullUpdatePayload)
     
     toast.success("ព័ត៌មានវិញ្ញាសាត្រូវបានកែប្រែដោយជោគជ័យ!")

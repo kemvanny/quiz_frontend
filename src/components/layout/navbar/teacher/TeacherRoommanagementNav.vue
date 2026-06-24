@@ -66,7 +66,6 @@ const authStore = useAuthStore();
 
 const onRoomCreated = (roomData) => {
     isCreateRoomOpen.value = false;
-    console.log("Room created successfully from topbar:", roomData);
     emit('room-created', roomData);
 };
 

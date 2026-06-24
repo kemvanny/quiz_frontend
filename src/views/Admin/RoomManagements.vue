@@ -37,9 +37,9 @@
             <!-- Loading State -->
             <div v-if="loading" class="loading-state text-center py-5">
                 <div class="spinner-border text-success" role="status">
-                    <span class="visually-hidden">កំពុងផ្ទុក...</span>
+                    <span class="visually-hidden" style="font-family: 'Kantumruy Pro';">កំពុងផ្ទុក...</span>
                 </div>
-                <p class="mt-3 text-muted">កំពុងផ្ទុកបន្ទប់រៀន...</p>
+                <p class="mt-3 text-muted" style="font-family: 'Kantumruy Pro';">កំពុងផ្ទុកបន្ទប់រៀន...</p>
             </div>
 
             <!-- Error State -->
@@ -54,8 +54,8 @@
                 <div class="empty-icon mb-3">
                     <i class="bi bi-door-closed"></i>
                 </div>
-                <h5 class="text-muted">រកមិនឃើញបន្ទប់រៀនទេ</h5>
-                <p class="text-muted small">សូមសាកល្បងស្វែងរកពាក្យផ្សេង ឬបន្ថែមបន្ទប់ថ្មី។</p>
+                <h5 class="text-muted" style="font-family: 'Kantumruy Pro';">រកមិនឃើញបន្ទប់រៀនទេ</h5>
+                <p class="text-muted small" style="font-family: 'Kantumruy Pro';">សូមសាកល្បងស្វែងរកពាក្យផ្សេង ឬបន្ថែមបន្ទប់ថ្មី។</p>
             </div>
 
             <!-- Room Cards Grid -->
@@ -275,6 +275,7 @@ onMounted(() => fetchRooms())
     padding: 0.35rem 0.85rem;
     font-size: 0.8rem;
     font-weight: 600;
+    font-family: 'Kantumruy Pro' !important;
 }
 
 .room-card {

@@ -248,7 +248,6 @@ const fetchAllExams = async () => {
     const res = await getExams()
     
     examList.value = res.data.data || res.data
-    console.log("Loaded exams successfully:", examList.value)
   } catch (err) {
     console.error("Failed to fetch exams:", err)
     toast.error("មិនអាចទាញយកបញ្ជីវិញ្ញាសាបានទេ!")

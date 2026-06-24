@@ -301,6 +301,5 @@ router.afterEach((to) => {
 
   localStorage.setItem('current_page', pageName);
 
-  console.log('Current Page:', pageName);
 });
 export default router
