@@ -13,7 +13,7 @@ import StudentDashboard from '@/views/dashboard/StudentDashboard.vue'
 import Quizzes from '@/views/teacher/Quizzes.vue'
 import FinalExam from '@/views/teacher/FinalExam.vue'
 import RoomManagement from '@/views/teacher/RoomManagement.vue'
-import RoomDetail from '@/views/teacher/RoomDetail.vue'
+import RoomDetails from '@/views/teacher/RoomDetail.vue'
 import ExamDetailView from '@/views/teacher/ExamDetailView.vue'
 import ClassStream from '@/views/teacher/ClassStream.vue'
 import StudentResults from '@/views/teacher/StudentResults.vue'
@@ -164,8 +164,8 @@ const router = createRouter({
         },
         {
           path: 'room-management/:roomId/exams',
-          name: 'RoomDetail',
-          component: RoomDetail,
+          name: 'RoomDetails',
+          component: RoomDetails,
           props: true
         },
         {

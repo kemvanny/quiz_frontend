@@ -11,8 +11,7 @@
         </div>
         <h1 class="course-title">{{ roomInfo.room_name }}</h1>
         <p class="course-instructor-meta">
-          <i class="fas fa-chalkboard-teacher me-2"></i> បង្រៀនដោយ៖ <strong class="ms-1">{{ roomInfo.teacher_name
-            }}</strong>
+          <i class="fas fa-chalkboard-teacher me-2"></i> បង្រៀនដោយ៖ <strong class="ms-1">{{ roomInfo.teacher_name }}</strong>
         </p>
       </div>
 
@@ -33,7 +32,7 @@
           <div class="sk-line-text skeleton-shimmer" style="width: 40%;"></div>
         </div>
 
-        <div v-else class="stream-sidebar-card">
+        <div class="stream-sidebar-card">
           <h5 class="sidebar-card-title">ការងារត្រូវប្រគល់</h5>
           <div class="sidebar-card-body">
             <p class="text-muted small mb-0">Woohoo, មិនមានកិច្ចការជិតដល់ថ្ងៃកំណត់ឡើយ!</p>
@@ -80,14 +79,13 @@
             <p class="mb-0">មិនទាន់មានការបង្ហោះ ឬសេចក្តីប្រកាសណាមួយនៅក្នុងបន្ទប់សិក្សានេះទេ!</p>
           </div>
 
-          <div v-for="post in streamPosts" :key="post.id" class="stream-post-card mb-4">
+          <div v-for="post in displayedPosts" :key="post.id" class="stream-post-card mb-4">
             <div class="post-header">
               <div class="author-avatar" style="background-color: var(--em-soft); color: var(--em-dk);">
                 <i class="fas fa-user"></i>
               </div>
               <div class="author-info">
-                <h6 class="author-name">{{ roomInfo?.teacher_name || 'គ្រូបង្រៀន' }} <span
-                    class="badge-teacher">គ្រូបង្រៀន</span></h6>
+                <h6 class="author-name">{{ roomInfo?.teacher_name || 'គ្រូបង្រៀន' }} <span class="badge-teacher">គ្រូបង្រៀន</span></h6>
                 <span class="post-date">បានបង្ហោះនៅ៖ {{ formatDate(post.created_at) }}</span>
               </div>
               <button class="btn-more-options"><i class="fas fa-ellipsis-v"></i></button>
@@ -99,8 +97,15 @@
 
               <div v-if="post.exam_link" class="exam-action-block mt-3">
                 <a :href="post.exam_link" target="_blank"
-                  class="btn btn-success w-100 text-white py-2 fw-bold shadow-sm">
-                  <i class="fas fa-file-signature me-2"></i> ចុចទីនេះដើម្បីចូលទៅធ្វើការប្រឡង
+                  class="btn w-100 py-2 shadow-sm d-flex align-items-center justify-content-center gap-2"
+                  :class="isExamExpired(post.exam_expired_at) ? 'btn-secondary disabled-btn' : 'btn-success text-white'">
+                  
+                  <template v-if="isExamExpired(post.exam_expired_at)">
+                    <i class="fas fa-lock"></i> ការប្រឡងត្រូវបានបិទ/ហួសពេលកំណត់ហើយ
+                  </template>
+                  <template v-else>
+                    <i class="fas fa-file-signature"></i> ចុចទីនេះដើម្បីចូលទៅធ្វើការប្រឡង
+                  </template>
                 </a>
               </div>
             </div>
@@ -111,6 +116,13 @@
               </button>
             </div>
           </div>
+
+          <div v-if="!isAllLoaded && streamPosts.length > 0" class="text-center my-4">
+            <button @click="loadMorePosts" class="btn btn-outline-success px-4 py-2 rounded-pill fw-bold shadow-sm">
+              មើលបន្ថែម <i class="fas fa-chevron-down ms-1"></i>
+            </button>
+          </div>
+
         </div>
 
       </div>
@@ -120,7 +132,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import { useRoute } from 'vue-router';
 import studentApi from '@/api/student.api';
 
@@ -131,6 +143,15 @@ const roomInfo = ref(null);
 const streamPosts = ref([]);
 const isLoading = ref(false);
 const errorMessage = ref('');
+const visibleCount = ref(3); 
+const isAllLoaded = computed(() => visibleCount.value >= streamPosts.value.length);
+const displayedPosts = computed(() => {
+  return streamPosts.value.slice(0, visibleCount.value);
+});
+
+const loadMorePosts = () => {
+  visibleCount.value += 3; 
+};
 
 const fetchRoomData = async () => {
   isLoading.value = true;
@@ -157,6 +178,13 @@ const fetchRoomData = async () => {
       isLoading.value = false;
     }, 450);
   }
+};
+
+const isExamExpired = (expiredDateString) => {
+  if (!expiredDateString) return false; 
+  const now = new Date();
+  const expiryLimit = new Date(expiredDateString);
+  return now > expiryLimit; 
 };
 
 const formatDate = (dateString) => {
@@ -190,6 +218,12 @@ onMounted(() => {
   --bdr: #e2e8f0;
   --sh-sm: 0 4px 12px rgba(0, 0, 0, 0.03);
   --sh-md: 0 10px 25px rgba(0, 0, 0, 0.05);
+}
+
+.disabled-btn {
+  pointer-events: none;
+  cursor: not-allowed;
+  opacity: 0.65;
 }
 
 .classroom-stream-container {

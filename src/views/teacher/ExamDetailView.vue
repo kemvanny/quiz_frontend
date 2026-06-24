@@ -82,17 +82,17 @@
     </div>
   </div>
 </template>
-
 <script setup>
 import { ref, computed, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useToast } from 'vue-toastification';
 import api from '@/api/axiosInstance';
+import { useExamStore } from '@/stores/examStore';
 import { getQuestionsForTeacher, updateQuestion, deleteQuestion } from '@/api/exam.api';
-import TeacherExamDetail from '@/components/layout/navbar/teacher/TeacherExamDetail.vue';
 
 const route = useRoute();
 const router = useRouter();
+const examStore = useExamStore();
 const toast = useToast();
 const examId = route.params.examId;
 
@@ -101,7 +101,11 @@ const questions = ref([]);
 const loading = ref(false);
 const selectedQuestionIndex = ref(0);
 
-const getKhmerNumber = (num) => ["១", "២", "៣", "៤", "៥", "៦", "៧", "៨", "៩", "១០"][num - 1] || num.toString();
+// បន្ថែមមុខងារនេះត្រឡប់ទៅក្នុង script setup វិញ
+const getKhmerNumber = (num) => {
+  const khmerNumbers = ["១", "២", "៣", "៤", "៥", "៦", "៧", "៨", "៩", "១០"];
+  return khmerNumbers[num - 1] || num.toString();
+};
 
 // 1. Fetch Data
 const fetchAll = async () => {
@@ -112,45 +116,49 @@ const fetchAll = async () => {
       getQuestionsForTeacher(examId)
     ]);
     
-    examData.value = examRes.data?.data || examRes.data;
+    const data = examRes.data?.data || examRes.data;
     const rawData = qRes.data?.data || qRes.data;
+    
+    examData.value = data;
+    
+    // បញ្ជូនទិន្នន័យទៅ Store តែម្តងគត់នៅទីនេះ
+    if (data) {
+        examStore.setExamTitle(data.title || 'គ្មានចំណងជើង');
+        examStore.setRoomName(data.room_name || 'ថ្នាក់រៀន');
+        examStore.setQuestionCount(rawData.length);
+    }
     
     questions.value = rawData.map(q => {
       let opts = [];
       try {
         opts = typeof q.options === 'string' ? JSON.parse(q.options) : q.options;
       } catch (e) {
-        console.error("កំហុសក្នុងការ parse options:", e);
         opts = []; 
       }
 
       return {
         id: q.id,
         text: q.question,
+        pts: q.points || 0,
         choices: opts.map(opt => ({
           text: opt,
           isCorrect: q.correct_answer && q.correct_answer.includes(opt)
         }))
       };
     });
-  } catch (e) { toast.error("ទាញយកទិន្នន័យបរាជ័យ"); }
-  finally { loading.value = false; }
+  } catch (e) { 
+    console.error(e);
+    toast.error("ទាញយកទិន្នន័យបរាជ័យ"); 
+  } finally { 
+    loading.value = false; 
+  }
 };
 
 // 2. Computed & Helpers
-const totalPoints = computed(() => questions.value.reduce((sum, q) => sum + (q.pts || 0), 0));
-
+const totalPoints = computed(() => questions.value.reduce((sum, q) => sum + (Number(q.pts) || 0), 0));
 const selectQuestion = (idx) => { selectedQuestionIndex.value = idx; };
 
-const setCorrectChoice = (qIdx, cIdx) => {
-  questions.value[qIdx].choices.forEach((c, i) => c.isCorrect = (i === cIdx));
-};
-
-const removeChoice = (qIdx, cIdx) => {
-  if (questions.value[qIdx].choices.length > 1) questions.value[qIdx].choices.splice(cIdx, 1);
-};
-
-// 3. Actions (Update & Delete)
+// 3. Actions
 const handleSingleQuestionSave = async (idx) => {
   const q = questions.value[idx];
   try {
@@ -164,7 +172,7 @@ const handleSingleQuestionSave = async (idx) => {
     await updateQuestion(q.id, payload);
     toast.success("រក្សាទុកជោគជ័យ!");
   } catch (e) { 
-    toast.error("បរាជ័យ! សូមពិនិត្យ Console");
+    toast.error("បរាជ័យ!");
   }
 };
 
@@ -173,6 +181,8 @@ const handleDeleteQuestion = async (qId, idx) => {
   try {
     await deleteQuestion(qId);
     questions.value.splice(idx, 1);
+    // Update ចំនួនសំណួរក្នុង Store វិញក្រោយលុប
+    examStore.setQuestionCount(questions.value.length);
     toast.success("បានលុបសំណួរជោគជ័យ!");
   } catch (e) { 
     toast.error("បរាជ័យក្នុងការលុប!"); 
@@ -183,7 +193,6 @@ const goBack = () => router.push('/teacher/room-management');
 
 onMounted(fetchAll);
 </script>
-
 
 
 <style scoped>
