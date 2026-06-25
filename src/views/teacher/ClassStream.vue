@@ -23,7 +23,7 @@
               <i class="fas fa-stream"></i> ថ្នាក់រៀន
             </div>
             <div class="class-tab" :class="{ active: currentTab === 'people' }" @click="currentTab = 'people'">
-              <i class="fas fa-users"></i> សិស្ស​ សរុប
+              <i class="fas fa-users"></i> សិស្ស​សរុប
               <span class="badge-count ms-2">({{ roomData?.students?.length || 0 }})</span>
             </div>
             <div class="class-tab" :class="{ active: currentTab === 'results' }" @click="currentTab = 'results'">
@@ -104,7 +104,7 @@
                     <p>{{ post.message }}</p>
                   </div>
 
-                  <a :href="post.exam_link"
+                  <div
                     target="_blank"
                     rel="noopener noreferrer"
                     class="assignment-card-link d-flex align-items-center border rounded-3 shadow-sm overflow-hidden mt-3 mb-2"
@@ -117,9 +117,9 @@
                       <small class="text-muted">តេស្ត • ចុចដើម្បីបើកវិញ្ញាសា</small>
                     </div>
                     <div class="p-3">
-                      <span class="btn btn-sm px-3 rounded-pill" style="background-color: #e6fffa; color: #38b2ac; font-weight: 600;">មើលលម្អិត</span>
+                      <!-- <span class="btn btn-sm px-3 rounded-pill" style="background-color: #e6fffa; color: #38b2ac; font-weight: 600;">មើលលម្អិត</span> -->
                     </div>
-                  </a>
+                  </div>
                 </div>
               </div>
             </div>
@@ -131,7 +131,7 @@
         <div v-if="currentTab === 'people'" class="tab-pane active">
           <div class="roster-container">
             <div class="roster-header">
-              <h3>សិស្សសរុប ({{ roomData?.students?.length || 0 }})</h3>
+              <h3>សិស្ស​សរុប ({{ roomData?.students?.length || 0 }})</h3>
               <!-- <button class="btn btn-sm btn-emerald">Invite</button> -->
             </div>
             <table class="roster-table">

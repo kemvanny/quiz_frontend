@@ -59,11 +59,12 @@
     </div>
   </div>
 
-  <CreateRoomModal 
-    :is-open="isCreateRoomOpen" 
-    @close="isCreateRoomOpen = false" 
-    @created="onRoomCreated" 
-  />
+<CreateRoomModal
+  :is-open="isCreateRoomOpen"
+  :existing-rooms="backendRooms"
+  @close="isCreateRoomOpen = false"
+  @created="onRoomCreated"
+/>
 </template>
 
 <script setup>

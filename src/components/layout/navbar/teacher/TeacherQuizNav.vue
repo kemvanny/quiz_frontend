@@ -20,7 +20,7 @@
 
       <!-- Center Section: Status & Duration Controls with added horizontal padding -->
       <div class="tb-section border-0 gap-3 flex-shrink-0 align-items-center tb-center-controls">
-        <div class="select-wrapper">
+        <!-- <div class="select-wrapper">
           <select 
             :value="status" 
             @change="$emit('update:status', $event.target.value)" 
@@ -29,19 +29,9 @@
             <option value="draft">Status: Draft</option>
             <option value="active">Status: Active</option>
           </select>
-        </div>
+        </div> -->
         
-        <div class="d-flex align-items-center text-muted fw-bold timer-pill-box">
-          <i class="fa-regular fa-clock clock-icon"></i>
-          <input 
-            type="number" 
-            :value="duration" 
-            @input="$emit('update:duration', parseInt($event.target.value) || 0)"
-            class="form-control form-control-sm border text-dark fw-bold text-center shadow-none timer-num-field" 
-            min="0"
-          />
-          <span class="mins-lbl">នាទី</span>
-        </div>
+
       </div>
 
       <!-- Saved Status Indicators (Hidden on small screens) -->

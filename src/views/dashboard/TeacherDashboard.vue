@@ -327,7 +327,6 @@ const fetchAllExams = async () => {
   try {
     isLoading.value = true;
     const res = await getExams();
-
     examList.value = res.data.data || res.data;
   } catch (err) {
     console.error("Failed to fetch exams:", err);
