@@ -39,22 +39,18 @@
                 <div class="info-item">
                   <label>ស្ថានភាព</label>
                   <div class="mt-1">
-                    <StatusBadge
-                      :type="
-                        Number(detailedUser?.is_active) === 1
-                          ? 'active'
-                          : 'inactive'
-                      "
-                    />
+                    <StatusBadge :type="Number(detailedUser?.is_active) === 1
+                      ? 'active'
+                      : 'inactive'
+                      " />
                   </div>
                 </div>
                 <div class="info-item">
-                  <label>ថ្នាក់សិក្សា</label>
-                  <p>{{ detailedUser?.class_name || "មិនទាន់មាន" }}</p>
-                </div>
-                <div class="info-item">
                   <label>ភេទ</label>
-                  <p>{{ detailedUser?.gender || "មិនទាន់បំពេញ" }}</p>
+                  <p>{{
+                    detailedUser?.gender?.toLowerCase() === 'female' ? 'ស្រី' :
+                      detailedUser?.gender?.toLowerCase() === 'male' ? 'ប្រុស' : 'មិនទាន់បំពេញ'
+                    }}</p>
                 </div>
                 <div class="info-item">
                   <label>ថ្ងៃបង្កើត</label>
@@ -73,10 +69,7 @@
                     detailedUser?.email || "មិនមានអ៊ីមែល"
                   }}</span>
                 </div>
-                <button
-                  @click="copyToClipboard(detailedUser?.email, 'អ៊ីមែល')"
-                  class="btn-copy"
-                >
+                <button @click="copyToClipboard(detailedUser?.email, 'អ៊ីមែល')" class="btn-copy">
                   <i class="bi bi-clipboard"></i>
                 </button>
               </div>
@@ -88,10 +81,7 @@
                     detailedUser?.phone || "មិនមានលេខទូរស័ព្ទ"
                   }}</span>
                 </div>
-                <button
-                  @click="copyToClipboard(detailedUser?.phone, 'លេខទូរស័ព្ទ')"
-                  class="btn-copy"
-                >
+                <button @click="copyToClipboard(detailedUser?.phone, 'លេខទូរស័ព្ទ')" class="btn-copy">
                   <i class="bi bi-clipboard"></i>
                 </button>
               </div>
@@ -132,6 +122,7 @@ const fetchUserDetails = async (id) => {
   try {
     const res = await getUserByID(id);
     fetchedUser.value = res.data?.data || res.data || res;
+    console.log("User Data from API:", fetchedUser.value);
   } catch {
     toast.error("មិនអាចទាញយកព័ត៌មាន!");
   } finally {
@@ -147,9 +138,9 @@ watch(
       : (fetchedUser.value = null),
 );
 
-const detailedUser = computed(() =>{ 
-  
-if (fetchedUser.value && Object.keys(fetchedUser.value).length > 0) {
+const detailedUser = computed(() => {
+
+  if (fetchedUser.value && Object.keys(fetchedUser.value).length > 0) {
     return fetchedUser.value;
   }
   return props.user || {};
@@ -170,7 +161,7 @@ const displayName = computed(() => {
 const roleKhmer = computed(
   () =>
     ({ teacher: "គ្រូបង្រៀន", student: "សិស្ស", admin: "អ្នកគ្រប់គ្រង" })[
-      detailedUser.value?.role?.toLowerCase()
+    detailedUser.value?.role?.toLowerCase()
     ] ||
     detailedUser.value?.role ||
     "",
