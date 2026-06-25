@@ -74,9 +74,9 @@
         >
           <i class="fas fa-lock"></i> ផ្លាស់ប្តូរលេខសម្ងាត់
         </button>
-        <button type="button" class="btn btn-danger" @click="openLogoutModal">
-          <i class="fas fa-trash-alt"></i> លុបគណនី
-        </button>
+  <button type="button" class="btn btn-danger" @click="openLogoutModal">
+    <i class="fas fa-sign-out-alt"></i> ចាកចេញពីគណនី
+  </button>
       </div>
     </div>
 
@@ -600,11 +600,12 @@ const confirmSignOut = async () => {
   width: 100%;
   max-width: 1140px;
   margin: 0;
-  padding: 24px;
   display: grid;
   grid-template-columns: 290px 810px;
   gap: 24px;
   align-items: start;
+  justify-content: center;
+  margin-inline: 50px 0px;
 }
 
 .left-card {

@@ -75,7 +75,7 @@ import { useRouter } from 'vue-router';
 import { useAuthStore } from '@/stores/auth'; 
 
 defineProps({
-  quizTitle: { type: String, default: 'Create Quiz' },
+  quizTitle: { type: String, default: 'បង្កើតការប្រឡង' },
   duration: { type: [Number, String], default: 60 },
   status: { type: String, default: 'draft' }
 });
