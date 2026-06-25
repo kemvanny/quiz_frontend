@@ -1,5 +1,8 @@
 <template>
   <div class="classroom-stream-container">
+    <button @click="goBack" class="btn-back-custom mb-3">
+  <i class="fas fa-arrow-left me-2"></i> ត្រឡប់ក្រោយ
+</button>
 
     <div v-if="isLoading" class="skeleton-hero-banner skeleton-shimmer mb-4"></div>
 
@@ -25,7 +28,7 @@
     </div>
 
     <div v-else class="row g-4 mt-1">
-      <div class="col-12 col-md-3">
+      <!-- <div class="col-12 col-md-3">
         <div v-if="isLoading" class="skeleton-sidebar-card">
           <div class="sk-line-title skeleton-shimmer mb-3" style="width: 60%;"></div>
           <div class="sk-line-text skeleton-shimmer mb-2" style="width: 100%;"></div>
@@ -39,9 +42,9 @@
             <a href="#" class="view-all-link mt-3 d-inline-block">មើលទាំងអស់ <i class="fas fa-arrow-right ms-1"></i></a>
           </div>
         </div>
-      </div>
+      </div> -->
 
-      <div class="col-12 col-md-9">
+      <div class="col-12 ">
 
         <div v-if="!isLoading" class="announcement-input-box mb-4">
           <div class="d-flex align-items-center gap-3">
@@ -135,6 +138,9 @@
 import { ref, onMounted, computed } from 'vue';
 import { useRoute } from 'vue-router';
 import studentApi from '@/api/student.api';
+import { useRouter } from 'vue-router'; 
+
+const router = useRouter();
 
 const route = useRoute();
 const roomId = route.params.room_id || route.params.id;
@@ -151,6 +157,10 @@ const displayedPosts = computed(() => {
 
 const loadMorePosts = () => {
   visibleCount.value += 3; 
+};
+
+const goBack = () => {
+  router.back(); 
 };
 
 const fetchRoomData = async () => {
@@ -231,7 +241,28 @@ onMounted(() => {
   color: var(--txt);
   padding: 10px 0;
 }
+.btn-back-custom {
+  background: transparent;
+  border: 1px solid #d1d5db; 
+  color: #4b5563;
+  padding: 8px 16px;
+  border-radius: 8px; 
+  font-weight: 500;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
 
+.btn-back-custom:hover {
+  background: #3b9855;
+  border-color: #9ca3af;
+  color: #fffefe;
+}
+
+.btn-back-custom:active {
+  transform: scale(0.98); 
+}
 /* ── SKELETON ANIMATION STYLE ── */
 .skeleton-shimmer {
   background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);

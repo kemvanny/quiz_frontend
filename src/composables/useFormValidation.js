@@ -9,6 +9,7 @@ export function useFormValidation() {
     role: "",
     phone: "",
     address: "",
+    gender: "",
   });
 
   const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{3,}$/;
@@ -129,6 +130,14 @@ export function useFormValidation() {
     }
   };
 
+  const validateGender = (value) => {
+  if (!value || value.trim() === "") {
+    errors.value.gender = "សូមជ្រើសរើសភេទរបស់អ្នក!";
+  } else {
+    errors.value.gender = "";
+  }
+};
+
   return {
     errors,
     validateEmail,
@@ -140,6 +149,7 @@ export function useFormValidation() {
     validateAddress,
     validateAll,
     validateGradeLevel,
-    validateMajor
+    validateMajor,
+     validateGender
   };
 }

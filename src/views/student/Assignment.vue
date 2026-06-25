@@ -42,7 +42,7 @@
     </div>
 
     <div v-else-if="paginatedExams.length > 0">
-      <a v-for="exam in paginatedExams" :key="exam.id" href="#" class="task-card type-exam mb-3" @click.prevent>
+      <a v-for="exam in paginatedExams" :key="exam.id" href="#" style="cursor:default;" class="task-card type-exam mb-3" @click.prevent>
         <div class="task-icon"
           :style="exam.is_completed === 1 ? 'background: #f1f5f9; color: #64748b;' : (exam.time_status === 'upcoming' ? 'background: #eff6ff; color: #2563eb;' : 'background: #ecfdf5; color:#059669')">
           <i
@@ -50,7 +50,7 @@
         </div>
 
         <div class="flex-grow-1">
-          <div class="task-meta">
+          <div class="task-meta" >
             <span v-if="exam.is_completed === 1" class="meta-chip" style="background: #e2e8f0; color: #475569">
               <i class="fas fa-check-circle"></i> បានបញ្ចប់
             </span>
@@ -115,7 +115,7 @@
       </div>
     </div>
 
-    <div v-else class="task-card task-card-static type-exam">
+    <div v-else class="task-card task-card-static type-exam" >
       <div class="task-icon" style="background: #fef2f2; color: #ef4444">
         <i class="fas fa-triangle-exclamation"></i>
       </div>
@@ -156,7 +156,7 @@ const activeTab = ref("all");
 
 // Pagination States
 const currentPage = ref(1);
-const itemsPerPage = ref(10);
+const itemsPerPage = ref(4);
 const processedExams = computed(() => {
   const nowTime = new Date().getTime();
 
