@@ -271,6 +271,7 @@ const fetchExamsData = async () => {
   try {
     loading.value = true
     const res = await getExamsInRoom(route.params.roomId);
+    console.log('RAW EXAM DATA:', res.data?.data) 
     allExams.value = res.data?.data || [];
   } catch (err) {
     console.error("កំហុស API:", err);
@@ -285,7 +286,7 @@ const handleUpdate = (exam) => {
   selectedExamId.value = exam.id
   editForm.value = {
     title: exam.title,
-    duration: exam.duration,
+    duration: Number(exam.duration),
     description: exam.description || '',
     type: exam.type || 'quiz',     
     status: exam.status || 'active'  
@@ -317,7 +318,7 @@ const submitUpdateExam = async () => {
       title: editForm.value.title.trim(),
       type: editForm.value.type,
       description: editForm.value.description ? editForm.value.description.trim() : 'គ្មានការពិពណ៌នា',
-      duration: parseInt(editForm.value.duration) || 60,
+      duration: parseInt(editForm.value.duration),
       status: editForm.value.status,
       start_time: start_date_formatted,
       end_time: end_date_formatted
