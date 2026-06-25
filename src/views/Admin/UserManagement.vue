@@ -87,7 +87,7 @@
 
                 <div class="glass-field full">
                     <label>អ៊ីមែល</label>
-                    <input type="email" placeholder="សូមបញ្ចូលអ៊ីមែល" v-model="form.email"
+                    <input type="email" placeholder="សូមបញ្ចូលអ៊ីមែល" @input="validateEmail(form.email, false)" v-model="form.email"
                         :class="{ 'input-error': errors.email }">
                     <span v-if="errors.email" class="text-danger-msg">{{ errors.email }}</span>
                 </div>
@@ -154,6 +154,17 @@ const totalRecords = ref(0);
 const selectedRoleForCreate = ref('student');
 const form = ref({ firstName: '', lastName: '', email: '' })
 
+watch(() => form.value.firstName, (val) => validateFirstName(val));
+watch(() => form.value.lastName, (val) => validateLastName(val));
+watch(() => form.value.email, (val) => validateEmail(val));
+
+watch(isModalOpen, (isOpen) => {
+    if (!isOpen) {
+        errors.value.firstName = '';
+        errors.value.lastName = '';
+        errors.value.email = '';
+    }
+});
 
 const openUserDetail = async (user) => {
     selectedUser.value = user;
@@ -231,7 +242,7 @@ const fetchUsers = async () => {
 const handleCreate = async () => {
     validateFirstName(form.value.firstName);
     validateLastName(form.value.lastName);
-    validateEmail(form.value.email);
+    validateEmail(form.value.email, true);
 
     if (errors.value.firstName || errors.value.lastName || errors.value.email) {
         return;
@@ -255,10 +266,16 @@ const handleCreate = async () => {
         const res = await createUser(payload, token);
 
         if (res.data?.result) {
-            isModalOpen.value = false;
+            
+
             form.value = { firstName: '', lastName: '', email: '' };
+
             errors.value = { firstName: '', lastName: '', email: '' };
+
+            isModalOpen.value = false;
+
             selectedRoleForCreate.value = 'student';
+
             await fetchUsers();
 
             triggerToast("បង្កើតគណនីអ្នកប្រើប្រាស់បានជោគជ័យ!", 'fa-solid fa-circle-check');
@@ -339,18 +356,6 @@ const handleToggleStatus = async (user) => {
     });
 };
 
-
-watch(() => form.value.firstName, (val) => validateFirstName(val));
-watch(() => form.value.lastName, (val) => validateLastName(val));
-watch(() => form.value.email, (val) => validateEmail(val));
-
-watch(isModalOpen, (isOpen) => {
-    if (!isOpen) {
-        errors.value.firstName = '';
-        errors.value.lastName = '';
-        errors.value.email = '';
-    }
-});
 
 onMounted(() => {
     fetchUsers();
