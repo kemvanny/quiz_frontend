@@ -1,13 +1,15 @@
 <template>
   <section class="student-dashboard">
-
     <div v-if="isLoading" class="skeleton-dashboard-wrapper">
       <div class="stats">
         <div v-for="i in 3" :key="'stat-skey-' + i" class="stat skeleton-card">
           <div class="skeleton-element skeleton-icon"></div>
-          <div class="w-100" style="margin-top: 15px;">
+          <div class="w-100" style="margin-top: 15px">
             <div class="skeleton-element skeleton-line w-50"></div>
-            <div class="skeleton-element skeleton-line w-25" style="height: 26px; margin-top: 15px;"></div>
+            <div
+              class="skeleton-element skeleton-line w-25"
+              style="height: 26px; margin-top: 15px"
+            ></div>
           </div>
         </div>
       </div>
@@ -16,11 +18,23 @@
         <div class="left-col">
           <div class="card skeleton-card">
             <div class="qa-wrap">
-              <div class="skeleton-element skeleton-line w-25" style="height: 16px;"></div>
+              <div
+                class="skeleton-element skeleton-line w-25"
+                style="height: 16px"
+              ></div>
               <div class="qa-btns">
-                <div class="skeleton-element skeleton-btn" style="width: 130px;"></div>
-                <div class="skeleton-element skeleton-btn" style="width: 150px;"></div>
-                <div class="skeleton-element skeleton-btn" style="width: 160px;"></div>
+                <div
+                  class="skeleton-element skeleton-btn"
+                  style="width: 130px"
+                ></div>
+                <div
+                  class="skeleton-element skeleton-btn"
+                  style="width: 150px"
+                ></div>
+                <div
+                  class="skeleton-element skeleton-btn"
+                  style="width: 160px"
+                ></div>
               </div>
             </div>
           </div>
@@ -28,16 +42,32 @@
           <div class="card skeleton-card">
             <div class="perf-head">
               <div class="w-50">
-                <div class="skeleton-element skeleton-line w-75" style="height: 16px; margin-bottom: 14px;"></div>
+                <div
+                  class="skeleton-element skeleton-line w-75"
+                  style="height: 16px; margin-bottom: 14px"
+                ></div>
               </div>
-              <div class="gpa-block" style="min-width: 100px;">
-                <div class="skeleton-element skeleton-line w-50 ms-auto" style="height: 26px; margin-bottom: 5px;"></div>
-                <div class="skeleton-element skeleton-line w-100" style="height: 12px;"></div>
+              <div class="gpa-block" style="min-width: 100px">
+                <div
+                  class="skeleton-element skeleton-line w-50 ms-auto"
+                  style="height: 26px; margin-bottom: 5px"
+                ></div>
+                <div
+                  class="skeleton-element skeleton-line w-100"
+                  style="height: 12px"
+                ></div>
               </div>
             </div>
-            
-            <div v-for="i in 3" :key="'perf-skey-' + i" class="subj-row align-items-center">
-              <div class="skeleton-element skeleton-circle" style="width: 8px; height: 8px;"></div>
+
+            <div
+              v-for="i in 3"
+              :key="'perf-skey-' + i"
+              class="subj-row align-items-center"
+            >
+              <div
+                class="skeleton-element skeleton-circle"
+                style="width: 8px; height: 8px"
+              ></div>
               <div class="subj-info">
                 <div class="skeleton-element skeleton-line w-50"></div>
               </div>
@@ -50,12 +80,23 @@
         </div>
 
         <div class="right-col">
-          <div class="card skeleton-card" style="border-top: 3px solid #cbd5e1;">
+          <div class="card skeleton-card" style="border-top: 3px solid #cbd5e1">
             <div class="section-head">
-              <div class="skeleton-element skeleton-line w-50" style="height: 16px;"></div>
+              <div
+                class="skeleton-element skeleton-line w-50"
+                style="height: 16px"
+              ></div>
             </div>
-            <div v-for="i in 2" :key="'dl-skey-' + i" class="d-flex align-items-center gap-3 p-3 mb-2" style="border-radius: 10px; background: #f8fafc;">
-              <div class="skeleton-element skeleton-circle" style="width: 36px; height: 36px; border-radius: 8px;"></div>
+            <div
+              v-for="i in 2"
+              :key="'dl-skey-' + i"
+              class="d-flex align-items-center gap-3 p-3 mb-2"
+              style="border-radius: 10px; background: #f8fafc"
+            >
+              <div
+                class="skeleton-element skeleton-circle"
+                style="width: 36px; height: 36px; border-radius: 8px"
+              ></div>
               <div class="flex-grow-1">
                 <div class="skeleton-element skeleton-line w-75 mb-2"></div>
                 <div class="skeleton-element skeleton-line w-50"></div>
@@ -65,18 +106,30 @@
 
           <div class="card skeleton-card">
             <div class="section-head">
-              <div class="skeleton-element skeleton-line w-50" style="height: 16px;"></div>
-              <div class="skeleton-element skeleton-line w-15" style="height: 14px;"></div>
+              <div
+                class="skeleton-element skeleton-line w-50"
+                style="height: 16px"
+              ></div>
+              <div
+                class="skeleton-element skeleton-line w-15"
+                style="height: 14px"
+              ></div>
             </div>
             <div v-for="i in 2" :key="'fb-skey-' + i" class="fb-row">
               <div class="fb-left w-75">
-                <div class="skeleton-element skeleton-circle" style="width: 36px; height: 36px; border-radius: 9px;"></div>
+                <div
+                  class="skeleton-element skeleton-circle"
+                  style="width: 36px; height: 36px; border-radius: 9px"
+                ></div>
                 <div class="w-100">
                   <div class="skeleton-element skeleton-line w-60 mb-2"></div>
                   <div class="skeleton-element skeleton-line w-40"></div>
                 </div>
               </div>
-              <div class="skeleton-element skeleton-line w-15" style="height: 22px; border-radius: 99px;"></div>
+              <div
+                class="skeleton-element skeleton-line w-15"
+                style="height: 22px; border-radius: 99px"
+              ></div>
             </div>
           </div>
         </div>
@@ -86,7 +139,7 @@
     <div v-else class="dashboard-real-content d-flex flex-column gap-4">
       <div class="stats">
         <a href="#" class="stat">
-          <div class="stat-icon icon-green" >
+          <div class="stat-icon icon-green">
             <i class="bi bi-check-circle"></i>
           </div>
           <div>
@@ -96,7 +149,7 @@
         </a>
 
         <a href="#" class="stat">
-          <div class="stat-icon icon-blue" >
+          <div class="stat-icon icon-blue">
             <i class="bi bi-door-open"></i>
           </div>
           <div>
@@ -106,12 +159,12 @@
         </a>
 
         <a href="#" class="stat">
-          <div class="stat-icon icon-orange" >
+          <div class="stat-icon icon-orange">
             <i class="bi bi-graph-up-arrow"></i>
           </div>
           <div>
             <div class="stat-label">ពិន្ទុជាមធ្យមសរុប</div>
-            <div class="stat-value">{{ dashboardData.overallAvg || '0%' }}</div>
+            <div class="stat-value">{{ dashboardData.overallAvg || "0%" }}</div>
           </div>
         </a>
       </div>
@@ -124,17 +177,17 @@
                 <div class="card-title no-margin">សកម្មភាពរហ័ស</div>
               </div>
               <div class="qa-btns">
-                <router-link :to="{name: 'Classroom'}" class="btn primary" >
+                <router-link :to="{ name: 'Classroom' }" class="btn primary">
                   <i class="bi bi-building"></i>ថ្នាក់រៀន
                 </router-link>
-                <router-link :to="{name: 'Assignment'}" class="btn">
+                <router-link :to="{ name: 'Assignment' }" class="btn">
                   <i class="bi bi-clipboard-check"></i> ការប្រឡង
                 </router-link>
-                <router-link :to="{name: 'AnalyticsResult'}" class="btn">
+                <router-link :to="{ name: 'AnalyticsResult' }" class="btn">
                   <i class="bi bi-laptop"></i> លទ្ធផល
                 </router-link>
               </div>
-             </div>
+            </div>
           </div>
 
           <div class="card">
@@ -143,22 +196,40 @@
                 <div class="card-title">លទ្ធផលសិក្សាតាមមុខវិជ្ជា</div>
               </div>
               <div class="gpa-block" v-if="performanceList">
-                <div class="gpa-val text-center">{{ performanceList.currentGPA }}</div>
+                <div class="gpa-val text-center">
+                  {{ performanceList.currentGPA }}
+                </div>
                 <div class="gpa-lbl">មធ្យមភាគប៉ាន់ស្មាន</div>
               </div>
             </div>
 
-            <div v-if="performanceList.length === 0" class="py-3 text-center text-muted">
+            <div
+              v-if="performanceList.length === 0"
+              class="py-3 text-center text-muted"
+            >
               មិនមានទិន្នន័យលទ្ធផលសិក្សាទេ
             </div>
-            <div v-else v-for="(subject, index) in performanceList.subjects" :key="index" class="subj-row">
-              <div class="subj-dot" :style="{ background: getSubjectColor(index) }"></div>
+            <div
+              v-else
+              v-for="(subject, index) in performanceList.subjects"
+              :key="index"
+              class="subj-row"
+            >
+              <div
+                class="subj-dot"
+                :style="{ background: getSubjectColor(index) }"
+              ></div>
               <div class="subj-info">
                 <div class="subj-name">{{ subject.subjectName }}</div>
               </div>
               <div class="subj-track">
-                <div class="subj-fill" :style="{ width: subject.percentage + '%', background: getSubjectColor(index) }">
-                </div>
+                <div
+                  class="subj-fill"
+                  :style="{
+                    width: subject.percentage + '%',
+                    background: getSubjectColor(index),
+                  }"
+                ></div>
               </div>
               <div class="subj-pct">{{ subject.percentage }}%</div>
             </div>
@@ -170,31 +241,46 @@
         </div>
 
         <div class="right-col">
-          <div class="card" style="border-top: 3px solid #f59e0b; border-radius: 0 0 14px 14px">
+          <div
+            class="card"
+            style="border-top: 3px solid #f59e0b; border-radius: 0 0 14px 14px"
+          >
             <div class="section-head">
               <div>
                 <div class="card-title">កាលកំណត់ជិតដល់</div>
               </div>
             </div>
 
-            <div v-if="deadlineList.length === 0" class="py-4 text-center text-muted">
-              <i class="bi bi-calendar-check d-block mb-1 fs-4"></i> គ្មានកាលកំណត់សម្រាប់ថ្ងៃនេះទេ!
+            <div
+              v-if="deadlineList.length === 0"
+              class="py-4 text-center text-muted"
+            >
+              <i class="bi bi-calendar-check d-block mb-1 fs-4"></i>
+              គ្មានកាលកំណត់សម្រាប់ថ្ងៃនេះទេ!
             </div>
 
-            <a v-else v-for="dl in deadlineList" :key="dl.examId" href="#" class="dl-item"
+            <a
+              v-else
+              v-for="dl in deadlineList"
+              :key="dl.examId"
+              href="#"
+              class="dl-item"
               style="
                 background: var(--amber-soft);
                 border: 1px solid var(--amber-border);
-                margin-bottom: 8px;cursor: default;
-              ">
+                margin-bottom: 8px;
+                cursor: default;
+              "
+            >
               <div class="dl-icon" style="background: #fef3c7; color: #b45309">
                 <i class="bi bi-hourglass-split"></i>
               </div>
               <div style="flex: 1">
                 <div class="dl-name" style="color: #92400e">{{ dl.title }}</div>
-                <div class="dl-time" style="color: #b45309">{{ dl.dueText }}</div>
+                <div class="dl-time" style="color: #b45309">
+                  {{ dl.dueText }}
+                </div>
               </div>
-              
             </a>
           </div>
 
@@ -203,24 +289,37 @@
               <div>
                 <div class="card-title">មតិកែលម្អថ្មីៗ</div>
               </div>
-               <router-link :to="{name: 'AnalyticsResult'}" class="view-link">មើលលម្អិត</router-link>
+              <router-link :to="{ name: 'AnalyticsResult' }" class="view-link"
+                >មើលលម្អិត</router-link
+              >
             </div>
 
-            <div v-if="feedbackList.length === 0" class="py-3 text-center text-muted">
+            <div
+              v-if="feedbackList.length === 0"
+              class="py-3 text-center text-muted"
+            >
               មិនមានមតិកែលម្អលើការប្រឡងថ្មីៗទេ
             </div>
             <div v-else v-for="fb in feedbackList" :key="fb.id" class="fb-row">
               <div class="fb-left">
-                <div class="fb-icon" style="background: var(--em-soft); color: var(--em)">
+                <div
+                  class="fb-icon"
+                  style="background: var(--em-soft); color: var(--em)"
+                >
                   <i class="bi bi-award"></i>
                 </div>
                 <div>
                   <div class="fb-quiz">{{ fb.examTitle || fb.title }}</div>
-                  <div class="fb-when">Graded {{ fb.gradedAt || 'recently' }}</div>
+                  <div class="fb-when">
+                    Graded {{ fb.gradedAt || "recently" }}
+                  </div>
                 </div>
               </div>
-              <span class="badge" :class="fb.score >= 50 ? 'badge-green' : 'badge-amber'">
-                {{ fb.score }}/100
+              <span
+                class="badge"
+                :class="getPercentage(fb) >= 50 ? 'badge-green' : 'badge-amber'"
+              >
+                {{ fb.score }}/{{ fb.total_points }}
               </span>
             </div>
           </div>
@@ -228,21 +327,45 @@
       </div>
     </div>
 
-    <div class="modal-wrap" :class="{ open: isModalOpen }" @click.self="closeModal">
+    <div
+      class="modal-wrap"
+      :class="{ open: isModalOpen }"
+      @click.self="closeModal"
+    >
       <div class="modal-box">
         <div class="modal-title">ចូលរួមថ្នាក់</div>
-        <div class="modal-sub">សូមបញ្ចូលកូដថ្នាក់ដែលគ្រូរបស់អ្នកបានផ្តល់ឱ្យ</div>
+        <div class="modal-sub">
+          សូមបញ្ចូលកូដថ្នាក់ដែលគ្រូរបស់អ្នកបានផ្តល់ឱ្យ
+        </div>
         <label class="modal-label" for="classCode">កូដថ្នាក់រៀន</label>
-        <input class="modal-input" :class="{ invalid: classCodeError }" id="classCode" ref="classCodeInput"
-          v-model="classCode" type="text" placeholder="e.g. AB12-CD34" maxlength="12" autocomplete="off"
-          @input="classCodeError = false" @keyup.enter="joinClass" />
+        <input
+          class="modal-input"
+          :class="{ invalid: classCodeError }"
+          id="classCode"
+          ref="classCodeInput"
+          v-model="classCode"
+          type="text"
+          placeholder="e.g. AB12-CD34"
+          maxlength="12"
+          autocomplete="off"
+          @input="classCodeError = false"
+          @keyup.enter="joinClass"
+        />
         <div class="modal-actions">
-          <button class="btn primary" type="button" style="justify-content: center; padding: 12px; font-size: 15px"
-            @click="joinClass">
+          <button
+            class="btn primary"
+            type="button"
+            style="justify-content: center; padding: 12px; font-size: 15px"
+            @click="joinClass"
+          >
             <i class="bi bi-door-open"></i> ចូលរួមឥឡូវនេះ
           </button>
-          <button class="btn" type="button" style="justify-content: center; padding: 11px; color: var(--txt-mu)"
-            @click="closeModal">
+          <button
+            class="btn"
+            type="button"
+            style="justify-content: center; padding: 11px; color: var(--txt-mu)"
+            @click="closeModal"
+          >
             Cancel
           </button>
         </div>
@@ -257,7 +380,7 @@ import {
   getDashboardStats,
   getRecentFeedback,
   getStudentPerformance,
-  getUpcomingDeadlines
+  getUpcomingDeadlines,
 } from "@/api/student.api";
 
 const isModalOpen = ref(false);
@@ -279,12 +402,13 @@ function getSubjectColor(index) {
 async function loadDashboardContent() {
   try {
     isLoading.value = true;
-    const [resStats, resFeedback, resPerformance, resDeadlineList] = await Promise.all([
-      getDashboardStats(),
-      getRecentFeedback(),
-      getStudentPerformance(),
-      getUpcomingDeadlines()
-    ]);
+    const [resStats, resFeedback, resPerformance, resDeadlineList] =
+      await Promise.all([
+        getDashboardStats(),
+        getRecentFeedback(),
+        getStudentPerformance(),
+        getUpcomingDeadlines(),
+      ]);
 
     if (resStats.data?.success) {
       dashboardData.value = resStats.data.data;
@@ -297,11 +421,10 @@ async function loadDashboardContent() {
     if (resPerformance.data?.success) {
       performanceList.value = resPerformance.data.data || [];
     }
-    
+
     if (resDeadlineList.data?.success) {
       deadlineList.value = resDeadlineList.data.data || [];
     }
-
   } catch (error) {
     console.error("Error loading student dashboard content:", error);
   } finally {
@@ -319,7 +442,18 @@ async function openModal() {
   classCodeInput.value?.focus();
 }
 
-function closeModal() { isModalOpen.value = false; }
+function closeModal() {
+  isModalOpen.value = false;
+}
+
+const getPercentage = (item) => {
+  const score = Number(item.score || 0);
+  const total = Number(item.total_points || 0);
+
+  if (total === 0) return 0;
+
+  return Math.round((score / total) * 100);
+};
 
 function joinClass() {
   const code = classCode.value.trim();
@@ -390,9 +524,15 @@ onMounted(loadDashboardContent);
 }
 
 @keyframes skeleton-pulse {
-  0% { background-color: #f1f5f9; }
-  50% { background-color: #e2e8f0; }
-  100% { background-color: #f1f5f9; }
+  0% {
+    background-color: #f1f5f9;
+  }
+  50% {
+    background-color: #e2e8f0;
+  }
+  100% {
+    background-color: #f1f5f9;
+  }
 }
 
 .skeleton-element {
@@ -426,16 +566,36 @@ onMounted(loadDashboardContent);
 }
 
 /* Helper Utilities */
-.w-10 { width: 10%; }
-.w-15 { width: 15%; }
-.w-25 { width: 25%; }
-.w-40 { width: 40%; }
-.w-50 { width: 50%; }
-.w-60 { width: 60%; }
-.w-75 { width: 75%; }
-.w-100 { width: 100%; }
-.ms-auto { margin-left: auto; }
-.mb-2 { margin-bottom: 8px; }
+.w-10 {
+  width: 10%;
+}
+.w-15 {
+  width: 15%;
+}
+.w-25 {
+  width: 25%;
+}
+.w-40 {
+  width: 40%;
+}
+.w-50 {
+  width: 50%;
+}
+.w-60 {
+  width: 60%;
+}
+.w-75 {
+  width: 75%;
+}
+.w-100 {
+  width: 100%;
+}
+.ms-auto {
+  margin-left: auto;
+}
+.mb-2 {
+  margin-bottom: 8px;
+}
 
 /* ── STATS ── */
 .stats {
@@ -452,8 +612,8 @@ onMounted(loadDashboardContent);
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 12px;          
-  
+  gap: 12px;
+
   cursor: pointer;
   transition: 0.15s;
 }
@@ -474,11 +634,17 @@ onMounted(loadDashboardContent);
   flex-shrink: 0;
   background: inherit;
 }
-.icon-green { background: var(--em-soft) !important; color: var(--em) !important; }
-.icon-blue { background: var(--blue-soft) !important; color: #3b82f6 !important; }
-.icon-orange { 
-    background: #ffedd5 !important;
-    color: #ea580c !important;     
+.icon-green {
+  background: var(--em-soft) !important;
+  color: var(--em) !important;
+}
+.icon-blue {
+  background: var(--blue-soft) !important;
+  color: #3b82f6 !important;
+}
+.icon-orange {
+  background: #ffedd5 !important;
+  color: #ea580c !important;
 }
 
 .stat-label {
@@ -487,7 +653,7 @@ onMounted(loadDashboardContent);
   color: var(--txt-mu);
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  margin-bottom: 0px; 
+  margin-bottom: 0px;
 }
 
 .stat-value {

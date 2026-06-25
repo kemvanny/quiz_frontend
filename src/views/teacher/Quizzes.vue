@@ -3,17 +3,21 @@
     <div class="app-shell flex-grow-1 overflow-hidden">
       <div class="main-col">
         <div class="workspace">
-
-          <div class="panel d-flex flex-column" style="height: 100%; max-height: calc(100vh - 120px);">
+          <div
+            class="panel d-flex flex-column"
+            style="height: 100%; max-height: calc(100vh - 120px)"
+          >
             <div class="panel-head flex-shrink-0">
               <span class="panel-lbl">Question List</span>
-              <span class="panel-count" id="qCountLabel">{{ questions.length }} Q</span>
+              <span class="panel-count" id="qCountLabel"
+                >{{ questions.length }} Q</span
+              >
             </div>
 
             <div
               class="q-nav-scroll flex-grow-1 overflow-y-auto"
               ref="qNavScrollRef"
-              style="max-height: calc(100% - 100px);"
+              style="max-height: calc(100% - 100px)"
             >
               <div
                 v-for="(q, idx) in questions"
@@ -31,7 +35,12 @@
             <div class="p-2 border-top bg-white flex-shrink-0">
               <button
                 class="btn btn-sm fw-bold rounded-3 border-0 add-q-btn w-100 py-2"
-                style="border: 1.5px dashed rgba(16,185,129,.35) !important; background: rgba(16,185,129,.04); color: var(--em); font-size: .78rem;"
+                style="
+                  border: 1.5px dashed rgba(16, 185, 129, 0.35) !important;
+                  background: rgba(16, 185, 129, 0.04);
+                  color: var(--em);
+                  font-size: 0.78rem;
+                "
                 @click="addNewQuestion"
               >
                 <i class="fas fa-plus-circle me-1"></i> បន្ថែមសំណួរថ្មី
@@ -40,27 +49,33 @@
           </div>
 
           <div class="feed-col" id="questionFeed">
-
             <div
               class="quiz-info-card p-4 rounded-4 border-0 mb-4"
-              style="background-color: #f8fafc; border: 1px solid #e2e8f0;"
+              style="background-color: #f8fafc; border: 1px solid #e2e8f0"
             >
               <h5 class="fw-bold text-dark mb-3 d-flex align-items-center">
-                <i class="fas fa-edit me-2" style="color: var(--em);"></i> ព័ត៌មានវិញ្ញាសា
+                <i class="fas fa-edit me-2" style="color: var(--em)"></i>
+                ព័ត៌មានវិញ្ញាសា
               </h5>
 
               <div class="mb-3">
-                <label class="form-label fw-bold small text-uppercase text-muted">ចំណងជើងវិញ្ញាសា</label>
+                <label
+                  class="form-label fw-bold small text-uppercase text-muted"
+                  >ចំណងជើងវិញ្ញាសា</label
+                >
                 <input
                   type="text"
                   v-model="quizTitle"
                   class="form-control rounded-3 py-2 px-3 border-0 shadow-sm"
                   placeholder="ឧទាហរណ៍៖ ប្រឡងឆមាសទី១ មុខវិជ្ជាគណិតវិទ្យា"
-                >
+                />
               </div>
 
               <div class="mb-3">
-                <label class="form-label fw-bold small text-uppercase text-muted">ការណែនាំ</label>
+                <label
+                  class="form-label fw-bold small text-uppercase text-muted"
+                  >ការណែនាំ</label
+                >
                 <textarea
                   v-model="quizInstructions"
                   class="form-control rounded-3 py-2 px-3 border-0 shadow-sm"
@@ -68,22 +83,62 @@
                   placeholder="សូមសរសេរការណែនាំខ្លីៗសម្រាប់សិស្ស..."
                 ></textarea>
               </div>
-                        <div class="mb-3">
-                <label class="form-label fw-bold small text-uppercase text-muted">រយៈពេលប្រឡង (នាទី)</label>
+              <div class="mb-3">
+                <label
+                  class="form-label fw-bold small text-uppercase text-muted"
+                  >រយៈពេលប្រឡង (នាទី)</label
+                >
                 <input
                   type="number"
                   v-model.number="quizDuration"
                   class="form-control rounded-3 py-2 px-3 border-0 shadow-sm"
                   min="1"
                   placeholder="ឧ. 60"
+                />
+              </div>
+
+              <div class="mb-3">
+                <label
+                  class="form-label fw-bold small text-uppercase text-muted"
                 >
+                  ម៉ោងចាប់ផ្ដើម
+                </label>
+                <input
+                  type="datetime-local"
+                  v-model="startTime"
+                  class="form-control rounded-3 py-2 px-3 border-0 shadow-sm"
+                />
+              </div>
+
+              <div class="mb-3">
+                <label
+                  class="form-label fw-bold small text-uppercase text-muted"
+                >
+                  ម៉ោងបញ្ចប់
+                </label>
+                <input
+                  type="datetime-local"
+                  v-model="endTime"
+                  readonly
+                  class="form-control rounded-3 py-2 px-3 border-0 shadow-sm bg-light"
+                />
               </div>
 
               <div>
-                <label class="form-label fw-bold small text-uppercase text-muted">ជ្រើសរើសថ្នាក់រៀន</label>
-                <select v-model="selectedRoomId" class="form-select rounded-3 py-2 px-3 border-0 shadow-sm">
+                <label
+                  class="form-label fw-bold small text-uppercase text-muted"
+                  >ជ្រើសរើសថ្នាក់រៀន</label
+                >
+                <select
+                  v-model="selectedRoomId"
+                  class="form-select rounded-3 py-2 px-3 border-0 shadow-sm"
+                >
                   <option value="" disabled>-- ជ្រើសរើសថ្នាក់រៀន --</option>
-                  <option v-for="room in allRooms" :key="room.id" :value="room.id">
+                  <option
+                    v-for="room in allRooms"
+                    :key="room.id"
+                    :value="room.id"
+                  >
                     {{ room.name }}
                   </option>
                 </select>
@@ -98,22 +153,40 @@
               :class="{ 'active-card': selectedQuestionIndex === qIdx }"
               @click="selectedQuestionIndex = qIdx"
             >
-              <div class="d-flex align-items-center justify-content-between px-3 py-2 border-bottom bg-light">
+              <div
+                class="d-flex align-items-center justify-content-between px-3 py-2 border-bottom bg-light"
+              >
                 <div class="d-flex align-items-center gap-2">
                   <div class="q-num-badge">{{ qIdx + 1 }}</div>
-                  <span class="fw-bold" style="font-size: .85rem; color: var(--txt);">
+                  <span
+                    class="fw-bold"
+                    style="font-size: 0.85rem; color: var(--txt)"
+                  >
                     សំណួរទី {{ getKhmerNumber(qIdx + 1) }}
                   </span>
                 </div>
                 <div class="pts-pill">
                   <label>pts</label>
-                  <input type="number" v-model.number="q.pts" min="0" class="pts-input">
+                  <input
+                    type="number"
+                    v-model.number="q.pts"
+                    min="0"
+                    class="pts-input"
+                  />
                 </div>
               </div>
 
               <div class="p-3 d-flex flex-column gap-2">
-                <textarea v-model="q.text" class="q-field" rows="3" placeholder="Type your question here…"></textarea>
-                <div class="text-uppercase fw-bold text-muted" style="font-size: .6rem; letter-spacing: 1.1px;">
+                <textarea
+                  v-model="q.text"
+                  class="q-field"
+                  rows="3"
+                  placeholder="Type your question here…"
+                ></textarea>
+                <div
+                  class="text-uppercase fw-bold text-muted"
+                  style="font-size: 0.6rem; letter-spacing: 1.1px"
+                >
                   Answers &amp; Choices
                 </div>
 
@@ -130,7 +203,7 @@
                       v-model="choice.text"
                       class="choice-input"
                       placeholder="បញ្ចូលខ្លឹមសារចម្លើយ…"
-                    >
+                    />
 
                     <div class="d-flex align-items-center gap-2 flex-shrink-0">
                       <span class="text-muted correct-label">Correct?</span>
@@ -140,7 +213,7 @@
                         :name="`q_correct_${qIdx}`"
                         :checked="choice.isCorrect"
                         @change="setCorrectChoice(qIdx, cIdx)"
-                      >
+                      />
                       <button
                         class="btn btn-sm p-1 text-secondary border-0 remove-choice-btn"
                         @click="removeChoice(qIdx, cIdx)"
@@ -152,10 +225,12 @@
                 </div>
               </div>
 
-              <div class="d-flex align-items-center justify-content-between px-3 pb-3">
+              <div
+                class="d-flex align-items-center justify-content-between px-3 pb-3"
+              >
                 <button
                   class="btn btn-sm fw-bold rounded-3 border-0 bg-transparent"
-                  style="color: var(--em); font-size: .76rem;"
+                  style="color: var(--em); font-size: 0.76rem"
                   @click="addChoice(qIdx)"
                 >
                   <i class="fas fa-plus-circle me-1"></i> បន្ថែមជម្រើស
@@ -163,7 +238,7 @@
                 <button
                   v-if="questions.length > 1"
                   class="btn btn-sm btn-outline-danger rounded-3 fw-bold"
-                  style="font-size: .72rem;"
+                  style="font-size: 0.72rem"
                   @click.stop="removeQuestion(qIdx)"
                 >
                   <i class="fas fa-trash-alt me-1"></i> Remove
@@ -177,104 +252,211 @@
               <span class="panel-lbl">Quiz Progress</span>
             </div>
 
-            <div class="flex-grow-1 overflow-y-auto p-3 d-flex flex-column gap-3" style="padding: 16px 14px;">
+            <div
+              class="flex-grow-1 overflow-y-auto p-3 d-flex flex-column gap-3"
+              style="padding: 16px 14px"
+            >
               <div class="d-flex justify-content-center">
-                <div style="position: relative; width: 120px; height: 120px;">
-                  <svg width="120" height="120" viewBox="0 0 120 120" class="svg-ring">
-                    <circle cx="60" cy="60" r="50" class="ring-bg"/>
+                <div style="position: relative; width: 120px; height: 120px">
+                  <svg
+                    width="120"
+                    height="120"
+                    viewBox="0 0 120 120"
+                    class="svg-ring"
+                  >
+                    <circle cx="60" cy="60" r="50" class="ring-bg" />
                     <circle
-                      cx="60" cy="60" r="50"
+                      cx="60"
+                      cy="60"
+                      r="50"
                       class="ring-fill"
-                      :style="{ strokeDashoffset: circleStrokeDashoffset, stroke: progressColor }"
+                      :style="{
+                        strokeDashoffset: circleStrokeDashoffset,
+                        stroke: progressColor,
+                      }"
                     />
                   </svg>
-                  <div class="position-absolute top-50 start-50 translate-middle text-center">
-                    <div class="fw-bold" :style="{ color: progressColor }" style="font-size: 1.4rem; line-height: 1;">
+                  <div
+                    class="position-absolute top-50 start-50 translate-middle text-center"
+                  >
+                    <div
+                      class="fw-bold"
+                      :style="{ color: progressColor }"
+                      style="font-size: 1.4rem; line-height: 1"
+                    >
                       {{ totalPoints }}
                     </div>
-                    <div style="font-size: .62rem; font-weight: 700; color: var(--txt-mu);">MAX PTS</div>
+                    <div
+                      style="
+                        font-size: 0.62rem;
+                        font-weight: 700;
+                        color: var(--txt-mu);
+                      "
+                    >
+                      MAX PTS
+                    </div>
                   </div>
                 </div>
               </div>
 
               <div class="text-center">
-                <div class="fw-bold" style="font-size: .88rem; color: var(--txt);">ពិន្ទុតេស្ត</div>
-                <div class="text-muted" style="font-size: .7rem; line-height: 1.5;">
+                <div
+                  class="fw-bold"
+                  style="font-size: 0.88rem; color: var(--txt)"
+                >
+                  ពិន្ទុតេស្ត
+                </div>
+                <div
+                  class="text-muted"
+                  style="font-size: 0.7rem; line-height: 1.5"
+                >
                   ពិន្ទុសរុបដែលគណនាបង្កើតដោយស្វ័យប្រវត្តិផ្អែកតាមវិញ្ញាសា
                 </div>
               </div>
 
-              <hr class="my-1"/>
+              <hr class="my-1" />
 
               <div class="d-flex flex-column gap-2 mb-2">
                 <div class="d-flex justify-content-between align-items-center">
-                  <span style="font-size: .73rem; font-weight: 600; color: var(--txt-mu);">
-                    <i class="fas fa-layer-group me-1" style="color: var(--em);"></i>សំណួរ
+                  <span
+                    style="
+                      font-size: 0.73rem;
+                      font-weight: 600;
+                      color: var(--txt-mu);
+                    "
+                  >
+                    <i
+                      class="fas fa-layer-group me-1"
+                      style="color: var(--em)"
+                    ></i
+                    >សំណួរ
                   </span>
-                  <span class="fw-bold" style="font-size: .77rem; color: var(--txt);">{{ questions.length }}</span>
+                  <span
+                    class="fw-bold"
+                    style="font-size: 0.77rem; color: var(--txt)"
+                    >{{ questions.length }}</span
+                  >
                 </div>
                 <div class="d-flex justify-content-between align-items-center">
-                  <span style="font-size: .73rem; font-weight: 600; color: var(--txt-mu);">
-                    <i class="fas fa-star me-1" style="color: var(--em);"></i>ពិន្ទុសរុប
+                  <span
+                    style="
+                      font-size: 0.73rem;
+                      font-weight: 600;
+                      color: var(--txt-mu);
+                    "
+                  >
+                    <i class="fas fa-star me-1" style="color: var(--em)"></i
+                    >ពិន្ទុសរុប
                   </span>
-                  <span class="fw-bold" style="font-size: .77rem; color: var(--txt);">{{ totalPoints }} Pts</span>
+                  <span
+                    class="fw-bold"
+                    style="font-size: 0.77rem; color: var(--txt)"
+                    >{{ totalPoints }} Pts</span
+                  >
                 </div>
               </div>
 
               <button
                 class="btn btn-sm rounded-3 fw-bold text-white w-100 save-publish-btn"
-                style="background: linear-gradient(135deg, var(--em), var(--em-dk)); box-shadow: 0 4px 14px rgba(16,185,129,.3);"
+                style="
+                  background: linear-gradient(135deg, var(--em), var(--em-dk));
+                  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3);
+                "
                 @click="finalizePublish"
                 :disabled="isSubmitting"
               >
-                <span v-if="isSubmitting" class="spinner-border spinner-border-sm me-1"></span>
+                <span
+                  v-if="isSubmitting"
+                  class="spinner-border spinner-border-sm me-1"
+                ></span>
                 <i v-else class="fas fa-paper-plane me-1"></i> Publish
               </button>
             </div>
           </div>
-
         </div>
       </div>
     </div>
 
-    <div class="modal-overlay" v-if="showPreviewModal" @click.self="showPreviewModal = false">
-      <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
+    <div
+      class="modal-overlay"
+      v-if="showPreviewModal"
+      @click.self="showPreviewModal = false"
+    >
+      <div
+        class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable"
+      >
         <div
           class="modal-content border-0 rounded-4 shadow-lg overflow-hidden"
-          style="background: #f8fafc;"
+          style="background: #f8fafc"
         >
-          <div style="height: 6px; background: linear-gradient(90deg, var(--em), var(--em-dk));"></div>
+          <div
+            style="
+              height: 6px;
+              background: linear-gradient(90deg, var(--em), var(--em-dk));
+            "
+          ></div>
 
           <div class="modal-header border-0 pb-0 px-4 pt-4">
-            <h5 class="modal-title fw-bold text-dark d-flex align-items-center gap-2">
-              <i class="fas fa-eye" style="color: var(--em);"></i> Student Preview
+            <h5
+              class="modal-title fw-bold text-dark d-flex align-items-center gap-2"
+            >
+              <i class="fas fa-eye" style="color: var(--em)"></i> Student
+              Preview
             </h5>
-            <button type="button" class="btn-close shadow-none" @click="showPreviewModal = false"></button>
+            <button
+              type="button"
+              class="btn-close shadow-none"
+              @click="showPreviewModal = false"
+            ></button>
           </div>
 
           <div
             class="modal-body p-4"
-            style="user-select: none; -webkit-user-select: none; max-height: 60vh; overflow-y: auto;"
+            style="
+              user-select: none;
+              -webkit-user-select: none;
+              max-height: 60vh;
+              overflow-y: auto;
+            "
           >
             <div class="mb-4 pb-3 border-bottom text-center">
-              <h3 class="fw-bold" style="color: var(--txt);">{{ quizTitle || 'Untitled Quiz' }}</h3>
-              <p class="text-muted small mb-1" v-if="quizInstructions">{{ quizInstructions }}</p>
-              <p class="text-muted small mb-0">This is exactly how students will see the exam.</p>
+              <h3 class="fw-bold" style="color: var(--txt)">
+                {{ quizTitle || "Untitled Quiz" }}
+              </h3>
+              <p class="text-muted small mb-1" v-if="quizInstructions">
+                {{ quizInstructions }}
+              </p>
+              <p class="text-muted small mb-0">
+                This is exactly how students will see the exam.
+              </p>
             </div>
 
-            <div v-if="questions.length === 0" class="text-center py-5 text-muted">
+            <div
+              v-if="questions.length === 0"
+              class="text-center py-5 text-muted"
+            >
               <i class="fas fa-inbox fa-3x mb-3 opacity-50"></i>
               <p>No questions added yet.</p>
             </div>
 
             <div v-else>
               <div v-for="(q, index) in questions" :key="index" class="mb-4">
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                  <span class="badge bg-secondary text-white rounded-pill px-3 py-2">Question {{ index + 1 }}</span>
-                  <span class="text-muted fw-bold" style="font-size: .85rem;">{{ q.pts }} Points</span>
+                <div
+                  class="d-flex justify-content-between align-items-center mb-3"
+                >
+                  <span
+                    class="badge bg-secondary text-white rounded-pill px-3 py-2"
+                    >Question {{ index + 1 }}</span
+                  >
+                  <span class="text-muted fw-bold" style="font-size: 0.85rem"
+                    >{{ q.pts }} Points</span
+                  >
                 </div>
-                <h5 class="fw-bold mb-3" style="color: var(--txt); line-height: 1.5;">
-                  {{ q.text || '(Empty Question)' }}
+                <h5
+                  class="fw-bold mb-3"
+                  style="color: var(--txt); line-height: 1.5"
+                >
+                  {{ q.text || "(Empty Question)" }}
                 </h5>
                 <div class="options-container">
                   <div
@@ -283,8 +465,15 @@
                     class="p-3 mb-2 bg-white rounded-3 shadow-sm border option-preview-row"
                   >
                     <div class="form-check m-0 d-flex align-items-center gap-2">
-                      <input class="form-check-input mt-0 shadow-none" type="radio" :name="`preview_q${index}`">
-                      <label class="form-check-label w-100" style="color: var(--txt); font-size: .95rem;">
+                      <input
+                        class="form-check-input mt-0 shadow-none"
+                        type="radio"
+                        :name="`preview_q${index}`"
+                      />
+                      <label
+                        class="form-check-label w-100"
+                        style="color: var(--txt); font-size: 0.95rem"
+                      >
                         {{ choice.text || `Option ${getKhmerAlphabet(cIdx)}` }}
                       </label>
                     </div>
@@ -293,7 +482,7 @@
                 <hr
                   v-if="index < questions.length - 1"
                   class="my-4"
-                  style="border-color: var(--bdr); opacity: 1;"
+                  style="border-color: var(--bdr); opacity: 1"
                 />
               </div>
             </div>
@@ -301,12 +490,18 @@
 
           <div
             class="modal-footer border-0 pt-0 pb-4 px-4 bg-white"
-            style="border-top: 1px solid var(--bdr) !important;"
+            style="border-top: 1px solid var(--bdr) !important"
           >
-            <button class="btn btn-light rounded-3 fw-bold px-4" @click="showPreviewModal = false">
+            <button
+              class="btn btn-light rounded-3 fw-bold px-4"
+              @click="showPreviewModal = false"
+            >
               Exit Preview
             </button>
-            <button class="btn text-white rounded-3 fw-bold px-4 disabled" style="background: var(--em);">
+            <button
+              class="btn text-white rounded-3 fw-bold px-4 disabled"
+              style="background: var(--em)"
+            >
               Submit Exam
             </button>
           </div>
@@ -321,25 +516,29 @@
     >
       <div
         class="modal-dialog-custom p-4 bg-white rounded-4 shadow-lg text-center slide-in"
-        style="width: 100%; max-width: 480px; z-index: 9999;"
+        style="width: 100%; max-width: 480px; z-index: 9999"
       >
         <div
           class="success-icon-wrapper mb-3 mx-auto d-flex align-items-center justify-content-center rounded-circle bg-success bg-opacity-10 text-success"
-          style="width: 56px; height: 56px;"
+          style="width: 56px; height: 56px"
         >
           <i class="fas fa-check-circle fa-2x"></i>
         </div>
 
         <h4 class="fw-bold text-dark mb-1">បង្កើតវិញ្ញាសាជោគជ័យ!</h4>
         <p class="text-muted small mb-4">
-          វិញ្ញាសារបស់អ្នកត្រូវបានដាក់ផ្សាយជាផ្លូវការរួចរាល់ហើយ។ សូមចម្លងតំណភ្ជាប់ខាងក្រោមដើម្បីផ្ញើជូនសិស្សានុសិស្ស៖
+          វិញ្ញាសារបស់អ្នកត្រូវបានដាក់ផ្សាយជាផ្លូវការរួចរាល់ហើយ។
+          សូមចម្លងតំណភ្ជាប់ខាងក្រោមដើម្បីផ្ញើជូនសិស្សានុសិស្ស៖
         </p>
 
-        <div class="d-flex align-items-center justify-content-between p-2.5 mb-4 rounded-3 border bg-light text-start">
+        <div
+          class="d-flex align-items-center justify-content-between p-2.5 mb-4 rounded-3 border bg-light text-start"
+        >
           <span
             class="text-dark text-truncate me-2 fw-medium"
-            style="font-size: 0.88rem; max-width: 320px;"
-          >{{ generatedExamLink }}</span>
+            style="font-size: 0.88rem; max-width: 320px"
+            >{{ generatedExamLink }}</span
+          >
           <button
             class="btn btn-sm btn-dark rounded-2 px-3 fw-bold d-flex align-items-center gap-1 flex-shrink-0"
             @click="copyLinkToClipboard"
@@ -349,187 +548,219 @@
         </div>
 
         <div class="w-100">
-          <button class="btn btn-light w-100 rounded-3 fw-bold py-2 text-muted" @click="showCodeModal = false">
+          <button
+            class="btn btn-light w-100 rounded-3 fw-bold py-2 text-muted"
+            @click="showCodeModal = false"
+          >
             បិទផ្ទាំងនេះ (Close)
           </button>
         </div>
       </div>
     </div>
-
   </div>
 </template>
 
 <script setup>
-import { ref, computed, nextTick, onMounted } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
-import { useToast } from 'vue-toastification'
-import { useAuthStore } from '@/stores/auth' 
-import { createExam, createQuestion } from '@/api/exam.api'
-import { getMyRooms } from '@/api/teacher.api';
+import { ref, computed, nextTick, onMounted, watch } from "vue";
+import { useRoute, useRouter } from "vue-router";
+import { useToast } from "vue-toastification";
+import { useAuthStore } from "@/stores/auth";
+import { createExam, createQuestion } from "@/api/exam.api";
+import { getMyRooms } from "@/api/teacher.api";
 
-const route = useRoute()
-const router = useRouter()
-const toast = useToast()
-const authStore = useAuthStore() 
+const route = useRoute();
+const router = useRouter();
+const toast = useToast();
+const authStore = useAuthStore();
 
-const qNavScrollRef = ref(null)
-const isSubmitting = ref(false)
-const showPreviewModal = ref(false)
-const selectedQuestionIndex = ref(0)
+const qNavScrollRef = ref(null);
+const isSubmitting = ref(false);
+const showPreviewModal = ref(false);
+const selectedQuestionIndex = ref(0);
 
-const showCodeModal = ref(false)
-const generatedExamLink = ref('')
+const showCodeModal = ref(false);
+const generatedExamLink = ref("");
 
-const quizTitle = ref('')
-const quizInstructions = ref('')
-const quizDuration = ref(60)
+const quizTitle = ref("");
+const quizInstructions = ref("");
+const quizDuration = ref(60);
+
+const startTime = ref("");
+const endTime = ref("");
+watch([startTime, quizDuration], ([newStart, newDuration]) => {
+  if (!newStart || !newDuration) return;
+
+  const start = new Date(newStart);
+
+  start.setMinutes(start.getMinutes() + parseInt(newDuration || 0));
+
+  const year = start.getFullYear();
+  const month = String(start.getMonth() + 1).padStart(2, "0");
+  const day = String(start.getDate()).padStart(2, "0");
+  const hours = String(start.getHours()).padStart(2, "0");
+  const minutes = String(start.getMinutes()).padStart(2, "0");
+
+  endTime.value = `${year}-${month}-${day}T${hours}:${minutes}`;
+});
 
 const roomId = route.params.roomId;
-const allRooms = ref([]); 
-const selectedRoomId = ref('');
+const allRooms = ref([]);
+const selectedRoomId = ref("");
 
-const KH = ["ក", "ខ", "គ", "ឃ", "ង", "ច"]
-const KH_N = ["១", "២", "៣", "៤", "៥", "៦", "៧", "៨", "៩", "១០"]
+const KH = ["ក", "ខ", "គ", "ឃ", "ង", "ច"];
+const KH_N = ["១", "២", "៣", "៤", "៥", "៦", "៧", "៨", "៩", "១០"];
 
 const questions = ref([
   {
-    text: '',
+    text: "",
     pts: 10,
-    question_type: 'multiple_choice',
+    question_type: "multiple_choice",
     choices: [
-      { text: '', isCorrect: true },
-      { text: '', isCorrect: false }
-    ]
-  }
-])
+      { text: "", isCorrect: true },
+      { text: "", isCorrect: false },
+    ],
+  },
+]);
 
 const getKhmerNumber = (num) => {
-  return KH_N[num - 1] || num.toString()
-}
+  return KH_N[num - 1] || num.toString();
+};
 
 const getKhmerAlphabet = (idx) => {
-  return KH[idx] || String.fromCharCode(65 + idx)
-}
+  return KH[idx] || String.fromCharCode(65 + idx);
+};
 
 const selectQuestion = (idx) => {
-  selectedQuestionIndex.value = idx
-  const card = document.getElementById(`qcard-${idx}`)
+  selectedQuestionIndex.value = idx;
+  const card = document.getElementById(`qcard-${idx}`);
   if (card) {
-    card.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    card.scrollIntoView({ behavior: "smooth", block: "start" });
   }
-  const navItem = document.getElementById(`qnav-${idx}`)
+  const navItem = document.getElementById(`qnav-${idx}`);
   if (navItem && qNavScrollRef.value) {
-    navItem.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
+    navItem.scrollIntoView({ behavior: "smooth", block: "nearest" });
   }
-}
+};
 
 // Dynamically counts total points from whatever values the teacher adds
 const totalPoints = computed(() => {
-  return questions.value.reduce((sum, q) => sum + (parseInt(q.pts) || 0), 0)
-})
+  return questions.value.reduce((sum, q) => sum + (parseInt(q.pts) || 0), 0);
+});
 
 // Visual dynamic properties for the tracking ring UI component
 const circleStrokeDashoffset = computed(() => {
   // Since the base maximum is exactly totalPoints, the ring layout will show 100% full configuration
-  return totalPoints.value > 0 ? 0 : 314
-})
+  return totalPoints.value > 0 ? 0 : 314;
+});
 
 const progressColor = computed(() => {
-  return 'var(--em)' 
-})
+  return "var(--em)";
+});
 
 const addNewQuestion = () => {
   questions.value.push({
-    text: '',
+    text: "",
     pts: 10,
-    question_type: 'multiple_choice',
+    question_type: "multiple_choice",
     choices: [
-      { text: '', isCorrect: true },
-      { text: '', isCorrect: false }
-    ]
-  })
-  const newIndex = questions.value.length - 1
-  selectedQuestionIndex.value = newIndex
+      { text: "", isCorrect: true },
+      { text: "", isCorrect: false },
+    ],
+  });
+  const newIndex = questions.value.length - 1;
+  selectedQuestionIndex.value = newIndex;
 
   nextTick(() => {
-    const card = document.getElementById(`qcard-${newIndex}`)
-    if (card) card.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    const card = document.getElementById(`qcard-${newIndex}`);
+    if (card) card.scrollIntoView({ behavior: "smooth", block: "start" });
     if (qNavScrollRef.value) {
       qNavScrollRef.value.scrollTo({
         top: qNavScrollRef.value.scrollHeight,
-        behavior: 'smooth'
-      })
+        behavior: "smooth",
+      });
     }
-  })
-}
+  });
+};
 
 const removeQuestion = (idx) => {
   if (questions.value.length > 1) {
-    questions.value.splice(idx, 1)
+    questions.value.splice(idx, 1);
     if (selectedQuestionIndex.value >= questions.value.length) {
-      selectedQuestionIndex.value = questions.value.length - 1
+      selectedQuestionIndex.value = questions.value.length - 1;
     }
   }
-}
+};
 
 const addChoice = (qIdx) => {
-  const q = questions.value[qIdx]
+  const q = questions.value[qIdx];
   if (q.choices.length < KH.length) {
-    q.choices.push({ text: '', isCorrect: false })
+    q.choices.push({ text: "", isCorrect: false });
   }
-}
+};
 
 const removeChoice = (qIdx, cIdx) => {
-  const q = questions.value[qIdx]
-  if (q.choices.length > 1) q.choices.splice(cIdx, 1)
-}
+  const q = questions.value[qIdx];
+  if (q.choices.length > 1) q.choices.splice(cIdx, 1);
+};
 
 const setCorrectChoice = (qIdx, cIdx) => {
   questions.value[qIdx].choices.forEach((choice, idx) => {
-    choice.isCorrect = (idx === cIdx)
-  })
-}
+    choice.isCorrect = idx === cIdx;
+  });
+};
 
 const openPreviewModal = () => {
-  showPreviewModal.value = true
-}
+  showPreviewModal.value = true;
+};
 
 const getAllRooms = async () => {
   try {
-    const res = await getMyRooms(); 
+    const res = await getMyRooms();
     allRooms.value = res?.data?.data || [];
   } catch (err) {
     console.error("មិនអាចទាញយកបញ្ជីថ្នាក់រៀនបានទេ:", err);
   }
+};
+const formatDateTime = (dateTime) => {
+  return dateTime.replace("T", " ") + ":00";
 };
 
 const finalizePublish = async () => {
   if (isSubmitting.value) return;
   if (!quizTitle.value.trim()) return toast.error("សូមបញ្ចូលចំណងជើងវិញ្ញាសា!");
   if (!selectedRoomId.value) return toast.error("សូមជ្រើសរើសថ្នាក់រៀនសិន!");
+  if (!startTime.value) return toast.error("សូមជ្រើសរើស Start Time!");
+
+  if (!endTime.value) return toast.error("សូមជ្រើសរើស End Time!");
+
+  if (new Date(startTime.value) >= new Date(endTime.value))
+    return toast.error("End Time ត្រូវតែធំជាង Start Time!");
 
   for (let i = 0; i < questions.value.length; i++) {
     const q = questions.value[i];
     if (!q.text.trim()) return toast.error(`សូមបំពេញសំណួរទី ${i + 1}`);
-    
-    if (q.choices.some(c => !c.text.trim())) return toast.error(`សូមបំពេញជម្រើសចម្លើយក្នុងសំណួរទី ${i + 1}`);
-    
-    if (!q.choices.some(c => c.isCorrect)) return toast.error(`សូមជ្រើសរើសចម្លើយត្រឹមត្រូវសម្រាប់សំណួរទី ${i + 1}`);
+
+    if (q.choices.some((c) => !c.text.trim()))
+      return toast.error(`សូមបំពេញជម្រើសចម្លើយក្នុងសំណួរទី ${i + 1}`);
+
+    if (!q.choices.some((c) => c.isCorrect))
+      return toast.error(`សូមជ្រើសរើសចម្លើយត្រឹមត្រូវសម្រាប់សំណួរទី ${i + 1}`);
   }
 
   try {
     isSubmitting.value = true;
-    
+
     const examPayload = {
-      room_id: parseInt(selectedRoomId.value), 
+      room_id: parseInt(selectedRoomId.value),
       title: quizTitle.value.trim(),
-      type: 'quiz',
-      description: quizInstructions.value || 'គ្មានការពិពណ៌នា',
+      type: "quiz",
+      description: quizInstructions.value || "គ្មានការពិពណ៌នា",
       duration: parseInt(quizDuration.value) || 60,
-      total_points: totalPoints.value, // Dynamic sum is passed here straight to backend API
-      status: 'active',
-      start_time: new Date().toISOString().split('T')[0],
-      end_time: new Date(Date.now() + 7 * 86400000).toISOString().split('T')[0]
+      total_points: totalPoints.value,
+      status: "active",
+
+      start_time: formatDateTime(startTime.value),
+      end_time: formatDateTime(endTime.value),
     };
 
     const createRes = await createExam(examPayload);
@@ -541,20 +772,20 @@ const finalizePublish = async () => {
       await createQuestion({
         exam_id: examId,
         question: q.text,
-        question_type: 'multiple_choice',
-        options: q.choices.map(c => c.text),
-        correct_answer: [q.choices.find(c => c.isCorrect)?.text],
-        points: q.pts
+        question_type: "multiple_choice",
+        options: q.choices.map((c) => c.text),
+        correct_answer: [q.choices.find((c) => c.isCorrect)?.text],
+        points: q.pts,
       });
     }
 
-    generatedExamLink.value = createRes.data?.data?.link || '';
+    generatedExamLink.value = createRes.data?.data?.link || "";
     showCodeModal.value = true;
     toast.success("វិញ្ញាសាត្រូវបានដាក់ផ្សាយជោគជ័យ!");
-
   } catch (err) {
     console.error("កំហុសលម្អិតពី Server:", err.response?.data || err);
-    const errorMsg = err.response?.data?.message || "មានកំហុសក្នុងការផ្សព្វផ្សាយវិញ្ញាសា!";
+    const errorMsg =
+      err.response?.data?.message || "មានកំហុសក្នុងការផ្សព្វផ្សាយវិញ្ញាសា!";
     toast.error(errorMsg);
   } finally {
     isSubmitting.value = false;
@@ -563,15 +794,15 @@ const finalizePublish = async () => {
 
 const copyLinkToClipboard = async () => {
   try {
-    await navigator.clipboard.writeText(generatedExamLink.value)
-    toast.success("បានចម្លងតំណភ្ជាប់វិញ្ញាសារួចរាល់!")
+    await navigator.clipboard.writeText(generatedExamLink.value);
+    toast.success("បានចម្លងតំណភ្ជាប់វិញ្ញាសារួចរាល់!");
   } catch (err) {
-    toast.error("មិនអាចចម្លងតំណភ្ជាប់បានទេ!")
+    toast.error("មិនអាចចម្លងតំណភ្ជាប់បានទេ!");
   }
-}
+};
 
 onMounted(async () => {
-  await getAllRooms(); 
+  await getAllRooms();
   if (!authStore.user) {
     authStore.fetchUserProfile();
   }
@@ -580,20 +811,20 @@ onMounted(async () => {
 
 <style scoped>
 .quiz-builder-container {
-  --em:      #10b981;
-  --em-dk:   #059669;
+  --em: #10b981;
+  --em-dk: #059669;
   --em-soft: #ecfdf5;
-  --em-mid:  rgba(16,185,129,.25);
-  --txt:     #1e293b;
-  --txt-m:   #334155;
-  --txt-mu:  #64748b;
-  --surf:    #ffffff;
-  --bdr:     #e2e8f0;
-  --r-md:    10px;
-  --r-lg:    14px;
-  --r-xl:    20px;
-  --sh-sm:   0 2px 8px rgba(0,0,0,.04);
-  --sh-md:   0 8px 24px rgba(0,0,0,.08);
+  --em-mid: rgba(16, 185, 129, 0.25);
+  --txt: #1e293b;
+  --txt-m: #334155;
+  --txt-mu: #64748b;
+  --surf: #ffffff;
+  --bdr: #e2e8f0;
+  --r-md: 10px;
+  --r-lg: 14px;
+  --r-xl: 20px;
+  --sh-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
+  --sh-md: 0 8px 24px rgba(0, 0, 0, 0.08);
 
   display: flex;
   flex-direction: column;
@@ -604,29 +835,29 @@ onMounted(async () => {
   color: var(--txt);
 }
 
-.app-shell { 
-  display: flex; 
-  height: 100%; 
-  overflow: hidden; 
+.app-shell {
+  display: flex;
+  height: 100%;
+  overflow: hidden;
 }
 
-.main-col { 
-  flex: 1; 
-  min-width: 0; 
-  display: flex; 
-  flex-direction: column; 
-  height: 100%; 
-  overflow: hidden; 
+.main-col {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
 }
 
 .workspace {
-  flex: 1; 
+  flex: 1;
   min-height: 0;
-  display: flex; 
+  display: flex;
   flex-direction: column;
   gap: 12px;
   padding: 12px;
-  overflow-y: auto; 
+  overflow-y: auto;
   overflow-x: hidden;
 }
 
@@ -637,30 +868,30 @@ onMounted(async () => {
     overflow: hidden;
   }
 }
-.quiz-info-card .form-control, 
+.quiz-info-card .form-control,
 .quiz-info-card .form-select {
   background-color: #ffffff;
   transition: all 0.3s ease;
 }
 
-.quiz-info-card .form-control:focus, 
+.quiz-info-card .form-control:focus,
 .quiz-info-card .form-select:focus {
   border: 1px solid var(--em) !important;
   box-shadow: 0 0 0 0.2rem rgba(16, 185, 129, 0.15) !important;
 }
 
 @media (max-width: 991px) {
-  .panel { 
-    min-height: 250px; 
-    flex-shrink: 0; 
-    overflow: visible !important; 
+  .panel {
+    min-height: 250px;
+    flex-shrink: 0;
+    overflow: visible !important;
   }
-  .main-col { 
-    overflow-y: auto; 
-    overflow-x: hidden; 
+  .main-col {
+    overflow-y: auto;
+    overflow-x: hidden;
   }
-  .workspace { 
-    overflow: visible; 
+  .workspace {
+    overflow: visible;
   }
 }
 
@@ -669,86 +900,86 @@ onMounted(async () => {
   border: 1px solid var(--bdr);
   border-radius: var(--r-xl);
   box-shadow: var(--sh-sm);
-  display: flex; 
+  display: flex;
   flex-direction: column;
-  min-height: 0; 
+  min-height: 0;
   overflow: hidden;
 }
 .panel-head {
   flex-shrink: 0;
   padding: 12px 14px;
   border-bottom: 1px solid var(--bdr);
-  display: flex; 
-  align-items: center; 
+  display: flex;
+  align-items: center;
   justify-content: space-between;
 }
-.panel-lbl { 
-  font-size: .6rem; 
-  font-weight: 700; 
-  text-transform: uppercase; 
-  letter-spacing: 1.2px; 
-  color: var(--txt-mu); 
+.panel-lbl {
+  font-size: 0.6rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  color: var(--txt-mu);
 }
-.panel-count { 
-  font-size: .62rem; 
-  font-weight: 700; 
-  color: var(--em); 
+.panel-count {
+  font-size: 0.62rem;
+  font-weight: 700;
+  color: var(--em);
 }
 
-.q-nav-scroll { 
-  flex: 1; 
-  min-height: 0; 
-  overflow-y: auto; 
-  padding: 8px; 
-  display: flex; 
-  flex-direction: column; 
-  gap: 5px; 
+.q-nav-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
 }
 .q-nav-item {
-  padding: 9px 12px; 
+  padding: 9px 12px;
   border-radius: var(--r-md);
-  border: 1.5px solid var(--bdr); 
+  border: 1.5px solid var(--bdr);
   background: #fafafa;
-  cursor: pointer; 
-  display: flex; 
-  align-items: center; 
+  cursor: pointer;
+  display: flex;
+  align-items: center;
   justify-content: space-between;
-  font-size: .8rem; 
-  font-weight: 600; 
+  font-size: 0.8rem;
+  font-weight: 600;
   color: var(--txt-m);
-  transition: .15s; 
+  transition: 0.15s;
   flex-shrink: 0;
 }
-.q-nav-item:hover { 
-  border-color: var(--em-mid); 
-  background: var(--em-soft); 
-  color: var(--em); 
+.q-nav-item:hover {
+  border-color: var(--em-mid);
+  background: var(--em-soft);
+  color: var(--em);
 }
-.q-nav-item.active { 
-  background: linear-gradient(135deg, var(--em), var(--em-dk)); 
-  border-color: transparent; 
-  color: #fff; 
-  box-shadow: 0 4px 12px rgba(16,185,129,.22); 
+.q-nav-item.active {
+  background: linear-gradient(135deg, var(--em), var(--em-dk));
+  border-color: transparent;
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.22);
 }
-.q-badge { 
-  font-size: .63rem; 
-  font-weight: 700; 
-  padding: 2px 7px; 
-  border-radius: 999px; 
-  background: rgba(255,255,255,.2); 
-  color: #fff; 
+.q-badge {
+  font-size: 0.63rem;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
 }
-.q-nav-item:not(.active) .q-badge { 
-  background: var(--em-soft); 
-  color: var(--em); 
+.q-nav-item:not(.active) .q-badge {
+  background: var(--em-soft);
+  color: var(--em);
 }
 
-.feed-col { 
-  min-height: 0; 
-  overflow-y: auto; 
-  display: flex; 
-  flex-direction: column; 
-  gap: 12px; 
+.feed-col {
+  min-height: 0;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
   padding-bottom: 20px;
 }
 
@@ -757,161 +988,171 @@ onMounted(async () => {
   border: 1.5px solid var(--bdr);
   border-radius: var(--r-xl);
   box-shadow: var(--sh-sm);
-  overflow: hidden; 
+  overflow: hidden;
   flex-shrink: 0;
-  transition: box-shadow .17s;
+  transition: box-shadow 0.17s;
   cursor: pointer;
 }
-.q-card:hover { 
-  box-shadow: var(--sh-md); 
+.q-card:hover {
+  box-shadow: var(--sh-md);
 }
-.q-card.active-card { 
-  border-color: var(--em-mid); 
-  box-shadow: 0 0 0 3px rgba(16,185,129,.08), var(--sh-md); 
+.q-card.active-card {
+  border-color: var(--em-mid);
+  box-shadow:
+    0 0 0 3px rgba(16, 185, 129, 0.08),
+    var(--sh-md);
 }
 
 .q-num-badge {
-  width: 28px; 
-  height: 28px; 
+  width: 28px;
+  height: 28px;
   border-radius: 8px;
   background: linear-gradient(135deg, var(--em), var(--em-dk));
-  color: #fff; 
-  font-weight: 800; 
-  font-size: .72rem;
-  display: flex; 
-  align-items: center; 
+  color: #fff;
+  font-weight: 800;
+  font-size: 0.72rem;
+  display: flex;
+  align-items: center;
   justify-content: center;
-  box-shadow: 0 3px 8px rgba(16,185,129,.28);
+  box-shadow: 0 3px 8px rgba(16, 185, 129, 0.28);
 }
-.pts-pill { 
-  display: flex; 
-  align-items: center; 
-  gap: 6px; 
-  background: var(--em-soft); 
-  border-radius: 8px; 
-  padding: 5px 10px; 
+.pts-pill {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--em-soft);
+  border-radius: 8px;
+  padding: 5px 10px;
 }
-.pts-pill label { 
-  font-size: .65rem; 
-  font-weight: 700; 
-  color: var(--em); 
-  margin: 0; 
+.pts-pill label {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: var(--em);
+  margin: 0;
 }
-.pts-input { 
-  width: 40px; 
-  border: none; 
-  background: #fff; 
-  border-radius: 6px; 
-  padding: 3px 5px; 
-  text-align: center; 
-  font-weight: 800; 
-  font-size: .8rem; 
-  color: var(--em); 
-  outline: none; 
-  box-shadow: 0 1px 3px rgba(0,0,0,.06); 
+.pts-input {
+  width: 40px;
+  border: none;
+  background: #fff;
+  border-radius: 6px;
+  padding: 3px 5px;
+  text-align: center;
+  font-weight: 800;
+  font-size: 0.8rem;
+  color: var(--em);
+  outline: none;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
 }
 
 .q-field {
-  width: 100%; 
-  border: 1.5px solid var(--bdr); 
+  width: 100%;
+  border: 1.5px solid var(--bdr);
   border-radius: var(--r-lg);
-  padding: 10px 13px; 
-  font-size: .87rem; 
-  font-weight: 500; 
+  padding: 10px 13px;
+  font-size: 0.87rem;
+  font-weight: 500;
   color: var(--txt);
-  outline: none; 
-  resize: none; 
+  outline: none;
+  resize: none;
   background: #fafbfc;
-  transition: .17s; 
+  transition: 0.17s;
   line-height: 1.6;
 }
-.q-field:focus { 
-  border-color: var(--em); 
-  background: #fff; 
-  box-shadow: 0 0 0 3px rgba(16,185,129,.08); 
+.q-field:focus {
+  border-color: var(--em);
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.08);
 }
-.q-field::placeholder { 
-  color: #b0bec5; 
-}
-
-.choice-row { 
-  display: flex; 
-  align-items: center; 
-  gap: 8px; 
-  padding: 8px 11px; 
-  border: 1.5px solid var(--bdr); 
-  border-radius: var(--r-md); 
-  background: #fafbfc; 
-  transition: .13s; 
-}
-.choice-row:hover { 
-  border-color: var(--em-mid); 
-  background: #fff; 
-}
-.choice-row.correct-highlight { 
-  border-color: var(--em); 
-  background: var(--em-soft); 
-}
-.choice-lbl { 
-  width: 28px; 
-  height: 28px; 
-  flex-shrink: 0; 
-  border-radius: 7px; 
-  background: var(--em-soft); 
-  color: var(--em); 
-  font-weight: 800; 
-  font-size: .74rem; 
-  display: flex; 
-  align-items: center; 
-  justify-content: center; 
-}
-.choice-input { 
-  flex: 1; 
-  border: none; 
-  background: transparent; 
-  font-size: .81rem; 
-  font-weight: 500; 
-  color: var(--txt); 
-  outline: none; 
-}
-.choice-input::placeholder { 
-  color: #b0bec5; 
-}
-.form-check-input.cr { 
-  width: 16px; 
-  height: 16px; 
-  cursor: pointer; 
-  border: 2px solid #cbd5e1; 
-}
-.form-check-input.cr:checked { 
-  background-color: var(--em) !important; 
-  border-color: var(--em) !important; 
-  box-shadow: 0 0 0 3px rgba(16,185,129,.14); 
+.q-field::placeholder {
+  color: #b0bec5;
 }
 
-.svg-ring { 
-  transform: rotate(-90deg); 
-  overflow: visible; 
+.choice-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 11px;
+  border: 1.5px solid var(--bdr);
+  border-radius: var(--r-md);
+  background: #fafbfc;
+  transition: 0.13s;
 }
-.ring-bg { 
-  fill: none; 
-  stroke: #f1f5f9; 
-  stroke-width: 9; 
+.choice-row:hover {
+  border-color: var(--em-mid);
+  background: #fff;
 }
-.ring-fill { 
-  fill: none; 
-  stroke-width: 9; 
-  stroke-linecap: round; 
-  stroke-dasharray: 314; 
-  transition: stroke-dashoffset .45s ease, stroke .3s ease; 
+.choice-row.correct-highlight {
+  border-color: var(--em);
+  background: var(--em-soft);
+}
+.choice-lbl {
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+  border-radius: 7px;
+  background: var(--em-soft);
+  color: var(--em);
+  font-weight: 800;
+  font-size: 0.74rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.choice-input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  font-size: 0.81rem;
+  font-weight: 500;
+  color: var(--txt);
+  outline: none;
+}
+.choice-input::placeholder {
+  color: #b0bec5;
+}
+.form-check-input.cr {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  border: 2px solid #cbd5e1;
+}
+.form-check-input.cr:checked {
+  background-color: var(--em) !important;
+  border-color: var(--em) !important;
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.14);
 }
 
-@keyframes slideUp { 
-  from { opacity:0; transform:translateY(10px); } 
-  to { opacity:1; transform:translateY(0); } 
+.svg-ring {
+  transform: rotate(-90deg);
+  overflow: visible;
 }
-.slide-in { 
-  animation: slideUp .22s ease; 
+.ring-bg {
+  fill: none;
+  stroke: #f1f5f9;
+  stroke-width: 9;
+}
+.ring-fill {
+  fill: none;
+  stroke-width: 9;
+  stroke-linecap: round;
+  stroke-dasharray: 314;
+  transition:
+    stroke-dashoffset 0.45s ease,
+    stroke 0.3s ease;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.slide-in {
+  animation: slideUp 0.22s ease;
 }
 
 .modal-overlay {
@@ -946,13 +1187,13 @@ onMounted(async () => {
 }
 
 .correct-label {
-  font-size:.63rem;
-  font-weight:700;
+  font-size: 0.63rem;
+  font-weight: 700;
 }
 
 .remove-choice-btn {
-  font-size:.8rem;
-  transition:.13s;
+  font-size: 0.8rem;
+  transition: 0.13s;
   background: transparent;
 }
 .remove-choice-btn:hover {
@@ -999,7 +1240,13 @@ onMounted(async () => {
 }
 
 @keyframes modalSlideEntrance {
-  from { opacity: 0; transform: translateY(12px) scale(0.98); }
-  to { opacity: 1; transform: translateY(0) scale(1); }
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 </style>
