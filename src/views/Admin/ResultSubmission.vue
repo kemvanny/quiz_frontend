@@ -100,11 +100,12 @@ const filteredSubmissions = computed(() => {
 // Grade
 const calculateGrade = (score, maxScore = 10) => {
   const percentage = (score / maxScore) * 100;
-  if (percentage >= 85) return 'A';
-  if (percentage >= 75) return 'B';
-  if (percentage >= 65) return 'C';
-  if (percentage >= 50) return 'D';
-  return 'E';
+  if (percentage >= 90) return 'A';
+  if (percentage >= 80) return 'B';
+  if (percentage >= 70) return 'C';
+  if (percentage >= 60) return 'D';
+  if (percentage >= 50) return 'E'
+  return 'F';
 };
 
 const getGradeClass = (grade) => {
