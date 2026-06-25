@@ -23,9 +23,9 @@ export function useFormValidation() {
 
   const addressPattern = /^[a-zA-Z0-9 Khmer\u1780-\u17F9\s,.\/\-]+$/;
 
-  const validateEmail = (value) => {
+  const validateEmail = (value ,isRequired = true) => {
     if (!value) {
-      errors.value.email = "សូមបញ្ចូលអ៊ីមែល!";
+      errors.value.email = isRequired ? "សូមបញ្ចូលអ៊ីមែល!" : "";
     } else if (!emailPattern.test(value)) {
       errors.value.email = "ទម្រង់អ៊ីមែលមិនត្រឹមត្រូវ";
     } else {
