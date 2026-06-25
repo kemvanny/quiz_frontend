@@ -264,24 +264,27 @@ router.beforeEach((to, from) => {
     '3': 'student'
   };
 
+  const publicPages = ['Home', 'About', 'Features', 'Login', 'ForgetPassword', 'ResetPassword', 'CheckEmail'];
+  const isPublicPage = publicPages.includes(to.name);
+
   const userRoleName = rolePaths[userRoleId];
 
   if (to.name === 'AcceptInvitation') {
     return true;
   }
 
-  if (requiresAuth && !isLoggedIn) {
-    return { path: '/login' };
-  }
-
   if (isLoggedIn) {
-    if (to.path === '/login' && userRoleName) {
+    if (isPublicPage) {
       return { path: `/${userRoleName}/dashboard` };
     }
 
+    const requiredRole = to.meta.role;
     if (requiredRole && userRoleName !== requiredRole) {
       return { path: `/${userRoleName}/dashboard` };
     }
+  } 
+  else if (requiresAuth) {
+    return { path: '/login' };
   }
 
   return true;
