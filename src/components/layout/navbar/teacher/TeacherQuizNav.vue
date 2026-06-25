@@ -109,7 +109,7 @@ onMounted(() => {
   --radius-md:   12px;
   --shadow-sm:   0 1px 3px rgba(15, 23, 42, 0.03);
 
-  height: 70px; 
+  height: 79px; 
   background: var(--surf-card);
   border-bottom: 1px solid var(--bdr);
   display: flex;
