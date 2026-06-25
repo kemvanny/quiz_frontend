@@ -49,7 +49,11 @@
                 : 'fas fa-chalkboard-teacher'
             "
           ></i>
-          {{ profileData.role?.toUpperCase() === 'STUDENT' ? 'សិស្ស' : 'គ្រូបង្រៀន' }}
+          {{
+            profileData.role?.toUpperCase() === "STUDENT"
+              ? "សិស្ស"
+              : "គ្រូបង្រៀន"
+          }}
         </span>
       </div>
 
@@ -58,25 +62,28 @@
           type="button"
           :class="[
             'btn',
-            currentTab === 'general' ? 'btn-green' : 'btn-outline',
+            currentTab === 'general' ? 'btn-green' : 'btn-green-outline',
           ]"
           @click="currentTab = 'general'"
         >
-          <i class="fas fa-edit"></i> ព័ត៌មានផ្ទាល់ខ្លួន
+          <i class="fas fa-edit"></i>
+          ព័ត៌មានផ្ទាល់ខ្លួន
         </button>
+
         <button
           type="button"
           :class="[
             'btn',
-            currentTab === 'security' ? 'btn-purple' : 'btn-outline',
+            currentTab === 'security' ? 'btn-purple' : 'btn-purple-outline',
           ]"
           @click="currentTab = 'security'"
         >
-          <i class="fas fa-lock"></i> ផ្លាស់ប្តូរលេខសម្ងាត់
+          <i class="fas fa-lock"></i>
+          ផ្លាស់ប្តូរពាក្យសម្ងាត់
         </button>
-  <button type="button" class="btn btn-danger" @click="openLogoutModal">
-    <i class="fas fa-sign-out-alt"></i> ចាកចេញពីគណនី
-  </button>
+        <button type="button" class="btn btn-danger" @click="openLogoutModal">
+          <i class="fas fa-sign-out-alt"></i> ចាកចេញពីគណនី
+        </button>
       </div>
     </div>
 
@@ -252,7 +259,11 @@
             <div class="profile-field">
               <label>ពាក្យសម្ងាត់បច្ចុប្បន្ន</label>
               <div class="password-input">
-                <input type="password" placeholder="••••••••••••" />
+                <input
+                  :type="showPassword.oldPassword ? 'text' : 'password'"
+                  v-model="passwordForm.oldPassword"
+                  placeholder="បញ្ចូលលេខសម្ងាត់ចាស់"
+                />
               </div>
             </div>
             <div
@@ -265,15 +276,20 @@
               <div class="profile-field">
                 <label>ពាក្យសម្ងាត់ថ្មី</label>
                 <div class="password-input">
-                  <input type="password" placeholder="បញ្ចូលពាក្យសម្ងាត់ថ្មី" />
+                  <input
+                    :type="showPassword.newPassword ? 'text' : 'password'"
+                    v-model="passwordForm.newPassword"
+                    placeholder="បញ្ចូលលេខសម្ងាត់ថ្មី"
+                  />
                 </div>
               </div>
               <div class="profile-field">
                 <label>បញ្ជាក់ពាក្យសម្ងាត់ថ្មី</label>
                 <div class="password-input">
                   <input
-                    type="password"
-                    placeholder="បញ្ចូលពាក្យសម្ងាត់ថ្មីម្តងទៀត"
+                    :type="showPassword.confirmPassword ? 'text' : 'password'"
+                    v-model="passwordForm.confirmPassword"
+                    placeholder="បញ្ជាក់លេខសម្ងាត់ថ្មី"
                   />
                 </div>
               </div>
@@ -284,8 +300,16 @@
               type="button"
               class="btn btn-purple"
               style="width: auto; padding: 10px 24px"
+              @click="handleChangePassword"
+              :disabled="passwordLoading"
             >
-              ធ្វើបច្ចុប្បន្នភាពពាក្យសម្ងាត់
+              <i v-if="passwordLoading" class="fas fa-spinner fa-spin me-2"></i>
+
+              {{
+                passwordLoading
+                  ? "កំពុងរក្សាទុក..."
+                  : "ធ្វើបច្ចុប្បន្នភាពពាក្យសម្ងាត់"
+              }}
             </button>
           </div>
         </form>
@@ -324,7 +348,8 @@
             <span
               v-if="loadingAvatar"
               class="spinner-border spinner-border-sm me-1"
-            ></span>លុបចេញ
+            ></span
+            >លុបចេញ
           </button>
         </div>
       </div>
@@ -374,6 +399,7 @@ import {
   updateAvatar,
   deleteAvatar,
 } from "@/api/teacher.api";
+import { changePasswordAPI } from "@/api/auth.api";
 
 import { logoutAPI } from "@/api/auth.api";
 import BaseModal from "@/components/common/BaseModal.vue";
@@ -386,6 +412,19 @@ const isEditing = ref(false);
 const loadingData = ref(false);
 const updatingProfile = ref(false);
 const loadingAvatar = ref(false);
+const passwordLoading = ref(false);
+
+const passwordForm = reactive({
+  oldPassword: "",
+  newPassword: "",
+  confirmPassword: "",
+});
+
+const showPassword = reactive({
+  oldPassword: false,
+  newPassword: false,
+  confirmPassword: false,
+});
 
 const fileInput = ref(null);
 const localUploadedUrl = ref("");
@@ -420,35 +459,39 @@ const fetchUserProfile = async () => {
     const responseData = res.data;
 
     if (responseData?.result === false) {
-      toast.error(responseData?.msg || 'សូមចូលប្រើប្រាស់ប្រព័ន្ធជាមុនសិន!', toastConfig);
+      toast.error(
+        responseData?.msg || "សូមចូលប្រើប្រាស់ប្រព័ន្ធជាមុនសិន!",
+        toastConfig,
+      );
       return;
     }
 
     const user = responseData?.data || responseData;
 
     if (user) {
-      profileData.userId = user.code || 'N/A';
-      profileData.firstName = user.firstName || '';
-      profileData.lastName = user.lastName || '';
-      
+      profileData.userId = user.code || "N/A";
+      profileData.firstName = user.firstName || "";
+      profileData.lastName = user.lastName || "";
+
       // FIX: Standardize value to uppercase to match template option keys
-      profileData.gender = user.gender ? user.gender.toUpperCase() : '';
-      
-      profileData.email = user.email || '';
-      profileData.phone = user.phone || '';
-      profileData.address = user.address || '';
-      profileData.role = user.role || user.user_role || user.roleName || '';
+      profileData.gender = user.gender ? user.gender.toUpperCase() : "";
+
+      profileData.email = user.email || "";
+      profileData.phone = user.phone || "";
+      profileData.address = user.address || "";
+      profileData.role = user.role || user.user_role || user.roleName || "";
 
       if (localUploadedUrl.value) {
         profileData.avatarUrl = localUploadedUrl.value;
-      } 
-      else if (user.avatar && user.avatar !== 'default.png') {
-        if (user.avatar.startsWith('http')) {
+      } else if (user.avatar && user.avatar !== "default.png") {
+        if (user.avatar.startsWith("http")) {
           profileData.avatarUrl = user.avatar;
         } else {
           const url = new URL(import.meta.env.VITE_BASE_URL);
-          const serverOrigin = url.origin; 
-          const cleanAvatarPath = user.avatar.startsWith('/') ? user.avatar.slice(1) : user.avatar;
+          const serverOrigin = url.origin;
+          const cleanAvatarPath = user.avatar.startsWith("/")
+            ? user.avatar.slice(1)
+            : user.avatar;
           profileData.avatarUrl = `${serverOrigin}/${cleanAvatarPath}`;
         }
       } else {
@@ -457,9 +500,65 @@ const fetchUserProfile = async () => {
     }
   } catch (err) {
     console.error("Fetch profile error:", err);
-    toast.error('មិនអាចទាញយកទិន្នន័យប្រវត្តិរូបបានទេ!', toastConfig);
+    toast.error("មិនអាចទាញយកទិន្នន័យប្រវត្តិរូបបានទេ!", toastConfig);
   } finally {
     loadingData.value = false;
+  }
+};
+
+const handleChangePassword = async () => {
+  if (!passwordForm.oldPassword) {
+    toast.error("សូមបញ្ចូលលេខសម្ងាត់ចាស់!", toastConfig);
+    return;
+  }
+
+  if (!passwordForm.newPassword) {
+    toast.error("សូមបញ្ចូលលេខសម្ងាត់ថ្មី!", toastConfig);
+    return;
+  }
+
+  if (!passwordForm.confirmPassword) {
+    toast.error("សូមបញ្ជាក់លេខសម្ងាត់ថ្មី!", toastConfig);
+    return;
+  }
+
+  if (passwordForm.newPassword.length < 8) {
+    toast.error("លេខសម្ងាត់ថ្មីត្រូវមានយ៉ាងតិច 8 តួអក្សរ!", toastConfig);
+    return;
+  }
+
+  if (passwordForm.newPassword !== passwordForm.confirmPassword) {
+    toast.error("លេខសម្ងាត់ថ្មី និងការបញ្ជាក់មិនដូចគ្នា!", toastConfig);
+    return;
+  }
+
+  try {
+    passwordLoading.value = true;
+
+    const res = await changePasswordAPI(
+      passwordForm.oldPassword,
+      passwordForm.newPassword,
+    );
+
+    if (!res.data.result) {
+      toast.error(res.data.msg, toastConfig);
+      return;
+    }
+
+    toast.success("ផ្លាស់ប្តូរលេខសម្ងាត់ជោគជ័យ!", toastConfig);
+
+    passwordForm.oldPassword = "";
+    passwordForm.newPassword = "";
+    passwordForm.confirmPassword = "";
+  } catch (error) {
+    console.error(error);
+
+    toast.error(
+      error?.response?.data?.msg || "មានបញ្ហាក្នុងការផ្លាស់ប្តូរលេខសម្ងាត់!",
+      toastConfig,
+    );
+  } finally {
+    passwordLoading.value = false;
   }
 };
 
@@ -744,14 +843,22 @@ const confirmSignOut = async () => {
   background: #f7fafc;
 }
 
-.btn-green {
-  background-color: #f0fff4 !important;
-  border: 1px solid #c6f6d5 !important;
-  color: #38a169 !important;
+.btn-green, 
+.btn-green-outline {
+  background: #d6fee98d;
+  color: #217247;
+  border: 1px solid #38a16964;
+}
+.btn-green-outline:hover {
+  background-color: #baf9d897 !important;
+  color: #217247;
+  border: 1px solid #38a169;
 }
 
 .btn-green:hover {
-  background-color: #e6fffa !important;
+  background-color: #baf9d897 !important;
+  color: #217247;
+  border: 1px solid #38a169;
 }
 
 .btn-outline {
@@ -760,8 +867,22 @@ const confirmSignOut = async () => {
   color: #6b46c1 !important;
 }
 
+.btn-purple,
+.btn-purple-outline {
+  background: #ede5fd5b;
+  color: #6e47c2;
+  border: 1px solid #815ad588;
+}
+.btn-purple-outline:hover {
+  background-color: #f3e8ff !important;
+  color: #3a1e7b;
+  border: 1px solid #805ad5;
+}
+
 .btn-purple:hover {
   background-color: #f3e8ff !important;
+  color: #3a1e7b;
+  border: 1px solid #805ad5;
 }
 
 .btn-danger {
