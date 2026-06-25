@@ -124,15 +124,15 @@
                 <div class="card-title no-margin">សកម្មភាពរហ័ស</div>
               </div>
               <div class="qa-btns">
-                <button class="btn primary" @click="openModal">
-                  <i class="bi bi-plus-lg"></i>ចូលរួមថ្នាក់រៀន
-                </button>
-                <a href="#" class="btn">
-                  <i class="bi bi-clipboard-check"></i> កិច្ចការដែលត្រូវធ្វើ
-                </a>
-                <a href="#" class="btn">
-                  <i class="bi bi-laptop"></i> ពិនិត្យប្រព័ន្ធសិក្សា
-                </a>
+                <router-link :to="{name: 'Classroom'}" class="btn primary" >
+                  <i class="bi bi-building"></i>ថ្នាក់រៀន
+                </router-link>
+                <router-link :to="{name: 'Assignment'}" class="btn">
+                  <i class="bi bi-clipboard-check"></i> ការប្រឡង
+                </router-link>
+                <router-link :to="{name: 'AnalyticsResult'}" class="btn">
+                  <i class="bi bi-laptop"></i> លទ្ធផល
+                </router-link>
               </div>
              </div>
           </div>
@@ -181,11 +181,11 @@
               <i class="bi bi-calendar-check d-block mb-1 fs-4"></i> គ្មានកាលកំណត់សម្រាប់ថ្ងៃនេះទេ!
             </div>
 
-            <a v-else v-for="dl in deadlineList" :key="dl.examId" href="3.st-assignments.html" class="dl-item"
+            <a v-else v-for="dl in deadlineList" :key="dl.examId" href="#" class="dl-item"
               style="
                 background: var(--amber-soft);
                 border: 1px solid var(--amber-border);
-                margin-bottom: 8px;
+                margin-bottom: 8px;cursor: default;
               ">
               <div class="dl-icon" style="background: #fef3c7; color: #b45309">
                 <i class="bi bi-hourglass-split"></i>
@@ -194,7 +194,7 @@
                 <div class="dl-name" style="color: #92400e">{{ dl.title }}</div>
                 <div class="dl-time" style="color: #b45309">{{ dl.dueText }}</div>
               </div>
-              <i class="bi bi-chevron-right" style="color: #d97706; font-size: 15px"></i>
+              
             </a>
           </div>
 
