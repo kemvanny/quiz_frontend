@@ -18,7 +18,7 @@
                     <span class="fw-bold" style="font-size: .8rem; color: var(--txt);">
                         {{ authStore.fullName }}
                     </span>
-                    <span style="font-size: .65rem; color: var(--txt-mu); font-weight: 500;">Instructor</span>
+                    <span style="font-size: .65rem; color: var(--txt-mu); font-weight: 500;">គ្រូបង្រៀន</span>
                 </div>
             </div>
         </div>

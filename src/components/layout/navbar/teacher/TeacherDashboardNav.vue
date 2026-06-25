@@ -42,7 +42,7 @@
         <img :src="authStore.avatarUrl" alt="avatar" style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover;" />
         <div class="d-none d-sm-flex flex-column justify-content-center pe-2" style="line-height: 1.1;">
             <span class="fw-bold" style="font-size: .8rem; color: var(--txt);">{{ authStore.fullName }}</span>
-            <span style="font-size: .65rem; color: var(--txt-mu); font-weight: 500;">Instructor</span>
+            <span style="font-size: .65rem; color: var(--txt-mu); font-weight: 500;">គ្រូបង្រៀន</span>
         </div>
       </div>
     </div>
