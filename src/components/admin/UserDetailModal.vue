@@ -132,7 +132,6 @@ const fetchUserDetails = async (id) => {
   try {
     const res = await getUserByID(id);
     fetchedUser.value = res.data?.data || res.data || res;
-    console.log("ទិន្នន័យពេញលេញពី API:",  fetchedUser.value);
   } catch {
     toast.error("មិនអាចទាញយកព័ត៌មាន!");
   } finally {

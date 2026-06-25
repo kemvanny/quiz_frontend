@@ -102,11 +102,9 @@ const openQuizDetail = async (item) => {
 
     try {
         const response = await getQuizDetail(item.id);
-        console.log(response.data.data);
         if (response.data.data) {
             selectedQuiz.value = response.data.data;
             isOpenQuizDetail.value = true;
-            console.log("Modal state is now:", isOpenQuizDetail.value);
         }
     } catch (err) {
         console.error("មិនអាចទាញយកទិន្នន័យបានទេ៖", err);

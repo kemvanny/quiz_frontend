@@ -4,7 +4,6 @@
       <div class="main-col">
         <div class="workspace">
 
-          <!-- Left Panel: Question List -->
           <div class="panel d-flex flex-column" style="height: 100%; max-height: calc(100vh - 120px);">
             <div class="panel-head flex-shrink-0">
               <span class="panel-lbl">Question List</span>
@@ -40,10 +39,8 @@
             </div>
           </div>
 
-          <!-- Center Feed Column -->
           <div class="feed-col" id="questionFeed">
 
-            <!-- Quiz Info Card -->
             <div
               class="quiz-info-card p-4 rounded-4 border-0 mb-4"
               style="background-color: #f8fafc; border: 1px solid #e2e8f0;"
@@ -83,7 +80,6 @@
               </div>
             </div>
 
-            <!-- Question Cards -->
             <div
               v-for="(q, qIdx) in questions"
               :key="qIdx"
@@ -166,7 +162,6 @@
             </div>
           </div>
 
-          <!-- Right Panel: Quiz Progress -->
           <div class="panel">
             <div class="panel-head">
               <span class="panel-lbl">Quiz Progress</span>
@@ -187,15 +182,15 @@
                     <div class="fw-bold" :style="{ color: progressColor }" style="font-size: 1.4rem; line-height: 1;">
                       {{ totalPoints }}
                     </div>
-                    <div style="font-size: .62rem; font-weight: 700; color: var(--txt-mu);">/ 100 PT</div>
+                    <div style="font-size: .62rem; font-weight: 700; color: var(--txt-mu);">MAX PTS</div>
                   </div>
                 </div>
               </div>
 
               <div class="text-center">
-                <div class="fw-bold" style="font-size: .88rem; color: var(--txt);">Quiz Progress</div>
+                <div class="fw-bold" style="font-size: .88rem; color: var(--txt);">ពិន្ទុតេស្ត</div>
                 <div class="text-muted" style="font-size: .7rem; line-height: 1.5;">
-                  Accumulated points across all questions.
+                  ពិន្ទុសរុបដែលគណនាបង្កើតដោយស្វ័យប្រវត្តិផ្អែកតាមវិញ្ញាសា
                 </div>
               </div>
 
@@ -204,15 +199,15 @@
               <div class="d-flex flex-column gap-2 mb-2">
                 <div class="d-flex justify-content-between align-items-center">
                   <span style="font-size: .73rem; font-weight: 600; color: var(--txt-mu);">
-                    <i class="fas fa-layer-group me-1" style="color: var(--em);"></i>Questions
+                    <i class="fas fa-layer-group me-1" style="color: var(--em);"></i>សំណួរ
                   </span>
                   <span class="fw-bold" style="font-size: .77rem; color: var(--txt);">{{ questions.length }}</span>
                 </div>
                 <div class="d-flex justify-content-between align-items-center">
                   <span style="font-size: .73rem; font-weight: 600; color: var(--txt-mu);">
-                    <i class="fas fa-star me-1" style="color: var(--em);"></i>Total Pts
+                    <i class="fas fa-star me-1" style="color: var(--em);"></i>ពិន្ទុសរុប
                   </span>
-                  <span class="fw-bold" style="font-size: .77rem; color: var(--txt);">{{ totalPoints }} / 100</span>
+                  <span class="fw-bold" style="font-size: .77rem; color: var(--txt);">{{ totalPoints }} Pts</span>
                 </div>
               </div>
 
@@ -232,7 +227,6 @@
       </div>
     </div>
 
-    <!-- Preview Modal -->
     <div class="modal-overlay" v-if="showPreviewModal" @click.self="showPreviewModal = false">
       <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
         <div
@@ -310,7 +304,6 @@
       </div>
     </div>
 
-    <!-- Success / Code Modal -->
     <div
       v-if="showCodeModal"
       class="modal-backdrop-custom d-flex align-items-center justify-content-center"
@@ -369,31 +362,25 @@ const router = useRouter()
 const toast = useToast()
 const authStore = useAuthStore() 
 
-// គ្រប់គ្រងស្ថានភាពការបង្ហាញ UI
 const qNavScrollRef = ref(null)
 const isSubmitting = ref(false)
 const showPreviewModal = ref(false)
 const selectedQuestionIndex = ref(0)
 
-// គ្រប់គ្រងស្ថានភាពផ្ទាំងបង្ហាញតំណភ្ជាប់វិញ្ញាសា (Exam Link Modal)
 const showCodeModal = ref(false)
 const generatedExamLink = ref('')
 
-// ទិន្នន័យ Form នៃវិញ្ញាសា
 const quizTitle = ref('')
 const quizInstructions = ref('')
 const quizDuration = ref(60)
-
 
 const roomId = route.params.roomId;
 const allRooms = ref([]); 
 const selectedRoomId = ref('');
 
-// អក្សរ និងលេខខ្មែរសម្រាប់ប្រើប្រាស់លើ Interface
 const KH = ["ក", "ខ", "គ", "ឃ", "ង", "ច"]
 const KH_N = ["១", "២", "៣", "៤", "៥", "៦", "៧", "៨", "៩", "១០"]
 
-// កម្រងសំណួរ និងជម្រើសចម្លើយលំនាំដើម
 const questions = ref([
   {
     text: '',
@@ -414,7 +401,6 @@ const getKhmerAlphabet = (idx) => {
   return KH[idx] || String.fromCharCode(65 + idx)
 }
 
-// មុខងាររុករក និងរំកិល Scroll ទៅកាន់សំណួរដែលបានជ្រើសរើស
 const selectQuestion = (idx) => {
   selectedQuestionIndex.value = idx
   const card = document.getElementById(`qcard-${idx}`)
@@ -427,26 +413,21 @@ const selectQuestion = (idx) => {
   }
 }
 
-// គណនាពិន្ទុ និងគំនូសរង្វង់ Progress 
+// Dynamically counts total points from whatever values the teacher adds
 const totalPoints = computed(() => {
   return questions.value.reduce((sum, q) => sum + (parseInt(q.pts) || 0), 0)
 })
 
-const progressPercent = computed(() => {
-  return Math.min(Math.round((totalPoints.value / 100) * 100), 100)
-})
-
+// Visual dynamic properties for the tracking ring UI component
 const circleStrokeDashoffset = computed(() => {
-  return Math.max(0, 314 - (progressPercent.value / 100) * 314)
+  // Since the base maximum is exactly totalPoints, the ring layout will show 100% full configuration
+  return totalPoints.value > 0 ? 0 : 314
 })
 
 const progressColor = computed(() => {
-  if (totalPoints.value === 100) return 'var(--em)'
-  if (totalPoints.value > 100) return '#ef4444'
-  return '#f59e0b'
+  return 'var(--em)' 
 })
 
-// បន្ថែម និងលុបសំណួរចេញពី Array
 const addNewQuestion = () => {
   questions.value.push({
     text: '',
@@ -481,7 +462,6 @@ const removeQuestion = (idx) => {
   }
 }
 
-// បន្ថែម និងលុបជម្រើសចម្លើយ
 const addChoice = (qIdx) => {
   const q = questions.value[qIdx]
   if (q.choices.length < KH.length) {
@@ -500,7 +480,6 @@ const setCorrectChoice = (qIdx, cIdx) => {
   })
 }
 
-// គ្រប់គ្រងការបើក Preview
 const openPreviewModal = () => {
   showPreviewModal.value = true
 }
@@ -508,18 +487,14 @@ const openPreviewModal = () => {
 const getAllRooms = async () => {
   try {
     const res = await getMyRooms(); 
-    // FIX: បានបន្ថែម ?. ដើម្បីកុំឱ្យ Crash នៅពេល API ឆ្លើយតបយឺត
     allRooms.value = res?.data?.data || [];
   } catch (err) {
     console.error("មិនអាចទាញយកបញ្ជីថ្នាក់រៀនបានទេ:", err);
-    // ខ្ញុំបាន Comment toast.error នេះចោល ដើម្បីកុំឱ្យវា Alert គ្រប់ពេលដែល Error
-    // toast.error("មានបញ្ហាក្នុងការផ្ទុកទិន្នន័យថ្នាក់រៀន");
   }
 };
 
 const finalizePublish = async () => {
   if (isSubmitting.value) return;
-  // 1. Validation ក្នុង Frontend
   if (!quizTitle.value.trim()) return toast.error("សូមបញ្ចូលចំណងជើងវិញ្ញាសា!");
   if (!selectedRoomId.value) return toast.error("សូមជ្រើសរើសថ្នាក់រៀនសិន!");
 
@@ -527,7 +502,6 @@ const finalizePublish = async () => {
     const q = questions.value[i];
     if (!q.text.trim()) return toast.error(`សូមបំពេញសំណួរទី ${i + 1}`);
     
-    // ពិនិត្យថាគ្រប់ Choices បានបំពេញអក្សរ
     if (q.choices.some(c => !c.text.trim())) return toast.error(`សូមបំពេញជម្រើសចម្លើយក្នុងសំណួរទី ${i + 1}`);
     
     if (!q.choices.some(c => c.isCorrect)) return toast.error(`សូមជ្រើសរើសចម្លើយត្រឹមត្រូវសម្រាប់សំណួរទី ${i + 1}`);
@@ -542,7 +516,7 @@ const finalizePublish = async () => {
       type: 'quiz',
       description: quizInstructions.value || 'គ្មានការពិពណ៌នា',
       duration: parseInt(quizDuration.value) || 60,
-      total_points: totalPoints.value,
+      total_points: totalPoints.value, // Dynamic sum is passed here straight to backend API
       status: 'active',
       start_time: new Date().toISOString().split('T')[0],
       end_time: new Date(Date.now() + 7 * 86400000).toISOString().split('T')[0]
@@ -569,10 +543,7 @@ const finalizePublish = async () => {
     toast.success("វិញ្ញាសាត្រូវបានដាក់ផ្សាយជោគជ័យ!");
 
   } catch (err) {
-    // ជួសជុល៖ បង្ហាញ Error លម្អិតក្នុង Console
     console.error("កំហុសលម្អិតពី Server:", err.response?.data || err);
-    
-    // បង្ហាញសារ Error ដែលមានន័យជាងមុន
     const errorMsg = err.response?.data?.message || "មានកំហុសក្នុងការផ្សព្វផ្សាយវិញ្ញាសា!";
     toast.error(errorMsg);
   } finally {
@@ -589,23 +560,13 @@ const copyLinkToClipboard = async () => {
   }
 }
 
-const autoGrowTextarea = (event) => {
-  const el = event.target
-  el.style.height = 'auto'
-  el.style.height = el.scrollHeight + 'px'
-}
-
 onMounted(async () => {
-  // កុំហៅ Validation ក្នុង onMounted បើមិនចាំបាច់
   await getAllRooms(); 
-  
   if (!authStore.user) {
     authStore.fetchUserProfile();
   }
 });
 </script>
-
-
 
 <style scoped>
 .quiz-builder-container {
@@ -633,14 +594,12 @@ onMounted(async () => {
   color: var(--txt);
 }
 
-/* ── Layout shell ── */
 .app-shell { 
   display: flex; 
   height: 100%; 
   overflow: hidden; 
 }
 
-/* ── Main column ── */
 .main-col { 
   flex: 1; 
   min-width: 0; 
@@ -650,7 +609,6 @@ onMounted(async () => {
   overflow: hidden; 
 }
 
-/* Workspace 3-col grid */
 .workspace {
   flex: 1; 
   min-height: 0;
@@ -727,7 +685,6 @@ onMounted(async () => {
   color: var(--em); 
 }
 
-/* Question nav list (left panel) */
 .q-nav-scroll { 
   flex: 1; 
   min-height: 0; 
@@ -776,7 +733,6 @@ onMounted(async () => {
   color: var(--em); 
 }
 
-/* Center feed */
 .feed-col { 
   min-height: 0; 
   overflow-y: auto; 
@@ -786,7 +742,6 @@ onMounted(async () => {
   padding-bottom: 20px;
 }
 
-/* Question card */
 .q-card {
   background: var(--surf);
   border: 1.5px solid var(--bdr);
@@ -869,7 +824,6 @@ onMounted(async () => {
   color: #b0bec5; 
 }
 
-/* Choice rows */
 .choice-row { 
   display: flex; 
   align-items: center; 
@@ -925,7 +879,6 @@ onMounted(async () => {
   box-shadow: 0 0 0 3px rgba(16,185,129,.14); 
 }
 
-/* Right panel progress ring */
 .svg-ring { 
   transform: rotate(-90deg); 
   overflow: visible; 
@@ -943,65 +896,12 @@ onMounted(async () => {
   transition: stroke-dashoffset .45s ease, stroke .3s ease; 
 }
 
-/* Animations */
 @keyframes slideUp { 
   from { opacity:0; transform:translateY(10px); } 
   to { opacity:1; transform:translateY(0); } 
 }
 .slide-in { 
   animation: slideUp .22s ease; 
-}
-
-/* Glass header info card */
-.quiz-info-header {
-  background: rgba(255, 255, 255, 0.6); 
-  backdrop-filter: blur(24px); 
-  -webkit-backdrop-filter: blur(24px); 
-  border-radius: var(--r-xl); 
-  border: 1px solid rgba(255, 255, 255, 0.8); 
-  box-shadow: 0 4px 15px rgba(0,0,0,.02);
-}
-
-.decoration-circle {
-  width: 100px; 
-  height: 100px; 
-  background: radial-gradient(circle, var(--em-soft) 0%, transparent 70%); 
-  top: -30px; 
-  right: -20px; 
-  z-index: 0; 
-  pointer-events: none;
-}
-
-.icon-circle {
-  width: 20px; 
-  height: 20px; 
-  background: var(--em-soft); 
-  color: var(--em);
-}
-
-.quiz-info-lbl {
-  font-size: .6rem; 
-  font-weight: 800; 
-  color: var(--em); 
-  letter-spacing: 1px; 
-  text-transform: uppercase;
-}
-
-.quiz-title-input {
-  font-size: 1.3rem; 
-  letter-spacing: -0.3px; 
-  outline: none; 
-  background: transparent; 
-  transition: color .2s;
-}
-
-.quiz-desc-input {
-  font-size: .85rem; 
-  color: #64748b; 
-  outline: none; 
-  resize: none; 
-  background: transparent; 
-  line-height: 1.4;
 }
 
 .modal-overlay {
@@ -1056,7 +956,6 @@ onMounted(async () => {
 </style>
 
 <style>
-/* Clean layout overrides when Quiz Builder is active to make it full bleed on the right of the sidebar */
 .content-body:has(.quiz-builder-container) {
   padding: 0 !important;
   overflow: hidden !important;
@@ -1085,7 +984,6 @@ onMounted(async () => {
   z-index: 9999;
 }
 
-/* Micro Animation Entrance Specs */
 .slide-in {
   animation: modalSlideEntrance 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
@@ -1095,4 +993,3 @@ onMounted(async () => {
   to { opacity: 1; transform: translateY(0) scale(1); }
 }
 </style>
-

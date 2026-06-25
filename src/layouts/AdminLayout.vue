@@ -77,7 +77,7 @@
                 កំពុងស្វែងរក...
               </div>
               <div v-else-if="usersList.length === 0" class="dropdown-status">
-                មិនមានទិន្នន័យឡើយ 🔍
+                មិនមានទិន្នន័យឡើយ
               </div>
 
               <ul v-else class="result-list">
@@ -110,10 +110,6 @@
         </template>
         <template #right>
           <div class="user-info">
-            <button class="notif-btn">
-              <i class="bi bi-bell"></i>
-              <span class="dot"></span>
-            </button>
             <router-link :to="{ name: 'ProfileAdmin' }" class="profile-link">
               <img
                 :src="
@@ -249,8 +245,6 @@ const fetchSearchResults = async (search = "") => {
   isLoading.value = true;
   try {
     const response = await getSearchUsers(search);
-
-    console.log("លទ្ធផលពី Backend:", response.data);
 
     if (response.data) {
       if (response.data.data) {

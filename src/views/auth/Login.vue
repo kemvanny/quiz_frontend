@@ -3,7 +3,7 @@
 
         <router-link :to="{name: 'Home'}" class="floating-back-btn">
             <i class="fas fa-arrow-left"></i>
-            <span>Back to Homepage</span>
+            <span>ត្រឡប់ទៅកាន់ទំព័រដើម</span>
         </router-link>
 
         <div class="card-wrapper">
@@ -23,7 +23,7 @@
             </div>
 
             <div class="right-panel">
-                <h3>ចូលគណនី</h3>
+                <h3 class="fw-semibold">ចូលគណនី</h3>
                 <p class="subtitle">
                     សូមបញ្ចូលអ៊ីមែល និងពាក្យសម្ងាត់របស់អ្នក
                 </p>
@@ -264,8 +264,8 @@ input:-webkit-autofill:active {
     border-radius: 50px;
     text-decoration: none;
     color: #333;
-    font-size: 0.92rem;
-    font-weight: 700;
+    font-size: 0.95rem;
+    font-weight: 600;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
     transition: all 0.3s ease;
 }
@@ -273,7 +273,7 @@ input:-webkit-autofill:active {
 .floating-back-btn:hover {
     transform: translateY(-2px);
     background: #fff;
-    color: #3cbfae;
+    color: #059669;
     box-shadow: 0 15px 35px rgba(60, 191, 174, 0.18);
 }
 
@@ -300,7 +300,7 @@ input:-webkit-autofill:active {
 
 .left-panel {
     width: 45%;
-    background: linear-gradient(135deg, #3cbfae, #2fa898);
+    background: linear-gradient(135deg, #10b981, #059669);
     padding: 50px 40px 230px;
     position: relative;
     overflow: hidden;
@@ -339,7 +339,7 @@ input:-webkit-autofill:active {
 
 .welcome-text h2 {
     font-size: 2.8rem;
-    font-weight: 800;
+    font-weight: 600;
     line-height: 1.6;
     margin-bottom: 18px;
 }
@@ -436,10 +436,10 @@ input:-webkit-autofill:active {
 }
 
 .forgot-password a {
-    color: #3cbfae;
+    color: #10b981;
     text-decoration: none;
     font-size: 0.9rem;
-    font-weight: 700;
+    font-weight: 600;
     transition: 0.3s;
 }
 
@@ -453,7 +453,7 @@ input:-webkit-autofill:active {
     border: none;
     padding: 14px;
     border-radius: 50px;
-    background: linear-gradient(135deg, #3cbfae, #2fa898);
+    background: linear-gradient(135deg, #10b981, #059669);
     color: #fff;
     font-weight: 800;
     font-size: 0.95rem;

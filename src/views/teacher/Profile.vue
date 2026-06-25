@@ -1,236 +1,416 @@
 <template>
-  <div class="content-area">
-    
-    <div class="profile-hero mb-4">
-      <div class="d-flex flex-column flex-md-row align-items-center align-items-md-start gap-4 text-center text-md-start">
-        <div class="position-relative">
-          <img 
-            :src="profileData.avatarUrl" 
-            class="hero-avatar" 
-            id="profileImagePreview" 
-            @error="handleImageError"
-          />
-          <div class="hero-edit-btn shadow-sm" @click="triggerFileInput">
-            <i class="fas fa-camera"></i>
-          </div>
-          <input ref="fileInput" type="file" hidden accept="image/*" @change="handleAvatarUpload" />
-        </div>
-        <div>
-          <h2 class="fw-bold mb-1" style="color: var(--txt); letter-spacing: -0.5px;">
-            {{ profileData.firstName }} {{ profileData.lastName }}
-          </h2>
-          <p class="mb-3" style="color: var(--txt-mu); font-weight: 500; font-size: 0.9rem;">
-            <i class="fas fa-chalkboard-teacher me-2 text-primary"></i>Instructor
-          </p>
-          <div class="d-flex flex-wrap justify-content-center justify-content-md-start gap-2">
-            <span class="hero-badge"><i class="fas fa-star text-warning"></i> 4.9 Rating</span>
-            <span class="hero-badge"><i class="fas fa-users text-primary"></i> 1,284 Students</span>
-            <span class="hero-badge"><i class="fas fa-layer-group text-success"></i> 12 Active Classes</span>
-          </div>
-        </div>
-      </div>
-      
-      <div v-if="profileData.avatarUrl && !profileData.avatarUrl.includes('ui-avatars.com')" class="w-100 w-md-auto d-flex justify-content-center mt-3 mt-md-0">
-        <button class="btn btn-outline-danger fw-bold rounded-pill px-4" style="border-width: 2px;" @click="openDeleteModal" :disabled="loadingAvatar">
-          <i class="fas fa-spinner fa-spin me-2" v-if="loadingAvatar"></i>
-          <i class="fas fa-trash-alt me-2" v-else></i> លុបរូបភាព
+  <div class="layout">
+    <div class="left-card">
+      <div class="avatar-wrapper">
+        <img
+          :src="profileData.avatarUrl"
+          id="profileImagePreview"
+          @error="handleImageError"
+          alt="Avatar"
+        />
+        <button
+          class="btn-upload"
+          @click="triggerFileInput"
+          title="ប្តូររូបភាព"
+        >
+          <i class="fas fa-upload"></i>
         </button>
+        <button
+          v-if="
+            profileData.avatarUrl &&
+            !profileData.avatarUrl.includes('ui-avatars.com')
+          "
+          class="btn-delete-avatar"
+          @click="openDeleteModal"
+          :disabled="loadingAvatar"
+        >
+          <i class="fas fa-spinner fa-spin" v-if="loadingAvatar"></i>
+          <i class="fas fa-trash-alt" v-else></i>
+        </button>
+        <input
+          ref="fileInput"
+          type="file"
+          hidden
+          accept="image/*"
+          @change="handleAvatarUpload"
+        />
+      </div>
+
+      <h4 class="user-name">
+        {{ profileData.firstName }} {{ profileData.lastName }}
+      </h4>
+
+      <div class="mb-4">
+        <span class="role-badge">
+          <i
+            :class="
+              profileData.role?.toUpperCase() === 'STUDENT'
+                ? 'fas fa-graduation-cap'
+                : 'fas fa-chalkboard-teacher'
+            "
+          ></i>
+          {{ profileData.role?.toUpperCase() === 'STUDENT' ? 'សិស្ស' : 'គ្រូបង្រៀន' }}
+        </span>
+      </div>
+
+      <div class="action-buttons">
+        <button
+          type="button"
+          :class="[
+            'btn',
+            currentTab === 'general' ? 'btn-green' : 'btn-outline',
+          ]"
+          @click="currentTab = 'general'"
+        >
+          <i class="fas fa-edit"></i> ព័ត៌មានផ្ទាល់ខ្លួន
+        </button>
+        <button
+          type="button"
+          :class="[
+            'btn',
+            currentTab === 'security' ? 'btn-purple' : 'btn-outline',
+          ]"
+          @click="currentTab = 'security'"
+        >
+          <i class="fas fa-lock"></i> ផ្លាស់ប្តូរលេខសម្ងាត់
+        </button>
+  <button type="button" class="btn btn-danger" @click="openLogoutModal">
+    <i class="fas fa-sign-out-alt"></i> ចាកចេញពីគណនី
+  </button>
       </div>
     </div>
 
-    <div class="row g-4">
-      <div class="col-lg-3">
-        <div class="settings-nav">
-          <a href="javascript:void(0)" :class="['settings-nav-item', currentTab === 'general' ? 'active' : '']" @click="currentTab = 'general'"><i class="fas fa-user"></i> General Info</a>
-          <a href="javascript:void(0)" :class="['settings-nav-item', currentTab === 'security' ? 'active' : '']" @click="currentTab = 'security'"><i class="fas fa-lock"></i> Security & Password</a>
-          <a href="javascript:void(0)" :class="['settings-nav-item', currentTab === 'notifications' ? 'active' : '']" @click="currentTab = 'notifications'"><i class="fas fa-bell"></i> Notifications</a>
-          <a href="javascript:void(0)" :class="['settings-nav-item', currentTab === 'sessions' ? 'active' : '']" @click="currentTab = 'sessions'"><i class="fas fa-shield-alt"></i> Active Sessions</a>
-          <hr class="my-2 border-secondary opacity-10">
-          <a href="javascript:void(0)" class="settings-nav-item text-danger" @click="openLogoutModal"><i class="fas fa-sign-out-alt"></i> Sign Out</a>
+    <div class="right-card">
+      <div
+        v-if="currentTab === 'general'"
+        id="tab-general"
+        class="fade-in-panel w-100"
+      >
+        <div class="mb-4">
+          <h2 class="m-0">ព័ត៌មានរបស់ខ្ញុំ</h2>
         </div>
-      </div>
 
-      <div class="col-lg-9">
-        <div v-if="currentTab === 'general'" id="tab-general" class="settings-tab-content">
-          <div class="settings-card">
-            <h5 class="fw-bold mb-4" style="color: var(--txt);">Personal Information</h5>
-            
-            <div v-if="loadingData" class="text-center py-4">
-              <div class="spinner-border text-success spinner-border-sm" role="status"></div>
+        <div v-if="loadingData" class="text-center py-5">
+          <div class="spinner-border text-success" role="status"></div>
+        </div>
+
+        <form v-else @submit.prevent="handleSaveProfile">
+          <div class="info-grid">
+            <div class="info-item">
+              <label class="info-label">ID គណនី</label>
+              <div class="input-wrapper">
+                <i class="fas fa-id-badge input-icon"></i>
+                <input
+                  type="text"
+                  class="info-input"
+                  v-model="profileData.userId"
+                  disabled
+                />
+              </div>
             </div>
-            
-            <form v-else @submit.prevent="handleSaveProfile">
-              <div class="row g-4">
-                <div class="col-md-6">
-                  <div class="input-group-premium">
-                    <label>First Name</label>
-                    <input type="text" v-model="profileData.firstName">
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <div class="input-group-premium">
-                    <label>Last Name</label>
-                    <input type="text" v-model="profileData.lastName">
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <div class="input-group-premium">
-                    <label>Email Address</label>
-                    <input type="email" v-model="profileData.email" disabled style="cursor: not-allowed; opacity: 0.7;">
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <div class="input-group-premium">
-                    <label>Phone Number</label>
-                    <input type="text" v-model="profileData.phone">
-                  </div>
-                </div>
-                <div class="col-12">
-                  <div class="input-group-premium">
-                    <label>Address</label>
-                    <input type="text" v-model="profileData.address">
-                  </div>
-                </div>
-              </div>
 
-              <div class="d-flex justify-content-end gap-3 mt-4 pt-4 border-top">
-                <button type="button" class="btn btn-light fw-bold px-4" style="border-radius: 12px; color: var(--txt-mu);" @click="fetchUserProfile">Discard changes</button>
-                <button type="submit" class="btn btn-success fw-bold px-4" style="border-radius: 12px; background: var(--em); border-color: var(--em);" :disabled="updatingProfile">
-                  <i class="fas fa-spinner fa-spin me-1" v-if="updatingProfile"></i>
-                  Save Changes
-                </button>
+            <div class="info-item">
+              <label class="info-label">ភេទ</label>
+              <div class="input-wrapper">
+                <i class="fas fa-venus-mars input-icon"></i>
+                <select
+                  class="info-input selector-custom"
+                  v-model="profileData.gender"
+                  :disabled="!isEditing"
+                >
+                  <option value="" disabled>ជ្រើសរើសភេទ</option>
+                  <option value="MALE">ប្រុស</option>
+                  <option value="FEMALE">ស្រី</option>
+                  <option value="OTHER">ផ្សេងៗ</option>
+                </select>
               </div>
-            </form>
+            </div>
+
+            <div class="info-item">
+              <label class="info-label">នាមត្រកូល</label>
+              <div class="input-wrapper">
+                <i class="fas fa-user input-icon"></i>
+                <input
+                  type="text"
+                  class="info-input"
+                  v-model="profileData.firstName"
+                  placeholder="បញ្ចូលនាមត្រកូល"
+                  :disabled="!isEditing"
+                />
+              </div>
+            </div>
+
+            <div class="info-item">
+              <label class="info-label">នាមខ្លួន</label>
+              <div class="input-wrapper">
+                <i class="fas fa-user input-icon"></i>
+                <input
+                  type="text"
+                  class="info-input"
+                  v-model="profileData.lastName"
+                  placeholder="បញ្ចូលនាមខ្លួន"
+                  :disabled="!isEditing"
+                />
+              </div>
+            </div>
+
+            <div class="info-item">
+              <label class="info-label">អាសយដ្ឋានអ៊ីមែល</label>
+              <div class="input-wrapper">
+                <i class="fas fa-envelope input-icon"></i>
+                <input
+                  type="email"
+                  class="info-input"
+                  v-model="profileData.email"
+                  disabled
+                />
+              </div>
+            </div>
+
+            <div class="info-item">
+              <label class="info-label">លេខទូរសព្ទ</label>
+              <div class="input-wrapper">
+                <i class="fas fa-phone input-icon"></i>
+                <input
+                  type="text"
+                  class="info-input"
+                  v-model="profileData.phone"
+                  placeholder="បញ្ចូលលេខទូរសព្ទ"
+                  :disabled="!isEditing"
+                />
+              </div>
+            </div>
+
+            <div class="info-item" style="grid-column: span 2">
+              <label class="info-label">អាសយដ្ឋាន</label>
+              <div class="input-wrapper">
+                <i class="fas fa-map-marker-alt input-icon"></i>
+                <input
+                  type="text"
+                  class="info-input"
+                  v-model="profileData.address"
+                  placeholder="បញ្ចូលអាសយដ្ឋាន"
+                  :disabled="!isEditing"
+                />
+              </div>
+            </div>
           </div>
-        </div>
-        
-        <div v-if="currentTab === 'security'" id="tab-security" class="settings-tab-content">
-          <div class="settings-card">
-            <h5 class="fw-bold mb-4" style="color: var(--txt);">Security & Password</h5>
-            <form>
-              <div class="row g-4">
-                <div class="col-12">
-                  <div class="input-group-premium">
-                    <label>Current Password</label>
-                    <input type="password" placeholder="Enter current password">
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <div class="input-group-premium">
-                    <label>New Password</label>
-                    <input type="password" placeholder="Enter new password">
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <div class="input-group-premium">
-                    <label>Confirm New Password</label>
-                    <input type="password" placeholder="Confirm new password">
-                  </div>
-                </div>
-              </div>
-              <div class="d-flex justify-content-end mt-4 pt-4 border-top">
-                <button type="button" class="btn btn-success fw-bold px-4" style="border-radius: 12px; background: var(--em); border-color: var(--em);">Update Password</button>
-              </div>
-            </form>
+
+          <div class="d-flex justify-content-end gap-3 mt-5 pt-4 border-top">
+            <button
+              v-if="!isEditing"
+              type="button"
+              class="btn btn-green"
+              style="width: auto; padding: 10px 24px"
+              @click="isEditing = true"
+            >
+              <i class="fas fa-edit me-1"></i> កែប្រែព័ត៌មាន
+            </button>
+
+            <template v-else>
+              <button
+                type="button"
+                class="btn btn-outline"
+                style="width: auto; padding: 10px 24px"
+                @click="cancelEditing"
+              >
+                បោះបង់
+              </button>
+              <button
+                type="submit"
+                class="btn btn-green"
+                style="
+                  width: auto;
+                  padding: 10px 24px;
+                  background-color: #38a169;
+                  color: white;
+                "
+                :disabled="updatingProfile"
+              >
+                <i
+                  class="fas fa-spinner fa-spin me-2"
+                  v-if="updatingProfile"
+                ></i>
+                រក្សាទុកព័ត៌មាន
+              </button>
+            </template>
           </div>
-        </div>
+        </form>
+      </div>
+
+      <div
+        v-if="currentTab === 'security'"
+        id="tab-security"
+        class="fade-in-panel w-100"
+      >
+        <h2>សុវត្ថិភាព និងពាក្យសម្ងាត់</h2>
+        <form @submit.prevent>
+          <div
+            class="profile-form"
+            style="display: grid; grid-template-columns: 1fr; gap: 20px"
+          >
+            <div class="profile-field">
+              <label>ពាក្យសម្ងាត់បច្ចុប្បន្ន</label>
+              <div class="password-input">
+                <input type="password" placeholder="••••••••••••" />
+              </div>
+            </div>
+            <div
+              style="
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 20px;
+              "
+            >
+              <div class="profile-field">
+                <label>ពាក្យសម្ងាត់ថ្មី</label>
+                <div class="password-input">
+                  <input type="password" placeholder="បញ្ចូលពាក្យសម្ងាត់ថ្មី" />
+                </div>
+              </div>
+              <div class="profile-field">
+                <label>បញ្ជាក់ពាក្យសម្ងាត់ថ្មី</label>
+                <div class="password-input">
+                  <input
+                    type="password"
+                    placeholder="បញ្ចូលពាក្យសម្ងាត់ថ្មីម្តងទៀត"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="d-flex justify-content-end mt-5 pt-4 border-top">
+            <button
+              type="button"
+              class="btn btn-purple"
+              style="width: auto; padding: 10px 24px"
+            >
+              ធ្វើបច្ចុប្បន្នភាពពាក្យសម្ងាត់
+            </button>
+          </div>
+        </form>
       </div>
     </div>
 
-<BaseModal :isOpen="isDeleteModalOpen" @close="isDeleteModalOpen = false" width="350px">
-      <div class="p-2 text-center" style="font-family: inherit;">
-        
-        <h5 class="fw-bold text-dark mb-2" style="font-size: 1.1rem; letter-spacing: -0.3px;">
+    <BaseModal
+      :isOpen="isDeleteModalOpen"
+      @close="isDeleteModalOpen = false"
+      width="350px"
+    >
+      <div class="p-3 text-center">
+        <div class="modal-icon-alert text-danger mb-3">
+          <i class="fas fa-exclamation-circle fa-2x"></i>
+        </div>
+        <h5 class="fw-bold text-dark mb-2" style="font-size: 1.1rem">
           លុបរូបភាពប្រវត្តិរូប?
         </h5>
-        <p class="text-muted mb-4 px-1" style="font-size: 0.88rem; line-height: 1.4;">
-          តើអ្នកពិតជាចង់លុបរូបភាពបច្ចុប្បន្ននេះមែនទេ? សកម្មភាពនេះមិនអាចទាញត្រឡប់មកវិញបានឡើយ។
+        <p class="text-muted mb-4 small" style="line-height: 1.5">
+          តើអ្នកពិតជាចង់លុបរូបភាពបច្ចុប្បន្ននេះមែនទេ?
+          សកម្មភាពនេះមិនអាចទាញត្រឡប់មកវិញបានឡើយ។
         </p>
-        
         <div class="d-flex gap-2 w-100">
-          <button class="btn fw-bold flex-fill border-0 transition-all" 
-                  style="border-radius: 10px; font-size: 0.88rem; padding: 10px; color: #475569; background: #f1f5f9;"
-                  @click="isDeleteModalOpen = false">
+          <button
+            class="btn btn-outline flex-fill"
+            @click="isDeleteModalOpen = false"
+          >
             បោះបង់
           </button>
-          <button class="btn btn-danger fw-bold flex-fill border-0 transition-all" 
-                  style="border-radius: 10px; font-size: 0.88rem; padding: 10px; background: #dc2626;"
-                  @click="confirmDeleteAvatar" 
-                  :disabled="loadingAvatar">
-            <span v-if="loadingAvatar" class="spinner-border spinner-border-sm me-1"></span>
-            លុបចេញ
+          <button
+            class="btn btn-danger flex-fill"
+            style="margin-top: 0"
+            @click="confirmDeleteAvatar"
+            :disabled="loadingAvatar"
+          >
+            <span
+              v-if="loadingAvatar"
+              class="spinner-border spinner-border-sm me-1"
+            ></span>លុបចេញ
           </button>
         </div>
       </div>
     </BaseModal>
 
-    <BaseModal :isOpen="isLogoutModalOpen" @close="isLogoutModalOpen = false" width="350px">
-      <div class="p-2 text-center" style="font-family: inherit;">
-        
-        <h5 class="fw-bold text-dark mb-2" style="font-size: 1.1rem; letter-spacing: -0.3px;">
+    <BaseModal
+      :isOpen="isLogoutModalOpen"
+      @close="isLogoutModalOpen = false"
+      width="350px"
+    >
+      <div class="p-3 text-center">
+        <div class="modal-icon-alert text-warning mb-3">
+          <i class="fas fa-sign-out-alt fa-2x"></i>
+        </div>
+        <h5 class="fw-bold text-dark mb-2" style="font-size: 1.1rem">
           ចាកចេញពីប្រព័ន្ធ?
         </h5>
-        <p class="text-muted mb-4 px-1" style="font-size: 0.88rem; line-height: 1.4;">
+        <p class="text-muted mb-4 small" style="line-height: 1.5">
           តើអ្នកពិតជាចង់បញ្ចប់ការងារ និងចាកចេញពីគណនីបច្ចុប្បន្ននេះមែនទេ?
         </p>
-        
         <div class="d-flex gap-2 w-100">
-          <button class="btn fw-bold flex-fill border-0 transition-all" 
-                  style="border-radius: 10px; font-size: 0.88rem; padding: 10px; color: #475569; background: #f1f5f9;"
-                  @click="isLogoutModalOpen = false">
+          <button
+            class="btn btn-outline flex-fill"
+            @click="isLogoutModalOpen = false"
+          >
             បោះបង់
           </button>
-          <button class="btn btn-danger fw-bold flex-fill border-0 text-white transition-all" 
-                  style="border-radius: 10px; font-size: 0.88rem; padding: 10px; background: #dc2626;"
-                  @click="confirmSignOut">
+          <button
+            class="btn btn-danger flex-fill"
+            style="margin-top: 0"
+            @click="confirmSignOut"
+          >
             ចាកចេញ
           </button>
         </div>
       </div>
     </BaseModal>
-
   </div>
 </template>
 
 <script setup>
-import { ref, reactive, onMounted } from 'vue';
-import { useToast } from 'vue-toastification';
-import { getProfile, updateProfile, updateAvatar, deleteAvatar } from '@/api/teacher.api';
+import { ref, reactive, onMounted } from "vue";
+import { useToast } from "vue-toastification";
+import {
+  getProfile,
+  updateProfile,
+  updateAvatar,
+  deleteAvatar,
+} from "@/api/teacher.api";
 
-import { logoutAPI } from '@/api/auth.api';
-import BaseModal from '@/components/common/BaseModal.vue'; 
-import { useAuthStore } from '@/stores/auth';
+import { logoutAPI } from "@/api/auth.api";
+import BaseModal from "@/components/common/BaseModal.vue";
+import { useAuthStore } from "@/stores/auth";
 const toast = useToast();
-const authStore = useAuthStore(); 
+const authStore = useAuthStore();
 
-const currentTab = ref('general');
+const currentTab = ref("general");
+const isEditing = ref(false);
 const loadingData = ref(false);
 const updatingProfile = ref(false);
 const loadingAvatar = ref(false);
 
 const fileInput = ref(null);
-const localUploadedUrl = ref(''); 
+const localUploadedUrl = ref("");
 
 const isDeleteModalOpen = ref(false);
 const isLogoutModalOpen = ref(false);
 
 const profileData = reactive({
-  firstName: '',
-  lastName: '',
-  email: '',
-  phone: '',
-  address: '',
-  avatarUrl: ''
+  userId: "",
+  firstName: "",
+  lastName: "",
+  gender: "",
+  email: "",
+  phone: "",
+  address: "",
+  avatarUrl: "",
 });
 
 const toastConfig = {
   position: "bottom-right",
   timeout: 3000,
   closeOnClick: true,
-  pauseOnHover: true
+  pauseOnHover: true,
 };
 
-// ================= FETCH PROFILE =================
 const fetchUserProfile = async () => {
   if (loadingData.value) return;
 
@@ -247,11 +427,17 @@ const fetchUserProfile = async () => {
     const user = responseData?.data || responseData;
 
     if (user) {
+      profileData.userId = user.code || 'N/A';
       profileData.firstName = user.firstName || '';
       profileData.lastName = user.lastName || '';
+      
+      // FIX: Standardize value to uppercase to match template option keys
+      profileData.gender = user.gender ? user.gender.toUpperCase() : '';
+      
       profileData.email = user.email || '';
       profileData.phone = user.phone || '';
       profileData.address = user.address || '';
+      profileData.role = user.role || user.user_role || user.roleName || '';
 
       if (localUploadedUrl.value) {
         profileData.avatarUrl = localUploadedUrl.value;
@@ -277,7 +463,11 @@ const fetchUserProfile = async () => {
   }
 };
 
-// ================= HANDLE IMAGE ERROR =================
+const cancelEditing = () => {
+  isEditing.value = false;
+  fetchUserProfile();
+};
+
 const handleImageError = () => {
   profileData.avatarUrl = `https://ui-avatars.com/api/?name=${profileData.firstName}+${profileData.lastName}&background=random`;
 };
@@ -286,7 +476,6 @@ onMounted(() => {
   fetchUserProfile();
 });
 
-// ================= UPDATE PROFILE =================
 const handleSaveProfile = async () => {
   try {
     updatingProfile.value = true;
@@ -294,31 +483,31 @@ const handleSaveProfile = async () => {
     const payload = {
       firstName: profileData.firstName.trim(),
       lastName: profileData.lastName.trim(),
+      gender: profileData.gender || null,
       phone: profileData.phone ? profileData.phone.trim() : null,
-      address: profileData.address ? profileData.address.trim() : null
+      address: profileData.address ? profileData.address.trim() : null,
     };
 
     await updateProfile(payload);
-    toast.success('រក្សាទុកព័ត៌មានផ្ទាល់ខ្លួនជោគជ័យ', toastConfig);
-    
+    toast.success("រក្សាទុកព័ត៌មានផ្ទាល់ខ្លួនជោគជ័យ", toastConfig);
+
+    isEditing.value = false;
     await fetchUserProfile();
-    await authStore.fetchUserProfile(true); 
+    await authStore.fetchUserProfile(true);
   } catch (err) {
     console.error(err);
-    toast.error('ការកែប្រែព័ត៌មានបានបរាជ័យ!', toastConfig);
+    toast.error("ការកែប្រែព័ត៌មានបានបរាជ័យ!", toastConfig);
   } finally {
     updatingProfile.value = false;
   }
 };
 
-// ================= OPEN FILE INPUT =================
 const triggerFileInput = () => {
   if (fileInput.value) {
     fileInput.value.click();
   }
 };
 
-// ================= UPLOAD AVATAR =================
 const handleAvatarUpload = async (event) => {
   const file = event.target.files[0];
   if (!file) return;
@@ -328,113 +517,424 @@ const handleAvatarUpload = async (event) => {
   profileData.avatarUrl = previewUrl;
 
   const formData = new FormData();
-  formData.append('avatar', file);
+  formData.append("avatar", file);
 
   try {
     loadingAvatar.value = true;
     await updateAvatar(formData);
-    toast.success('ផ្លាស់ប្តូររូបភាពប្រវត្តិរូបជោគជ័យ', toastConfig);
-    
+    toast.success("ផ្លាស់ប្តូររូបភាពប្រវត្តិរូបជោគជ័យ", toastConfig);
+
     await fetchUserProfile();
-    await authStore.fetchUserProfile(true); 
+    await authStore.fetchUserProfile(true);
   } catch (err) {
     console.error(err);
-    toast.error('ការបង្ហោះរូបភាពបានបរាជ័យ!', toastConfig);
+    toast.error("ការបង្ហោះរូបភាពបានបរាជ័យ!", toastConfig);
   } finally {
     loadingAvatar.value = false;
   }
 };
 
-// =================  CONTROL DELETE MODAL =================
 const openDeleteModal = () => {
   isDeleteModalOpen.value = true;
 };
 
 const confirmDeleteAvatar = async () => {
-  isDeleteModalOpen.value = false; 
+  isDeleteModalOpen.value = false;
   try {
     loadingAvatar.value = true;
     await deleteAvatar();
-    localUploadedUrl.value = ''; 
-    toast.success('លុបរូបភាពប្រវត្តិរូបជោគជ័យ', toastConfig);
-    
+    localUploadedUrl.value = "";
+    toast.success("លុបរូបភាពប្រវត្តិរូបជោគជ័យ", toastConfig);
+
     await fetchUserProfile();
-    await authStore.fetchUserProfile(true); 
+    await authStore.fetchUserProfile(true);
   } catch (err) {
     console.error(err);
-    toast.error('ការលុបរូបភាពបានបរាជ័យ!', toastConfig);
+    toast.error("ការលុបរូបភាពបានបរាជ័យ!", toastConfig);
   } finally {
     loadingAvatar.value = false;
   }
 };
 
-// ================= CONTROL LOGOUT MODAL =================
 const openLogoutModal = () => {
   isLogoutModalOpen.value = true;
 };
 
 const confirmSignOut = async () => {
-  isLogoutModalOpen.value = false; 
+  isLogoutModalOpen.value = false;
   try {
-    await logoutAPI(); 
+    await logoutAPI();
   } catch (err) {
     console.error("Logout API Error:", err);
   } finally {
     localStorage.clear();
-    toast.success('ចាកចេញពីប្រព័ន្ធបានជោគជ័យ!', toastConfig);
+    toast.success("ចាកចេញពីប្រព័ន្ធបានជោគជ័យ!", toastConfig);
     setTimeout(() => {
-      window.location.href = '/login';
+      window.location.href = "/login";
     }, 1500);
   }
 };
 </script>
+
 <style scoped>
-.content-area {
-  flex: 1;
-  overflow-y: auto;
-  padding: 30px 40px;
-  display: flex;
-  flex-direction: column;
+.layout {
+  --bg: #f0f4f8;
+  --card: #ffffff;
+  --border: #e2e8f0;
+  --text-primary: #1a202c;
+  --text-secondary: #718096;
+  --green: #38a169;
+  --green-light: #f0fff4;
+  --green-border: #c6f6d5;
+  --blue-light: #ebf4ff;
+  --blue-border: #bee3f8;
+  --blue: #3182ce;
+  --orange: #dd6b20;
+  --orange-bg: #fffaf0;
+  --red: #e53e3e;
+  --purple-light: #faf5ff;
+  --purple-border: #e9d8fd;
+  --shadow: 0 2px 6px rgba(15, 23, 42, 0.12);
+  --shadow-md: 0 12px 26px rgba(15, 23, 42, 0.14);
+
+  width: 100%;
+  max-width: 1140px;
+  margin: 0;
+  display: grid;
+  grid-template-columns: 290px 810px;
+  gap: 24px;
+  align-items: start;
+  justify-content: center;
+  margin-inline: 50px 0px;
 }
 
-.profile-hero {
-  background: #ffffff;
-  border: 1px solid var(--bdr);
-  border-radius: 24px;
-  padding: 30px;
-  box-shadow: var(--sh-sm);
+.left-card {
+  background: var(--card);
+  border-radius: 18px;
+  box-shadow: var(--shadow);
+  min-height: 580px;
+  padding: 28px 24px 24px;
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.avatar-wrapper {
+  position: relative;
+  margin-bottom: 16px;
+}
+
+.role-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: linear-gradient(135deg, #39c97c, #2eb583);
+  color: white;
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  padding: 0.32rem 0.85rem;
+  border-radius: 50px;
+  box-shadow: 0 3px 10px rgba(5, 150, 105, 0.3);
+}
+
+.avatar-wrapper img {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid #cbf8de;
+  display: block;
+}
+
+.btn-upload {
+  position: absolute;
+  bottom: 0;
+  left: -5px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1.5px solid #d8e0ea;
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: var(--shadow);
+  transition: box-shadow 0.2s;
+}
+
+.btn-upload:hover {
+  box-shadow: var(--shadow-md);
+}
+
+.btn-upload i {
+  width: 14px;
+  height: 14px;
+  color: #475569;
+}
+
+.btn-delete-avatar {
+  position: absolute;
+  bottom: 0;
+  right: -5px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1.5px solid #fed7d7;
+  background: #fff5f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: var(--shadow);
+  transition: background 0.2s;
+}
+
+.btn-delete-avatar:hover {
+  background: #fed7d7;
+}
+
+.btn-delete-avatar i {
+  width: 14px;
+  height: 14px;
+  color: var(--red);
+}
+
+.user-name {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  line-height: 1.2;
+  margin-bottom: 6px;
+}
+
+.action-buttons {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.btn {
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: none;
+  transition: all 0.2s;
+}
+
+.btn i {
+  width: 16px;
+  height: 16px;
+  flex: 0 0 auto;
+}
+
+.btn-outline:hover {
+  background: #f7fafc;
+}
+
+.btn-green {
+  background-color: #f0fff4 !important;
+  border: 1px solid #c6f6d5 !important;
+  color: #38a169 !important;
+}
+
+.btn-green:hover {
+  background-color: #e6fffa !important;
+}
+
+.btn-outline {
+  background-color: #faf5ff !important;
+  border: 1px solid #e9d8fd !important;
+  color: #6b46c1 !important;
+}
+
+.btn-purple:hover {
+  background-color: #f3e8ff !important;
+}
+
+.btn-danger {
+  background-color: #ffffff !important;
+  border: 1px solid #e53e3e !important;
+  color: #e53e3e !important;
+  margin-top: 8px;
+}
+
+.btn-danger:hover {
+  background-color: #fff5f5 !important;
+}
+
+.right-card {
+  background: var(--card);
+  border-radius: 18px;
+  box-shadow: var(--shadow);
+  min-height: 580px;
+  padding: 28px 30px 32px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.right-card h2 {
+  font-family: "Kantumruy Pro", "Noto Sans Khmer", sans-serif;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.35;
+  margin-bottom: 20px;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
   gap: 20px;
-  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.info-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #4a5568;
+}
+
+.input-wrapper {
+  position: relative;
+  display: flex;
   align-items: center;
 }
 
-.hero-avatar { width: 100px; height: 100px; border-radius: 20px; object-fit: cover; border: 4px solid #fff; box-shadow: var(--sh-md); }
-.hero-edit-btn { position: absolute; bottom: -10px; right: -10px; width: 34px; height: 34px; border-radius: 10px; background: var(--em); color: #fff; border: 2px solid #fff; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: .2s; }
-.hero-edit-btn:hover { transform: scale(1.1); background: var(--em-dk); }
-
-.hero-badge { background: #f8fafc; border: 1px solid var(--bdr); padding: 5px 12px; border-radius: 10px; font-size: 0.75rem; font-weight: 700; color: var(--txt-m); display: flex; align-items: center; gap: 6px; }
-
-.settings-nav { background: #fff; border-radius: 20px; border: 1px solid var(--bdr); padding: 12px; display: flex; flex-direction: column; gap: 4px; }
-.settings-nav-item { display: flex; align-items: center; gap: 12px; padding: 12px 16px; color: var(--txt-mu); text-decoration: none; font-weight: 600; font-size: 0.85rem; border-radius: 12px; transition: .2s; }
-.settings-nav-item i { width: 16px; text-align: center; }
-.settings-nav-item:hover { background: #f8fafc; color: var(--txt); }
-.settings-nav-item.active { background: var(--em-soft); color: var(--em); }
-
-.settings-card { background: #fff; border-radius: 24px; border: 1px solid var(--bdr); padding: 30px; box-shadow: var(--sh-sm); }
-
-.input-group-premium { display: flex; flex-direction: column; gap: 8px; }
-.input-group-premium label { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--txt-mu); }
-.input-group-premium input {
-  width: 100%; padding: 12px 16px; border: 2px solid transparent; background: #f8fafc;
-  border-radius: 12px; font-size: 0.9rem; font-weight: 500; color: var(--txt); transition: .2s;
-}
-.input-group-premium input:focus {
-  background: #fff; border-color: var(--em); outline: none; box-shadow: 0 4px 12px rgba(16,185,129,0.1);
+.input-icon {
+  position: absolute;
+  left: 14px;
+  color: #38a169;
+  font-size: 0.9rem;
+  pointer-events: none;
+  z-index: 2;
 }
 
-.custom-switch .form-check-input { width: 45px; height: 24px; border-radius: 24px; cursor: pointer; }
-.custom-switch .form-check-input:checked { background-color: var(--em); border-color: var(--em); }
+.info-input {
+  width: 100%;
+  padding: 12px 16px 12px 42px;
+  border-radius: 10px;
+  border: 1px solid #e2e8f0;
+  background-color: #ecfdf5;
+  color: #1a202c;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+  outline: none;
+}
 
+/* FIX: Refined styling setup for native dropdown alignment issues */
+.selector-custom {
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2338a169' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  background-size: 16px;
+  cursor: pointer;
+  line-height: normal;
+  vertical-align: middle;
+  padding-top: 0;
+  padding-bottom: 0;
+  height: 48px;
+}
+
+.info-input:disabled {
+  background-color: #ecfdf5;
+  color: #1a202c;
+  cursor: not-allowed;
+  opacity: 1;
+}
+
+.info-input:focus:not(:disabled) {
+  border-color: #38a169;
+  box-shadow: 0 0 0 3px rgba(56, 161, 105, 0.15);
+}
+
+@media (max-width: 600px) {
+  .info-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (min-width: 1280px) {
+  .layout {
+    grid-template-columns: 290px 810px;
+  }
+}
+
+@media (max-width: 1100px) {
+  .layout {
+    grid-template-columns: 1fr;
+    max-width: 560px;
+    min-height: auto;
+    margin: 0 auto;
+    padding: 16px 0 32px;
+  }
+  .left-card,
+  .right-card {
+    min-height: auto;
+  }
+}
+
+.profile-form {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.profile-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.profile-field label {
+  font-family: "Kantumruy Pro", "Noto Sans Khmer", sans-serif;
+  font-size: 0.86rem;
+  font-weight: 600;
+  color: #6f7788;
+}
+
+.profile-field input {
+  width: 100%;
+  height: 42px;
+  border: 1px solid #e1e7f0;
+  border-radius: 10px;
+  padding: 0 14px;
+  color: #1f2937;
+  background: #ffffff;
+  outline: none;
+}
+
+.fade-in-panel {
+  animation: fadeIn 0.22s ease-out;
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(3px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 </style>
