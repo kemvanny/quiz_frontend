@@ -164,7 +164,7 @@
           </button>
         </div>
         <div class="filter-strip px-4 pb-2">
-          <button class="filter-chip active">
+          <button class="filter-chip active " style="cursor: default;">
             ទាំងអស់
             <span class="chip-count">{{ examResultsList.length }}</span>
           </button>

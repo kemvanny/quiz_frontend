@@ -3,9 +3,9 @@
     <div class="left-card">
       <div class="avatar-wrapper">
         <img :src="authStore.profile?.avatar &&
-            authStore.profile?.avatar !== 'default.png'
-            ? `${imgBaseUrl}${authStore.profile.avatar}?t=${imageRefresh}`
-            : defaultImage
+          authStore.profile?.avatar !== 'default.png'
+          ? `${imgBaseUrl}${authStore.profile.avatar}?t=${imageRefresh}`
+          : defaultImage
           " alt="Profile photo" class="avatar-image" />
         <input ref="avatarInput" type="file" accept="image/*" hidden @change="uploadAvatar" />
 
@@ -84,6 +84,15 @@
               :class="{ empty: !authStore.profile.lastName }" />
           </div>
         </div>
+        <div class="info-item">
+          <label class="info-label">ភេទ</label>
+          <div class="input-wrapper">
+            <i class="fa-solid fa-venus-mars field-icon input-icon"></i>
+
+            <input type="text" :value="formattedGender" disabled class="info-input"
+              :class="{ empty: !authStore.profile.gender }" />
+          </div>
+        </div>
 
         <div class="info-item">
           <label class="info-label">អាសយដ្ឋានអ៊ីមែល</label>
@@ -157,6 +166,13 @@
           <input v-model="editForm.lastName" type="text" />
           <span v-if="errors.lastName" class="error-text">{{
             errors.lastName
+          }}</span>
+        </div>
+        <div class="profile-field">
+          <label>ភេទ</label>
+          <input v-model="editForm.gender" type="text" placeholder="មិនទាន់បំពេញ"/>
+          <span v-if="errors.gender" class="error-text">{{
+            errors.gender
           }}</span>
         </div>
         <div class="profile-field">
@@ -316,6 +332,7 @@ const {
   validateGradeLevel,
   validateMajor,
   validatePassword,
+  validateGender
 } = useFormValidation();
 
 const imgBaseUrl = import.meta.env.VITE_BASE_URL_FOR_IMAGE;
@@ -344,6 +361,7 @@ const editForm = ref({
   address: "",
   gradeLevel: "",
   major: "",
+  gender: "",
 });
 const originalProfile = ref({});
 
@@ -375,6 +393,13 @@ const openPasswordModal = () => {
 const closePasswordModal = () => {
   isPasswordModalOpen.value = false;
 };
+
+const formattedGender = computed(() => {
+  const g = authStore.profile.gender?.toLowerCase();
+  if (!g) return 'មិនទាន់បំពេញ';
+  
+  return g === 'female' ? 'ស្រី' : (g === 'male' ? 'ប្រុស' : g);
+});
 
 //Change Password
 const handleChangePassword = async () => {
@@ -519,6 +544,7 @@ const openEditModal = () => {
     address: showValue(profile?.address),
     gradeLevel: showValue(profile?.gradeLevel),
     major: showValue(profile?.major),
+    gender: showValue(profile?.gender)
   };
   editForm.value = { ...originalProfile.value };
   Object.keys(errors.value).forEach((key) => (errors.value[key] = ""));
@@ -543,6 +569,7 @@ const handleUpdateProfile = async () => {
   validateAddress(editForm.value.address);
   validateGradeLevel(editForm.value.gradeLevel);
   validateMajor(editForm.value.major);
+  validateGender(editForm.value.gender)
 
   const hasErrors = Object.values(errors.value).some(
     (err) => err && err.trim() !== "",
@@ -564,6 +591,7 @@ const handleUpdateProfile = async () => {
       address: saveValue(editForm.value.address),
       gradeLevel: saveValue(editForm.value.gradeLevel),
       major: saveValue(editForm.value.major),
+      gender: saveValue(editForm.value.gender)
     });
     triggerToast("អាប់ដេតព័ត៌មានជោគជ័យ!", "fa-solid fa-circle-check");
     closeEditModal();
@@ -644,6 +672,12 @@ watch(
 watch(
   () => editForm.value.major,
   (val) => validateMajor(val),
+);
+watch(
+  () => editForm.value.gender,
+  (val) => {
+    validateGender(val)
+  }
 );
 
 watch(
@@ -762,8 +796,8 @@ onMounted(async () => {
   background: var(--card);
   border-radius: 18px;
   box-shadow: var(--shadow);
-  min-height: 580px;
-  padding: 28px 24px 24px;
+  min-height: 600px;
+  padding: 28px 30px 32px;
   display: flex;
   flex-direction: column;
   align-items: center;
