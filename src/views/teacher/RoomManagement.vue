@@ -237,6 +237,7 @@ const fetchRooms = async () => {
   try {
     loading.value = true
     const response = await getMyRooms()
+    console.log("ROOMS API:", response.data)
     rooms.value = response.data?.data || response.data || []
   } catch (error) {
     console.error("Error fetching rooms:", error)
@@ -247,7 +248,9 @@ const fetchRooms = async () => {
 
 // Handle dynamic Room Setup flow after success
 const handleRoomCreatedSuccess = async (newRoom) => {
+
   await fetchRooms()
+
   selectedRoom.value = newRoom
   isInviteOpen.value = true
 }
