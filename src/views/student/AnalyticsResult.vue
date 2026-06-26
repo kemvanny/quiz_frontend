@@ -278,7 +278,7 @@
                 <td>
                   <div
                     class="feedback-box"
-                    :class="getFeedbackBorderClass(result.grade)"
+                    :class="getFeedbackBorderClass(result.feedback)"
                   >
                     <i class="fas fa-comment-dots me-1 opacity-50 small"></i>
                     {{ result.feedback || "មិនទាន់មានមតិកែលម្អ" }}
@@ -506,10 +506,11 @@ const getBadgeClass = (grade) => {
   return "badge-danger";
 };
 
-const getFeedbackBorderClass = (grade) => {
-  if (["A", "B"].includes(grade)) return "fb-success";
-  if (["C", "D"].includes(grade)) return "fb-warning";
-  return "fb-danger";
+const getFeedbackBorderClass = (feedback) => {
+  if (feedback && feedback.trim() !== "") {
+    return "fb-success"; 
+  }
+  return "fb-danger"; 
 };
 
 const exportToCSV = () => {

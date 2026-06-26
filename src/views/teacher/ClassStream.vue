@@ -2,31 +2,47 @@
   <div class="app-shell">
     <div class="main-col">
       <div class="workspace">
-
         <!-- Banner -->
         <div class="class-banner">
           <div class="class-banner-content">
-            <h1 class="class-title">{{ roomData?.name || 'Loading...' }}</h1>
+            <h1 class="class-title">{{ roomData?.name || "Loading..." }}</h1>
             <div class="class-meta d-flex align-items-center gap-4 flex-wrap">
               <span>
                 <i class="fas fa-users me-2"></i>
-                {{ roomData?.student_count ?? roomData?.students?.length ?? 0 }} Students
+                {{ roomData?.student_count ?? roomData?.students?.length ?? 0 }}
+                Students
               </span>
             </div>
           </div>
         </div>
 
         <!-- Tabs -->
-        <div class="class-tabs-container d-flex align-items-center justify-content-between">
+        <div
+          class="class-tabs-container d-flex align-items-center justify-content-between"
+        >
           <div class="class-tabs">
-            <div class="class-tab" :class="{ active: currentTab === 'stream' }" @click="currentTab = 'stream'">
+            <div
+              class="class-tab"
+              :class="{ active: currentTab === 'stream' }"
+              @click="currentTab = 'stream'"
+            >
               <i class="fas fa-stream"></i> ថ្នាក់រៀន
             </div>
-            <div class="class-tab" :class="{ active: currentTab === 'people' }" @click="currentTab = 'people'">
+            <div
+              class="class-tab"
+              :class="{ active: currentTab === 'people' }"
+              @click="currentTab = 'people'"
+            >
               <i class="fas fa-users"></i> សិស្ស​សរុប
-              <span class="badge-count ms-2">({{ roomData?.students?.length || 0 }})</span>
+              <span class="badge-count ms-2"
+                >({{ roomData?.students?.length || 0 }})</span
+              >
             </div>
-            <div class="class-tab" :class="{ active: currentTab === 'results' }" @click="currentTab = 'results'">
+            <div
+              class="class-tab"
+              :class="{ active: currentTab === 'results' }"
+              @click="handleTabChange('results')"
+            >
               <i class="fas fa-chart-bar"></i> លទ្ធផលសិស្ស
             </div>
           </div>
@@ -41,61 +57,167 @@
         <!-- Tab: Stream -->
         <div v-if="currentTab === 'stream'" class="tab-pane active">
           <div class="stream-grid">
-
             <div class="side-panel">
-              <div class="d-flex align-items-center justify-content-between mb-2">
-                <span style="font-size: 0.7rem; font-weight: 700; color: var(--txt-mu); text-transform: uppercase; letter-spacing: 1px;">ទិដ្ឋភាពទូទៅនៃថ្នាក់រៀន</span>
-                <button class="btn btn-sm text-muted p-0"><i class="fas fa-chart-line"></i></button>
+              <div
+                class="d-flex align-items-center justify-content-between mb-2"
+              >
+                <span
+                  style="
+                    font-size: 0.7rem;
+                    font-weight: 700;
+                    color: var(--txt-mu);
+                    text-transform: uppercase;
+                    letter-spacing: 1px;
+                  "
+                  >ទិដ្ឋភាពទូទៅនៃថ្នាក់រៀន</span
+                >
+                <button class="btn btn-sm text-muted p-0">
+                  <i class="fas fa-chart-line"></i>
+                </button>
               </div>
               <div class="d-flex gap-2 mt-2">
                 <div class="text-center flex-fill">
-                  <div style="font-weight: 700; color: var(--txt); font-size: 1.2rem;">{{ roomData?.students?.length || 0 }}</div>
-                  <div style="font-size: 0.65rem; color: var(--txt-mu); font-weight: 600;">សិស្ស</div>
+                  <div
+                    style="
+                      font-weight: 700;
+                      color: var(--txt);
+                      font-size: 1.2rem;
+                    "
+                  >
+                    {{ roomData?.students?.length || 0 }}
+                  </div>
+                  <div
+                    style="
+                      font-size: 0.65rem;
+                      color: var(--txt-mu);
+                      font-weight: 600;
+                    "
+                  >
+                    សិស្ស
+                  </div>
                 </div>
                 <div class="text-center flex-fill border-start border-end">
-                  <div style="font-weight: 700; color: var(--em); font-size: 1.2rem;">{{ averageGrade }}%</div>
-                  <div style="font-size: 0.65rem; color: var(--txt-mu); font-weight: 600;">មធ្យមភាគ</div>
+                  <div
+                    style="
+                      font-weight: 700;
+                      color: var(--em);
+                      font-size: 1.2rem;
+                    "
+                  >
+                    {{ averageGrade }}%
+                  </div>
+                  <div
+                    style="
+                      font-size: 0.65rem;
+                      color: var(--txt-mu);
+                      font-weight: 600;
+                    "
+                  >
+                    មធ្យមភាគ
+                  </div>
                 </div>
                 <div class="text-center flex-fill">
-                  <div style="font-weight: 700; color: var(--txt); font-size: 1.2rem;">{{posts?.length || 0 }}</div>
-                  <div style="font-size: 0.65rem; color: var(--txt-mu); font-weight: 600;">ដាក់ផ្សាយ</div>
+                  <div
+                    style="
+                      font-weight: 700;
+                      color: var(--txt);
+                      font-size: 1.2rem;
+                    "
+                  >
+                    {{ posts?.length || 0 }}
+                  </div>
+                  <div
+                    style="
+                      font-size: 0.65rem;
+                      color: var(--txt-mu);
+                      font-weight: 600;
+                    "
+                  >
+                    ដាក់ផ្សាយ
+                  </div>
                 </div>
               </div>
             </div>
 
             <div class="feed-container">
               <div class="composer-card">
-                <input v-model="newPost.title" class="form-control mb-2" placeholder="ចំណងជើង..." />
-                <textarea v-model="newPost.message" class="composer-input mb-2" rows="2" placeholder="សរសេរការប្រកាស..."></textarea>
-                <input v-model="newPost.examLink" class="form-control mb-2" placeholder="បញ្ចូល Link ការប្រឡង..." />
+                <input
+                  v-model="newPost.title"
+                  class="form-control mb-2"
+                  placeholder="ចំណងជើង..."
+                />
+                <textarea
+                  v-model="newPost.message"
+                  class="composer-input mb-2"
+                  rows="2"
+                  placeholder="សរសេរការប្រកាស..."
+                ></textarea>
+                <input
+                  v-model="newPost.examLink"
+                  class="form-control mb-2"
+                  placeholder="បញ្ចូល Link ការប្រឡង..."
+                />
                 <div class="composer-actions">
-                  <button class="btn-post" @click="handleCreatePost">Post</button>
+                  <button class="btn-post" @click="handleCreatePost">
+                    Post
+                  </button>
                 </div>
               </div>
 
               <div class="d-flex flex-column gap-4">
                 <div class="post-card" v-for="post in posts" :key="post.id">
-                  <div class="post-header d-flex justify-content-between align-items-center">
+                  <div
+                    class="post-header d-flex justify-content-between align-items-center"
+                  >
                     <div class="d-flex align-items-center">
-                      <img :src="authStore.avatarUrl" class="avatar-img me-2" alt="avatar" style="width: 40px; height: 40px; border-radius: 50%;">
+                      <img
+                        :src="authStore.avatarUrl"
+                        class="avatar-img me-2"
+                        alt="avatar"
+                        style="width: 40px; height: 40px; border-radius: 50%"
+                      />
                       <div>
                         <h6 class="mb-0">
                           {{ authStore.fullName }}
                           <span class="role-badge">Teacher</span>
                         </h6>
                         <small class="text-muted">
-                          {{ new Date(post.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) }},
-                          {{ new Date(post.created_at).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true }) }}
+                          {{
+                            new Date(post.created_at).toLocaleDateString(
+                              "en-US",
+                              { month: "short", day: "numeric" },
+                            )
+                          }},
+                          {{
+                            new Date(post.created_at).toLocaleTimeString(
+                              "en-US",
+                              {
+                                hour: "numeric",
+                                minute: "2-digit",
+                                hour12: true,
+                              },
+                            )
+                          }}
                         </small>
                       </div>
                     </div>
                     <div class="post-actions">
-                      <button class="btn-action-menu" @click.stop="toggleMenu(post.id)">
+                      <button
+                        class="btn-action-menu"
+                        @click.stop="toggleMenu(post.id)"
+                      >
                         <i class="fas fa-ellipsis-v"></i>
                       </button>
-                      <div class="action-dropdown" v-if="activeMenu === post.id">
-                        <button @click="openEditModal(post)"><i class="fas fa-edit me-2"></i>Edit</button>
-                        <button class="danger" @click="handleDelete(post.id)"><i class="fas fa-trash me-2"></i>Delete</button>
+                      <div
+                        class="action-dropdown"
+                        v-if="activeMenu === post.id"
+                      >
+                        <button @click="openEditModal(post)">
+                          <i class="fas fa-edit me-2"></i>Edit
+                        </button>
+                        <button class="danger" @click="handleDelete(post.id)">
+                          <i class="fas fa-trash me-2"></i>Delete
+                        </button>
                       </div>
                     </div>
                   </div>
@@ -109,12 +231,22 @@
                     rel="noopener noreferrer"
                     class="assignment-card-link d-flex align-items-center border rounded-3 shadow-sm overflow-hidden mt-3 mb-2"
                   >
-                    <div class="d-flex align-items-center justify-content-center" style="width: 80px; height: 80px; background-color: #f6993f; flex-shrink: 0;">
+                    <div
+                      class="d-flex align-items-center justify-content-center"
+                      style="
+                        width: 80px;
+                        height: 80px;
+                        background-color: #f6993f;
+                        flex-shrink: 0;
+                      "
+                    >
                       <i class="fas fa-laptop-code text-white fa-2x"></i>
                     </div>
                     <div class="p-3 flex-grow-1">
                       <h6 class="mb-0 fw-bold text-dark">{{ post.title }}</h6>
-                      <small class="text-muted">តេស្ត • ចុចដើម្បីបើកវិញ្ញាសា</small>
+                      <small class="text-muted"
+                        >តេស្ត • ចុចដើម្បីបើកវិញ្ញាសា</small
+                      >
                     </div>
                     <div class="p-3">
                       <!-- <span class="btn btn-sm px-3 rounded-pill" style="background-color: #e6fffa; color: #38b2ac; font-weight: 600;">មើលលម្អិត</span> -->
@@ -123,7 +255,6 @@
                 </div>
               </div>
             </div>
-
           </div>
         </div>
 
@@ -136,21 +267,30 @@
             </div>
             <table class="roster-table">
               <thead>
-                <tr><th>សិស្ស</th></tr>
+                <tr>
+                  <th>សិស្ស</th>
+                </tr>
               </thead>
               <tbody>
                 <tr v-for="student in roomData?.students" :key="student.id">
                   <td>
                     <div class="student-info">
-                      <img :src="student.avatar || 'default-avatar-url.jpg'" alt="">
+                      <img :src="getStudentAvatar(student)" alt="student avatar" />
                       <div>
-                        <h6>{{ student.first_name }} {{ student.last_name }}</h6>
+                        <h6>
+                          {{ student.first_name }} {{ student.last_name }}
+                        </h6>
                         <span>{{ student.student_card_id }}</span>
                       </div>
                     </div>
                   </td>
                   <td class="text-end">
-                    <button class="btn-remove-student" @click="openDeleteModal(student)">លុបចេញ</button>
+                    <button
+                      class="btn-remove-student"
+                      @click="openDeleteModal(student)"
+                    >
+                      លុបចេញ
+                    </button>
                   </td>
                 </tr>
               </tbody>
@@ -160,17 +300,22 @@
 
         <!-- Tab: Results (With Filter & Pagination) -->
         <div v-if="currentTab === 'results'" class="tab-pane active">
-          
           <!-- Loading State -->
-          <div v-if="loading" class="d-flex flex-column align-items-center justify-content-center p-5 text-muted">
+          <div
+            v-if="loading"
+            class="d-flex flex-column align-items-center justify-content-center p-5 text-muted"
+          >
             <div class="spinner-border text-primary mb-3" role="status">
               <span class="visually-hidden">កំពុងផ្ទុក...</span>
             </div>
             <span class="fw-medium text-secondary">កំពុងផ្ទុកទិន្នន័យ...</span>
           </div>
-          
+
           <!-- Empty State -->
-          <div v-else-if="studentResults.length === 0" class="d-flex flex-column align-items-center justify-content-center p-5 text-muted border border-dashed rounded-4 bg-light">
+          <div
+            v-else-if="studentResults.length === 0"
+            class="d-flex flex-column align-items-center justify-content-center p-5 text-muted border border-dashed rounded-4 bg-light"
+          >
             <div class="empty-state-icon mb-3 text-secondary-50">
               <i class="far fa-folder-open fa-3x"></i>
             </div>
@@ -180,24 +325,45 @@
           <!-- Content State -->
           <div v-else class="card border-0 shadow-sm rounded-4 overflow-hidden">
             <!-- Header with integrated filter controls -->
-            <div class="card-header bg-white border-bottom-0 pt-4 px-4 pb-3 d-flex align-items-center justify-content-between flex-wrap gap-3">
+            <div
+              class="card-header bg-white border-bottom-0 pt-4 px-4 pb-3 d-flex align-items-center justify-content-between flex-wrap gap-3"
+            >
               <div>
                 <h5 class="card-title fw-bold text-dark mb-1">លទ្ធផលសិស្ស</h5>
-                <p class="text-muted small mb-0">បង្ហាញព័ត៌មានលទ្ធផល និងការផ្តល់មតិត្រឡប់</p>
+                <p class="text-muted small mb-0">
+                  បង្ហាញព័ត៌មានលទ្ធផល និងការផ្តល់មតិត្រឡប់
+                </p>
               </div>
 
               <!-- Filter Selector and Stats -->
               <div class="d-flex align-items-center gap-3 flex-wrap">
                 <div class="d-flex align-items-center gap-2">
-                  <span class="text-muted small fw-semibold text-nowrap">តម្រងវិញ្ញាសា៖</span>
-                  <select v-model="selectedExam" class="form-select form-select-sm border border-secondary-subtle rounded-pill px-3 py-2 text-dark" style="min-width: 180px; font-size: 0.82rem; font-weight: 600; background-color: #f8fafc;">
+                  <span class="text-muted small fw-semibold text-nowrap"
+                    >តម្រងវិញ្ញាសា៖</span
+                  >
+                  <select
+                    v-model="selectedExam"
+                    class="form-select form-select-sm border border-secondary-subtle rounded-pill px-3 py-2 text-dark"
+                    style="
+                      min-width: 180px;
+                      font-size: 0.82rem;
+                      font-weight: 600;
+                      background-color: #f8fafc;
+                    "
+                  >
                     <option value="all">ទាំងអស់</option>
-                    <option v-for="title in availableExams" :key="title" :value="title">
+                    <option
+                      v-for="title in availableExams"
+                      :key="title"
+                      :value="title"
+                    >
                       {{ title }}
                     </option>
                   </select>
                 </div>
-                <span class="badge bg-light text-dark border px-3 py-2 rounded-pill fw-semibold">
+                <span
+                  class="badge bg-light text-dark border px-3 py-2 rounded-pill fw-semibold"
+                >
                   សរុប៖ {{ filteredResults.length }} នាក់
                 </span>
               </div>
@@ -209,41 +375,102 @@
                 <table class="table align-middle mb-0 custom-results-table">
                   <thead>
                     <tr>
-                      <th class="text-secondary text-uppercase py-3 ps-3" style="font-size: 0.75rem; letter-spacing: 0.5px;">សិស្ស</th>
-                      <th class="text-secondary text-uppercase py-3" style="font-size: 0.75rem; letter-spacing: 0.5px;">វិញ្ញាសា</th>
-                      <th class="text-secondary text-uppercase py-3 text-center" style="font-size: 0.75rem; letter-spacing: 0.5px;">ពិន្ទុ</th>
-                      <th class="text-secondary text-uppercase py-3 text-center" style="font-size: 0.75rem; letter-spacing: 0.5px;">កាលបរិច្ឆេទ</th>
-                      <th class="text-secondary text-uppercase py-3" style="font-size: 0.75rem; letter-spacing: 0.5px; min-width: 240px;">មតិកែលម្អ</th>
-                      <th class="text-center text-secondary text-uppercase py-3 pe-3" style="font-size: 0.75rem; letter-spacing: 0.5px; width: 90px;">សកម្មភាព</th>
+                      <th
+                        class="text-secondary text-uppercase py-3 ps-3"
+                        style="font-size: 0.75rem; letter-spacing: 0.5px"
+                      >
+                        សិស្ស
+                      </th>
+                      <th
+                        class="text-secondary text-uppercase py-3"
+                        style="font-size: 0.75rem; letter-spacing: 0.5px"
+                      >
+                        វិញ្ញាសា
+                      </th>
+                      <th
+                        class="text-secondary text-uppercase py-3 text-center"
+                        style="font-size: 0.75rem; letter-spacing: 0.5px"
+                      >
+                        ពិន្ទុ
+                      </th>
+                      <th
+                        class="text-secondary text-uppercase py-3 text-center"
+                        style="font-size: 0.75rem; letter-spacing: 0.5px"
+                      >
+                        កាលបរិច្ឆេទ
+                      </th>
+                      <th
+                        class="text-secondary text-uppercase py-3"
+                        style="
+                          font-size: 0.75rem;
+                          letter-spacing: 0.5px;
+                          min-width: 240px;
+                        "
+                      >
+                        មតិកែលម្អ
+                      </th>
+                      <th
+                        class="text-center text-secondary text-uppercase py-3 pe-3"
+                        style="
+                          font-size: 0.75rem;
+                          letter-spacing: 0.5px;
+                          width: 90px;
+                        "
+                      >
+                        សកម្មភាព
+                      </th>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr v-for="res in paginatedResults" :key="res.submission_id" class="card-row">
+                    <tr
+                      v-for="res in paginatedResults"
+                      :key="res.submission_id"
+                      class="card-row"
+                    >
                       <!-- Student Column -->
                       <td class="ps-3 py-3">
                         <div class="d-flex align-items-center gap-3">
                           <div class="avatar-circle-custom">
-                            {{ res.first_name ? res.first_name.charAt(0) : 'S' }}
+                            {{
+                              res.first_name ? res.first_name.charAt(0) : "S"
+                            }}
                           </div>
                           <div>
-                            <div class="fw-semibold text-dark mb-0">{{ res.first_name }} {{ res.last_name }}</div>
-                            <span class="text-muted small">{{ res.student_code }}</span>
+                            <div class="fw-semibold text-dark mb-0">
+                              {{ res.first_name }} {{ res.last_name }}
+                            </div>
+                            <span class="text-muted small">{{
+                              res.student_code
+                            }}</span>
                           </div>
                         </div>
                       </td>
 
                       <!-- Exam Title -->
                       <td class="py-3">
-                        <span class="fw-medium text-dark-emphasis">{{ res.exam_title }}</span>
+                        <span class="fw-medium text-dark-emphasis">{{
+                          res.exam_title
+                        }}</span>
                       </td>
 
                       <!-- Score Badge -->
                       <td class="py-3 text-center">
-                        <span 
+                        <span
                           class="badge rounded-pill px-3 py-2 fw-semibold d-inline-flex align-items-center gap-1"
-                          :class="res.score >= 50 ? 'bg-success-subtle text-success' : 'bg-danger-subtle text-danger'"
+                          :class="
+                            res.score >= 50
+                              ? 'bg-success-subtle text-success'
+                              : 'bg-danger-subtle text-danger'
+                          "
                         >
-                          <i class="fas" :class="res.score >= 50 ? 'fa-check-circle' : 'fa-times-circle'"></i>
+                          <i
+                            class="fas"
+                            :class="
+                              res.score >= 50
+                                ? 'fa-check-circle'
+                                : 'fa-times-circle'
+                            "
+                          ></i>
                           {{ parseFloat(res.score).toFixed(0) }}.00 / 100
                         </span>
                       </td>
@@ -255,18 +482,18 @@
 
                       <!-- Feedback Input -->
                       <td class="py-3">
-                        <input 
-                          type="text" 
-                          class="form-control form-control-sm border-0 bg-light rounded-3 px-3 py-2 feedback-input-field" 
-                          v-model="res.feedback" 
+                        <input
+                          type="text"
+                          class="form-control form-control-sm border-0 bg-light rounded-3 px-3 py-2 feedback-input-field"
+                          v-model="res.feedback"
                           placeholder="សរសេរមតិកែលម្អនៅទីនេះ..."
-                        >
+                        />
                       </td>
 
                       <!-- Action Button -->
                       <td class="text-center pe-3 py-3">
-                        <button 
-                          class="btn btn-action-send btn-sm rounded-3" 
+                        <button
+                          class="btn btn-action-send btn-sm rounded-3"
                           @click="sendFeedback(res.submission_id, res.feedback)"
                           title="ផ្ញើមតិកែលម្អ"
                         >
@@ -285,50 +512,101 @@
               </div>
 
               <!-- Pagination Footer Controls -->
-              <div v-if="totalPages > 1" class="d-flex align-items-center justify-content-between mt-4 border-top pt-3 flex-wrap gap-2">
+              <div
+                v-if="totalPages > 1"
+                class="d-flex align-items-center justify-content-between mt-4 border-top pt-3 flex-wrap gap-2"
+              >
                 <div class="text-muted small fw-medium">
-                  បង្ហាញ {{ (currentPage - 1) * itemsPerPage + 1 }} ដល់ {{ Math.min(currentPage * itemsPerPage, filteredResults.length) }} នៃលទ្ធផលសរុប {{ filteredResults.length }} នាក់
+                  បង្ហាញ {{ (currentPage - 1) * itemsPerPage + 1 }} ដល់
+                  {{
+                    Math.min(currentPage * itemsPerPage, filteredResults.length)
+                  }}
+                  នៃលទ្ធផលសរុប {{ filteredResults.length }} នាក់
                 </div>
                 <nav aria-label="Result pagination">
-                  <ul class="pagination pagination-sm mb-0 align-items-center gap-1">
-                    <li class="page-item" :class="{ disabled: currentPage === 1 }">
-                      <button class="page-link border-0 rounded-circle d-flex align-items-center justify-content-center p-0" @click="prevPage" style="width: 32px; height: 32px;">
-                        <i class="fas fa-chevron-left" style="font-size: 0.8rem;"></i>
+                  <ul
+                    class="pagination pagination-sm mb-0 align-items-center gap-1"
+                  >
+                    <li
+                      class="page-item"
+                      :class="{ disabled: currentPage === 1 }"
+                    >
+                      <button
+                        class="page-link border-0 rounded-circle d-flex align-items-center justify-content-center p-0"
+                        @click="prevPage"
+                        style="width: 32px; height: 32px"
+                      >
+                        <i
+                          class="fas fa-chevron-left"
+                          style="font-size: 0.8rem"
+                        ></i>
                       </button>
                     </li>
-                    
-                    <li v-for="page in totalPages" :key="page" class="page-item" :class="{ active: currentPage === page }">
-                      <button class="page-link border-0 rounded-circle d-flex align-items-center justify-content-center p-0 fw-semibold" @click="goToPage(page)" style="width: 32px; height: 32px; font-size: 0.82rem;">
+
+                    <li
+                      v-for="page in totalPages"
+                      :key="page"
+                      class="page-item"
+                      :class="{ active: currentPage === page }"
+                    >
+                      <button
+                        class="page-link border-0 rounded-circle d-flex align-items-center justify-content-center p-0 fw-semibold"
+                        @click="goToPage(page)"
+                        style="width: 32px; height: 32px; font-size: 0.82rem"
+                      >
                         {{ page }}
                       </button>
                     </li>
 
-                    <li class="page-item" :class="{ disabled: currentPage === totalPages }">
-                      <button class="page-link border-0 rounded-circle d-flex align-items-center justify-content-center p-0" @click="nextPage" style="width: 32px; height: 32px;">
-                        <i class="fas fa-chevron-right" style="font-size: 0.8rem;"></i>
+                    <li
+                      class="page-item"
+                      :class="{ disabled: currentPage === totalPages }"
+                    >
+                      <button
+                        class="page-link border-0 rounded-circle d-flex align-items-center justify-content-center p-0"
+                        @click="nextPage"
+                        style="width: 32px; height: 32px"
+                      >
+                        <i
+                          class="fas fa-chevron-right"
+                          style="font-size: 0.8rem"
+                        ></i>
                       </button>
                     </li>
                   </ul>
                 </nav>
               </div>
             </div>
-
           </div>
         </div>
-
       </div>
     </div>
   </div>
 
   <!-- Edit Modal -->
-  <div class="modal-overlay" v-if="isEditModalOpen" @click.self="isEditModalOpen = false">
+  <div
+    class="modal-overlay"
+    v-if="isEditModalOpen"
+    @click.self="isEditModalOpen = false"
+  >
     <div class="edit-modal">
       <h6>Edit Post</h6>
-      <input v-model="editPost.title" class="form-control mb-2" placeholder="ចំណងជើង..." />
-      <textarea v-model="editPost.message" class="form-control mb-2" rows="3" placeholder="សរសេរការប្រកាស..."></textarea>
+      <input
+        v-model="editPost.title"
+        class="form-control mb-2"
+        placeholder="ចំណងជើង..."
+      />
+      <textarea
+        v-model="editPost.message"
+        class="form-control mb-2"
+        rows="3"
+        placeholder="សរសេរការប្រកាស..."
+      ></textarea>
       <input v-model="editPost.exam_link" type="hidden" />
       <div class="d-flex justify-content-end gap-2 mt-3">
-        <button class="btn-cancel" @click="isEditModalOpen = false">Cancel</button>
+        <button class="btn-cancel" @click="isEditModalOpen = false">
+          Cancel
+        </button>
         <button class="btn-post" @click="handleUpdate">Save</button>
       </div>
     </div>
@@ -345,11 +623,11 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed, watch } from 'vue'
-import { useRouter } from 'vue-router'
-import { useToast } from 'vue-toastification'
-import { useAuthStore } from '@/stores/auth'
-import { getStudentResultsByExam, addFeedback } from '@/api/exam.api'
+import { ref, onMounted, computed, watch } from "vue";
+import { useRouter } from "vue-router";
+import { useToast } from "vue-toastification";
+import { useAuthStore } from "@/stores/auth";
+import { getStudentResultsByExam, addFeedback } from "@/api/exam.api";
 
 import {
   getOneRoom,
@@ -357,230 +635,240 @@ import {
   createPost,
   getPosts,
   deletePost,
-  updatePost
-} from '@/api/teacher.api'
+  updatePost,
+} from "@/api/teacher.api";
 
-import RemoveStudentModal from '@/components/teacher/RemoveStudentModal.vue'
+import RemoveStudentModal from "@/components/teacher/RemoveStudentModal.vue";
 
 //router
-const router = useRouter()
-const toast = useToast()
-const authStore = useAuthStore()
+const router = useRouter();
+const toast = useToast();
+const authStore = useAuthStore();
 
 //props
-const props = defineProps(['roomId'])
+const props = defineProps(["roomId"]);
 
 //state
-const roomData = ref(null)
-const posts = ref([])
+const roomData = ref(null);
+const posts = ref([]);
 
-const loading = ref(true)
-const currentTab = ref('stream')
+const loading = ref(true);
+const currentTab = ref("stream");
 
-const isDeleteModalOpen = ref(false)
-const isEditModalOpen = ref(false)
+const isDeleteModalOpen = ref(false);
+const isEditModalOpen = ref(false);
 
-const studentToDelete = ref(null)
+const studentToDelete = ref(null);
 
-const activeMenu = ref(null)
-const studentResults = ref([])
+const activeMenu = ref(null);
+const studentResults = ref([]);
 
 // --- FILTER & PAGINATION STATE ---
-const selectedExam = ref('all')
-const currentPage = ref(1)
-const itemsPerPage = ref(10) // Adjust the number of results per page here
+const selectedExam = ref("all");
+const currentPage = ref(1);
+const itemsPerPage = ref(10);
+
+const BASE_IMAGE_URL = import.meta.env.VITE_BASE_URL_FOR_IMAGE
+
+const getStudentAvatar = (student) => {
+  if (student.profile_image) {
+    return `${BASE_IMAGE_URL}/${student.profile_image}`.replace('//uploads', '/uploads')
+  }
+
+  return `https://ui-avatars.com/api/?name=${encodeURIComponent(
+    student.first_name + ' ' + student.last_name
+  )}`
+}
 
 // Computed value to pull unique list of Exam Titles dynamically
 const availableExams = computed(() => {
-  if (!studentResults.value) return []
-  const titles = studentResults.value.map(res => res.exam_title).filter(Boolean)
-  return [...new Set(titles)]
-})
+  if (!studentResults.value) return [];
+  const titles = studentResults.value
+    .map((res) => res.exam_title)
+    .filter(Boolean);
+  return [...new Set(titles)];
+});
 
 // Computed value to apply filter based on selected exam title
 const filteredResults = computed(() => {
-  if (!studentResults.value) return []
-  if (selectedExam.value === 'all') {
-    return studentResults.value
+  if (!studentResults.value) return [];
+  if (selectedExam.value === "all") {
+    return studentResults.value;
   }
-  return studentResults.value.filter(res => res.exam_title === selectedExam.value)
-})
+  return studentResults.value.filter(
+    (res) => res.exam_title === selectedExam.value,
+  );
+});
 
 // Computed value containing only the current page's sliced subset of results
 const paginatedResults = computed(() => {
-  const startIndex = (currentPage.value - 1) * itemsPerPage.value
-  const endIndex = startIndex + itemsPerPage.value
-  return filteredResults.value.slice(startIndex, endIndex)
-})
+  const startIndex = (currentPage.value - 1) * itemsPerPage.value;
+  const endIndex = startIndex + itemsPerPage.value;
+  return filteredResults.value.slice(startIndex, endIndex);
+});
 
 // Computed value to determine total number of page buttons required
 const totalPages = computed(() => {
-  return Math.ceil(filteredResults.value.length / itemsPerPage.value) || 1
-})
+  return Math.ceil(filteredResults.value.length / itemsPerPage.value) || 1;
+});
 
 // Methods to handle page switches
 const prevPage = () => {
   if (currentPage.value > 1) {
-    currentPage.value--
+    currentPage.value--;
   }
-}
+};
 
 // Calculate the dynamic average grade based on student results
 const averageGrade = computed(() => {
   if (!studentResults.value || studentResults.value.length === 0) {
-    return 0
+    return 0;
   }
-  
+
   const totalScore = studentResults.value.reduce((sum, res) => {
-    return sum + Number(res.score || 0)
-  }, 0)
-  
+    return sum + Number(res.score || 0);
+  }, 0);
+
   // Return rounded average
-  return Math.round(totalScore / studentResults.value.length)
-})
+  return Math.round(totalScore / studentResults.value.length);
+});
 
 const nextPage = () => {
   if (currentPage.value < totalPages.value) {
-    currentPage.value++
+    currentPage.value++;
   }
-}
+};
 
 const goToPage = (page) => {
-  currentPage.value = page
-}
+  currentPage.value = page;
+};
 
 // Reset current page index back to 1 if filter settings change
 watch(selectedExam, () => {
-  currentPage.value = 1
-})
+  currentPage.value = 1;
+});
 
 //new post
 const newPost = ref({
-  title: '',
-  message: '',
-  examLink: ''
-})
+  title: "",
+  message: "",
+  examLink: "",
+});
 
 //edit post
 const editPost = ref({
   id: null,
-  title: '',
-  message: '',
-  exam_link: ''
-})
+  title: "",
+  message: "",
+  exam_link: "",
+});
 
 //fetch room
 const fetchRoomData = async () => {
   try {
-    loading.value = true
-    const response = await getOneRoom(props.roomId)
-    roomData.value = response.data.data || response.data
+    loading.value = true;
+    const response = await getOneRoom(props.roomId);
+    roomData.value = response.data.data || response.data;
   } catch (error) {
-    console.error(error)
+    console.error(error);
   } finally {
-    loading.value = false
+    loading.value = false;
   }
-}
+};
 
 //fetch posts
 const fetchPosts = async () => {
   try {
-    const res = await getPosts(props.roomId)
-    posts.value = (res.data.data || []).reverse()
+    const res = await getPosts(props.roomId);
+    console.log("POSTS:", posts.value);
+    posts.value = (res.data.data || []).reverse();
   } catch (err) {
-    console.error(err)
+    console.error(err);
   }
-}
+};
 
 //create post
 const handleCreatePost = async () => {
-  if (!newPost.value.message.trim()) return
+  if (!newPost.value.message.trim()) return;
 
   try {
     await createPost(props.roomId, {
       title: newPost.value.title,
       message: newPost.value.message,
-      examLink: newPost.value.examLink
-    })
+      examLink: newPost.value.examLink,
+    });
 
-    toast.success('បានបង្ហោះជោគជ័យ!')
+    toast.success("បានបង្ហោះជោគជ័យ!");
 
     newPost.value = {
-      title: '',
-      message: '',
-      examLink: ''
-    }
-    await fetchPosts()
+      title: "",
+      message: "",
+      examLink: "",
+    };
+    await fetchPosts();
   } catch (err) {
-    console.error("កំហុស:", err.response?.data)
-    toast.error('មានកំហុស')
+    console.error("កំហុស:", err.response?.data);
+    toast.error("មានកំហុស");
   }
-}
+};
 
 //delete post
 const handleDelete = async (postId) => {
   try {
-    await deletePost(props.roomId, postId)
-    toast.success('បានលុបជោគជ័យ!')
-    await fetchPosts()
+    await deletePost(props.roomId, postId);
+    toast.success("បានលុបជោគជ័យ!");
+    await fetchPosts();
   } catch (err) {
-    toast.error('មិនអាចលុបបាន')
+    toast.error("មិនអាចលុបបាន");
   }
-}
+};
 
 //update post
 const handleUpdate = async () => {
   try {
     const payload = {
       title: editPost.value.title,
-      message: editPost.value.message
-    }
-    await updatePost(editPost.value.id, payload)
+      message: editPost.value.message,
+    };
+    await updatePost(editPost.value.id, payload);
 
-    toast.success('បានកែប្រែជោគជ័យ!')
-    isEditModalOpen.value = false
-    await fetchPosts()
-
+    toast.success("បានកែប្រែជោគជ័យ!");
+    isEditModalOpen.value = false;
+    await fetchPosts();
   } catch (err) {
-    console.error("កំហុស:", err.response?.data)
-    toast.error('មិនអាចកែប្រែបាន')
+    console.error("កំហុស:", err.response?.data);
+    toast.error("មិនអាចកែប្រែបាន");
   }
-}
-
+};
 
 //open delete modal
 const openDeleteModal = (student) => {
-  studentToDelete.value = student
-  isDeleteModalOpen.value = true
-}
+  studentToDelete.value = student;
+  isDeleteModalOpen.value = true;
+};
 
 //confirm delete
 const confirmDelete = async () => {
-  if (!studentToDelete.value) return
+  if (!studentToDelete.value) return;
 
   try {
-    await removeStudentFromRoom(
-      props.roomId,
-      studentToDelete.value.id
-    )
+    await removeStudentFromRoom(props.roomId, studentToDelete.value.id);
 
-    await fetchRoomData()
+    await fetchRoomData();
 
-    toast.success('បានលុបសិស្សជោគជ័យ!')
-
+    toast.success("បានលុបសិស្សជោគជ័យ!");
   } catch (error) {
-    toast.error('មិនអាចលុបសិស្សបាន')
+    toast.error("មិនអាចលុបសិស្សបាន");
   } finally {
-    isDeleteModalOpen.value = false
-    studentToDelete.value = null
+    isDeleteModalOpen.value = false;
+    studentToDelete.value = null;
   }
-}
+};
 
 //toggle menu
 const toggleMenu = (postId) => {
-  activeMenu.value =
-    activeMenu.value === postId ? null : postId
-}
+  activeMenu.value = activeMenu.value === postId ? null : postId;
+};
 
 //open edit modal
 const openEditModal = (post) => {
@@ -588,48 +876,42 @@ const openEditModal = (post) => {
     id: post.id,
     title: post.title,
     message: post.message,
-    exam_link: post.exam_link 
-  }
-  isEditModalOpen.value = true
-  activeMenu.value = null
-}
+    exam_link: post.exam_link,
+  };
+  isEditModalOpen.value = true;
+  activeMenu.value = null;
+};
 
 //open exam link
 const openExamLink = (url) => {
-  if (!url) return
+  if (!url) return;
 
-  const fullUrl = url.startsWith('http')
-    ? url
-    : `https://${url}`
+  const fullUrl = url.startsWith("http") ? url : `https://${url}`;
 
-  window.open(fullUrl, '_blank')
-}
+  window.open(fullUrl, "_blank");
+};
 
-const fetchStudentResults = async () => {
+const extractExamCode = (url) => {
+  if (!url) return null;
+  const parts = url.split("/");
+  return parts[parts.length - 1]; // deb9e1c6
+};
+
+const fetchStudentResults = async (examId) => {
   loading.value = true;
-  console.log("កំពុងសាកល្បងហៅលទ្ធផលតាម Exam ID: 86");
 
   try {
-    const res = await getStudentResultsByExam(86); 
-    console.log("ទិន្នន័យទទួលបាន:", res.data);
-    
-    // Safely verify if data structure is an Array or Object
-    const rawData = res.data.data;
-    if (Array.isArray(rawData)) {
-      studentResults.value = rawData;
-    } else if (rawData) {
-      studentResults.value = [rawData];
-    } else {
-      studentResults.value = [];
-    }
-    
+    const res = await getStudentResultsByExam(examId);
+    console.log(res.data.data);
+    const rawData = res.data?.data || res.data || [];
+
+    studentResults.value = Array.isArray(rawData) ? rawData : [];
   } catch (err) {
-    console.error("កំហុសក្នុងការហៅ API:", err);
+    console.error(err);
   } finally {
     loading.value = false;
   }
-}
-
+};
 const sendFeedback = async (subId, feedbackText) => {
   try {
     await addFeedback(subId, feedbackText);
@@ -638,30 +920,36 @@ const sendFeedback = async (subId, feedbackText) => {
     console.error(err);
     toast.error("មានកំហុសក្នុងការផ្ញើ Feedback");
   }
-}
+};
 const handleTabChange = (tab) => {
-  currentTab.value = tab
-  if (tab === 'results' && examId) {
-    fetchStudentResults(examId)
-  }
-}
+  currentTab.value = tab;
 
-// បើសិនអ្នកចង់ទាញយកលទ្ធផលនៃវិញ្ញាសាទាំងអស់ក្នុងថ្នាក់
+  if (tab === "results") {
+    const firstExamLink = posts.value?.[0]?.exam_link;
+
+    if (firstExamLink) {
+      fetchStudentResults(firstExamLink);
+    } else {
+      studentResults.value = [];
+    }
+  }
+};
+
 const loadAllResultsFromPosts = async () => {
-  const examIds = posts.value.map(p => p.examId).filter(id => id);
-  
+  const examIds = posts.value.map((p) => p.examId).filter((id) => id);
+
   if (examIds.length > 0) {
     await fetchStudentResults(examIds[0]);
   }
-}
+};
 
 //mounted
 onMounted(() => {
-  fetchRoomData()
-  fetchPosts()
-  fetchStudentResults()
-  authStore.fetchUserProfile()
-})
+  fetchRoomData();
+  fetchPosts();
+  fetchStudentResults();
+  authStore.fetchUserProfile();
+});
 </script>
 
 <style scoped>
@@ -799,15 +1087,36 @@ onMounted(() => {
 }
 
 :root {
-  --em: #10b981; --em-dk: #059669; --em-mid: #34d399; --em-soft: #ecfdf5;
-  --bg: #f8fafc; --surf: #ffffff; --bdr: #e2e8f0; --txt: #1e293b;
-  --txt-m: #475569; --txt-mu: #94a3b8; --sh-sm: 0 4px 12px rgba(0,0,0,0.03); --sh-md: 0 8px 24px rgba(0,0,0,0.06);
+  --em: #10b981;
+  --em-dk: #059669;
+  --em-mid: #34d399;
+  --em-soft: #ecfdf5;
+  --bg: #f8fafc;
+  --surf: #ffffff;
+  --bdr: #e2e8f0;
+  --txt: #1e293b;
+  --txt-m: #475569;
+  --txt-mu: #94a3b8;
+  --sh-sm: 0 4px 12px rgba(0, 0, 0, 0.03);
+  --sh-md: 0 8px 24px rgba(0, 0, 0, 0.06);
 }
 
 /* Table Card structure */
-.table-card { background: #ffffff; border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); overflow: hidden; padding-bottom: 20px; }
-.results-table { border-collapse: separate !important; border-spacing: 0 10px !important; }
-.results-table thead th { border: none !important; padding: 15px !important; }
+.table-card {
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  padding-bottom: 20px;
+}
+.results-table {
+  border-collapse: separate !important;
+  border-spacing: 0 10px !important;
+}
+.results-table thead th {
+  border: none !important;
+  padding: 15px !important;
+}
 
 .custom-results-table {
   border-collapse: separate;
@@ -928,48 +1237,258 @@ onMounted(() => {
 }
 
 /* Formatting single row components */
-.card-row { background: #ffffff !important; box-shadow: 0 2px 6px rgba(0,0,0,0.03) !important; transition: 0.2s; }
-.card-row td { padding: 18px 15px !important; border: none !important; }
-.card-row td:first-child { border-top-left-radius: 12px; border-bottom-left-radius: 12px; }
-.card-row td:last-child { border-top-right-radius: 12px; border-bottom-right-radius: 12px; }
+.card-row {
+  background: #ffffff !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03) !important;
+  transition: 0.2s;
+}
+.card-row td {
+  padding: 18px 15px !important;
+  border: none !important;
+}
+.card-row td:first-child {
+  border-top-left-radius: 12px;
+  border-bottom-left-radius: 12px;
+}
+.card-row td:last-child {
+  border-top-right-radius: 12px;
+  border-bottom-right-radius: 12px;
+}
 
 /* Global Shell Structures */
-.avatar-circle { width: 40px; height: 40px; background: #e0f2f1; color: #059669; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; }
-.score-pill { padding: 6px 14px; color: white; border-radius: 20px; font-size: 0.75rem; font-weight: 700; display: inline-block; }
-.feedback-input { border-radius: 20px; background: #f8fafc; border: 1px solid #e2e8f0; font-size: 0.85rem; padding: 8px 15px; transition: 0.2s; }
-.btn-emerald-soft { background: #f0fdf4; color: #059669; border-radius: 50%; width: 38px; height: 38px; border: none; }
-.btn-emerald-soft:hover { background: #d1fae5; }
-.app-shell { display: flex; height: 100vh; overflow: hidden; width: 100%; } 
-.sidebar { width: 240px; border-right: 1px solid var(--bdr); background: #fff; padding: 20px 14px; display: flex; flex-direction: column; flex-shrink: 0; }
-.nav-item { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: 10px; text-decoration: none; color: var(--txt-mu); font-size: .83rem; font-weight: 600; transition: .15s; }
-.nav-item.active { background: var(--em-soft); color: var(--em); }
-.nav-item:hover:not(.active) { background: #f8fafc; color: var(--txt); }
-.class-sidebar { width: 220px; background: #ffffff; border-right: 1px solid var(--bdr); padding: 20px; display: flex; flex-direction: column; gap: 20px; }
-.sidebar-header { font-size: 0.75rem; font-weight: 800; color: var(--txt-mu); text-transform: uppercase; }
-.class-item { display: flex; align-items: center; gap: 12px; padding: 10px; border-radius: 12px; cursor: pointer; transition: 0.2s; }
-.class-item.active { background: var(--em-soft); color: var(--em); }
-.class-initial { width: 35px; height: 35px; background: var(--em); color: white; display: flex; align-items: center; justify-content: center; border-radius: 8px; font-weight: 700; }
-.class-info h6 { font-size: 0.85rem; margin: 0; font-weight: 700; }
-.class-info span { font-size: 0.7rem; color: var(--txt-mu); }
-.btn-add-class { margin-top: auto; padding: 10px; border: 2px dashed var(--bdr); background: transparent; border-radius: 12px; font-weight: 700; cursor: pointer; }
-.main-col { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
-.topbar { height: 70px; background: rgba(255,255,255,0.85); backdrop-filter: blur(12px); border-bottom: 1px solid var(--bdr); display: flex; align-items: center; justify-content: space-between; padding: 12px 28px; }
-.search-bar { background: white; border-radius: 30px; padding: 8px 16px; border: 1px solid var(--bdr); max-width: 320px; display: flex; align-items: center; gap: 10px; }
-.search-bar input { border: none; outline: none; font-size: 0.8rem; width: 100%; }
+.avatar-circle {
+  width: 40px;
+  height: 40px;
+  background: #e0f2f1;
+  color: #059669;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+}
+.score-pill {
+  padding: 6px 14px;
+  color: white;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  display: inline-block;
+}
+.feedback-input {
+  border-radius: 20px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  font-size: 0.85rem;
+  padding: 8px 15px;
+  transition: 0.2s;
+}
+.btn-emerald-soft {
+  background: #f0fdf4;
+  color: #059669;
+  border-radius: 50%;
+  width: 38px;
+  height: 38px;
+  border: none;
+}
+.btn-emerald-soft:hover {
+  background: #d1fae5;
+}
+.app-shell {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+  width: 100%;
+}
+.sidebar {
+  width: 240px;
+  border-right: 1px solid var(--bdr);
+  background: #fff;
+  padding: 20px 14px;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+}
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px;
+  border-radius: 10px;
+  text-decoration: none;
+  color: var(--txt-mu);
+  font-size: 0.83rem;
+  font-weight: 600;
+  transition: 0.15s;
+}
+.nav-item.active {
+  background: var(--em-soft);
+  color: var(--em);
+}
+.nav-item:hover:not(.active) {
+  background: #f8fafc;
+  color: var(--txt);
+}
+.class-sidebar {
+  width: 220px;
+  background: #ffffff;
+  border-right: 1px solid var(--bdr);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.sidebar-header {
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: var(--txt-mu);
+  text-transform: uppercase;
+}
+.class-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.class-item.active {
+  background: var(--em-soft);
+  color: var(--em);
+}
+.class-initial {
+  width: 35px;
+  height: 35px;
+  background: var(--em);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  font-weight: 700;
+}
+.class-info h6 {
+  font-size: 0.85rem;
+  margin: 0;
+  font-weight: 700;
+}
+.class-info span {
+  font-size: 0.7rem;
+  color: var(--txt-mu);
+}
+.btn-add-class {
+  margin-top: auto;
+  padding: 10px;
+  border: 2px dashed var(--bdr);
+  background: transparent;
+  border-radius: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.main-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.topbar {
+  height: 70px;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--bdr);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 28px;
+}
+.search-bar {
+  background: white;
+  border-radius: 30px;
+  padding: 8px 16px;
+  border: 1px solid var(--bdr);
+  max-width: 320px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.search-bar input {
+  border: none;
+  outline: none;
+  font-size: 0.8rem;
+  width: 100%;
+}
 
-.profile-pill { display: flex; align-items: center; gap: 10px; padding: 6px; border-radius: 30px; background: #fff; border: 1px solid var(--bdr); }
-.profile-pill img { width: 34px; height: 34px; border-radius: 50%; object-fit: cover; }
+.profile-pill {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px;
+  border-radius: 30px;
+  background: #fff;
+  border: 1px solid var(--bdr);
+}
+.profile-pill img {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  object-fit: cover;
+}
 
-.workspace {flex: 1; overflow-y: auto; padding: 24px; }
-.class-banner { background: linear-gradient(135deg, rgba(16, 185, 129, 0.95), rgba(5, 150, 105, 0.95)); border-radius: 24px; padding: 36px; color: white; margin-bottom: 24px; box-shadow: 0 10px 30px rgba(16, 185, 129, 0.15); }
-.class-title { font-size: 1.8rem; font-weight: 700; margin-bottom: 6px; }
-.class-meta { font-size: 0.9rem; opacity: 0.9; }
+.workspace {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px;
+}
+.class-banner {
+  background: linear-gradient(
+    135deg,
+    rgba(16, 185, 129, 0.95),
+    rgba(5, 150, 105, 0.95)
+  );
+  border-radius: 24px;
+  padding: 36px;
+  color: white;
+  margin-bottom: 24px;
+  box-shadow: 0 10px 30px rgba(16, 185, 129, 0.15);
+}
+.class-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+.class-meta {
+  font-size: 0.9rem;
+  opacity: 0.9;
+}
 
 /* Tabs Layout */
-.class-tabs-container { margin-bottom: 24px; }
-.class-tabs { display: inline-flex; background: #fff; padding: 6px; border-radius: 30px; border: 1px solid var(--bdr); gap: 4px; box-shadow: var(--sh-sm); }
-.class-tab { padding: 8px 20px; font-size: 0.82rem; font-weight: 700; color: var(--txt-mu); cursor: pointer; border-radius: 24px; transition: 0.2s; }
-.class-tab.active { color: #fff; background: var(--em); box-shadow: 0 4px 12px rgba(16,185,129,0.2); }
+.class-tabs-container {
+  margin-bottom: 24px;
+}
+.class-tabs {
+  display: inline-flex;
+  background: #fff;
+  padding: 6px;
+  border-radius: 30px;
+  border: 1px solid var(--bdr);
+  gap: 4px;
+  box-shadow: var(--sh-sm);
+}
+.class-tab {
+  padding: 8px 20px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--txt-mu);
+  cursor: pointer;
+  border-radius: 24px;
+  transition: 0.2s;
+}
+.class-tab.active {
+  color: #fff;
+  background: var(--em);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+}
 .results-table {
   border-collapse: separate !important;
   border-spacing: 0 16px !important;
@@ -978,18 +1497,18 @@ onMounted(() => {
 /* Card Rows Transformation */
 .results-table tbody tr {
   background: #ffffff !important;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.05) !important;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05) !important;
   border-radius: 12px !important;
   transition: all 0.3s ease;
 }
 
-.results-table tbody tr td:first-child { 
-  border-top-left-radius: 12px; 
-  border-bottom-left-radius: 12px; 
+.results-table tbody tr td:first-child {
+  border-top-left-radius: 12px;
+  border-bottom-left-radius: 12px;
 }
-.results-table tbody tr td:last-child { 
-  border-top-right-radius: 12px; 
-  border-bottom-right-radius: 12px; 
+.results-table tbody tr td:last-child {
+  border-top-right-radius: 12px;
+  border-bottom-right-radius: 12px;
 }
 
 .results-table td {
@@ -1004,55 +1523,227 @@ onMounted(() => {
 }
 
 /* Stream Layout Grid */
-.stream-grid { display: grid; grid-template-columns: 260px 1fr; gap: 24px; align-items: start; }
-@media (max-width: 992px) { .stream-grid { grid-template-columns: 1fr; } }
+.stream-grid {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 24px;
+  align-items: start;
+}
+@media (max-width: 992px) {
+  .stream-grid {
+    grid-template-columns: 1fr;
+  }
+}
 
-.side-panel { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(16px); border-radius: 20px; border: 1px solid var(--bdr); padding: 20px; box-shadow: var(--sh-md); }
-.overview-lbl { font-size: 0.68rem; font-weight: 700; color: var(--txt-mu); text-transform: uppercase; letter-spacing: 0.5px; }
-.stat-num { font-weight: 700; color: var(--txt); font-size: 1.15rem; }
-.stat-lbl { font-size: 0.62rem; color: var(--txt-mu); font-weight: 600; }
-.panel-title { font-size: 0.85rem; font-weight: 700; color: var(--txt); margin-bottom: 12px; }
-.upcoming-item { display: flex; gap: 10px; align-items: flex-start; margin-bottom: 12px; }
-.upcoming-icon { width: 30px; height: 30px; border-radius: 8px; background: var(--em-soft); color: var(--em); display: flex; align-items: center; justify-content: center; font-size: 0.75rem; flex-shrink: 0; }
-.upcoming-text h6 { font-size: 0.78rem; font-weight: 700; margin: 0; color: var(--txt); }
-.upcoming-text p { font-size: 0.68rem; margin: 0; color: var(--txt-mu); }
+.side-panel {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(16px);
+  border-radius: 20px;
+  border: 1px solid var(--bdr);
+  padding: 20px;
+  box-shadow: var(--sh-md);
+}
+.overview-lbl {
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: var(--txt-mu);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.stat-num {
+  font-weight: 700;
+  color: var(--txt);
+  font-size: 1.15rem;
+}
+.stat-lbl {
+  font-size: 0.62rem;
+  color: var(--txt-mu);
+  font-weight: 600;
+}
+.panel-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--txt);
+  margin-bottom: 12px;
+}
+.upcoming-item {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+.upcoming-icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  background: var(--em-soft);
+  color: var(--em);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  flex-shrink: 0;
+}
+.upcoming-text h6 {
+  font-size: 0.78rem;
+  font-weight: 700;
+  margin: 0;
+  color: var(--txt);
+}
+.upcoming-text p {
+  font-size: 0.68rem;
+  margin: 0;
+  color: var(--txt-mu);
+}
 
-.feed-container { display: flex; flex-direction: column; gap: 24px; }
-.composer-card { background: #fff; border-radius: 20px; border: 1px solid var(--bdr); padding: 20px; box-shadow: var(--sh-md); }
-.avatar-img { width: 38px; height: 38px; border-radius: 50%; object-fit: cover; }
-.composer-input { width: 100%; border: none; background: transparent; outline: none; font-size: 0.92rem; resize: none; }
-.composer-actions { display: flex; justify-content: space-between; align-items: center; margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--bdr); }
-.attach-btns { display: flex; gap: 10px; }
-.btn-attach { border: 1px solid var(--bdr); background: #fff; font-size: 0.75rem; font-weight: 700; padding: 6px 14px; border-radius: 30px; color: var(--txt-m); }
-.btn-attach.quiz { color: #2563eb; } .btn-attach.assignment { color: #d97706; }
-.btn-post { background: var(--em); color: #fff; border: none; padding: 8px 20px; border-radius: 30px; font-weight: 700; font-size: 0.8rem; box-shadow: 0 4px 12px rgba(16,185,129,0.25); cursor: pointer; }
+.feed-container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+.composer-card {
+  background: #fff;
+  border-radius: 20px;
+  border: 1px solid var(--bdr);
+  padding: 20px;
+  box-shadow: var(--sh-md);
+}
+.avatar-img {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+.composer-input {
+  width: 100%;
+  border: none;
+  background: transparent;
+  outline: none;
+  font-size: 0.92rem;
+  resize: none;
+}
+.composer-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--bdr);
+}
+.attach-btns {
+  display: flex;
+  gap: 10px;
+}
+.btn-attach {
+  border: 1px solid var(--bdr);
+  background: #fff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 6px 14px;
+  border-radius: 30px;
+  color: var(--txt-m);
+}
+.btn-attach.quiz {
+  color: #2563eb;
+}
+.btn-attach.assignment {
+  color: #d97706;
+}
+.btn-post {
+  background: var(--em);
+  color: #fff;
+  border: none;
+  padding: 8px 20px;
+  border-radius: 30px;
+  font-weight: 700;
+  font-size: 0.8rem;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
+  cursor: pointer;
+}
 
-.post-card { background: #fff; border-radius: 20px; border: 1px solid var(--bdr); padding: 20px; box-shadow: var(--sh-md); }
-.pinned-banner { background: var(--em-soft) !important; border-color: var(--em-mid) !important; }
-.pin-wrap { width: 30px; height: 30px; border-radius: 8px; background: var(--em); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 0.8rem; flex-shrink: 0; }
-.pinned-text { font-size: 0.85rem; font-weight: 700; color: var(--txt); }
-.pinned-meta { font-size: 0.68rem; color: var(--txt-mu); margin-top: 2px; }
+.post-card {
+  background: #fff;
+  border-radius: 20px;
+  border: 1px solid var(--bdr);
+  padding: 20px;
+  box-shadow: var(--sh-md);
+}
+.pinned-banner {
+  background: var(--em-soft) !important;
+  border-color: var(--em-mid) !important;
+}
+.pin-wrap {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  background: var(--em);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  flex-shrink: 0;
+}
+.pinned-text {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--txt);
+}
+.pinned-meta {
+  font-size: 0.68rem;
+  color: var(--txt-mu);
+  margin-top: 2px;
+}
 
-.post-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
-.post-author { display: flex; align-items: center; gap: 10px; }
-.post-author-info h6 { margin: 0; font-size: 0.9rem; font-weight: 700; }
-.post-author-info span { font-size: 0.72rem; color: var(--txt-mu); }
-.role-badge { font-size: 0.58rem; font-weight: 700; padding: 1px 5px; border-radius: 4px; background: var(--em-soft); color: var(--em); margin-left: 4px; }
-.post-content { font-size: 0.9rem; color: var(--txt-m); line-height: 1.5; }
+.post-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+.post-author {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.post-author-info h6 {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+.post-author-info span {
+  font-size: 0.72rem;
+  color: var(--txt-mu);
+}
+.role-badge {
+  font-size: 0.58rem;
+  font-weight: 700;
+  padding: 1px 5px;
+  border-radius: 4px;
+  background: var(--em-soft);
+  color: var(--em);
+  margin-left: 4px;
+}
+.post-content {
+  font-size: 0.9rem;
+  color: var(--txt-m);
+  line-height: 1.5;
+}
 .table {
-  border-collapse: separate !important; 
+  border-collapse: separate !important;
   border-spacing: 0 12px !important;
   background: transparent !important;
 }
 
 tbody tr {
   background: #ffffff !important;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05) !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05) !important;
   border-radius: 12px !important;
   overflow: hidden;
 }
 
-.table td, .table th {
+.table td,
+.table th {
   padding: 16px 12px;
 }
 tbody tr td:first-child {
@@ -1081,67 +1772,247 @@ tbody tr td:last-child {
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08) !important;
 }
 
-.card-row td:first-child { border-top-left-radius: 12px; border-bottom-left-radius: 12px; }
-.card-row td:last-child { border-top-right-radius: 12px; border-bottom-right-radius: 12px; }
+.card-row td:first-child {
+  border-top-left-radius: 12px;
+  border-bottom-left-radius: 12px;
+}
+.card-row td:last-child {
+  border-top-right-radius: 12px;
+  border-bottom-right-radius: 12px;
+}
 .avatar-circle {
-  width: 35px; height: 35px; background: #eef2ff; color: #4f46e5;
-  border-radius: 50%; display: flex; align-items: center; justify-content: center;
-  font-weight: 700; font-size: 0.9rem;
+  width: 35px;
+  height: 35px;
+  background: #eef2ff;
+  color: #4f46e5;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.9rem;
 }
 
 .score-pill {
-  padding: 6px 16px; color: white; border-radius: 20px;
-  font-size: 0.75rem; font-weight: 700; display: inline-block;
+  padding: 6px 16px;
+  color: white;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  display: inline-block;
 }
 .avatar-circle {
-  width: 35px; height: 35px; background: #e0f2f1; color: #00796b;
-  border-radius: 50%; display: flex; align-items: center; justify-content: center;
-  font-weight: bold; font-size: 0.9rem;
+  width: 35px;
+  height: 35px;
+  background: #e0f2f1;
+  color: #00796b;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 0.9rem;
 }
 
 .score-pill {
-  padding: 4px 12px; color: white; border-radius: 20px;
-  font-size: 0.8rem; font-weight: 700; display: inline-block;
+  padding: 4px 12px;
+  color: white;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  display: inline-block;
 }
 
 .btn-emerald-soft {
-  background: #ecfdf5; color: #059669; border: none;
-  width: 35px; height: 35px; border-radius: 50%;
+  background: #ecfdf5;
+  color: #059669;
+  border: none;
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
 }
-.btn-emerald-soft:hover { background: #d1fae5; }
+.btn-emerald-soft:hover {
+  background: #d1fae5;
+}
 
 /* TAB 2: People Roster Table */
-.roster-container { background: #fff; border: 1px solid var(--bdr); border-radius: 16px; padding: 24px; box-shadow: var(--sh-sm); }
-.roster-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-.roster-header h3 { font-size: 1.15rem; font-weight: 700; margin: 0; }
-.btn-emerald { background: var(--em); color: #fff; font-weight: 700; font-size: 0.8rem; border: none; padding: 8px 16px; border-radius: 8px; }
-.roster-table { width: 100%; border-collapse: collapse; }
-.roster-table th { padding: 12px 16px; font-size: 0.7rem; text-transform: uppercase; color: var(--txt-mu); font-weight: 700; border-bottom: 1px solid var(--bdr); text-align: left; }
-.roster-table td { padding: 14px 16px; border-bottom: 1px solid var(--bdr); vertical-align: middle; }
-.student-info { display: flex; align-items: center; gap: 10px; }
-.student-info img { width: 36px; height: 36px; border-radius: 8px; object-fit: cover; }
-.student-info h6 { margin: 0; font-size: 0.88rem; font-weight: 700; }
-.student-info span { font-size: 0.7rem; color: var(--txt-mu); }
-.bg-online { background: rgba(16, 185, 129, 0.1); color: var(--em-dk); }
-.bg-offline { background: #f1f5f9; color: #64748b; }
-.date-lbl { font-size: 0.8rem; font-weight: 600; color: var(--txt-m); }
-.btn-remove-student { padding: 4px 12px; border-radius: 6px; border: 1px solid rgba(239,68,68,0.25); background: #fff; color: #ef4444; font-size: 0.7rem; font-weight: 700; cursor: pointer; }
+.roster-container {
+  background: #fff;
+  border: 1px solid var(--bdr);
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: var(--sh-sm);
+}
+.roster-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+.roster-header h3 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin: 0;
+}
+.btn-emerald {
+  background: var(--em);
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.8rem;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+}
+.roster-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.roster-table th {
+  padding: 12px 16px;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  color: var(--txt-mu);
+  font-weight: 700;
+  border-bottom: 1px solid var(--bdr);
+  text-align: left;
+}
+.roster-table td {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--bdr);
+  vertical-align: middle;
+}
+.student-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.student-info img {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  object-fit: cover;
+}
+.student-info h6 {
+  margin: 0;
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+.student-info span {
+  font-size: 0.7rem;
+  color: var(--txt-mu);
+}
+.bg-online {
+  background: rgba(16, 185, 129, 0.1);
+  color: var(--em-dk);
+}
+.bg-offline {
+  background: #f1f5f9;
+  color: #64748b;
+}
+.date-lbl {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--txt-m);
+}
+.btn-remove-student {
+  padding: 4px 12px;
+  border-radius: 6px;
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  background: #fff;
+  color: #ef4444;
+  font-size: 0.7rem;
+  font-weight: 700;
+  cursor: pointer;
+}
 
 /* TAB 3: Results Grid View */
-.small-meta-lbl { font-size: 0.78rem; font-weight: 600; color: var(--txt-m); }
-.result-grid-container { display: flex; flex-direction: column; width: 100%; border: 1px solid var(--bdr); border-radius: 12px; overflow: hidden; margin-top: 12px; }
-.rg-header { display: grid; grid-template-columns: 2.5fr 1.5fr 1.5fr 1.2fr 1fr 100px; padding: 12px 16px; font-size: 0.65rem; font-weight: 700; text-transform: uppercase; color: var(--txt-mu); background: #f8fafc; border-bottom: 1px solid var(--bdr); }
-.rg-row { display: grid; grid-template-columns: 2.5fr 1.5fr 1.5fr 1.2fr 1fr 100px; padding: 12px 16px; border-bottom: 1px solid var(--bdr); align-items: center; font-size: 0.82rem; }
-.rg-row:last-child { border-bottom: none; }
-.badge-status { display: inline-flex; align-items: center; padding: 4px 8px; border-radius: 6px; font-size: 0.68rem; font-weight: 700; }
-.badge-review { background: #fef3c7; color: #b45309; }
-.badge-graded { background: var(--em-soft); color: var(--em-dk); }
-.time-text { font-weight: 600; color: var(--txt); }
-.time-muted { color: var(--txt-mu); }
-.score-val { font-weight: 700; font-size: 1rem; }
-.score-green { color: var(--em); } .score-orange { color: #f59e0b; } .score-muted { color: var(--txt-mu); }
-.btn-row-action { padding: 5px 12px; border-radius: 6px; font-size: 0.72rem; font-weight: 700; background: #fff; border: 1px solid var(--bdr); color: var(--txt-m); cursor: pointer; }
-.btn-row-review { background: var(--em-soft); color: var(--em-dk); border-color: transparent; }
+.small-meta-lbl {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--txt-m);
+}
+.result-grid-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  border: 1px solid var(--bdr);
+  border-radius: 12px;
+  overflow: hidden;
+  margin-top: 12px;
+}
+.rg-header {
+  display: grid;
+  grid-template-columns: 2.5fr 1.5fr 1.5fr 1.2fr 1fr 100px;
+  padding: 12px 16px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--txt-mu);
+  background: #f8fafc;
+  border-bottom: 1px solid var(--bdr);
+}
+.rg-row {
+  display: grid;
+  grid-template-columns: 2.5fr 1.5fr 1.5fr 1.2fr 1fr 100px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--bdr);
+  align-items: center;
+  font-size: 0.82rem;
+}
+.rg-row:last-child {
+  border-bottom: none;
+}
+.badge-status {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 0.68rem;
+  font-weight: 700;
+}
+.badge-review {
+  background: #fef3c7;
+  color: #b45309;
+}
+.badge-graded {
+  background: var(--em-soft);
+  color: var(--em-dk);
+}
+.time-text {
+  font-weight: 600;
+  color: var(--txt);
+}
+.time-muted {
+  color: var(--txt-mu);
+}
+.score-val {
+  font-weight: 700;
+  font-size: 1rem;
+}
+.score-green {
+  color: var(--em);
+}
+.score-orange {
+  color: #f59e0b;
+}
+.score-muted {
+  color: var(--txt-mu);
+}
+.btn-row-action {
+  padding: 5px 12px;
+  border-radius: 6px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  background: #fff;
+  border: 1px solid var(--bdr);
+  color: var(--txt-m);
+  cursor: pointer;
+}
+.btn-row-review {
+  background: var(--em-soft);
+  color: var(--em-dk);
+  border-color: transparent;
+}
 .btn-exams-link {
   background: transparent;
   color: #10b981;
@@ -1173,15 +2044,78 @@ tbody tr td:last-child {
   cursor: pointer !important;
 }
 
-.post-actions { position: relative; }
-.btn-action-menu { background: none; border: none; color: var(--txt-mu); padding: 4px 8px; cursor: pointer; border-radius: 6px; }
-.btn-action-menu:hover { background: #f1f5f9; }
-.action-dropdown { position: absolute; right: 0; top: 100%; background: #fff; border: 1px solid var(--bdr); border-radius: 10px; box-shadow: var(--sh-md); z-index: 100; min-width: 130px; overflow: hidden; }
-.action-dropdown button { display: flex; align-items: center; width: 100%; padding: 10px 14px; border: none; background: none; font-size: 0.8rem; font-weight: 600; cursor: pointer; color: var(--txt); }
-.action-dropdown button:hover { background: #f8fafc; }
-.action-dropdown button.danger { color: #ef4444; }
-.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 999; display: flex; align-items: center; justify-content: center; }
-.edit-modal { background: #fff; border-radius: 20px; padding: 28px; width: 480px; box-shadow: var(--sh-md); }
-.edit-modal h6 { font-size: 1rem; font-weight: 700; margin-bottom: 16px; }
-.btn-cancel { padding: 8px 20px; border-radius: 30px; border: 1px solid var(--bdr); background: #fff; font-weight: 700; font-size: 0.8rem; cursor: pointer; }
+.post-actions {
+  position: relative;
+}
+.btn-action-menu {
+  background: none;
+  border: none;
+  color: var(--txt-mu);
+  padding: 4px 8px;
+  cursor: pointer;
+  border-radius: 6px;
+}
+.btn-action-menu:hover {
+  background: #f1f5f9;
+}
+.action-dropdown {
+  position: absolute;
+  right: 0;
+  top: 100%;
+  background: #fff;
+  border: 1px solid var(--bdr);
+  border-radius: 10px;
+  box-shadow: var(--sh-md);
+  z-index: 100;
+  min-width: 130px;
+  overflow: hidden;
+}
+.action-dropdown button {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 10px 14px;
+  border: none;
+  background: none;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  color: var(--txt);
+}
+.action-dropdown button:hover {
+  background: #f8fafc;
+}
+.action-dropdown button.danger {
+  color: #ef4444;
+}
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.edit-modal {
+  background: #fff;
+  border-radius: 20px;
+  padding: 28px;
+  width: 480px;
+  box-shadow: var(--sh-md);
+}
+.edit-modal h6 {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+.btn-cancel {
+  padding: 8px 20px;
+  border-radius: 30px;
+  border: 1px solid var(--bdr);
+  background: #fff;
+  font-weight: 700;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
 </style>
