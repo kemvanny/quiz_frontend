@@ -145,10 +145,6 @@
                 <h6 class="fw-bold text-dark mb-1 text-truncate">
                   {{ exam.title }}
                 </h6>
-                <div class="text-muted small mb-3">
-                  Type:
-                  <span class="text-uppercase fw-bold">{{ exam.type }}</span>
-                </div>
                 <div
                   class="d-flex justify-content-between align-items-center mt-auto pt-2 border-top border-light"
                 >
@@ -327,6 +323,7 @@ const fetchAllExams = async () => {
   try {
     isLoading.value = true;
     const res = await getExams();
+    console.log(res.data.data);
     examList.value = res.data.data || res.data;
   } catch (err) {
     console.error("Failed to fetch exams:", err);

@@ -10,25 +10,46 @@
     <!-- Content State -->
     <div v-else class="card border-0 shadow-sm rounded-4 overflow-hidden">
       <!-- Header with integrated filter controls -->
-      <div class="card-header bg-white border-bottom-0 pt-4 px-4 pb-3 d-flex align-items-center justify-content-between flex-wrap gap-3">
+      <div
+        class="card-header bg-white border-bottom-0 pt-4 px-4 pb-3 d-flex align-items-center justify-content-between flex-wrap gap-3"
+      >
         <div>
           <h5 class="card-title fw-bold text-dark mb-1">លទ្ធផលសិស្ស</h5>
-          <p class="text-muted small mb-0">បង្ហាញព័ត៌មានលទ្ធផល និងការផ្តល់មតិត្រឡប់</p>
+          <p class="text-muted small mb-0">
+            បង្ហាញព័ត៌មានលទ្ធផល និងការផ្តល់មតិត្រឡប់
+          </p>
         </div>
 
         <!-- Filter Selector and Stats -->
         <div class="d-flex align-items-center gap-3 flex-wrap">
           <div class="d-flex align-items-center gap-2">
-            <span class="text-muted small fw-semibold text-nowrap">តម្រងវិញ្ញាសា៖</span>
-            <select v-model="selectedExam" class="form-select form-select-sm border border-secondary-subtle rounded-pill px-3 py-2 text-dark" style="min-width: 180px; font-size: 0.82rem; font-weight: 600; background-color: #f8fafc;">
+            <span class="text-muted small fw-semibold text-nowrap"
+              >តម្រងវិញ្ញាសា៖</span
+            >
+            <select
+              v-model="selectedExam"
+              class="form-select form-select-sm border border-secondary-subtle rounded-pill px-3 py-2 text-dark"
+              style="
+                min-width: 180px;
+                font-size: 0.82rem;
+                font-weight: 600;
+                background-color: #f8fafc;
+              "
+            >
               <option value="all">ទាំងអស់</option>
-              <option v-for="title in availableExams" :key="title" :value="title">
+              <option
+                v-for="title in availableExams"
+                :key="title"
+                :value="title"
+              >
                 {{ title }}
               </option>
             </select>
           </div>
-          <span class="badge bg-light text-dark border px-3 py-2 rounded-pill fw-semibold">
-            សរុប៖ {{ filteredResults.length }} នាក់
+          <span
+            class="badge bg-light text-dark border px-3 py-2 rounded-pill fw-semibold"
+          >
+            សរុប៖ {{ filteredResults.length }} បញ្ជូល
           </span>
         </div>
       </div>
@@ -39,42 +60,102 @@
           <table class="table align-middle mb-0 custom-results-table">
             <thead>
               <tr>
-                <th class="text-secondary text-uppercase py-3 ps-3" style="font-size: 0.75rem; letter-spacing: 0.5px;">សិស្ស</th>
-                <th class="text-secondary text-uppercase py-3" style="font-size: 0.75rem; letter-spacing: 0.5px;">វិញ្ញាសា</th>
-                <th class="text-secondary text-uppercase py-3 text-center" style="font-size: 0.75rem; letter-spacing: 0.5px;">ពិន្ទុ</th>
-                <th class="text-secondary text-uppercase py-3 text-center" style="font-size: 0.75rem; letter-spacing: 0.5px;">កាលបរិច្ឆេទ</th>
-                <th class="text-secondary text-uppercase py-3" style="font-size: 0.75rem; letter-spacing: 0.5px; min-width: 240px;">មតិកែលម្អ</th>
-                <th class="text-center text-secondary text-uppercase py-3 pe-3" style="font-size: 0.75rem; letter-spacing: 0.5px; width: 90px;">សកម្មភាព</th>
+                <th
+                  class="text-secondary text-uppercase py-3 ps-3"
+                  style="font-size: 0.75rem; letter-spacing: 0.5px"
+                >
+                  សិស្ស
+                </th>
+                <th
+                  class="text-secondary text-uppercase py-3"
+                  style="font-size: 0.75rem; letter-spacing: 0.5px"
+                >
+                  វិញ្ញាសា
+                </th>
+                <th
+                  class="text-secondary text-uppercase py-3 text-center"
+                  style="font-size: 0.75rem; letter-spacing: 0.5px"
+                >
+                  ពិន្ទុ
+                </th>
+                <th
+                  class="text-secondary text-uppercase py-3 text-center"
+                  style="font-size: 0.75rem; letter-spacing: 0.5px"
+                >
+                  កាលបរិច្ឆេទ
+                </th>
+                <th
+                  class="text-secondary text-uppercase py-3"
+                  style="
+                    font-size: 0.75rem;
+                    letter-spacing: 0.5px;
+                    min-width: 240px;
+                  "
+                >
+                  មតិកែលម្អ
+                </th>
+                <th
+                  class="text-center text-secondary text-uppercase py-3 pe-3"
+                  style="font-size: 0.75rem; letter-spacing: 0.5px; width: 90px"
+                >
+                  សកម្មភាព
+                </th>
               </tr>
             </thead>
             <tbody>
-              <tr v-for="res in paginatedResults" :key="res.submission_id" class="card-row">
+              <tr
+                v-for="res in paginatedResults"
+                :key="res.submission_id"
+                class="card-row"
+              >
                 <!-- Student Column -->
                 <td class="ps-3 py-3">
                   <div class="d-flex align-items-center gap-3">
-                    <div class="avatar-circle-custom">
-                      {{ res.first_name ? res.first_name.charAt(0) : 'S' }}
+                    <div
+                      class="avatar-circle-custom d-flex align-items-center justify-content-center overflow-hidden rounded-circle bg-light"
+                      style="width: 40px; height: 40px"
+                    >
+                      <img
+                        :src="getAvatarUrl(res.avatar)"
+                        class="w-100 h-100 object-fit-cover"
+                        @error="
+                          (e) =>
+                            (e.target.src =
+                              'https://ui-avatars.com/api/?name=' +
+                              res.first_name +
+                              '+' +
+                              res.last_name +
+                              '&background=random')
+                        "
+                        alt="student avatar"
+                      />
                     </div>
                     <div>
-                      <div class="fw-semibold text-dark mb-0">{{ res.first_name }} {{ res.last_name }}</div>
-                      <span class="text-muted small">{{ res.student_code }}</span>
+                      <div class="fw-semibold text-dark mb-0">
+                        {{ res.first_name }} {{ res.last_name }}
+                      </div>
+                      <span class="text-muted small">{{
+                        res.student_code
+                      }}</span>
                     </div>
                   </div>
                 </td>
 
                 <!-- Exam Title -->
                 <td class="py-3">
-                  <span class="fw-medium text-dark-emphasis">{{ res.exam_title }}</span>
+                  <span class="fw-medium text-dark-emphasis">{{
+                    res.exam_title
+                  }}</span>
                 </td>
 
                 <!-- Score Badge -->
                 <td class="py-3 text-center">
-                  <span 
+                  <span
                     class="badge rounded-pill px-3 py-2 fw-semibold d-inline-flex align-items-center gap-1"
-                    :class="res.score >= 50 ? 'bg-success-subtle text-success' : 'bg-danger-subtle text-danger'"
+                    :class="getScoreClass(res)"
                   >
-                    <i class="fas" :class="res.score >= 50 ? 'fa-check-circle' : 'fa-times-circle'"></i>
-                    {{ parseFloat(res.score).toFixed(0) }}.00 / 100
+                    <i class="fas" :class="getScoreIcon(res)"></i>
+                    {{ formatScore(res) }}
                   </span>
                 </td>
 
@@ -85,18 +166,18 @@
 
                 <!-- Feedback Input -->
                 <td class="py-3">
-                  <input 
-                    type="text" 
-                    class="form-control form-control-sm border-0 bg-light rounded-3 px-3 py-2 feedback-input-field" 
-                    v-model="res.feedback" 
+                  <input
+                    type="text"
+                    class="form-control form-control-sm border-0 bg-light rounded-3 px-3 py-2 feedback-input-field"
+                    v-model="res.feedback"
                     placeholder="សរសេរមតិកែលម្អនៅទីនេះ..."
-                  >
+                  />
                 </td>
 
                 <!-- Action Button -->
                 <td class="text-center pe-3 py-3">
-                  <button 
-                    class="btn btn-action-send btn-sm rounded-3" 
+                  <button
+                    class="btn btn-action-send btn-sm rounded-3"
                     @click="sendFeedback(res.submission_id, res.feedback)"
                     title="ផ្ញើមតិកែលម្អ"
                   >
@@ -115,27 +196,52 @@
         </div>
 
         <!-- Pagination Footer Controls -->
-        <div v-if="totalPages > 1" class="d-flex align-items-center justify-content-between mt-4 border-top pt-3 flex-wrap gap-2">
+        <div
+          v-if="totalPages > 1"
+          class="d-flex align-items-center justify-content-between mt-4 border-top pt-3 flex-wrap gap-2"
+        >
           <div class="text-muted small fw-medium">
-            បង្ហាញ {{ (currentPage - 1) * itemsPerPage + 1 }} ដល់ {{ Math.min(currentPage * itemsPerPage, filteredResults.length) }} នៃលទ្ធផលសរុប {{ filteredResults.length }} នាក់
+            បង្ហាញ {{ (currentPage - 1) * itemsPerPage + 1 }} ដល់
+            {{ Math.min(currentPage * itemsPerPage, filteredResults.length) }}
+            នៃលទ្ធផលសរុប {{ filteredResults.length }} នាក់
           </div>
           <nav aria-label="Result pagination">
             <ul class="pagination pagination-sm mb-0 align-items-center gap-1">
               <li class="page-item" :class="{ disabled: currentPage === 1 }">
-                <button class="page-link border-0 rounded-circle d-flex align-items-center justify-content-center p-0" @click="prevPage" style="width: 32px; height: 32px;">
-                  <i class="fas fa-chevron-left" style="font-size: 0.8rem;"></i>
+                <button
+                  class="page-link border-0 rounded-circle d-flex align-items-center justify-content-center p-0"
+                  @click="prevPage"
+                  style="width: 32px; height: 32px"
+                >
+                  <i class="fas fa-chevron-left" style="font-size: 0.8rem"></i>
                 </button>
               </li>
-              
-              <li v-for="page in totalPages" :key="page" class="page-item" :class="{ active: currentPage === page }">
-                <button class="page-link border-0 rounded-circle d-flex align-items-center justify-content-center p-0 fw-semibold" @click="goToPage(page)" style="width: 32px; height: 32px; font-size: 0.82rem;">
+
+              <li
+                v-for="page in totalPages"
+                :key="page"
+                class="page-item"
+                :class="{ active: currentPage === page }"
+              >
+                <button
+                  class="page-link border-0 rounded-circle d-flex align-items-center justify-content-center p-0 fw-semibold"
+                  @click="goToPage(page)"
+                  style="width: 32px; height: 32px; font-size: 0.82rem"
+                >
                   {{ page }}
                 </button>
               </li>
 
-              <li class="page-item" :class="{ disabled: currentPage === totalPages }">
-                <button class="page-link border-0 rounded-circle d-flex align-items-center justify-content-center p-0" @click="nextPage" style="width: 32px; height: 32px;">
-                  <i class="fas fa-chevron-right" style="font-size: 0.8rem;"></i>
+              <li
+                class="page-item"
+                :class="{ disabled: currentPage === totalPages }"
+              >
+                <button
+                  class="page-link border-0 rounded-circle d-flex align-items-center justify-content-center p-0"
+                  @click="nextPage"
+                  style="width: 32px; height: 32px"
+                >
+                  <i class="fas fa-chevron-right" style="font-size: 0.8rem"></i>
                 </button>
               </li>
             </ul>
@@ -147,77 +253,147 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed, watch } from 'vue'
-import { useRouter } from 'vue-router'
-import { useToast } from 'vue-toastification'
-import { useAuthStore } from '@/stores/auth'
-import { getAllStudentResults, addFeedback } from '@/api/exam.api'
+import { ref, onMounted, computed, watch } from "vue";
+import { useRouter } from "vue-router";
+import { useToast } from "vue-toastification";
+import { useAuthStore } from "@/stores/auth";
+import { getAllStudentResults, addFeedback } from "@/api/exam.api";
 
 // --- State ---
-const loading = ref(true)
-const studentResults = ref([])
-const selectedExam = ref('all')
-const currentPage = ref(1)
-const itemsPerPage = ref(10)
+const loading = ref(true);
+const studentResults = ref([]);
+const selectedExam = ref("all");
+const currentPage = ref(1);
+const itemsPerPage = ref(10);
+const toast = useToast();
+const imgBaseUrl = import.meta.env.VITE_BASE_URL_FOR_IMAGE;
 
 // --- Computed (Filter & Pagination) ---
 const availableExams = computed(() => {
-  if (!studentResults.value) return []
-  return [...new Set(studentResults.value.map(res => res.exam_title).filter(Boolean))]
-})
+  if (!studentResults.value) return [];
+  return [
+    ...new Set(
+      studentResults.value.map((res) => res.exam_title).filter(Boolean),
+    ),
+  ];
+});
 
 const filteredResults = computed(() => {
-  if (!studentResults.value) return []
-  return selectedExam.value === 'all' 
-    ? studentResults.value 
-    : studentResults.value.filter(res => res.exam_title === selectedExam.value)
-})
+  if (!studentResults.value) return [];
+  return selectedExam.value === "all"
+    ? studentResults.value
+    : studentResults.value.filter(
+        (res) => res.exam_title === selectedExam.value,
+      );
+});
 
 const paginatedResults = computed(() => {
-  const startIndex = (currentPage.value - 1) * itemsPerPage.value
-  return filteredResults.value.slice(startIndex, startIndex + itemsPerPage.value)
-})
+  const startIndex = (currentPage.value - 1) * itemsPerPage.value;
+  return filteredResults.value.slice(
+    startIndex,
+    startIndex + itemsPerPage.value,
+  );
+});
 
-const totalPages = computed(() => Math.ceil(filteredResults.value.length / itemsPerPage.value) || 1)
+const totalPages = computed(
+  () => Math.ceil(filteredResults.value.length / itemsPerPage.value) || 1,
+);
 
 // --- Navigation ---
-const prevPage = () => { if (currentPage.value > 1) currentPage.value-- }
-const nextPage = () => { if (currentPage.value < totalPages.value) currentPage.value++ }
-const goToPage = (page) => { currentPage.value = page }
+const prevPage = () => {
+  if (currentPage.value > 1) currentPage.value--;
+};
+const nextPage = () => {
+  if (currentPage.value < totalPages.value) currentPage.value++;
+};
+const goToPage = (page) => {
+  currentPage.value = page;
+};
 
-watch(selectedExam, () => { currentPage.value = 1 })
+watch(selectedExam, () => {
+  currentPage.value = 1;
+});
 
 // --- API Calls ---
 const fetchStudentResults = async () => {
-  loading.value = true
+  loading.value = true;
   try {
-    // ហៅឈ្មោះមុខងារឱ្យចំនឹងអ្វីដែលបាន Export
-    const res = await getAllStudentResults()  
-    const rawData = res?.data?.data || []
-    
-    studentResults.value = Array.isArray(rawData) ? rawData : (rawData ? [rawData] : [])
+    const res = await getAllStudentResults();
+    console.log(res.data.data);
+
+    const rawData = res?.data?.data || [];
+
+    studentResults.value = Array.isArray(rawData)
+      ? rawData
+      : rawData
+        ? [rawData]
+        : [];
   } catch (err) {
-    console.error("កំហុស API:", err)
-    toast.error("មានកំហុសក្នុងការទាញយកលទ្ធផលសិស្ស")
+    console.error("កំហុស API:", err);
+    toast.error("មានកំហុសក្នុងការទាញយកលទ្ធផលសិស្ស");
   } finally {
-    loading.value = false
+    loading.value = false;
   }
-}
+};
+
+const getInitial = (res) => {
+  const name =
+    res.first_name ||
+    res.last_name ||
+    res.student_name ||
+    res.student_code ||
+    "S";
+
+  return name.charAt(0).toUpperCase();
+};
+
+const formatScore = (res) => {
+  const score = Number(res.score || 0);
+  const total = Number(res.total_points || 1);
+
+  return `${score.toFixed(0)} / ${total}`;
+};
+
+const getScoreClass = (res) => {
+  const score = Number(res.score || 0);
+  const total = Number(res.total_points || 1);
+
+  const percent = (score / total) * 100;
+
+  if (percent >= 50) return "bg-success-subtle text-success";
+  return "bg-danger-subtle text-danger";
+};
+
+const getScoreIcon = (res) => {
+  const score = Number(res.score || 0);
+  const total = Number(res.total_points || 1);
+
+  return (score / total) * 100 >= 50 ? "fa-check-circle" : "fa-times-circle";
+};
 
 const sendFeedback = async (subId, feedbackText) => {
   try {
-    await addFeedback(subId, feedbackText)
-    toast.success("បានផ្ញើ Feedback ជោគជ័យ!")
+    await addFeedback(subId, feedbackText);
+
+    toast.success("បានផ្ញើ Feedback ជោគជ័យ!");
   } catch (err) {
-    console.error("កំហុស Feedback:", err)
-    toast.error("មានកំហុសក្នុងការផ្ញើ Feedback")
+    console.error("កំហុស Feedback:", err.response?.data || err);
+    toast.error("មានកំហុសក្នុងការផ្ញើ Feedback");
   }
-}
+};
+
+const getAvatarUrl = (avatar) => {
+  if (!avatar || avatar === "default.png") {
+    return defaultImage;
+  }
+
+  return `${imgBaseUrl}${avatar}`;
+};
 
 onMounted(() => {
-  fetchStudentResults()
-  useAuthStore().fetchUserProfile()
-})
+  fetchStudentResults();
+  useAuthStore().fetchUserProfile();
+});
 </script>
 
 <style scoped>
@@ -226,7 +402,7 @@ onMounted(() => {
 }
 
 .custom-results-table {
-  font-family: 'Inter', 'Segoe UI', 'Kantumruy Pro', sans-serif;
+  font-family: "Inter", "Segoe UI", "Kantumruy Pro", sans-serif;
 }
 
 .avatar-circle-custom {
