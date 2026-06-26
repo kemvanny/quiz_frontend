@@ -1,25 +1,22 @@
 <template>
   <div class="classroom-stream-container">
-    <button @click="goBack" class="btn-back-custom mb-3">
-  <i class="fas fa-arrow-left me-2"></i> ត្រឡប់ក្រោយ
-</button>
+    <button @click="goBack" class="btn-modern-back mb-4">
+      <i class="fas fa-arrow-left"></i> <span>ត្រឡប់ក្រោយ</span>
+    </button>
 
     <div v-if="isLoading" class="skeleton-hero-banner skeleton-shimmer mb-4"></div>
-
-    <div v-else-if="roomInfo" class="course-hero-banner mb-4"
-      style="background: linear-gradient(135deg, #ecfdf5, #a7f3d0);">
+    <div v-else-if="roomInfo" class="course-hero-banner mb-4">
       <div class="banner-content">
         <div class="course-badge">
           <i class="fas fa-code me-1"></i> ថ្នាក់រៀនសកម្ម
         </div>
-        <h1 class="course-title">{{ roomInfo.room_name }}</h1>
-        <p class="course-instructor-meta">
+        <h1 class="course-title mt-2">{{ roomInfo.room_name }}</h1>
+        <p class="course-instructor-meta mb-0">
           <i class="fas fa-chalkboard-teacher me-2"></i> បង្រៀនដោយ៖ <strong class="ms-1">{{ roomInfo.teacher_name }}</strong>
         </p>
       </div>
-
       <div class="banner-floating-icon">
-        <i class="fas fa-code"></i>
+        <i class="fas fa-graduation-cap"></i>
       </div>
     </div>
 
@@ -28,23 +25,26 @@
     </div>
 
     <div v-else class="row g-4 mt-1">
-      <!-- <div class="col-12 col-md-3">
+      <div class="col-4 col-md-3">
         <div v-if="isLoading" class="skeleton-sidebar-card">
           <div class="sk-line-title skeleton-shimmer mb-3" style="width: 60%;"></div>
           <div class="sk-line-text skeleton-shimmer mb-2" style="width: 100%;"></div>
           <div class="sk-line-text skeleton-shimmer" style="width: 40%;"></div>
         </div>
 
-        <div class="stream-sidebar-card">
-          <h5 class="sidebar-card-title">ការងារត្រូវប្រគល់</h5>
+        <div v-if="!isLoading" class="stream-sidebar-card">
+          <h5 class="sidebar-card-title"><i class="fas fa-graduation-cap me-2 text-success"></i>ការណែនាំសិក្សា</h5>
           <div class="sidebar-card-body">
-            <p class="text-muted small mb-0">Woohoo, មិនមានកិច្ចការជិតដល់ថ្ងៃកំណត់ឡើយ!</p>
-            <a href="#" class="view-all-link mt-3 d-inline-block">មើលទាំងអស់ <i class="fas fa-arrow-right ms-1"></i></a>
+            <ul class="list-unstyled mb-0 small text-muted d-flex flex-column gap-2">
+              <li><i class="fas fa-check-circle text-success me-2"></i> ពិនិត្យមើលសេចក្តីប្រកាសប្រចាំថ្ងៃ</li>
+              <li><i class="fas fa-check-circle text-success me-2"></i> ចូលធ្វើវិញ្ញាសាឱ្យបានមុនម៉ោងកំណត់</li>
+              <li><i class="fas fa-check-circle text-success me-2"></i> អាចសួរនាំក្នុងប្រអប់មតិយោបល់</li>
+            </ul>
           </div>
         </div>
-      </div> -->
+      </div>
 
-      <div class="col-12 ">
+      <div class="col-8 col-md-9">
 
         <div v-if="!isLoading" class="announcement-input-box mb-4">
           <div class="d-flex align-items-center gap-3">
@@ -88,7 +88,8 @@
                 <i class="fas fa-user"></i>
               </div>
               <div class="author-info">
-                <h6 class="author-name">{{ roomInfo?.teacher_name || 'គ្រូបង្រៀន' }} <span class="badge-teacher">គ្រូបង្រៀន</span></h6>
+                <h6 class="author-name">{{ roomInfo?.teacher_name || 'គ្រូបង្រៀន' }} <span
+                    class="badge-teacher">គ្រូបង្រៀន</span></h6>
                 <span class="post-date">បានបង្ហោះនៅ៖ {{ formatDate(post.created_at) }}</span>
               </div>
               <button class="btn-more-options"><i class="fas fa-ellipsis-v"></i></button>
@@ -102,7 +103,7 @@
                 <a :href="post.exam_link" target="_blank"
                   class="btn w-100 py-2 shadow-sm d-flex align-items-center justify-content-center gap-2"
                   :class="isExamExpired(post.exam_expired_at) ? 'btn-secondary disabled-btn' : 'btn-success text-white'">
-                  
+
                   <template v-if="isExamExpired(post.exam_expired_at)">
                     <i class="fas fa-lock"></i> ការប្រឡងត្រូវបានបិទ/ហួសពេលកំណត់ហើយ
                   </template>
@@ -138,7 +139,7 @@
 import { ref, onMounted, computed } from 'vue';
 import { useRoute } from 'vue-router';
 import studentApi from '@/api/student.api';
-import { useRouter } from 'vue-router'; 
+import { useRouter } from 'vue-router';
 
 const router = useRouter();
 
@@ -149,18 +150,18 @@ const roomInfo = ref(null);
 const streamPosts = ref([]);
 const isLoading = ref(false);
 const errorMessage = ref('');
-const visibleCount = ref(3); 
+const visibleCount = ref(3);
 const isAllLoaded = computed(() => visibleCount.value >= streamPosts.value.length);
 const displayedPosts = computed(() => {
   return streamPosts.value.slice(0, visibleCount.value);
 });
 
 const loadMorePosts = () => {
-  visibleCount.value += 3; 
+  visibleCount.value += 3;
 };
 
 const goBack = () => {
-  router.back(); 
+  router.back();
 };
 
 const fetchRoomData = async () => {
@@ -191,10 +192,10 @@ const fetchRoomData = async () => {
 };
 
 const isExamExpired = (expiredDateString) => {
-  if (!expiredDateString) return false; 
+  if (!expiredDateString) return false;
   const now = new Date();
   const expiryLimit = new Date(expiredDateString);
-  return now > expiryLimit; 
+  return now > expiryLimit;
 };
 
 const formatDate = (dateString) => {
@@ -229,6 +230,77 @@ onMounted(() => {
   --sh-sm: 0 4px 12px rgba(0, 0, 0, 0.03);
   --sh-md: 0 10px 25px rgba(0, 0, 0, 0.05);
 }
+.btn-modern-back {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  padding: 8px 18px;
+  border-radius: 25px; 
+  color: #334155;
+  font-size: 14px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+}
+
+.btn-modern-back:hover {
+  background: #f8fafc;
+  color: #10b981;
+  border-color: #10b981;
+  transform: translateX(-4px); 
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.08);
+}
+.course-hero-banner {
+  position: relative;
+  background: linear-gradient(135deg, #f0fdf4 0%, #bbf7d0 100%) !important; 
+  border-radius: 16px;
+  border: 1px solid rgba(16, 185, 129, 0.15);
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+}
+
+.banner-content {
+  position: relative;
+  z-index: 2;
+  text-align: left; 
+}
+
+.course-badge {
+  display: inline-flex;
+  align-items: center;
+  background: #ffffff;
+  color: #065f46;
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+}
+
+.course-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: #064e3b;
+  margin-bottom: 8px;
+}
+
+.course-instructor-meta {
+  font-size: 14px;
+  color: #047857;
+}
+.banner-floating-icon {
+  position: absolute;
+  right: 5%;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 80px;
+  color: rgba(6, 95, 70, 0.05); 
+  z-index: 1;
+  pointer-events: none;
+}
 
 .disabled-btn {
   pointer-events: none;
@@ -241,12 +313,13 @@ onMounted(() => {
   color: var(--txt);
   padding: 10px 0;
 }
+
 .btn-back-custom {
   background: transparent;
-  border: 1px solid #d1d5db; 
+  border: 1px solid #d1d5db;
   color: #4b5563;
   padding: 8px 16px;
-  border-radius: 8px; 
+  border-radius: 8px;
   font-weight: 500;
   transition: all 0.2s ease;
   display: flex;
@@ -261,8 +334,9 @@ onMounted(() => {
 }
 
 .btn-back-custom:active {
-  transform: scale(0.98); 
+  transform: scale(0.98);
 }
+
 /* ── SKELETON ANIMATION STYLE ── */
 .skeleton-shimmer {
   background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
