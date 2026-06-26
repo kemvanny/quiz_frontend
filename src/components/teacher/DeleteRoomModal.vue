@@ -71,7 +71,6 @@ const handleDeleteRoom = async () => {
 
   try {
     loading.value = true;
-
     // ហៅទៅកាន់ Endpoint: DEL /api/teacher/rooms/:id
     await deleteRoomApi(props.roomData.id);
 
