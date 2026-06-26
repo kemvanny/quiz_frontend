@@ -78,8 +78,6 @@ const isCreateRoomOpen = ref(false);
 
 const onRoomCreated = (roomData) => {
   console.log("Room created:", roomData);
-  // Optionally trigger a refresh of the rooms list if global state is used,
-  // or navigate to the new room, etc.
 };
 </script>
 
