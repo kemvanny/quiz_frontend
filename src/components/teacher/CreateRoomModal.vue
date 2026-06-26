@@ -57,22 +57,27 @@ const form = reactive({ name: '' });
 const handleCreateRoom = async () => {
   if (!form.name.trim()) return;
 
-  const isDuplicate = existingRooms.value.some(
-    room => room.name.trim().toLowerCase() === form.name.trim().toLowerCase()
-  )
-  if (isDuplicate) {
-    toast.error("ឈ្មោះបន្ទប់នេះមានរួចហើយ! សូមប្រើឈ្មោះផ្សេង។")
-    return
-  }
-
   try {
     createLoading.value = true;
-    const res = await createRoom({ name: form.name.trim() });
+
+    const res = await createRoom({
+      name: form.name.trim(),
+    });
+
     const newRoomData = res.data?.data || res.data;
-    emit('created', newRoomData);
+
+    emit("created", newRoomData);
+
+    toast.success("បង្កើតថ្នាក់រៀនជោគជ័យ");
+
     handleClose();
   } catch (err) {
-    toast.error("មានបញ្ហាក្នុងការបង្កើតថ្នាក់រៀន សូមព្យាយាមម្ដងទៀត។")
+    console.error(err);
+
+    toast.error(
+      err.response?.data?.message ||
+      "មានបញ្ហាក្នុងការបង្កើតថ្នាក់រៀន"
+    );
   } finally {
     createLoading.value = false;
   }

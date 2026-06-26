@@ -8,21 +8,36 @@
     @close="$emit('close')"
   >
     <div class="glass-body p-4 text-center">
-      <div class="d-flex align-items-center justify-content-center mx-auto mb-3 rounded-circle bg-danger-light" style="width: 60px; height: 60px;">
+      <div
+        class="d-flex align-items-center justify-content-center mx-auto mb-3 rounded-circle bg-danger-light"
+        style="width: 60px; height: 60px"
+      >
         <i class="fas fa-exclamation-triangle text-danger fs-3"></i>
       </div>
-      
-      <h5 class="fw-bold text-dark mb-2">តើអ្នកពិតជាចង់លុបថ្នាក់រៀននេះមែនទេ?</h5>
-      <p class="text-muted small mb-0 px-2" style="line-height: 1.5;">
-        ការលុបថ្នាក់រៀន <strong class="text-danger">"{{ roomData?.name }}"</strong> នឹងធ្វើឱ្យរាល់ទិន្នន័យសិក្សា និងបញ្ជីឈ្មោះសិស្សទាំងអស់នៅក្នុងថ្នាក់នេះត្រូវបាត់បង់ជារៀងរហូត ដោយមិនអាចទាញយកមកវិញបានឡើយ។
+
+      <h5 class="fw-bold text-dark mb-2">
+        តើអ្នកពិតជាចង់លុបថ្នាក់រៀននេះមែនទេ?
+      </h5>
+      <p class="text-muted small mb-0 px-2" style="line-height: 1.5">
+        ការលុបថ្នាក់រៀន
+        <strong class="text-danger">"{{ roomData?.name }}"</strong>
+        នឹងធ្វើឱ្យរាល់ទិន្នន័យសិក្សា
+        និងបញ្ជីឈ្មោះសិស្សទាំងអស់នៅក្នុងថ្នាក់នេះត្រូវបាត់បង់ជារៀងរហូត
+        ដោយមិនអាចទាញយកមកវិញបានឡើយ។
       </p>
     </div>
 
     <template #footer>
-      <button class="btn btn-light rounded-3 fw-bold px-4" @click="$emit('close')" :disabled="loading">បោះបង់</button>
-      <button 
-        class="btn btn-danger rounded-3 fw-bold px-4 shadow-sm" 
-        @click="handleDeleteRoom" 
+      <button
+        class="btn btn-light rounded-3 fw-bold px-4"
+        @click="$emit('close')"
+        :disabled="loading"
+      >
+        បោះបង់
+      </button>
+      <button
+        class="btn btn-danger rounded-3 fw-bold px-4 shadow-sm"
+        @click="handleDeleteRoom"
         :disabled="loading"
       >
         <i class="fas fa-spinner fa-spin me-1" v-if="loading"></i>
@@ -56,7 +71,7 @@ const handleDeleteRoom = async () => {
 
   try {
     loading.value = true;
-    
+
     // ហៅទៅកាន់ Endpoint: DEL /api/teacher/rooms/:id
     await deleteRoomApi(props.roomData.id);
 
@@ -64,8 +79,12 @@ const handleDeleteRoom = async () => {
     emit('deleted');
     emit('close');
   } catch (err) {
-    console.error("Delete room error:", err);
-    alert("មានបញ្ហាក្នុងការលុបថ្នាក់រៀន សូមព្យាយាមម្ដងទៀត។");
+  console.error("Delete room error:", err);
+  console.log("Response:", err.response);
+  console.log("Data:", err.response?.data);
+  console.log("Status:", err.response?.status);
+
+  alert(err.response?.data?.message || "Delete failed");
   } finally {
     loading.value = false;
   }
