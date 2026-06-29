@@ -1,40 +1,26 @@
 <template>
-  <div class="teacher-dashboard">
+  <div class="teacher-dashboard p-1">
     <div class="row g-4">
+
       <div class="col-12 col-lg-8">
-        <!-- Stats Cards -->
+
         <div class="row g-3 mb-4">
           <div class="col-12 col-md-4" v-for="stat in stats" :key="stat.title">
             <div
-              class="stat-card d-flex flex-column align-items-center text-center justify-content-center gap-2"
-              @mouseover="stat.hover = true"
-              @mouseleave="stat.hover = false"
-              :style="
-                stat.hover
-                  ? {
-                      transform: 'translateY(-2px)',
-                      borderColor: 'var(--emerald)',
-                    }
-                  : {}
-              "
-            >
-              <div
-                class="d-flex align-items-center justify-content-center icon-box"
-                :style="{ background: stat.bg, color: stat.color }"
-              >
+              class="premium-stat-card d-flex flex-column align-items-center text-center justify-content-center gap-2"
+              @mouseover="stat.hover = true" @mouseleave="stat.hover = false"
+              :style="stat.hover ? { transform: 'translateY(-3px)', borderColor: '#10b981', boxShadow: '0 10px 20px rgba(16, 185, 129, 0.08)' } : {}">
+
+              <div class="icon-avatar-box d-flex align-items-center justify-content-center"
+                :style="{ background: stat.bg, color: stat.color }">
                 <i :class="stat.icon"></i>
               </div>
+
               <div>
-                <div class="stat-title">{{ stat.title }}</div>
-                <div
-                  class="d-flex align-items-baseline justify-content-center gap-2 mt-1"
-                >
-                  <div class="stat-value">{{ stat.value }}</div>
-                  <span
-                    :class="stat.trendClass"
-                    class="small trend-text"
-                    style="font-size: 0.78rem"
-                  >
+                <div class="premium-stat-title">{{ stat.title }}</div>
+                <div class="d-flex align-items-baseline justify-content-center gap-2 mt-1">
+                  <div class="premium-stat-value">{{ stat.value }}</div>
+                  <span :class="stat.trendClass" class="small fw-bold" style="font-size: 0.75rem">
                     <i :class="stat.trendIcon" v-if="stat.trendIcon"></i>
                     {{ stat.trendText }}
                   </span>
@@ -44,239 +30,169 @@
           </div>
         </div>
 
-        <!-- Quick Actions -->
-        <div class="custom-card mb-4">
-          <h5 class="section-title mb-3">សកម្មភាពរហ័ស</h5>
-          <div class="d-flex flex-wrap gap-3">
-            <button class="btn-emerald fw-semibold" @click="goToCreateExam">
+        <div class="premium-card mb-4">
+          <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
+            <div>
+              <h5 class="premium-section-title mb-1">សកម្មភាពរហ័ស</h5>
+              <p class="text-muted small mb-0">គ្រប់គ្រង និងរៀបចំកិច្ចការប្រឡងរបស់សិស្ស</p>
+            </div>
+            <button class="btn-premium-emerald" @click="goToCreateExam">
               <i class="fas fa-plus me-2"></i> បង្កើតការប្រឡង
             </button>
           </div>
         </div>
 
-        <!-- ========================================================= -->
-        <div class="custom-card mb-4">
-          <div class="d-flex justify-content-between align-items-center mb-3">
-            <h5 class="section-title mb-0">វិញ្ញាសារបស់ខ្ញុំ</h5>
-            <span
-              class="badge bg-success bg-opacity-10 text-success rounded-pill px-3"
-              style="font-size: 0.75rem; font-weight: 700"
-            >
-              {{ examList.length }} វិញ្ញាសា
-            </span>
+        <div class="premium-card mb-4">
+          <div class="d-flex justify-content-between align-items-center mb-4">
+            <h5 class="premium-section-title mb-0">វិញ្ញាសារបស់ខ្ញុំ</h5>
+            <span class="badge-count-pill">{{ examList.length }} វិញ្ញាសា</span>
+          </div>
+          <router-link to="/teacher/all-exams" class="view-all-rooms-btn mb-2 text-end">
+            មើលវិញ្ញាសាទាំងអស់ <i class="fas fa-arrow-right ms-1"></i>
+          </router-link>
+          <div v-if="isLoading" class="text-center py-5">
+            <div class="spinner-border text-success spinner-border-sm" role="status"></div>
           </div>
 
-          <div v-if="isLoading" class="text-center py-4">
-            <div
-              class="spinner-border text-success spinner-border-sm"
-              role="status"
-            ></div>
-          </div>
-
-          <div
-            v-else-if="examList.length === 0"
-            class="text-center py-4 text-muted small"
-          >
-            <p>មិនទាន់មានវិញ្ញាសាណាមួយត្រូវបានបង្កើតឡើយ។</p>
-          </div>
-
-          <div v-if="searchQuery.length > 0" class="search-results-list mb-4">
-            <div
-              v-for="exam in paginatedExams"
-              :key="exam.id"
-              class="search-row"
-            >
-              <div class="search-row-icon" :class="exam.status === 'active' ? 'sr-active' : 'sr-draft'">
-                <i class="fas fa-file-alt"></i>
-              </div>
-
-              <div class="search-row-main">
-                <span class="search-row-title">{{ exam.title }}</span>
-                <span class="search-row-type">{{ exam.type }}</span>
-              </div>
-
-              <div class="search-row-meta">
-                <span class="search-row-pts"><i class="far fa-clock me-1"></i>{{ exam.duration }} នាទី</span>
-                <span class="sr-badge" :class="exam.status === 'active' ? 'srb-active' : 'srb-draft'">{{ exam.status }}</span>
-              </div>
-
-              <router-link
-                :to="`/teacher/room-management/${exam.room_id || '0'}/exams/${exam.id}`"
-                class="search-row-link"
-              >
-                <i class="fas fa-arrow-right"></i>
-              </router-link>
-            </div>
+          <div v-else-if="examList.length === 0" class="text-center py-5 text-muted small">
+            <i class="far fa-folder-open fa-2x mb-2 opacity-50"></i>
+            <p class="mb-0">មិនទាន់មានវិញ្ញាសាណាមួយត្រូវបានបង្កើតឡើយ។</p>
           </div>
 
           <div v-else class="row g-3">
-            <div
-              class="col-12 col-md-6"
-              v-for="exam in paginatedExams"
-              :key="exam.id"
-            >
-              <router-link
-                :to="`/teacher/room-management/${exam.room_id || '0'}/exams/${exam.id}`"
-                class="p-3 rounded-3 border bg-white h-100 d-flex flex-column text-decoration-none"
-                style="
-                  transition: 0.2s;
-                  border-color: var(--bdr) !important;
-                  color: inherit;
-                  display: block;
-                "
-              >
-                <div
-                  class="d-flex justify-content-between align-items-center mb-2"
-                >
-                  <span
-                    class="badge rounded-pill px-2.5 py-1"
-                    :class="
-                      exam.status === 'active'
-                        ? 'bg-success bg-opacity-10 text-success'
-                        : 'bg-warning bg-opacity-10 text-warning'
-                    "
-                  >
+            <div class="col-12 col-md-6" v-for="exam in paginatedExams" :key="exam.id">
+              <div
+                class="premium-exam-subcard d-flex flex-column text-decoration-none">
+
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                  <span class="status-pill-badge" :class="exam.status === 'active' ? 'status-active' : 'status-draft'">
+                    <span class="live-dot" v-if="exam.status === 'active'"></span>
                     {{ exam.status === "active" ? "Active" : "Draft" }}
                   </span>
-                  <span class="text-muted small fw-bold">
-                    <i class="far fa-clock me-1"></i>{{ exam.duration }} នាទី
-                  </span>
+                  <span class="duration-text-badge"><i class="far fa-clock me-1"></i>{{ exam.duration }} នាទី</span>
                 </div>
-                <h6 class="fw-bold text-dark mb-1 text-truncate">
-                  {{ exam.title }}
-                </h6>
-                <div
-                  class="d-flex justify-content-between align-items-center mt-auto pt-2 border-top border-light"
-                >
-                  <span class="fw-bold text-success" style="font-size: 0.82rem"
-                    >ពិន្ទុ៖ {{ exam.total_points }}pt</span
-                  >
+
+                <h6 class="exam-title-text text-truncate" :title="exam.title">{{ exam.title }}</h6>
+
+                <div class="d-flex justify-content-between align-items-center mt-auto pt-2 border-top border-light">
+                  <span class="points-text-label">ម៉ោងចាប់ផ្ដើម៖ {{ exam.start_time ? new Date(exam.start_time).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : '---' }}</span>
+                  <span class="view-detail-arrow"></span>
                 </div>
-              </router-link>
+              </div>
             </div>
           </div>
 
-          <div
-            v-if="totalPages > 1"
-            class="d-flex justify-content-center align-items-center gap-2 mt-4"
-          >
-            <button
-              class="btn btn-sm btn-light border"
-              :disabled="currentPage === 1"
-              @click="currentPage--"
-            >
-              <i class="fas fa-chevron-left"></i>
-            </button>
-            <div class="d-flex gap-1">
-              <button
-                v-for="page in totalPages"
-                :key="page"
-                class="btn btn-sm"
-                :class="
-                  currentPage === page
-                    ? 'btn-emerald text-white'
-                    : 'btn-light border'
-                "
-                @click="currentPage = page"
-                style="min-width: 32px"
-              >
-                {{ page }}
+          <div v-if="totalPages > 1"
+            class="d-flex justify-content-between align-items-center flex-wrap gap-2 mt-4 pt-3 border-top border-light">
+            <div class="text-muted small fw-medium">បង្ហាញទំព័រទី {{ currentPage }} នៃ {{ totalPages }}</div>
+            <div class="d-flex align-items-center gap-1">
+              <button class="btn-page-nav" :disabled="currentPage === 1" @click="currentPage--">
+                <i class="fas fa-chevron-left"></i>
+              </button>
+              <template v-for="page in totalPages" :key="page">
+                <button
+                  v-if="Math.abs(page - currentPage) <= 1 || (currentPage === 1 && page <= 3) || (currentPage === totalPages && page >= totalPages - 2)"
+                  class="btn-page-number" :class="{ 'active': currentPage === page }" @click="currentPage = page">
+                  {{ page }}
+                </button>
+              </template>
+              <button class="btn-page-nav" :disabled="currentPage === totalPages" @click="currentPage++">
+                <i class="fas fa-chevron-right"></i>
               </button>
             </div>
-            <button
-              class="btn btn-sm btn-light border"
-              :disabled="currentPage === totalPages"
-              @click="currentPage++"
-            >
-              <i class="fas fa-chevron-right"></i>
-            </button>
           </div>
         </div>
-        
       </div>
 
-      <!-- Right Sidebar (Rooms, Expiring, Security) -->
-      <div class="col-12 col-lg-4">
-        <div class="custom-card d-flex flex-column" style="min-height: 380px">
-          <h5 class="section-title mb-3">បន្ទប់សិក្សា</h5>
+      <div class="col-12 col-lg-4 d-flex flex-column gap-4">
 
-          <div
-            v-if="loadingRooms"
-            class="text-center py-4 flex-grow-1 d-flex align-items-center justify-content-center"
-          >
-            <div
-              class="spinner-border text-success spinner-border-sm"
-              role="status"
-            ></div>
+        <div class="premium-card d-flex flex-column custom-room-card">
+          <div class="d-flex align-items-center justify-content-between mb-3">
+            <h5 class="premium-section-title mb-0">បន្ទប់សិក្សា</h5>
+            <i class="fas fa-graduation-cap text-muted opacity-50"></i>
           </div>
 
-          <div
-            v-else-if="backendRooms.length === 0"
-            class="text-center py-4 flex-grow-1 d-flex align-items-center justify-content-center text-muted small"
-          >
+          <div v-if="loadingRooms"
+            class="text-center py-4 flex-grow-1 d-flex align-items-center justify-content-center">
+            <div class="spinner-border text-success spinner-border-sm" role="status"></div>
+          </div>
+
+          <div v-else-if="backendRooms.length === 0"
+            class="text-center py-4 flex-grow-1 d-flex align-items-center justify-content-center text-muted small">
             មិនទាន់មានបន្ទប់សិក្សានៅឡើយទេ។
           </div>
 
-          <div v-else class="room-list flex-grow-1">
-            <div
-              class="room-item d-flex justify-content-between align-items-center"
-              v-for="room in backendRooms.slice(0, 3)"
-              :key="room.id"
-            >
-              <div>
-                <p class="mb-0 text-dark room-name" style="font-size: 0.9rem">
+          <div v-else class="room-list-scrollbar flex-grow-1 pe-1">
+            <div class="premium-room-row d-flex justify-content-between align-items-center mb-2"
+              v-for="room in backendRooms" :key="room.id">
+              <div class="text-truncate me-2">
+                <p class="mb-0 text-dark fw-bold text-truncate" style="font-size: 0.85rem">
                   {{ room.name || room.room_name }}
                 </p>
-                <small
-                  class="text-muted"
-                  style="font-size: 0.78rem; font-weight: 600"
-                  >{{ room.student_count || room.count || 0 }} សិស្ស
-                  Joined</small
-                >
+                <small class="text-muted fw-medium" style="font-size: 0.72rem">
+                  <i class="fas fa-users me-1 text-success opacity-75"></i> {{ room.student_count || room.count || 0 }}
+                  សិស្ស
+                </small>
               </div>
-              <router-link
-                to="/teacher/room-management"
-                class="text-success text-decoration-none small"
-                style="font-size: 0.85rem; font-weight: 700"
-                >មើលលម្អិត</router-link
-              >
+              <router-link to="/teacher/room-management" class="btn-room-action flex-shrink-0">មើល</router-link>
             </div>
           </div>
 
-          <router-link
-            to="/teacher/room-management"
-            class="text-center small text-decoration-none fw-bold text-success py-2 border-top border-light-subtle d-block style-all-rooms-link"
-            style="font-size: 0.85rem"
-          >
-            មើលបន្ទប់ទាំងអស់ 
-            <i class="fas fa-arrow-right ms-1" style="font-size: 0.75rem"></i>
-          </router-link>
-
-          <button
-            class="btn border-dashed mt-3 py-3"
-            style="font-size: 0.95rem"
-            @click="isCreateRoomOpen = true"
-          >
-            <i class="fas fa-plus me-2"></i> បង្កើតបន្ទប់ថ្មី
-          </button>
+          <div class="pt-3 border-top border-light mt-3">
+            <router-link to="/teacher/room-management" class="view-all-rooms-btn mb-2">
+              មើលបន្ទប់ទាំងអស់ <i class="fas fa-arrow-right ms-1"></i>
+            </router-link>
+            <button class="btn-create-room-dashed w-100 py-2" @click="isCreateRoomOpen = true">
+              <i class="fas fa-plus me-2"></i> បង្កើតបន្ទប់ថ្មី
+            </button>
+          </div>
         </div>
 
-        <!-- Security Guard Info Box -->
-        <!-- <div class="custom-card text-center p-4" style="background: var(--emerald-soft);">
-          <h6 class="text-success mb-2" style="font-size: 1rem; font-weight: 700;">Secure Mode Active</h6>
-          <p class="text-muted small mb-4" style="font-size: 0.78rem; line-height: 1.4; font-weight: 600;">Tab-switching and screenshot protections are enabled system-wide.</p>
-          <router-link to="/teacher/teacher-validations" class="btn btn-white w-100 border border-2 rounded-4 py-2.5 small bg-white text-success text-decoration-none d-block" style="font-size: 0.88rem; font-weight: 700;">Security Settings</router-link>
-        </div> -->
+        <div class="premium-card instruction-box">
+          <div class="d-flex align-items-center gap-2 mb-3">
+            <div class="tip-icon-box"><i class="far fa-lightbulb"></i></div>
+            <h5 class="premium-section-title mb-0" style="font-size: 0.90rem;">គន្លឹះ និងការណែនាំ</h5>
+          </div>
+
+          <div class="d-flex flex-column gap-3">
+            <div class="d-flex gap-2 align-items-start">
+              <span class="badge-dot mt-2" style="background-color: #10b981;"></span>
+              <p class="mb-0 text-muted" style="font-size: 0.90rem; line-height: 1.4;">
+                <strong class="text-dark">ការបង្កើតវិញ្ញាសា៖</strong> លោកគ្រូអាចកំណត់រយៈពេលប្រឡងច្បាស់លាស់
+                និងជ្រើសរើសបន្ទប់ដាក់ឱ្យសិស្សប្រឡងបានភ្លាមៗ។
+              </p>
+            </div>
+            <div class="d-flex gap-2 align-items-start">
+              <span class="badge-dot mt-2" style="background-color: #3b82f6;"></span>
+              <p class="mb-0 text-muted" style="font-size: 0.90rem; line-height: 1.4;">
+                <strong class="text-dark">ត្រួតពិនិត្យការប្រឡង៖</strong> រាល់ទិន្នន័យពិន្ទុ
+                និងការបញ្ជូនកិច្ចការរបស់សិស្ស
+                នឹងធ្វើបច្ចុប្បន្នភាពរហ័សតាមពេលវេលាជាក់ស្តែង។
+              </p>
+            </div>
+            <div class="d-flex gap-2 align-items-start">
+              <span class="badge-dot mt-2" style="background-color: #f59e0b;"></span>
+              <p class="mb-0 text-muted" style="font-size: 0.90rem; line-height: 1.4;">
+                <strong class="text-dark">ការគ្រប់គ្រងបន្ទប់សិក្សា៖</strong> លោកគ្រូអាចពិនិត្យមើលចំនួនសិស្សដែលបានចូលរួម
+                និងគ្រប់គ្រងសមាជិកក្នុងបន្ទប់នីមួយៗបានយ៉ាងងាយស្រួល។
+              </p>
+            </div>
+            <div class="d-flex gap-2 align-items-start">
+              <span class="badge-dot mt-2" style="background-color: #ef4444;"></span>
+              <p class="mb-0 text-muted" style="font-size: 0.90rem; line-height: 1.4;">
+                <strong class="text-dark">របាយការណ៍លទ្ធផល៖</strong> ប្រព័ន្ធនឹងរៀបចំស្ថិតិពិន្ទុទូទៅ
+                ដើម្បីជួយសម្រួលដល់លោកគ្រូក្នុងការវាយតម្លៃកម្រិតយល់ដឹងរបស់សិស្ស។
+              </p>
+            </div>
+          </div>
+        </div>
+
       </div>
+
     </div>
   </div>
 
-  <!-- Create Room Modal Dialog component -->
-  <CreateRoomModal
-    :is-open="isCreateRoomOpen"
-    @close="isCreateRoomOpen = false"
-    @created="onRoomCreated"
-  />
+  <CreateRoomModal :is-open="isCreateRoomOpen" @close="isCreateRoomOpen = false" @created="onRoomCreated" />
 </template>
 
 <script setup>
@@ -302,7 +218,7 @@ const isLoading = ref(false);
 const toast = useToast();
 
 const currentPage = ref(1);
-const itemsPerPage = 10;
+const itemsPerPage = 4;
 
 const searchQuery = inject("searchQuery");
 
@@ -323,7 +239,6 @@ const fetchAllExams = async () => {
   try {
     isLoading.value = true;
     const res = await getExams();
-    console.log(res.data.data);
     examList.value = res.data.data || res.data;
   } catch (err) {
     console.error("Failed to fetch exams:", err);
@@ -356,8 +271,6 @@ const stats = computed(() => [
     bg: "#ecfdf5",
     color: "#10b981",
     trendClass: "text-success",
-    trendIcon: "fas fa-arrow-up",
-    trendText: "12%",
     hover: false,
   },
   {
@@ -367,8 +280,6 @@ const stats = computed(() => [
     bg: "#f3e8ff",
     color: "#9333ea",
     trendClass: "text-muted",
-    trendIcon: "",
-    trendText: "Current term",
     hover: false,
   },
   {
@@ -378,8 +289,6 @@ const stats = computed(() => [
     bg: "#fff7ed",
     color: "#f59e0b",
     trendClass: "text-success",
-    trendIcon: "fas fa-check",
-    trendText: "On track",
     hover: false,
   },
 ]);
@@ -403,395 +312,295 @@ const totalPages = computed(() => {
 </script>
 
 <style scoped>
-.teacher-dashboard {
-  --emerald: #10b981;
-  --emerald-soft: #ecfdf5;
-  --text-dark: #1e293b;
-  --text-muted: #475569;
-  --border: #cbd5e1;
-  --sh-sm: 0 4px 12px rgba(0, 0, 0, 0.03);
-  font-family: "Kantumruy Pro", "Inter", sans-serif !important;
+/* Base Premium Design */
+.premium-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.01);
 }
 
-.teacher-dashboard,
-.teacher-dashboard div,
-.teacher-dashboard p,
-.teacher-dashboard span,
-.teacher-dashboard small {
-  font-family: "Kantumruy Pro", "Inter", sans-serif !important;
-  font-weight: 550 !important;
+.custom-room-card {
+  max-height: 380px;
 }
 
-/* បង្កើនភាពធាត់ខ្លាំងសម្រាប់ចំណងជើងកាតនីមួយៗ */
-.section-title {
-  font-size: 1.05rem;
-  font-weight: 700 !important;
-  color: var(--text-dark) !important;
+.room-list-scrollbar {
+  max-height: 200px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 #f8fafc;
 }
 
-.custom-card {
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(10px);
-  border-radius: 18px;
-  border: 1.5px solid var(--border);
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.04);
-  padding: 24px; /* បង្កើនទំហំប្រអប់ឲ្យធំជាងមុន */
-  margin-bottom: 24px;
+.room-list-scrollbar::-webkit-scrollbar {
+  width: 5px;
 }
 
-.stat-card {
-  background: white;
-  padding: 24px; /* ពង្រីកទំហំកាតស្ថិតិ */
-  border-radius: 18px;
-  border: 1.5px solid var(--border);
-  height: 100%;
-  transition: all 0.2s ease-in-out;
+.room-list-scrollbar::-webkit-scrollbar-track {
+  background: #f8fafc;
+  border-radius: 10px;
 }
 
-.icon-box {
-  width: 48px;
-  height: 48px;
-  font-size: 1.3rem;
+.room-list-scrollbar::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 10px;
+}
+
+.room-list-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Style Rows & Buttons */
+.premium-room-row {
+  background: #f8fafc;
+  border: 1px solid #f1f5f9;
+  padding: 10px 12px;
   border-radius: 12px;
+  transition: all 0.2s;
+}
+
+.premium-room-row:hover {
+  background: #e8f7f0;
+  border-color: rgba(16, 185, 129, 0.2);
+}
+
+.btn-room-action {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #10b981;
+  text-decoration: none;
+  background: #ffffff;
+  padding: 3px 10px;
+  border-radius: 20px;
+  border: 1px solid #e2e8f0;
+}
+
+.view-all-rooms-btn {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #10b981;
+  text-decoration: none;
+  text-align: center;
+  padding: 4px 0;
+  transition: all 0.2s;
+}
+.view-all-rooms-btn:hover {
+  color: #58e6a1; 
+  transform: translateY(-1px);  
+}
+
+.btn-create-room-dashed {
+  background: transparent;
+  border: 1px dashed rgba(16, 185, 129, 0.4);
+  color: #10b981;
+  border-radius: 12px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.btn-create-room-dashed:hover {
+  background: #e8f7f0;
+}
+
+.instruction-box {
+  background: #fdfdfd;
+  border-left: 4px solid #10b981;
+}
+
+.tip-icon-box {
+  width: 32px;
+  height: 32px;
+  background: #fff7ed;
+  color: #f59e0b;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.95rem;
+}
+
+.badge-dot {
+  width: 6px;
+  height: 6px;
+  background-color: #10b981;
+  border-radius: 50%;
+  display: inline-block;
   flex-shrink: 0;
 }
 
-/* រក្សាទុកកម្រាស់សម្រាប់ Icon មិនឲ្យបែករូប */
-.icon-box i,
-button i,
-span i,
-.stat-card i {
-  font-weight: 900 !important;
+.premium-stat-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.01);
+  transition: all 0.25s ease;
 }
 
-.style-all-rooms-link {
-  transition: color 0.2s ease;
-}
-.style-all-rooms-link:hover {
-  color: #059669 !important;
+.icon-avatar-box {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  font-size: 1.1rem;
 }
 
-.stat-title {
+.premium-stat-title {
   font-size: 0.8rem;
-  font-weight: 700 !important;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.stat-value {
-  font-size: 1.5rem;
-  font-weight: 800 !important; /* ធ្វើឲ្យលេខលទ្ធផលធាត់ដិតច្បាស់ខ្លាំង */
-  color: var(--text-dark) !important;
-  line-height: 1.2;
-}
-
-.trend-text {
-  font-weight: 700 !important;
-}
-.btn-emerald {
-  background-color: var(--emerald, #10b981) !important;
-  border-color: var(--emerald, #10b981) !important;
-}
-
-.btn-light.border {
-  border-color: #e2e8f0 !important;
+  font-weight: 700;
   color: #64748b;
 }
 
-.btn-light.border:hover {
-  background-color: #f1f5f9;
+.premium-stat-value {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #0f172a;
 }
 
-/* រចនាប័ទ្មសម្រាប់កាតវិញ្ញាសាដើម្បីឱ្យស្អាត (Clean Design) */
-.p-3.rounded-3.border.bg-white {
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
-  border: 1px solid #e2e8f0 !important;
-}
-
-.p-3.rounded-3.border.bg-white:hover {
-  border-color: var(--emerald) !important;
-  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.1);
-}
-/* ពង្រីកទំហំប៊ូតុង និងអក្សរលើប៊ូតុង */
-.btn-emerald {
-  background: var(--emerald);
-  color: white;
-  border: none;
-  border-radius: 12px;
-  padding: 12px 24px;
+.premium-section-title {
   font-size: 0.95rem;
-  transition: 0.3s;
+  font-weight: 700;
+  color: #0f172a;
 }
-.btn-emerald:hover {
-  background: #059669;
+
+.btn-premium-emerald {
+  background: linear-gradient(135deg, #2bb673, #10b981);
+  border: none;
+  color: #ffffff;
+  padding: 8px 18px;
+  border-radius: 30px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  box-shadow: 0 4px 10px rgba(16, 185, 129, 0.12);
+  transition: all 0.2s;
 }
-.exam-list {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+
+.btn-premium-emerald:hover {
+  transform: translateY(-1px);
 }
-.exam-list-item {
-  padding: 15px;
+
+.badge-count-pill {
+  background: #e8f7f0;
+  color: #10b981;
+  padding: 4px 12px;
+  border-radius: 30px;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.premium-exam-subcard {
   background: #f8fafc;
-  border: 1px solid #e2e8f0;
+  border: 1px solid #f1f5f9;
   border-radius: 12px;
-}
-.exam-list-item:hover {
-  border-color: var(--emerald);
-}
-
-.btn-emerald-outline {
-  background: transparent;
-  color: var(--emerald);
-  border: 2px solid var(--emerald);
-  border-radius: 12px;
-  padding: 12px 24px;
-  font-weight: 700 !important;
-  font-size: 0.92rem;
-  transition: 0.3s;
-}
-.btn-emerald-outline:hover {
-  background: var(--emerald-soft);
-}
-
-.border-dashed {
-  border: 2px dashed var(--emerald) !important;
-  color: var(--emerald);
-  background: transparent;
-  border-radius: 14px;
-  width: 100%;
-  padding: 14px;
-  font-weight: 700 !important;
-  font-size: 0.92rem;
-  transition: 0.2s;
-}
-.border-dashed:hover {
-  background: var(--emerald-soft);
-}
-
-.room-item {
-  background: white;
-  padding: 16px;
-  border-radius: 14px;
-  margin-bottom: 12px;
-  border: 1px solid var(--border);
-  transition: 0.2s;
-}
-.room-item:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-  border-color: var(--emerald);
-}
-
-.student-name,
-.room-name {
-  font-weight: 700 !important; /* ធ្វើឲ្យឈ្មោះសិស្ស និងបន្ទប់ដិតច្បាស់ */
-}
-
-.text-details {
-  font-weight: 600 !important;
-}
-
-.submission-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 12px 0;
-  border-bottom: 1px solid var(--border);
-}
-.submission-item:last-child {
-  border-bottom: none;
-}
-
-.avatar-sm {
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 1px solid var(--border);
-}
-
-.score-badge {
-  padding: 5px 12px;
-  border-radius: 20px;
-  font-size: 0.78rem;
-  font-weight: 800 !important;
-}
-.score-high {
-  background: #dcfce7;
-  color: #166534;
-}
-.score-mid {
-  background: #fef9c3;
-  color: #854d0e;
-}
-
-.bar-chart-container {
-  display: flex;
-  align-items: flex-end;
-  gap: 10px;
-  height: 115px;
-  padding-top: 10px;
-}
-.bar-wrapper {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
-}
-.bar {
-  width: 100%;
-  background: var(--emerald-soft);
-  border-radius: 4px 4px 0 0;
-  position: relative;
-  overflow: hidden;
-}
-.bar-fill {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: var(--emerald);
-  border-radius: 4px 4px 0 0;
-  transition: height 1s cubic-bezier(0.1, 0.76, 0.55, 0.94);
-}
-.bar-label {
-  font-size: 0.72rem;
-  color: var(--text-muted);
-  font-weight: 700 !important;
-}
-
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(15, 23, 42, 0.45);
-  backdrop-filter: blur(5px);
-  z-index: 2000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 16px;
-}
-.modal-dialog {
-  width: 100%;
-  max-width: 480px;
-  margin: 0;
-}
-.cursor-pointer {
-  cursor: pointer;
-}
-.search-results-list {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.search-row {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 10px 14px;
-  background: #fff;
-  border: 1px solid #e2e8f0;
-  border-radius: 12px;
+  padding: 18px;
+  min-height: 135px;
   transition: all 0.2s ease;
 }
 
-.search-row:hover {
-  border-color: #10b981;
-  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.08);
+.premium-exam-subcard:hover {
+  background: #ffffff;
+  border-color: rgba(16, 185, 129, 0.25);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.02);
 }
 
-.search-row-icon {
-  width: 32px;
-  height: 32px;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 13px;
-  flex-shrink: 0;
-}
-
-.sr-active { background: rgba(16, 185, 129, 0.08); color: #10b981; }
-.sr-draft  { background: #f1f5f9; color: #94a3b8; }
-
-.search-row-main {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  min-width: 0;
-}
-
-.search-row-title {
-  font-size: 13px;
+.exam-title-text {
+  font-size: 0.92rem;
   font-weight: 700;
   color: #1e293b;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  margin-bottom: 12px;
 }
 
-.search-row-type {
-  font-size: 10px;
+.status-pill-badge {
+  font-size: 0.7rem;
   font-weight: 700;
-  color: #10b981;
-  background: rgba(16, 185, 129, 0.08);
-  padding: 1px 7px;
-  border-radius: 5px;
-  text-transform: uppercase;
-  flex-shrink: 0;
-}
-
-.search-row-meta {
-  display: flex;
+  padding: 2px 10px;
+  border-radius: 20px;
+  display: inline-flex;
   align-items: center;
-  gap: 8px;
-  flex-shrink: 0;
+  gap: 4px;
 }
 
-.search-row-pts {
-  font-size: 11px;
-  color: #94a3b8;
+.status-active {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.status-draft {
+  background: #f1f5f9;
+  color: #475569;
+}
+
+.live-dot {
+  width: 5px;
+  height: 5px;
+  background-color: #10b981;
+  border-radius: 50%;
+  animation: pulseEffect 1.5s infinite;
+}
+
+@keyframes pulseEffect {
+
+  0%,
+  100% {
+    transform: scale(0.9);
+    opacity: 0.6;
+  }
+
+  50% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+}
+
+.duration-text-badge {
+  font-size: 0.75rem;
+  color: #64748b;
   font-weight: 600;
 }
 
-.sr-badge {
-  font-size: 10px;
+.points-text-label {
+  font-size: 0.78rem;
   font-weight: 700;
-  padding: 2px 9px;
-  border-radius: 20px;
-  text-transform: uppercase;
+  color: #10b981;
 }
 
-.srb-active { background: rgba(16, 185, 129, 0.1); color: #047857; }
-.srb-draft  { background: #f1f5f9; color: #64748b; }
-
-.search-row-link {
-  width: 28px;
-  height: 28px;
-  border-radius: 8px;
-  border: 1px solid #e2e8f0;
-  background: #f8fafc;
+.view-detail-arrow {
+  font-size: 0.78rem;
+  font-weight: 600;
   color: #94a3b8;
+}
+
+.premium-exam-subcard:hover .view-detail-arrow {
+  color: #10b981;
+}
+
+.btn-page-nav,
+.btn-page-number {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  color: #475569;
+  font-size: 0.78rem;
+  font-weight: 700;
+  width: 32px;
+  height: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 11px;
-  text-decoration: none;
-  flex-shrink: 0;
-  transition: all 0.2s ease;
+  border-radius: 8px;
+  transition: all 0.15s ease;
 }
 
-.search-row-link:hover {
-  background: #10b981;
-  border-color: #10b981;
-  color: #fff;
+.btn-page-number.active {
+  background: linear-gradient(135deg, #2bb673, #10b981);
+  color: #ffffff;
+  border-color: transparent;
+  box-shadow: 0 2px 6px rgba(16, 185, 129, 0.2);
+}
+
+.btn-page-nav:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
 }
 </style>

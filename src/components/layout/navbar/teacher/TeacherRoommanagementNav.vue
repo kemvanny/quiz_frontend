@@ -4,12 +4,8 @@
       <!-- Left Column: Controls, Header Icon, and Dashboard Title -->
       <div class="left-section">
         <!-- Mobile Sidebar Toggle -->
-        <button 
-          class="btn-control d-lg-none" 
-          data-bs-toggle="offcanvas" 
-          data-bs-target="#sidebarMenu" 
-          aria-label="Toggle Sidebar"
-        >
+        <button class="btn-control d-lg-none" data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu"
+          aria-label="Toggle Sidebar">
           <i class="fas fa-bars"></i>
         </button>
 
@@ -32,10 +28,7 @@
       <!-- Right Column: Actions & Instructor Pill -->
       <div class="right-section">
         <!-- Modern New Room Button -->
-        <button 
-          class="btn-create-room" 
-          @click="isCreateRoomOpen = true"
-        >
+        <button class="btn-create-room" @click="isCreateRoomOpen = true">
           <i class="fas fa-plus"></i>
           <span class="d-none d-sm-inline">ថ្នាក់ថ្មី</span>
         </button>
@@ -45,32 +38,25 @@
 
         <!-- Instructor Profile Pill -->
         <div class="instructor-profile">
-          <img 
-            :src="authStore.avatarUrl" 
-            alt="avatar" 
-            class="profile-avatar" 
-          />
-          <div class="profile-details">
-            <span class="profile-name">{{ authStore.fullName }}</span>
-            <span class="profile-role">គ្រូបង្រៀន</span>
-          </div>
+          <img :src="authStore.avatarUrl" alt="avatar" class="profile-avatar" />
+          <router-link to="/teacher/profile" class="d-none d-sm-flex flex-column justify-content-center pe-2"
+            style="line-height: 1.1;">
+            <span class="fw-bold" style="font-size: .8rem; color: var(--txt);">{{ authStore.fullName }}</span>
+            <span style="font-size: .65rem; color: var(--txt-mu); font-weight: 500;">គ្រូបង្រៀន</span>
+          </router-link>
         </div>
       </div>
     </div>
   </div>
 
-<CreateRoomModal
-  :is-open="isCreateRoomOpen"
-  :existing-rooms="backendRooms"
-  @close="isCreateRoomOpen = false"
-  @created="onRoomCreated"
-/>
+  <CreateRoomModal :is-open="isCreateRoomOpen" :existing-rooms="backendRooms" @close="isCreateRoomOpen = false"
+    @created="onRoomCreated" />
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue';
 import CreateRoomModal from '@/components/teacher/CreateRoomModal.vue';
-import { useAuthStore } from '@/stores/auth'; 
+import { useAuthStore } from '@/stores/auth';
 
 const isCreateRoomOpen = ref(false);
 const emit = defineEmits(['room-created']);
@@ -293,12 +279,15 @@ onMounted(() => {
   .topbar {
     padding: 10px 16px;
   }
+
   .page-title {
     font-size: 1rem;
   }
+
   .profile-details {
     display: none;
   }
+
   .instructor-profile {
     padding: 4px;
   }
