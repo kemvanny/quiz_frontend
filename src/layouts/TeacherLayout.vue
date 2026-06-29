@@ -34,6 +34,8 @@ import TeacherProfileNav from "@/components/layout/navbar/teacher/TeacherProfile
 import TeacherValidationNav from "@/components/layout/navbar/teacher/TeacherValidationNav.vue";
 import TeacherRoomDetail from "@/components/layout/navbar/teacher/TeacherRoomDetail.vue";
 import TeacherExamDetail from "@/components/layout/navbar/teacher/TeacherExamDetail.vue";
+import TeacherAllexamNav from "@/components/layout/navbar/teacher/TeacherAllexamNav.vue";
+
 
 const route = useRoute();
 
@@ -54,6 +56,7 @@ const activeNavbar = computed(() => {
     case "StudentResults": return TeacherResultaNav;
     case "Profile": return TeacherProfileNav;
     case "TeacherValidations": return TeacherValidationNav;
+    case "AllExams": return TeacherAllexamNav;
     default: return null;
   }
 });
