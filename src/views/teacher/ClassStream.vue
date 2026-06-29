@@ -780,7 +780,6 @@ const fetchRoomData = async () => {
 const fetchPosts = async () => {
   try {
     const res = await getPosts(props.roomId);
-    console.log("POSTS:", posts.value);
     posts.value = (res.data.data || []).reverse();
   } catch (err) {
     console.error(err);
@@ -925,10 +924,10 @@ const handleTabChange = (tab) => {
   currentTab.value = tab;
 
   if (tab === "results") {
-    const firstExamLink = posts.value?.[0]?.exam_link;
+    const examId = posts.value?.[0]?.exam_id; 
 
-    if (firstExamLink) {
-      fetchStudentResults(firstExamLink);
+    if (examId) {
+      fetchStudentResults(examId); 
     } else {
       studentResults.value = [];
     }
