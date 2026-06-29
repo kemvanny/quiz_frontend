@@ -53,111 +53,132 @@
     </div>
 
     <!-- Classroom Grid -->
-    <div v-else-if="filteredRooms.length > 0" class="classroom-grid">
-      <div 
-        v-for="(room, index) in filteredRooms" 
-        :key="room.id || index" 
-        class="classroom-card"
-        @click="goToRoomDetail(room.id)"
-      >
-        <!-- Main Top Content Block -->
-        <div class="card-main-content">
-          <div class="d-flex align-items-start justify-content-between gap-3">
-            <div class="d-flex align-items-center gap-3 min-w-0">
-              <div class="icon-avatar-box">
-                <i class="fas fa-graduation-cap"></i>
+    <div v-else-if="paginatedRooms.length > 0">
+      <div class="classroom-grid">
+        <div 
+          v-for="(room, index) in paginatedRooms" 
+          :key="room.id || index" 
+          class="classroom-card"
+          @click="goToRoomDetail(room.id)"
+        >
+          <!-- Main Top Content Block -->
+          <div class="card-main-content">
+            <div class="d-flex align-items-start justify-content-between gap-3">
+              <div class="d-flex align-items-center gap-3 min-w-0">
+                <div class="icon-avatar-box">
+                  <i class="fas fa-graduation-cap"></i>
+                </div>
+                <div class="title-overflow-block text-truncate">
+                  <h3 class="classroom-title-text text-truncate" :title="room.name">
+                    {{ room.name }}
+                  </h3>
+                  <span class="student-count-subtext">
+                    <i class="fas fa-users me-1"></i>
+                    <strong>{{ room.student_count || 0 }}</strong> សិស្សសរុប
+                  </span>
+                </div>
               </div>
-              <div class="title-overflow-block">
-                <h3 class="classroom-title-text text-truncate" :title="room.name">
-                  {{ room.name }}
-                </h3>
-                <span class="student-count-subtext">
-                  <i class="fas fa-users me-1"></i>
-                  <strong>{{ room.student_count || 0 }}</strong> សិស្សសរុប
-                </span>
+              
+              <!-- Modern Minimalist Actions -->
+              <div class="card-actions-wrapper" @click.stop>
+                <button class="action-circle-btn btn-edit" @click="openUpdateModal(room)" title="កែប្រែបន្ទប់">
+                  <i class="fas fa-pen"></i>
+                </button>
+                <button class="action-circle-btn btn-delete" @click="openDeleteModal(room)" title="លុបបន្ទប់">
+                  <i class="fas fa-trash-alt"></i>
+                </button>
               </div>
             </div>
-            
-            <!-- Modern Minimalist Actions -->
-            <div class="card-actions-wrapper" @click.stop>
-              <button class="action-circle-btn btn-edit" @click="openUpdateModal(room)" title="កែប្រែបន្ទប់">
-                <i class="fas fa-pen"></i>
-              </button>
-              <button class="action-circle-btn btn-delete" @click="openDeleteModal(room)" title="លុបបន្ទប់">
-                <i class="fas fa-trash-alt"></i>
-              </button>
+          </div>
+
+          <!-- Seamless Shaded Footer Tray -->
+          <div class="card-footer-tray d-flex align-items-center justify-content-between" @click.stop>
+            <div class="status-indicator-tag">
+              <span class="active-dot-pulse"></span>
+              <span class="small-text">Active</span>
             </div>
+
+            <button 
+              class="btn btn-pill-invite d-flex align-items-center gap-1"
+              @click.stop="handleInviteStudent(room)">
+              <i class="fas fa-user-plus"></i> <span>Invite</span>
+            </button>
           </div>
         </div>
+      </div>
 
-        <!-- Seamless Shaded Footer Tray -->
-        <div class="card-footer-tray d-flex align-items-center justify-content-between" @click.stop>
-          <div class="status-indicator-tag">
-            <span class="active-dot-pulse"></span>
-            <span class="small-text">Active</span>
-          </div>
-
-          <button 
-            class="btn btn-pill-invite d-flex align-items-center gap-1"
-            @click.stop="handleInviteStudent(room)">
-            <i class="fas fa-user-plus"></i> <span>Invite</span>
-          </button>
+      <!-- Pagination Controls (Clean & Minimalist Layout) -->
+      <div v-if="totalPages > 1" class="pagination-container d-flex align-items-center justify-content-between flex-wrap gap-3">
+        <div class="pagination-info">
+          បង្ហាញ {{ (currentPage - 1) * itemsPerPage + 1 }} ដល់
+          {{ Math.min(currentPage * itemsPerPage, filteredRooms.length) }} នៃថ្នាក់រៀនសរុប {{ filteredRooms.length }}
         </div>
-
+        <nav aria-label="Classroom pagination">
+          <ul class="pagination-list d-flex align-items-center gap-1 mb-0 p-0">
+            <li>
+              <button 
+                class="page-nav-btn" 
+                :disabled="currentPage === 1" 
+                @click="prevPage"
+              >
+                <i class="fas fa-chevron-left"></i>
+              </button>
+            </li>
+            <li v-for="page in totalPages" :key="page">
+              <button 
+                class="page-number-btn" 
+                :class="{ 'active': currentPage === page }"
+                @click="goToPage(page)"
+              >
+                {{ page }}
+              </button>
+            </li>
+            <li>
+              <button 
+                class="page-nav-btn" 
+                :disabled="currentPage === totalPages" 
+                @click="nextPage"
+              >
+                <i class="fas fa-chevron-right"></i>
+              </button>
+            </li>
+          </ul>
+        </nav>
       </div>
     </div>
 
     <!-- Filter Result Fall-Through Empty State -->
     <div v-else class="empty-state-container">
       <i class="fas fa-folder-open empty-icon"></i>
-      <p class="empty-text">រកមិនឃើញថ្នាក់រៀនដែលត្រូវគ្នានឹងការស្វែងរកឡើយ។</p>
+      <p class="empty-text">រកមិនឃើញថ្នាក់រៀនដែលត្រូវគ្នានឹងការស្វែងរកឡើយ。</p>
     </div>
 
-    <!-- Modals (Functional State Integrations) -->
-    <CreateRoomModal 
-      :is-open="isCreateOpen" 
-      @close="isCreateOpen = false" 
-      @created="handleRoomCreatedSuccess" 
-    />
-
-    <UpdateRoomModal 
-      :is-open="isUpdateOpen" 
-      :room-data="selectedRoom" 
-      @close="closeUpdateModal" 
-      @updated="fetchRooms" 
-    />
-
-    <DeleteRoomModal 
-      :is-open="isDeleteOpen" 
-      :room-data="selectedRoom" 
-      @close="closeDeleteModal" 
-      @deleted="fetchRooms" 
-    />
-
-    <InviteStudentModal 
-      :is-open="isInviteOpen" 
-      :room-data="selectedRoom" 
-      @close="isInviteOpen = false" 
-    />
+    <!-- Modals -->
+    <CreateRoomModal :is-open="isCreateOpen" @close="isCreateOpen = false" @created="handleRoomCreatedSuccess" />
+    <UpdateRoomModal :is-open="isUpdateOpen" :room-data="selectedRoom" @close="closeUpdateModal" @updated="fetchRooms" />
+    <DeleteRoomModal :is-open="isDeleteOpen" :room-data="selectedRoom" @close="closeDeleteModal" @deleted="fetchRooms" />
+    <InviteStudentModal :is-open="isInviteOpen" :room-data="selectedRoom" @close="isInviteOpen = false" />
   </div>
 </template>
 
 <script setup>
-import { ref, computed, onMounted, watch } from 'vue'
+import { ref, computed, onMounted, watch, inject } from 'vue'
 import { useRouter } from 'vue-router'
 import { getMyRooms } from '@/api/teacher.api'
+import { storeToRefs } from 'pinia'            
+import { useRoomStore } from '@/stores/roomStore'
 
 import CreateRoomModal from '@/components/teacher/CreateRoomModal.vue'
 import UpdateRoomModal from '@/components/teacher/UpdateRoomModal.vue'
 import DeleteRoomModal from '@/components/teacher/DeleteRoomModal.vue'
 import InviteStudentModal from '@/components/teacher/InviteStudentModal.vue'
 
-// Router & States
 const router = useRouter()
+const roomStore = useRoomStore()
+
+const { rooms, loading } = storeToRefs(roomStore)
 
 const searchQuery = ref('')
-const rooms = ref([])
-const loading = ref(false)
 const selectedRoom = ref(null)
 
 const isCreateOpen = ref(false)
@@ -165,11 +186,13 @@ const isUpdateOpen = ref(false)
 const isDeleteOpen = ref(false)
 const isInviteOpen = ref(false)
 
-// Google search-like autocomplete states
 const isFocused = ref(false)
 const activeIndex = ref(-1)
 
-// Dynamic suggestions limited to top 6 matches
+// PAGINATION STATE
+const currentPage = ref(1)
+const itemsPerPage = ref(9) 
+
 const suggestions = computed(() => {
   if (!searchQuery.value) return []
   return rooms.value.filter(room => 
@@ -177,14 +200,16 @@ const suggestions = computed(() => {
   ).slice(0, 6)
 })
 
-// Reset the active keyboard navigation index when search query changes
 watch(searchQuery, () => {
   activeIndex.value = -1
+  currentPage.value = 1 
 })
 
 const onBlur = () => {
-  isFocused.value = false
-  activeIndex.value = -1
+  setTimeout(() => {
+    isFocused.value = false
+    activeIndex.value = -1
+  }, 200)
 }
 
 const selectSuggestion = (room) => {
@@ -193,7 +218,6 @@ const selectSuggestion = (room) => {
   goToRoomDetail(room.id)
 }
 
-// Keyboard Navigation Handlers
 const onArrowDown = () => {
   if (suggestions.value.length === 0) return
   activeIndex.value = (activeIndex.value + 1) % suggestions.value.length
@@ -216,7 +240,6 @@ const onEnter = () => {
   }
 }
 
-// Computed Classroom Filter List
 const filteredRooms = computed(() => {
   if (!searchQuery.value) return rooms.value
   return rooms.value.filter(room => 
@@ -224,7 +247,29 @@ const filteredRooms = computed(() => {
   )
 })
 
-// Room Details Navigation
+const paginatedRooms = computed(() => {
+  const startIndex = (currentPage.value - 1) * itemsPerPage.value
+  const endIndex = startIndex + itemsPerPage.value
+  return filteredRooms.value.slice(startIndex, endIndex)
+})
+
+const totalPages = computed(() => {
+  return Math.ceil(filteredRooms.value.length / itemsPerPage.value) || 1
+})
+
+// PAGINATION NAVIGATION METHODS
+const prevPage = () => {
+  if (currentPage.value > 1) currentPage.value--
+}
+
+const nextPage = () => {
+  if (currentPage.value < totalPages.value) currentPage.value++
+}
+
+const goToPage = (page) => {
+  currentPage.value = page
+}
+
 const goToRoomDetail = (roomId) => {
   router.push({
     name: 'ClassStream', 
@@ -232,12 +277,10 @@ const goToRoomDetail = (roomId) => {
   })
 }
 
-// Fetch Classroom Data API call
 const fetchRooms = async () => {
   try {
     loading.value = true
     const response = await getMyRooms()
-    console.log("ROOMS API:", response.data)
     rooms.value = response.data?.data || response.data || []
   } catch (error) {
     console.error("Error fetching rooms:", error)
@@ -245,17 +288,29 @@ const fetchRooms = async () => {
     loading.value = false
   }
 }
+const refreshRoomsSignal = inject('refreshRoomsSignal', null)
 
-// Handle dynamic Room Setup flow after success
-const handleRoomCreatedSuccess = async (newRoom) => {
-
-  await fetchRooms()
-
-  selectedRoom.value = newRoom
-  isInviteOpen.value = true
+if (refreshRoomsSignal) {
+  watch(refreshRoomsSignal, () => {
+    fetchRooms(); 
+  })
 }
 
-// Update Room Modal Trigger
+
+const handleRoomCreatedSuccess = async (newRoom) => {
+  if (newRoom) {
+    rooms.value.unshift({
+      id: newRoom.id,
+      name: newRoom.name || newRoom.title || 'បន្ទប់គ្មានឈ្មោះ', 
+      student_count: 0 
+    });
+  }
+  isCreateOpen.value = false;
+  await fetchRooms();
+  selectedRoom.value = newRoom;
+  isInviteOpen.value = true;
+};
+
 const openUpdateModal = (room) => {
   selectedRoom.value = room
   isUpdateOpen.value = true
@@ -266,7 +321,6 @@ const closeUpdateModal = () => {
   selectedRoom.value = null
 }
 
-// Delete Room Modal Trigger
 const openDeleteModal = (room) => {
   selectedRoom.value = room
   isDeleteOpen.value = true
@@ -277,13 +331,11 @@ const closeDeleteModal = () => {
   selectedRoom.value = null
 }
 
-// Invite Handler
 const handleInviteStudent = (room) => {
   selectedRoom.value = room
   isInviteOpen.value = true
 }
 
-// Setup onmount
 onMounted(() => {
   fetchRooms()
 })
@@ -396,7 +448,7 @@ onMounted(() => {
   font-size: 0.75rem;
   color: var(--em);
   opacity: 0;
-  transform: scaleHorizontally(-1); /* Points diagonal-up or left to imply insert */
+  transform: scaleHorizontally(-1); 
   transition: opacity 0.15s ease, transform 0.15s ease;
 }
 
@@ -606,5 +658,60 @@ onMounted(() => {
   font-size: 0.9rem;
   font-weight: 600;
   margin: 0;
+}
+
+/* PAGINATION CONTROLS */
+.pagination-container {
+  border-top: 1px solid var(--bdr);
+  padding-top: 20px;
+}
+
+.pagination-info {
+  font-size: 0.85rem;
+  color: var(--txt-mu);
+  font-weight: 500;
+}
+
+.pagination-list {
+  list-style: none;
+}
+
+.page-number-btn, 
+.page-nav-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 25px;
+  border: 1px solid var(--bdr);
+  background-color: var(--surf);
+  color: var(--txt-m);
+  font-size: 0.88rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+}
+
+.page-number-btn:hover, 
+.page-nav-btn:not(:disabled):hover {
+  border-color: var(--em);
+  color: var(--em);
+  background-color: var(--em-soft);
+}
+
+.page-number-btn.active {
+  background-color: var(--em);
+  color: #ffffff;
+  border-color: var(--em);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
+}
+
+.page-nav-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  background-color: #f1f5f9;
+  border-color: #e2e8f0;
+  color: #94a3b8;
 }
 </style>

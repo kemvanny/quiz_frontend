@@ -39,13 +39,16 @@
     </template>
   </BaseModal>
 </template>
-  
+
 <script setup>
 import { ref, reactive } from 'vue';
 import { createRoom } from '@/api/teacher.api';
 import { useToast } from 'vue-toastification'
+import { useRoomStore } from '@/stores/roomStore'
 
 const toast = useToast()
+const roomStore = useRoomStore() 
+
 defineProps({
   isOpen: { type: Boolean, required: true }
 });
@@ -59,25 +62,17 @@ const handleCreateRoom = async () => {
 
   try {
     createLoading.value = true;
+    const res = await createRoom({ name: form.name.trim() });
+    const newRoom = res.data?.data || res.data;
+    roomStore.addRoomToStore(newRoom);
+    roomStore.fetchRooms(); 
 
-    const res = await createRoom({
-      name: form.name.trim(),
-    });
-
-    const newRoomData = res.data?.data || res.data;
-
-    emit("created", newRoomData);
-
+    emit("created", newRoom);
     toast.success("បង្កើតថ្នាក់រៀនជោគជ័យ");
-
     handleClose();
   } catch (err) {
     console.error(err);
-
-    toast.error(
-      err.response?.data?.message ||
-      "មានបញ្ហាក្នុងការបង្កើតថ្នាក់រៀន"
-    );
+    toast.error(err.response?.data?.message || "មានបញ្ហាក្នុងការបង្កើតថ្នាក់រៀន");
   } finally {
     createLoading.value = false;
   }
