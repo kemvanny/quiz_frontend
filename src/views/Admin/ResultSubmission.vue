@@ -121,13 +121,13 @@ const fetchResultSubmission = async () => {
       page: currentPage.value,
       limit: limit.value
     });
-
+    console.log(res);
     if (res.data && res.data.result) {
       const rawSubmissions = res.data.data.submissions || [];
 
       submissions.value = rawSubmissions.map(item => {
         const currentScore = Number(item.score);
-        const maxScore = 100;
+        const maxScore = Number(item.total_points);
         const percentage = (currentScore / maxScore) * 100;
 
         return {
