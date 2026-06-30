@@ -463,6 +463,31 @@ const warningCount = ref(0);
 const isScreenLocked = ref(false);
 const unlockScreen = () => {
     isScreenLocked.value = false;
+    saveProgressToStorage(); 
+};
+
+const STORAGE_PREFIX = computed(() => `exam_${examCode.value || 'default'}_`);
+const saveProgressToStorage = () => {
+    if (!examCode.value || currentStep.value !== 3) return;
+    localStorage.setItem(`${STORAGE_PREFIX.value}answers`, JSON.stringify(userAnswers.value));
+    localStorage.setItem(`${STORAGE_PREFIX.value}time_left`, totalSeconds.value.toString());
+    localStorage.setItem(`${STORAGE_PREFIX.value}current_step`, currentStep.value.toString());
+    localStorage.setItem(`${STORAGE_PREFIX.value}student_info`, JSON.stringify(studentInfo.value));
+    localStorage.setItem(`${STORAGE_PREFIX.value}questions`, JSON.stringify(examQuestions.value));
+    localStorage.setItem(`${STORAGE_PREFIX.value}exam_id`, (examId.value || '').toString());
+    localStorage.setItem(`${STORAGE_PREFIX.value}warning_count`, warningCount.value.toString());
+    localStorage.setItem(`${STORAGE_PREFIX.value}screen_locked`, isScreenLocked.value ? 'true' : 'false');
+};
+const clearExamStorage = () => {
+    if (!examCode.value) return;
+    localStorage.removeItem(`${STORAGE_PREFIX.value}answers`);
+    localStorage.removeItem(`${STORAGE_PREFIX.value}time_left`);
+    localStorage.removeItem(`${STORAGE_PREFIX.value}current_step`);
+    localStorage.removeItem(`${STORAGE_PREFIX.value}student_info`);
+    localStorage.removeItem(`${STORAGE_PREFIX.value}questions`);
+    localStorage.removeItem(`${STORAGE_PREFIX.value}exam_id`);
+    localStorage.removeItem(`${STORAGE_PREFIX.value}warning_count`);
+    localStorage.removeItem(`${STORAGE_PREFIX.value}screen_locked`);
 };
 
 const watermarkStyle = computed(() => {
@@ -481,8 +506,11 @@ const setupExamSecurity = () => {
         if (isScreenLocked.value) return;
 
         warningCount.value++;
+        saveProgressToStorage(); 
+
         if (warningCount.value > 3) {
             isScreenLocked.value = true; 
+            saveProgressToStorage();
             showToast('អ្នកបានល្មើសវិន័យលើសពី ៣ ដងហើយ! ប្រព័ន្ធនឹងបញ្ជូនចម្លើយឥឡូវនេះ។', 'error');
             setTimeout(() => {
                 performSubmit();
@@ -491,7 +519,9 @@ const setupExamSecurity = () => {
         }
         showToast(`ព្រមានលើកទី ${warningCount.value}៖ ${message}`, 'warning');
         isScreenLocked.value = true;
+        saveProgressToStorage(); 
     };
+
     const handleVisibilityChange = () => {
         if (document.hidden) {
             handleViolation('សូមកុំចាកចេញពីទំព័រប្រឡង ឬលួចថតរូបអេក្រង់!');
@@ -506,6 +536,10 @@ const setupExamSecurity = () => {
             handleViolation('មិនអនុញ្ញាតឱ្យថតរូបអេក្រង់ឡើយ!');
             e.preventDefault();
         }
+        if (e.key === 'F5' || (e.ctrlKey && e.key === 'r') || (e.ctrlKey && e.key === 'R')) {
+            saveProgressToStorage(); 
+            return; 
+        }
         if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J'))) {
             e.preventDefault();
         }
@@ -517,15 +551,43 @@ const setupExamSecurity = () => {
     const handleContextMenu = (e) => {
         e.preventDefault();
     };
+
+    const handleBeforeUnload = (e) => {
+        if (currentStep.value === 3) {
+            saveProgressToStorage(); 
+            e.preventDefault();
+            e.returnValue = 'តើអ្នកប្រាកដជាចង់ចាកចេញមែនទេ? ចម្លើយរបស់អ្នកត្រូវបានរក្សាទុកក្នុងម៉ាស៊ីនរួចរាល់។';
+        }
+    };
+
+    const handleOffline = () => {
+        saveProgressToStorage(); 
+        handleViolation('ប្រព័ន្ធរកឃើញថាអ្នកបានដាច់ការតភ្ជាប់អ៊ីនធឺណិត! សូមភ្ជាប់បណ្តាញរបស់អ្នកឡើងវិញដើម្បីធ្វើតេស្តបន្ត។');
+    };
+
+    const handleOnline = () => {
+        showToast('អ៊ីនធឺណិតត្រូវបានភ្ជាប់ឡើងវិញដោយជោគជ័យ។', 'success');
+        isScreenLocked.value = false; 
+        saveProgressToStorage();
+    };
+
     document.addEventListener('visibilitychange', handleVisibilityChange);
     window.addEventListener('blur', handleWindowBlur);
     window.addEventListener('keydown', handleKeyDown);
     document.addEventListener('contextmenu', handleContextMenu);
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    window.addEventListener('offline', handleOffline);
+    window.addEventListener('online', handleOnline);
+    
     return () => {
         document.removeEventListener('visibilitychange', handleVisibilityChange);
         window.removeEventListener('blur', handleWindowBlur);
         window.removeEventListener('keydown', handleKeyDown);
         document.removeEventListener('contextmenu', handleContextMenu);
+        window.removeEventListener('beforeunload', handleBeforeUnload);
+        
+        window.removeEventListener('offline', handleOffline);
+        window.removeEventListener('online', handleOnline);
     };
 };
 
@@ -541,6 +603,40 @@ onMounted(async () => {
     if (!examCode.value) {
         showToast('រកមិនឃើញលេខកូដវិញ្ញាសាឡើយ!', 'error');
         return;
+    }
+    const savedStep = localStorage.getItem(`${STORAGE_PREFIX.value}current_step`);
+    if (savedStep === '3') {
+        const savedAnswers = localStorage.getItem(`${STORAGE_PREFIX.value}answers`);
+        const savedTime = localStorage.getItem(`${STORAGE_PREFIX.value}time_left`);
+        const savedInfo = localStorage.getItem(`${STORAGE_PREFIX.value}student_info`);
+        const savedQuestions = localStorage.getItem(`${STORAGE_PREFIX.value}questions`);
+        const savedId = localStorage.getItem(`${STORAGE_PREFIX.value}exam_id`);
+        const savedWarnings = localStorage.getItem(`${STORAGE_PREFIX.value}warning_count`);
+        const savedLock = localStorage.getItem(`${STORAGE_PREFIX.value}screen_locked`);
+
+        if (savedAnswers && savedInfo && savedQuestions) {
+            userAnswers.value = JSON.parse(savedAnswers);
+            studentInfo.value = JSON.parse(savedInfo);
+            examQuestions.value = JSON.parse(savedQuestions);
+            examId.value = savedId ? Number(savedId) : null;
+            warningCount.value = savedWarnings ? Number(savedWarnings) : 0;
+            isScreenLocked.value = savedLock === 'true';
+            
+            if (savedTime) {
+                totalSeconds.value = Number(savedTime);
+            }
+            
+            currentStep.value = 3;
+            clearSecurityEvents = setupExamSecurity();
+            startTimer();
+            if (warningCount.value > 3) {
+                performSubmit();
+                return;
+            }
+
+            showToast('បានស្ដារឡើងវិញនូវវគ្គប្រឡងចុងក្រោយរបស់អ្នកដោយជោគជ័យ!', 'success');
+            return; 
+        }
     }
     try {
         const response = await examApi.checkExamCode(examCode.value);
@@ -574,6 +670,7 @@ onMounted(async () => {
 
 onUnmounted(() => {
     if (clearSecurityEvents) clearSecurityEvents();
+    if (intervalId) clearInterval(intervalId);
 });
 
 const startExamSession = async () => {
@@ -623,8 +720,9 @@ const startExamSession = async () => {
 
         examQuestions.value = questionsArray;
         currentStep.value = 3;
+        saveProgressToStorage();
+        
         clearSecurityEvents = setupExamSecurity();
-
         startTimer();
     } catch (error) {
         showToast('មិនអាចចាប់ផ្តើមបានទេ! ', 'error');
@@ -634,6 +732,12 @@ const startExamSession = async () => {
 };
 
 const performSubmit = async () => {
+    if (!navigator.onLine) {
+        saveProgressToStorage();
+        showToast('មិនអាចបញ្ជូនចម្លើយបានទេ ដោយសារដាច់អ៊ីនធឺណិត! ចម្លើយរបស់អ្នកត្រូវបានរក្សាទុកដោយសុវត្ថិភាព។ សូមពិនិត្យបណ្តាញ រួចសាកល្បងម្តងទៀត។', 'error');
+        return;
+    }
+
     isSubmitting.value = true;
     try {
         if (intervalId) clearInterval(intervalId);
@@ -658,6 +762,8 @@ const performSubmit = async () => {
             correctCount: responseData.correctCount !== undefined ? responseData.correctCount : 0,
             timeSpent: responseData.timeSpent || calculateTimeSpent()
         };
+        clearExamStorage();
+
         if (bsModalInstance) {
             bsModalInstance.hide();
         } else if (closeModalBtnRef.value) {
@@ -665,7 +771,8 @@ const performSubmit = async () => {
         }
         currentStep.value = 4;
     } catch (error) {
-        showToast('មានបញ្ហាក្នុងការបញ្ជូនចម្លើយ!', 'error');
+        saveProgressToStorage();
+        showToast('ការបញ្ជូនបរាជ័យ! ប្រហែលជាមានបញ្ហាដាច់អ៊ីនធឺណិត ឬសេវាខ្សោយខ្លាំង។ ប្រព័ន្ធបានរក្សាទុកចម្លើយរបស់អ្នក សូមពិនិត្យអ៊ីនធឺណិត រួចចុចបញ្ជូនម្តងទៀត។', 'error');
     } finally {
         isSubmitting.value = false;
     }
@@ -689,7 +796,10 @@ const calculateTimeSpent = () => {
 
 const loadQuestion = (idx) => { currentIdx.value = idx; };
 const changeQuestion = (dir) => { currentIdx.value += dir; };
-const selectOption = (qId, optValue) => { userAnswers.value[qId] = optValue; };
+const selectOption = (qId, optValue) => { 
+    userAnswers.value[qId] = optValue; 
+    saveProgressToStorage();
+};
 
 const startTimer = () => {
     const total = totalSeconds.value;
@@ -700,6 +810,10 @@ const startTimer = () => {
             return;
         }
         totalSeconds.value--;
+        if (totalSeconds.value % 5 === 0) {
+            localStorage.setItem(`${STORAGE_PREFIX.value}time_left`, totalSeconds.value.toString());
+        }
+
         const mins = Math.floor(totalSeconds.value / 60).toString().padStart(2, '0');
         const secs = (totalSeconds.value % 60).toString().padStart(2, '0');
         formattedTime.value = `${mins}:${secs}`;
@@ -711,6 +825,7 @@ const startTimer = () => {
 const goToLobby = () => { window.location.reload(); };
 const printResult = () => { window.print(); };
 </script>
+
 <style scoped>
 .exam-container-wrapper {
     -webkit-user-select: none;
