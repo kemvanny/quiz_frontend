@@ -70,19 +70,18 @@
         <BaseModal :is-open="isModalOpen" title="បង្កើតគណនី" subtitle="បន្ថែមអ្នកប្រើប្រាស់ទៅក្នុងប្រព័ន្ធរបស់អ្នក"
             tag="អ្នកប្រើប្រាស់ថ្មី" width="600px" @close="isModalOpen = false">
             <div class="glass-grid">
+                <div class="glass-field">
+                    <label>នាមត្រកូល</label>
+                    <input type="text" placeholder="សូមបញ្ចូលនាមត្រកូល" v-model="form.lastName"
+                        :class="{ 'input-error': errors.lastName }">
+                    <span v-if="errors.lastName" class="text-danger-msg">{{ errors.lastName }}</span>
+                </div>
 
                 <div class="glass-field">
                     <label>នាមខ្លួន</label>
                     <input type="text" placeholder="សូមបញ្ចូលនាមខ្លួន" v-model="form.firstName"
                         :class="{ 'input-error': errors.firstName }">
                     <span v-if="errors.firstName" class="text-danger-msg">{{ errors.firstName }}</span>
-                </div>
-
-                <div class="glass-field">
-                    <label>នាមត្រកូល</label>
-                    <input type="text" placeholder="សូមបញ្ចូលនាមត្រកូល" v-model="form.lastName"
-                        :class="{ 'input-error': errors.lastName }">
-                    <span v-if="errors.lastName" class="text-danger-msg">{{ errors.lastName }}</span>
                 </div>
 
                 <div class="glass-field full">

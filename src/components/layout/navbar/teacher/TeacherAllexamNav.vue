@@ -10,13 +10,13 @@
                 <div class="d-flex align-items-center gap-3" style="min-width: 0;">
                     <div style="min-width: 0;">
                         <h4 class="mb-1 fw-bold text-dark text-truncate"
-                            style="font-size:1.15rem; line-height:1; letter-spacing: -0.2px;">លទ្ធផលសិស្ស</h4>
-                        <div class="text-muted fw-bold d-none d-sm-flex align-items-center gap-2"
+                            style="font-size:1.15rem; line-height:1; letter-spacing: -0.2px;">ការប្រឡងទាំងអស់</h4>
+                        <div class="text-muted fw-bold d-none d-sm-flex align-items-center gap-2 mt-2"
                             style="font-size:.7rem; letter-spacing:0.5px;">
                             <span
                                 style="color:var(--em); background:var(--em-soft); border: 1px solid rgba(16,185,129,.2); padding: 2px 6px; border-radius: 4px; font-weight:700;"><i
-                                    class="fas fa-chart-bar me-1"></i> គ្រប់គ្រងពិន្ទុ</span>
-                            <span>ការពិនិត្យ និងវិភាគ</span>
+                                    class="fas fa-chart-bar me-1"></i> គ្រប់គ្រងការប្រឡង
+                            </span>
                         </div>
                     </div>
                 </div>

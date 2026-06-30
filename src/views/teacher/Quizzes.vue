@@ -552,7 +552,7 @@
             class="btn btn-light w-100 rounded-3 fw-bold py-2 text-muted"
             @click="showCodeModal = false"
           >
-            បិទផ្ទាំងនេះ (Close)
+            បិទផ្ទាំងនេះ 
           </button>
         </div>
       </div>
