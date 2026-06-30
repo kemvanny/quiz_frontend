@@ -17,7 +17,7 @@
             v-model="form.name" 
             @keydown.enter.prevent="handleCreateRoom"
             class="form-control border-0 shadow-none px-2 focus-ring-emerald" 
-            placeholder="ឧទាហរណ៍៖ គណិតវិទ្យា - ថ្នាក់ទី ១០" 
+            placeholder="សូមបញ្ចូលបន្ទប់រៀន" 
             style="font-size: .95rem; background: #fafbfc;"
           >
         </div>
