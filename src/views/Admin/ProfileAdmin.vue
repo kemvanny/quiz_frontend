@@ -16,18 +16,22 @@
 
       <div class="stats-strip">
         <div class="stat-box">
+          <span v-if="isLoadingDashboard" class="skeleton skeleton-text"></span>
           <span class="stat-num">{{ totalUser?.total_users }}</span>
           <span class="stat-label">អ្នកប្រើប្រាស់សរុប</span>
         </div>
         <div class="stat-box">
+          <span v-if="isLoadingDashboard" class="skeleton skeleton-text"></span>
           <span class="stat-num">{{ totalUser?.total_teachers }}</span>
           <span class="stat-label">គ្រូបង្រៀន</span>
         </div>
         <div class="stat-box">
+          <span v-if="isLoadingDashboard" class="skeleton skeleton-text"></span>
           <span class="stat-num">{{ totalUser?.total_students }}</span>
           <span class="stat-label">និស្សិត</span>
         </div>
         <div class="stat-box">
+          <span v-if="isLoadingDashboard" class="skeleton skeleton-text"></span>
           <span class="stat-num">{{ totalUser?.total_rooms }}</span>
           <span class="stat-label">បន្ទប់</span>
         </div>
@@ -165,6 +169,8 @@ const { triggerToast } = useToast();
 const imageRefresh = ref(Date.now())
 const fileInput = ref(null)
 
+const isLoadingDashboard = ref(false);
+
 const totalUser = ref();
 
 const triggerFileInput = () => {
@@ -290,10 +296,14 @@ const saveChanges = async () => {
 //Get Total User
 const fetchTotalUser = async()=>{
   try{
+    isLoadingDashboard.value = true;
     const res = await getTotalUser();
     totalUser.value = res.data.data;
   }catch(error){
     triggerToast('មិនអាចទាញទិន្នន័យបានទេ','fa-solid fa-circle-xmark')
+  }
+  finally {
+    isLoadingDashboard.value = false;
   }
 }
 
@@ -308,7 +318,7 @@ const cancelEdit = () => {
   Object.assign(userProfile, originalProfile.value)
   clearErrors()
   isEditMode.value = false
-  triggerToast('Changes discarded.', 'fa-solid fa-rotate-left')
+  triggerToast('បោះបង់ការកែប្រែ', 'fa-solid fa-rotate-left')
 }
 
 onMounted(async () => {
