@@ -1,31 +1,42 @@
 <template>
-  <div class="quiz-builder-container">
+  <div class="quiz-builder-container" ref="containerRef" :style="{ height: containerHeight }">
     <div class="app-shell flex-grow-1 overflow-hidden">
       <div class="main-col">
         <div class="workspace">
-          <div class="panel d-flex flex-column" style="height: 100%; max-height: calc(100vh - 120px)">
+          <div class="panel d-flex flex-column">
             <div class="panel-head flex-shrink-0">
               <span class="panel-lbl">បញ្ជីសំណួរ</span>
               <span class="panel-count" id="qCountLabel">{{ questions.length }} សំណួរ</span>
             </div>
 
-            <div class="q-nav-scroll flex-grow-1 overflow-y-auto" ref="qNavScrollRef"
-              style="max-height: calc(100% - 100px)">
+            <div class="q-nav-scroll" ref="qNavScrollRef">
               <div v-for="(q, idx) in questions" :key="idx" :id="`qnav-${idx}`" class="q-nav-item slide-in"
                 :class="{ active: selectedQuestionIndex === idx }" @click="selectQuestion(idx)">
-                <span>សំណួរទី {{ getKhmerNumber(idx + 1) }}</span>
+                <span class="d-flex align-items-center gap-1">
+                  <i :class="q.question_type === 'true_false' ? 'fas fa-toggle-on' : 'fas fa-list-ul'"
+                    style="font-size: 0.62rem"></i>
+                  សំណួរទី {{ getKhmerNumber(idx + 1) }}
+                </span>
                 <span class="q-badge">{{ q.pts }} ពិន្ទុ</span>
               </div>
             </div>
 
-            <div class="p-2 border-top bg-white flex-shrink-0">
+            <div class="p-2 border-top bg-white flex-shrink-0 d-flex flex-column gap-2">
               <button class="btn btn-sm fw-bold rounded-3 border-0 add-q-btn w-100 py-2" style="
                   border: 1.5px dashed rgba(16, 185, 129, 0.35) !important;
                   background: rgba(16, 185, 129, 0.04);
                   color: var(--em);
                   font-size: 0.78rem;
-                " @click="addNewQuestion">
-                <i class="fas fa-plus-circle me-1"></i> បន្ថែមសំណួរថ្មី
+                " @click="addNewQuestion('multiple_choice')">
+                <i class="fas fa-plus-circle me-1"></i> សំណួរជ្រើសរើសចម្លើយ
+              </button>
+              <button class="btn btn-sm fw-bold rounded-3 border-0 add-q-btn-tf w-100 py-2" style="
+                  border: 1.5px dashed rgba(59, 130, 246, 0.35) !important;
+                  background: rgba(59, 130, 246, 0.04);
+                  color: #3b82f6;
+                  font-size: 0.78rem;
+                " @click="addNewQuestion('true_false')">
+                <i class="fas fa-toggle-on me-1"></i> សំណួរ​ true/false
               </button>
             </div>
           </div>
@@ -50,7 +61,7 @@
                   rows="2" placeholder="សូមសរសេរការណែនាំខ្លីៗសម្រាប់សិស្ស"></textarea>
               </div>
               <div class="mb-3">
-                <label class="form-label fw-bold small text-uppercase text-muted">រយៈពេលប្រឡង (នាទី)</label>
+                <label class="form-label fw-bold small text-uppercase text-muted">រយៈពេលប្រឡង-នាទី</label>
                 <input type="number" v-model.number="quizDuration"
                   class="form-control rounded-3 py-2 px-3 border-0 shadow-sm" min="1" placeholder="ឧ. 60" />
               </div>
@@ -84,13 +95,25 @@
 
             <div v-for="(q, qIdx) in questions" :key="qIdx" :id="`qcard-${qIdx}`" class="q-card slide-in"
               :class="{ 'active-card': selectedQuestionIndex === qIdx }" @click="selectedQuestionIndex = qIdx">
-              <div class="d-flex align-items-center justify-content-between px-3 py-2 border-bottom bg-light">
+              <div class="d-flex align-items-center justify-content-between px-3 py-2 border-bottom bg-light flex-wrap gap-2">
                 <div class="d-flex align-items-center gap-2">
                   <div class="q-num-badge">{{ qIdx + 1 }}</div>
                   <span class="fw-bold" style="font-size: 0.85rem; color: var(--txt)">
                     សំណួរទី {{ getKhmerNumber(qIdx + 1) }}
                   </span>
                 </div>
+
+                <div class="type-toggle" @click.stop>
+                  <button type="button" class="type-toggle-btn" :class="{ active: q.question_type !== 'true_false' }"
+                    @click="setQuestionType(qIdx, 'multiple_choice')">
+                    <i class="fas fa-list-ul me-1"></i>ជ្រើសរើស
+                  </button>
+                  <button type="button" class="type-toggle-btn" :class="{ active: q.question_type === 'true_false' }"
+                    @click="setQuestionType(qIdx, 'true_false')">
+                    <i class="fas fa-toggle-on me-1"></i>ture/false
+                  </button>
+                </div>
+
                 <div class="pts-pill">
                   <label>​ពិន្ទុ</label>
                   <input type="number" v-model.number="q.pts" min="0" class="pts-input" />
@@ -103,7 +126,8 @@
                   ចម្លើយ និងជម្រើស
                 </div>
 
-                <div class="d-flex flex-column gap-2">
+                <!-- Multiple choice UI -->
+                <div v-if="q.question_type !== 'true_false'" class="d-flex flex-column gap-2">
                   <div v-for="(choice, cIdx) in q.choices" :key="cIdx" class="choice-row"
                     :class="{ 'correct-highlight': choice.isCorrect }">
                     <div class="choice-lbl">{{ getKhmerAlphabet(cIdx) }}</div>
@@ -120,13 +144,29 @@
                     </div>
                   </div>
                 </div>
+
+                <!-- True / False UI -->
+                <div v-else class="d-flex flex-column gap-2">
+                  <div v-for="(choice, cIdx) in q.choices" :key="cIdx" class="tf-choice-row"
+                    :class="{ 'correct-highlight': choice.isCorrect }" @click="setCorrectChoice(qIdx, cIdx)">
+                    <div class="tf-icon">
+                      <i :class="cIdx === 0 ? 'fas fa-check' : 'fas fa-times'"></i>
+                    </div>
+                    <span class="tf-label">{{ choice.text }}</span>
+                    <input class="form-check-input cr shadow-none m-0 ms-auto" type="radio"
+                      :name="`q_correct_${qIdx}`" :checked="choice.isCorrect" @click.stop
+                      @change.stop="setCorrectChoice(qIdx, cIdx)" />
+                  </div>
+                </div>
               </div>
 
               <div class="d-flex align-items-center justify-content-between px-3 pb-3">
-                <button class="btn btn-sm fw-bold rounded-3 border-0 bg-transparent"
+                <button v-if="q.question_type !== 'true_false'"
+                  class="btn btn-sm fw-bold rounded-3 border-0 bg-transparent"
                   style="color: var(--em); font-size: 0.76rem" @click="addChoice(qIdx)">
                   <i class="fas fa-plus-circle me-1"></i> បន្ថែមជម្រើស
                 </button>
+                <span v-else></span>
                 <button v-if="questions.length > 1" class="btn btn-sm btn-outline-danger rounded-3 fw-bold"
                   style="font-size: 0.72rem" @click.stop="removeQuestion(qIdx)">
                   <i class="fas fa-trash-alt me-1"></i> លុប
@@ -140,7 +180,7 @@
               <span class="panel-lbl">វឌ្ឍនភាពនៃការធ្វើតេស្ត</span>
             </div>
 
-            <div class="flex-grow-1 overflow-y-auto p-3 d-flex flex-column gap-3" style="padding: 16px 14px">
+            <div class="flex-grow-1 p-3 d-flex flex-column gap-3 progress-fixed" style="padding: 16px 14px">
               <div class="d-flex justify-content-center">
                 <div style="position: relative; width: 120px; height: 120px">
                   <svg width="120" height="120" viewBox="0 0 120 120" class="svg-ring">
@@ -325,7 +365,7 @@
 </template>
 
 <script setup>
-import { ref, computed, nextTick, onMounted, watch } from "vue";
+import { ref, computed, nextTick, onMounted, onUnmounted, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useToast } from "vue-toastification";
 import { useAuthStore } from "@/stores/auth";
@@ -337,6 +377,7 @@ const router = useRouter();
 const toast = useToast();
 const authStore = useAuthStore();
 
+const containerRef = ref(null);
 const qNavScrollRef = ref(null);
 const isSubmitting = ref(false);
 const showPreviewModal = ref(false);
@@ -386,6 +427,39 @@ const questions = ref([
   },
 ]);
 
+// --- Fix the component to exactly the remaining viewport height,
+// no matter what header/topbar sits above it. This guarantees the
+// whole page never scrolls; only the center feed column scrolls.
+const containerHeight = ref("100vh");
+
+const updateContainerHeight = () => {
+  if (!containerRef.value) return;
+  const top = containerRef.value.getBoundingClientRect().top;
+  containerHeight.value = `${window.innerHeight - top}px`;
+};
+
+let resizeObserver;
+onMounted(async () => {
+  await nextTick();
+  updateContainerHeight();
+  window.addEventListener("resize", updateContainerHeight);
+  // Also react if fonts/late content shift the header height slightly
+  resizeObserver = new ResizeObserver(() => updateContainerHeight());
+  if (containerRef.value?.parentElement) {
+    resizeObserver.observe(containerRef.value.parentElement);
+  }
+
+  await getAllRooms();
+  if (!authStore.user) {
+    authStore.fetchUserProfile();
+  }
+});
+
+onUnmounted(() => {
+  window.removeEventListener("resize", updateContainerHeight);
+  resizeObserver?.disconnect();
+});
+
 const getKhmerNumber = (num) => {
   return KH_N[num - 1] || num.toString();
 };
@@ -421,15 +495,22 @@ const progressColor = computed(() => {
   return "var(--em)";
 });
 
-const addNewQuestion = () => {
+// type can be "multiple_choice" or "true_false"; both use the same createQuestion API
+const addNewQuestion = (type = "multiple_choice") => {
+  const isTF = type === "true_false";
   questions.value.push({
     text: "",
     pts: 10,
-    question_type: "multiple_choice",
-    choices: [
-      { text: "", isCorrect: true },
-      { text: "", isCorrect: false },
-    ],
+    question_type: type,
+    choices: isTF
+      ? [
+          { text: "True", isCorrect: true },
+          { text: "False", isCorrect: false },
+        ]
+      : [
+          { text: "", isCorrect: true },
+          { text: "", isCorrect: false },
+        ],
   });
   const newIndex = questions.value.length - 1;
   selectedQuestionIndex.value = newIndex;
@@ -444,6 +525,26 @@ const addNewQuestion = () => {
       });
     }
   });
+};
+
+// Switch an existing question's type; converts its choices accordingly
+const setQuestionType = (qIdx, type) => {
+  const q = questions.value[qIdx];
+  if (q.question_type === type) return;
+
+  q.question_type = type;
+
+  if (type === "true_false") {
+    q.choices = [
+      { text: "ត្រូវ", isCorrect: true },
+      { text: "ខុស", isCorrect: false },
+    ];
+  } else if (q.choices.length < 2 || q.choices.some((c) => ["ត្រូវ", "ខុស"].includes(c.text))) {
+    q.choices = [
+      { text: "", isCorrect: true },
+      { text: "", isCorrect: false },
+    ];
+  }
 };
 
 const removeQuestion = (idx) => {
@@ -536,7 +637,7 @@ const finalizePublish = async () => {
       await createQuestion({
         exam_id: examId,
         question: q.text,
-        question_type: "multiple_choice",
+        question_type: q.question_type,
         options: q.choices.map((c) => c.text),
         correct_answer: [q.choices.find((c) => c.isCorrect)?.text],
         points: q.pts,
@@ -564,13 +665,6 @@ const copyLinkToClipboard = async () => {
     toast.error("មិនអាចចម្លងតំណភ្ជាប់បានទេ!");
   }
 };
-
-onMounted(async () => {
-  await getAllRooms();
-  if (!authStore.user) {
-    authStore.fetchUserProfile();
-  }
-});
 </script>
 
 <style scoped>
@@ -592,16 +686,25 @@ onMounted(async () => {
 
   display: flex;
   flex-direction: column;
-  height: 100%;
+  /* height is set dynamically via :style binding to exactly fill
+     whatever space is left below your app's header — see containerHeight */
   width: 100%;
   overflow: hidden;
   font-family: "Kantumruy Pro", "Poppins", sans-serif;
   color: var(--txt);
+  box-sizing: border-box;
+}
+
+.quiz-builder-container *,
+.quiz-builder-container *::before,
+.quiz-builder-container *::after {
+  box-sizing: border-box;
 }
 
 .app-shell {
   display: flex;
   height: 100%;
+  min-height: 0;
   overflow: hidden;
 }
 
@@ -611,25 +714,44 @@ onMounted(async () => {
   display: flex;
   flex-direction: column;
   height: 100%;
-  overflow: hidden;
+  min-height: 0;
+  overflow: hidden; /* the page itself never scrolls */
 }
 
+/* Grid layout is ALWAYS on, at every screen size — side panels stay
+   pinned to the container's fixed height; only the center feed scrolls */
 .workspace {
   flex: 1;
   min-height: 0;
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: 220px 1fr 190px;
+  grid-template-rows: 100%;
   gap: 12px;
   padding: 12px;
-  overflow-y: auto;
-  overflow-x: hidden;
+  overflow: hidden;
 }
 
-@media (min-width: 992px) {
+@media (max-width: 991px) {
   .workspace {
-    display: grid;
-    grid-template-columns: 220px 1fr 190px;
-    overflow: hidden;
+    grid-template-columns: 150px 1fr 130px;
+    gap: 8px;
+    padding: 8px;
+  }
+}
+
+@media (max-width: 767px) {
+  .workspace {
+    grid-template-columns: 120px 1fr 110px;
+    gap: 6px;
+    padding: 6px;
+  }
+
+  .panel-lbl {
+    font-size: 0.52rem;
+  }
+
+  .q-nav-item span:first-child {
+    font-size: 0.68rem;
   }
 }
 
@@ -645,23 +767,6 @@ onMounted(async () => {
   box-shadow: 0 0 0 0.2rem rgba(16, 185, 129, 0.15) !important;
 }
 
-@media (max-width: 991px) {
-  .panel {
-    min-height: 250px;
-    flex-shrink: 0;
-    overflow: visible !important;
-  }
-
-  .main-col {
-    overflow-y: auto;
-    overflow-x: hidden;
-  }
-
-  .workspace {
-    overflow: visible;
-  }
-}
-
 .panel {
   background: var(--surf);
   border: 1px solid var(--bdr);
@@ -669,8 +774,9 @@ onMounted(async () => {
   box-shadow: var(--sh-sm);
   display: flex;
   flex-direction: column;
+  height: 100%;
   min-height: 0;
-  overflow: hidden;
+  overflow: hidden; /* panel is fixed as a block, never scrolls itself, never resizes with center content */
 }
 
 .panel-head {
@@ -696,10 +802,13 @@ onMounted(async () => {
   color: var(--em);
 }
 
+/* Left panel: only this inner list scrolls; header + add-buttons stay fixed */
 .q-nav-scroll {
-  flex: 1;
+  flex: 1 1 0%;
+  height: 0;
   min-height: 0;
   overflow-y: auto;
+  overflow-x: hidden;
   padding: 8px;
   display: flex;
   flex-direction: column;
@@ -749,9 +858,12 @@ onMounted(async () => {
   color: var(--em);
 }
 
+/* Center column: this is the ONLY thing that scrolls */
 .feed-col {
   min-height: 0;
+  height: 100%;
   overflow-y: auto;
+  overflow-x: hidden;
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -911,6 +1023,92 @@ onMounted(async () => {
   box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.14);
 }
 
+/* Type toggle (multiple choice / true-false) */
+.type-toggle {
+  display: flex;
+  background: #f1f5f9;
+  border-radius: 999px;
+  padding: 3px;
+  gap: 2px;
+}
+
+.type-toggle-btn {
+  border: none;
+  background: transparent;
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 5px 10px;
+  border-radius: 999px;
+  color: var(--txt-mu);
+  cursor: pointer;
+  transition: 0.15s;
+  white-space: nowrap;
+}
+
+.type-toggle-btn.active {
+  background: var(--em);
+  color: #fff;
+  box-shadow: 0 2px 6px rgba(16, 185, 129, 0.28);
+}
+
+/* True/False choice rows */
+.tf-choice-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 13px;
+  border: 1.5px solid var(--bdr);
+  border-radius: var(--r-md);
+  background: #fafbfc;
+  cursor: pointer;
+  transition: 0.13s;
+}
+
+.tf-choice-row:hover {
+  border-color: var(--em-mid);
+  background: #fff;
+}
+
+.tf-choice-row.correct-highlight {
+  border-color: var(--em);
+  background: var(--em-soft);
+}
+
+.tf-icon {
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+  border-radius: 7px;
+  background: #e2e8f0;
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.78rem;
+}
+
+.tf-choice-row.correct-highlight .tf-icon {
+  background: var(--em);
+  color: #fff;
+}
+
+.tf-label {
+  flex: 1;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--txt);
+}
+
+.add-q-btn-tf:hover {
+  background: rgba(59, 130, 246, 0.08) !important;
+}
+
+/* Right panel: fully fixed, no internal scroll at all */
+.progress-fixed {
+  min-height: 0;
+  overflow: hidden;
+}
+
 .svg-ring {
   transform: rotate(-90deg);
   overflow: visible;
@@ -997,22 +1195,6 @@ onMounted(async () => {
 .option-preview-row:hover {
   border-color: var(--em) !important;
   background: var(--em-soft) !important;
-}
-
-.content-body:has(.quiz-builder-container) {
-  padding: 0 !important;
-  overflow: hidden !important;
-  height: calc(100vh - 80px) !important;
-  background-color: #f4f7fe;
-}
-
-.content-body:has(.quiz-builder-container) .page-body {
-  padding: 0 !important;
-  height: 100% !important;
-}
-
-.content-body:has(.quiz-builder-container) .main-content {
-  height: 100% !important;
 }
 
 .modal-backdrop-custom {

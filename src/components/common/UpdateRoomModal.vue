@@ -66,7 +66,7 @@ const form = reactive({
   name: ''
 });
 
-// តាមដានរាល់ពេលបើក Modal ឱ្យវាចាប់យកឈ្មោះបន្ទប់ចាស់មកបំពេញក្នុង Input ភ្លាមៗ
+
 watch(() => props.isOpen, (newVal) => {
   if (newVal && props.roomData) {
     form.name = props.roomData.name || '';
@@ -79,14 +79,12 @@ const handleUpdateRoom = async () => {
   try {
     loading.value = true;
     
-    // ហៅទៅកាន់ Endpoint: PUT /api/teacher/rooms/:id
     await updateRoom(props.roomData.id, { name: form.name.trim() });
 
-    // ផ្ញើ Event ទៅកាន់ Parent Component ដើម្បី Reload បញ្ជីបន្ទប់ឡើងវិញ
+    
     emit('updated');
     emit('close');
   } catch (err) {
-    console.error("Update room error:", err);
     alert("មានបញ្ហាក្នុងការកែប្រែថ្នាក់រៀន សូមព្យាយាមម្ដងទៀត។");
   } finally {
     loading.value = false;

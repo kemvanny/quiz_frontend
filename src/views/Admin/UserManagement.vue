@@ -240,7 +240,6 @@ const fetchUsers = async () => {
 
         if (res.data && res.data.data) {
             const rawUsers = res.data.data.users || [];
-            console.log("Fetched users:", rawUsers);
 
             users.value = rawUsers;
 

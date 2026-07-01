@@ -136,7 +136,7 @@
     </svg>
     <div class="gauge-label-content">
       <h3 class="mb-0 fw-extrabold text-dark">{{ totalPoints }}</h3>
-      <span class="gauge-denominator text-muted">/ {{ examData.total_points || 100 }} pts</span>
+      <span class="gauge-denominator text-muted"> ពិន្ទុសរុប</span>
     </div>
   </div>
 
@@ -147,9 +147,9 @@
       <span class="metric-value">{{ questions.length }} សំណួរ</span>
     </div>
     <div class="metric-box">
-      <span class="metric-label">ពិន្ទុមធ្យម/សំណួរ</span>
+      <span class="metric-label">ពិន្ទុ/សំណួរ</span>
       <span class="metric-value">
-        {{ questions.length > 0 ? (totalPoints / questions.length).toFixed(1) : 0 }} pts
+        {{ questions.length > 0 ? (totalPoints / questions.length).toFixed(1) : 0 }} ពិន្ទុ
       </span>
     </div>
   </div>
@@ -157,7 +157,7 @@
   <!-- Soft Callout Banner -->
   <div class="info-callout mb-4">
     <i class="fas fa-info-circle text-success me-2 mt-1"></i>
-    <span>ពិន្ទុសរុបនឹងត្រូវគណនាជាក់ស្តែងផ្អែកលើសំណួរដែលបានបញ្ចូល។</span>
+    <span>ពិន្ទុសរុបនឹងត្រូវគណនាជាក់ស្តែងផ្អែកលើសំណួរដែលបានបញ្ចូល</span>
   </div>
 
   <!-- Back Action Button -->
@@ -338,7 +338,6 @@ onMounted(fetchAll);
   overflow: hidden;
   font-family: "Kantumruy Pro", "Inter", sans-serif;
   color: var(--txt);
-  background-color: #f8fafc;
 }
 
 .app-shell {

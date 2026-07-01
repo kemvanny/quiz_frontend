@@ -74,12 +74,12 @@ const studentMainMenus = [
     icon: "bi bi-list-task"
   },
   {
-    name: "ការវិភាគ និងលទ្ធផល",
+    name: "លទ្ធផលប្រឡង",
     routeName: "AnalyticsResult",
     icon: "bi bi-bar-chart-fill",
   },
   {
-    name: "ការកំណត់គណនី",
+    name: "ប្រវត្តិរូប",
     routeName: "ProfileSetting",
     icon: "bi bi-person-circle",
   },
