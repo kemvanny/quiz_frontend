@@ -17,16 +17,14 @@
           <span>បង្កើតការប្រឡង</span>
         </router-link>
 
-        <router-link
-          :to="{ name: 'RoomManagement' }"
-          class="nav-link"
-          active-class="active"
-          :class="{
-            active:
-              $route.name === 'ClassStream' || $route.name === 'RoomDetail',
-          }"
-        >
+        <router-link :to="{ name: 'RoomManagement' }" class="nav-link" active-class="active" :class="{
+          active:
+            $route.name === 'ClassStream' || $route.name === 'RoomDetail',
+        }">
           <i class="fas fa-users"></i> គ្រប់គ្រងថ្នាក់រៀន
+        </router-link>
+        <router-link :to="{ name: 'AllExams' }" class="nav-link">
+          <i class="fas fa-file-alt"></i> បញ្ជីវិញ្ញាសារ
         </router-link>
         <router-link :to="{ name: 'StudentResults' }" class="nav-link">
           <i class="fas fa-chart-bar"></i> លទ្ធផលសិក្សារបស់សិស្ស
@@ -37,15 +35,9 @@
       </div>
     </div>
 
-    <div
-      class="sidebar-cta p-3 text-center"
-      style="cursor: pointer"
-      @click="isCreateRoomOpen = true"
-    >
-      <div
-        class="bg-white rounded-circle d-flex align-items-center justify-content-center shadow-sm mx-auto mb-2"
-        style="width: 38px; height: 38px"
-      >
+    <div class="sidebar-cta p-3 text-center" style="cursor: pointer" @click="isCreateRoomOpen = true">
+      <div class="bg-white rounded-circle d-flex align-items-center justify-content-center shadow-sm mx-auto mb-2"
+        style="width: 38px; height: 38px">
         <i class="fas fa-plus text-success"></i>
       </div>
       <div class="fw-medium text-dark mb-1" style="font-size: 0.85rem">
@@ -54,18 +46,11 @@
       <div class="text-muted mb-2" style="font-size: 0.7rem; line-height: 1.3">
         បង្កើតថ្នាក់រៀនសម្រាប់សិស្សចូលរួម
       </div>
-      <span
-        class="badge bg-success rounded-pill w-100 py-2 fw-normal"
-        style="font-size: 0.72rem; letter-spacing: 0.5px"
-        >ចាប់ផ្ដើមបង្កើត</span
-      >
+      <span class="badge bg-success rounded-pill w-100 py-2 fw-normal"
+        style="font-size: 0.72rem; letter-spacing: 0.5px">ចាប់ផ្ដើមបង្កើត</span>
     </div>
 
-    <CreateRoomModal
-      :is-open="isCreateRoomOpen"
-      @close="isCreateRoomOpen = false"
-      @created="onRoomCreated"
-    />
+    <CreateRoomModal :is-open="isCreateRoomOpen" @close="isCreateRoomOpen = false" @created="onRoomCreated" />
   </aside>
 </template>
 
@@ -91,6 +76,7 @@ const onRoomCreated = (roomData) => {
 .nav-link {
   font-weight: 550 !important;
 }
+
 .nav-link.active {
   background-color: #10b981 !important;
   color: white !important;
@@ -101,6 +87,7 @@ const onRoomCreated = (roomData) => {
 .nav-link.active i {
   color: white !important;
 }
+
 .dropdown-enter-active,
 .dropdown-leave-active {
   transition: all 0.7s ease;
@@ -168,6 +155,7 @@ const onRoomCreated = (roomData) => {
 .sidebar-cta:hover {
   background: #d1fae5;
 }
+
 .sidebar-brand {
   padding: 39px 20px;
   display: flex;

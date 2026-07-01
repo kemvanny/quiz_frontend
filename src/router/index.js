@@ -35,6 +35,7 @@ import CheckEmail from '@/views/auth/CheckEmail.vue'
 import TakeExam from '@/views/student/TakeExam.vue'
 import RoomManagements from '@/views/admin/RoomManagements.vue'
 import RoomDetailStudent from '@/views/student/RoomDetail.vue'
+import AllExam from '@/views/teacher/AllExam.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -184,6 +185,12 @@ const router = createRouter({
           name: 'Profile',
           component: Profile,
           meta: { title: "Profile" }
+        },
+        {
+          path: 'all-exams',
+          name: 'AllExams',
+          component: AllExam,
+          meta: { title: "AllExams" }
         }
       ]
     },

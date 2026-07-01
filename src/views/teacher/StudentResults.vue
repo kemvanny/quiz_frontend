@@ -11,8 +11,7 @@
     <div v-else class="card border-0 shadow-sm rounded-4 overflow-hidden">
       <!-- Header with integrated filter controls -->
       <div
-        class="card-header bg-white border-bottom-0 pt-4 px-4 pb-3 d-flex align-items-center justify-content-between flex-wrap gap-3"
-      >
+        class="card-header bg-white border-bottom-0 pt-4 px-4 pb-3 d-flex align-items-center justify-content-between flex-wrap gap-3">
         <div>
           <h5 class="card-title fw-bold text-dark mb-1">លទ្ធផលសិស្ស</h5>
           <p class="text-muted small mb-0">
@@ -23,32 +22,21 @@
         <!-- Filter Selector and Stats -->
         <div class="d-flex align-items-center gap-3 flex-wrap">
           <div class="d-flex align-items-center gap-2">
-            <span class="text-muted small fw-semibold text-nowrap"
-              >តម្រងវិញ្ញាសា៖</span
-            >
-            <select
-              v-model="selectedExam"
-              class="form-select form-select-sm border border-secondary-subtle rounded-pill px-3 py-2 text-dark"
-              style="
+            <span class="text-muted small fw-semibold text-nowrap">តម្រងវិញ្ញាសា៖</span>
+            <select v-model="selectedExam"
+              class="form-select form-select-sm border border-secondary-subtle rounded-pill px-3 py-2 text-dark" style="
                 min-width: 180px;
                 font-size: 0.82rem;
                 font-weight: 600;
                 background-color: #f8fafc;
-              "
-            >
+              ">
               <option value="all">ទាំងអស់</option>
-              <option
-                v-for="title in availableExams"
-                :key="title"
-                :value="title"
-              >
+              <option v-for="title in availableExams" :key="title" :value="title">
                 {{ title }}
               </option>
             </select>
           </div>
-          <span
-            class="badge bg-light text-dark border px-3 py-2 rounded-pill fw-semibold"
-          >
+          <span class="badge bg-light text-dark border px-3 py-2 rounded-pill fw-semibold">
             សរុប៖ {{ filteredResults.length }} បញ្ជូល
           </span>
         </div>
@@ -60,75 +48,53 @@
           <table class="table align-middle mb-0 custom-results-table">
             <thead>
               <tr>
-                <th
-                  class="text-secondary text-uppercase py-3 ps-3"
-                  style="font-size: 0.75rem; letter-spacing: 0.5px"
-                >
+                <th class="text-secondary text-uppercase py-3 ps-3" style="font-size: 0.75rem; letter-spacing: 0.5px">
                   សិស្ស
                 </th>
-                <th
-                  class="text-secondary text-uppercase py-3"
-                  style="font-size: 0.75rem; letter-spacing: 0.5px"
-                >
+                <th class="text-secondary text-uppercase py-3 ps-3" style="font-size: 0.75rem; letter-spacing: 0.5px">
+                  បន្ទប់
+                </th>
+                <th class="text-secondary text-uppercase py-3" style="font-size: 0.75rem; letter-spacing: 0.5px">
                   វិញ្ញាសា
                 </th>
-                <th
-                  class="text-secondary text-uppercase py-3 text-center"
-                  style="font-size: 0.75rem; letter-spacing: 0.5px"
-                >
+                <th class="text-secondary text-uppercase py-3 text-center"
+                  style="font-size: 0.75rem; letter-spacing: 0.5px">
                   ពិន្ទុ
                 </th>
-                <th
-                  class="text-secondary text-uppercase py-3 text-center"
-                  style="font-size: 0.75rem; letter-spacing: 0.5px"
-                >
+                <th class="text-secondary text-uppercase py-3 text-center"
+                  style="font-size: 0.75rem; letter-spacing: 0.5px">
                   កាលបរិច្ឆេទ
                 </th>
-                <th
-                  class="text-secondary text-uppercase py-3"
-                  style="
+                <th class="text-secondary text-uppercase py-3" style="
                     font-size: 0.75rem;
                     letter-spacing: 0.5px;
                     min-width: 240px;
-                  "
-                >
+                  ">
                   មតិកែលម្អ
                 </th>
-                <th
-                  class="text-center text-secondary text-uppercase py-3 pe-3"
-                  style="font-size: 0.75rem; letter-spacing: 0.5px; width: 90px"
-                >
+                <th class="text-center text-secondary text-uppercase py-3 pe-3"
+                  style="font-size: 0.75rem; letter-spacing: 0.5px; width: 90px">
                   សកម្មភាព
                 </th>
               </tr>
             </thead>
             <tbody>
-              <tr
-                v-for="res in paginatedResults"
-                :key="res.submission_id"
-                class="card-row"
-              >
+              <tr v-for="res in paginatedResults" :key="res.submission_id" class="card-row">
                 <!-- Student Column -->
                 <td class="ps-3 py-3">
                   <div class="d-flex align-items-center gap-3">
                     <div
                       class="avatar-circle-custom d-flex align-items-center justify-content-center overflow-hidden rounded-circle bg-light"
-                      style="width: 40px; height: 40px"
-                    >
-                      <img
-                        :src="getAvatarUrl(res.avatar)"
-                        class="w-100 h-100 object-fit-cover"
-                        @error="
-                          (e) =>
-                            (e.target.src =
-                              'https://ui-avatars.com/api/?name=' +
-                              res.first_name +
-                              '+' +
-                              res.last_name +
-                              '&background=random')
-                        "
-                        alt="student avatar"
-                      />
+                      style="width: 40px; height: 40px">
+                      <img :src="getAvatarUrl(res.avatar)" class="w-100 h-100 object-fit-cover" @error="
+                        (e) =>
+                        (e.target.src =
+                          'https://ui-avatars.com/api/?name=' +
+                          res.first_name +
+                          '+' +
+                          res.last_name +
+                          '&background=random')
+                      " alt="student avatar" />
                     </div>
                     <div>
                       <div class="fw-semibold text-dark mb-0">
@@ -141,6 +107,12 @@
                   </div>
                 </td>
 
+                <td class="py-3">
+                  <span class="fw-medium text-dark-emphasis">{{
+                    res.room
+                  }}</span>
+                </td>
+
                 <!-- Exam Title -->
                 <td class="py-3">
                   <span class="fw-medium text-dark-emphasis">{{
@@ -150,10 +122,8 @@
 
                 <!-- Score Badge -->
                 <td class="py-3 text-center">
-                  <span
-                    class="badge rounded-pill px-3 py-2 fw-semibold d-inline-flex align-items-center gap-1"
-                    :class="getScoreClass(res)"
-                  >
+                  <span class="badge rounded-pill px-3 py-2 fw-semibold d-inline-flex align-items-center gap-1"
+                    :class="getScoreClass(res)">
                     <i class="fas" :class="getScoreIcon(res)"></i>
                     {{ formatScore(res) }}
                   </span>
@@ -166,21 +136,15 @@
 
                 <!-- Feedback Input -->
                 <td class="py-3">
-                  <input
-                    type="text"
+                  <input type="text"
                     class="form-control form-control-sm border-0 bg-light rounded-3 px-3 py-2 feedback-input-field"
-                    v-model="res.feedback"
-                    placeholder="សរសេរមតិកែលម្អនៅទីនេះ..."
-                  />
+                    v-model="res.feedback" placeholder="សរសេរមតិកែលម្អនៅទីនេះ..." />
                 </td>
 
                 <!-- Action Button -->
                 <td class="text-center pe-3 py-3">
-                  <button
-                    class="btn btn-action-send btn-sm rounded-3"
-                    @click="sendFeedback(res.submission_id, res.feedback)"
-                    title="ផ្ញើមតិកែលម្អ"
-                  >
+                  <button class="btn btn-action-send btn-sm rounded-3"
+                    @click="sendFeedback(res.submission_id, res.feedback)" title="ផ្ញើមតិកែលម្អ">
                     <i class="fas fa-paper-plane"></i>
                   </button>
                 </td>
@@ -196,10 +160,8 @@
         </div>
 
         <!-- Pagination Footer Controls -->
-        <div
-          v-if="totalPages > 1"
-          class="d-flex align-items-center justify-content-between mt-4 border-top pt-3 flex-wrap gap-2"
-        >
+        <div v-if="totalPages > 1"
+          class="d-flex align-items-center justify-content-between mt-4 border-top pt-3 flex-wrap gap-2">
           <div class="text-muted small fw-medium">
             បង្ហាញ {{ (currentPage - 1) * itemsPerPage + 1 }} ដល់
             {{ Math.min(currentPage * itemsPerPage, filteredResults.length) }}
@@ -208,39 +170,23 @@
           <nav aria-label="Result pagination">
             <ul class="pagination pagination-sm mb-0 align-items-center gap-1">
               <li class="page-item" :class="{ disabled: currentPage === 1 }">
-                <button
-                  class="page-link border-0 rounded-circle d-flex align-items-center justify-content-center p-0"
-                  @click="prevPage"
-                  style="width: 32px; height: 32px"
-                >
+                <button class="page-link border-0 rounded-circle d-flex align-items-center justify-content-center p-0"
+                  @click="prevPage" style="width: 32px; height: 32px">
                   <i class="fas fa-chevron-left" style="font-size: 0.8rem"></i>
                 </button>
               </li>
 
-              <li
-                v-for="page in totalPages"
-                :key="page"
-                class="page-item"
-                :class="{ active: currentPage === page }"
-              >
+              <li v-for="page in totalPages" :key="page" class="page-item" :class="{ active: currentPage === page }">
                 <button
                   class="page-link border-0 rounded-circle d-flex align-items-center justify-content-center p-0 fw-semibold"
-                  @click="goToPage(page)"
-                  style="width: 32px; height: 32px; font-size: 0.82rem"
-                >
+                  @click="goToPage(page)" style="width: 32px; height: 32px; font-size: 0.82rem">
                   {{ page }}
                 </button>
               </li>
 
-              <li
-                class="page-item"
-                :class="{ disabled: currentPage === totalPages }"
-              >
-                <button
-                  class="page-link border-0 rounded-circle d-flex align-items-center justify-content-center p-0"
-                  @click="nextPage"
-                  style="width: 32px; height: 32px"
-                >
+              <li class="page-item" :class="{ disabled: currentPage === totalPages }">
+                <button class="page-link border-0 rounded-circle d-flex align-items-center justify-content-center p-0"
+                  @click="nextPage" style="width: 32px; height: 32px">
                   <i class="fas fa-chevron-right" style="font-size: 0.8rem"></i>
                 </button>
               </li>
@@ -264,7 +210,7 @@ const loading = ref(true);
 const studentResults = ref([]);
 const selectedExam = ref("all");
 const currentPage = ref(1);
-const itemsPerPage = ref(10);
+const itemsPerPage = ref(6);
 const toast = useToast();
 const imgBaseUrl = import.meta.env.VITE_BASE_URL_FOR_IMAGE;
 
@@ -283,8 +229,8 @@ const filteredResults = computed(() => {
   return selectedExam.value === "all"
     ? studentResults.value
     : studentResults.value.filter(
-        (res) => res.exam_title === selectedExam.value,
-      );
+      (res) => res.exam_title === selectedExam.value,
+    );
 });
 
 const paginatedResults = computed(() => {
@@ -319,8 +265,6 @@ const fetchStudentResults = async () => {
   loading.value = true;
   try {
     const res = await getAllStudentResults();
-    console.log(res.data.data);
-
     const rawData = res?.data?.data || [];
 
     studentResults.value = Array.isArray(rawData)
@@ -329,7 +273,7 @@ const fetchStudentResults = async () => {
         ? [rawData]
         : [];
   } catch (err) {
-    console.error("កំហុស API:", err);
+    console.error(err);
     toast.error("មានកំហុសក្នុងការទាញយកលទ្ធផលសិស្ស");
   } finally {
     loading.value = false;
@@ -384,7 +328,7 @@ const sendFeedback = async (subId, feedbackText) => {
 
 const getAvatarUrl = (avatar) => {
   if (!avatar || avatar === "default.png") {
-    return defaultImage;
+    return 'default.png';
   }
 
   return `${imgBaseUrl}${avatar}`;

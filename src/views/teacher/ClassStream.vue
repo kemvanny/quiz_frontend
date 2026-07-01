@@ -2,7 +2,6 @@
   <div class="app-shell">
     <div class="main-col">
       <div class="workspace">
-        <!-- Banner -->
         <div class="class-banner">
           <div class="class-banner-content">
             <h1 class="class-title">{{ roomData?.name || "Loading..." }}</h1>
@@ -16,123 +15,85 @@
           </div>
         </div>
 
-        <!-- Tabs -->
-        <div
-          class="class-tabs-container d-flex align-items-center justify-content-between"
-        >
+        <div class="class-tabs-container d-flex align-items-center justify-content-between">
           <div class="class-tabs">
-            <div
-              class="class-tab"
-              :class="{ active: currentTab === 'stream' }"
-              @click="currentTab = 'stream'"
-            >
+            <div class="class-tab" :class="{ active: currentTab === 'stream' }" @click="handleTabChange('stream')">
               <i class="fas fa-stream"></i> ថ្នាក់រៀន
             </div>
-            <div
-              class="class-tab"
-              :class="{ active: currentTab === 'people' }"
-              @click="currentTab = 'people'"
-            >
-              <i class="fas fa-users"></i> សិស្ស​សរុប
-              <span class="badge-count ms-2"
-                >({{ roomData?.students?.length || 0 }})</span
-              >
+            <div class="class-tab" :class="{ active: currentTab === 'people' }" @click="handleTabChange('people')">
+              <i class="fas fa-users"></i> សិស្សសរុប
+              <span class="badge-count ms-2">({{ roomData?.students?.length || 0 }})</span>
             </div>
-            <div
-              class="class-tab"
-              :class="{ active: currentTab === 'results' }"
-              @click="handleTabChange('results')"
-            >
+            <div class="class-tab" :class="{ active: currentTab === 'results' }" @click="handleTabChange('results')">
               <i class="fas fa-chart-bar"></i> លទ្ធផលសិស្ស
             </div>
           </div>
-          <RouterLink
-            :to="`/teacher/room-management/${props.roomId}/exams`"
-            class="btn-exams-link"
-          >
+          <RouterLink :to="`/teacher/room-management/${props.roomId}/exams`" class="btn-exams-link">
             <i class="fas fa-file-alt me-2"></i>មើលការប្រឡងទាំងអស់
           </RouterLink>
         </div>
 
-        <!-- Tab: Stream -->
         <div v-if="currentTab === 'stream'" class="tab-pane active">
           <div class="stream-grid">
             <div class="side-panel">
-              <div
-                class="d-flex align-items-center justify-content-between mb-2"
-              >
-                <span
-                  style="
+              <div class="d-flex align-items-center justify-content-between mb-2">
+                <span style="
                     font-size: 0.7rem;
                     font-weight: 700;
                     color: var(--txt-mu);
                     text-transform: uppercase;
                     letter-spacing: 1px;
-                  "
-                  >ទិដ្ឋភាពទូទៅនៃថ្នាក់រៀន</span
-                >
+                  ">ទិដ្ឋភាពទូទៅនៃថ្នាក់រៀន</span>
                 <button class="btn btn-sm text-muted p-0">
                   <i class="fas fa-chart-line"></i>
                 </button>
               </div>
               <div class="d-flex gap-2 mt-2">
                 <div class="text-center flex-fill">
-                  <div
-                    style="
+                  <div style="
                       font-weight: 700;
                       color: var(--txt);
                       font-size: 1.2rem;
-                    "
-                  >
+                    ">
                     {{ roomData?.students?.length || 0 }}
                   </div>
-                  <div
-                    style="
+                  <div style="
                       font-size: 0.65rem;
                       color: var(--txt-mu);
                       font-weight: 600;
-                    "
-                  >
+                    ">
                     សិស្ស
                   </div>
                 </div>
                 <div class="text-center flex-fill border-start border-end">
-                  <div
-                    style="
+                  <div style="
                       font-weight: 700;
                       color: var(--em);
                       font-size: 1.2rem;
-                    "
-                  >
+                    ">
                     {{ averageGrade }}%
                   </div>
-                  <div
-                    style="
+                  <div style="
                       font-size: 0.65rem;
                       color: var(--txt-mu);
                       font-weight: 600;
-                    "
-                  >
+                    ">
                     មធ្យមភាគ
                   </div>
                 </div>
                 <div class="text-center flex-fill">
-                  <div
-                    style="
+                  <div style="
                       font-weight: 700;
                       color: var(--txt);
                       font-size: 1.2rem;
-                    "
-                  >
+                    ">
                     {{ posts?.length || 0 }}
                   </div>
-                  <div
-                    style="
+                  <div style="
                       font-size: 0.65rem;
                       color: var(--txt-mu);
                       font-weight: 600;
-                    "
-                  >
+                    ">
                     ដាក់ផ្សាយ
                   </div>
                 </div>
@@ -141,22 +102,10 @@
 
             <div class="feed-container">
               <div class="composer-card">
-                <input
-                  v-model="newPost.title"
-                  class="form-control mb-2"
-                  placeholder="ចំណងជើង..."
-                />
-                <textarea
-                  v-model="newPost.message"
-                  class="composer-input mb-2"
-                  rows="2"
-                  placeholder="សរសេរការប្រកាស..."
-                ></textarea>
-                <input
-                  v-model="newPost.examLink"
-                  class="form-control mb-2"
-                  placeholder="បញ្ចូល Link ការប្រឡង..."
-                />
+                <input v-model="newPost.title" class="form-control mb-2" placeholder="ចំណងជើង..." />
+                <textarea v-model="newPost.message" class="composer-input mb-2" rows="2"
+                  placeholder="សរសេរការប្រកាស..."></textarea>
+                <input v-model="newPost.examLink" class="form-control mb-2" placeholder="បញ្ចូល Link ការប្រឡង..." />
                 <div class="composer-actions">
                   <button class="btn-post" @click="handleCreatePost">
                     Post
@@ -166,16 +115,10 @@
 
               <div class="d-flex flex-column gap-4">
                 <div class="post-card" v-for="post in posts" :key="post.id">
-                  <div
-                    class="post-header d-flex justify-content-between align-items-center"
-                  >
+                  <div class="post-header d-flex justify-content-between align-items-center">
                     <div class="d-flex align-items-center">
-                      <img
-                        :src="authStore.avatarUrl"
-                        class="avatar-img me-2"
-                        alt="avatar"
-                        style="width: 40px; height: 40px; border-radius: 50%"
-                      />
+                      <img :src="authStore.avatarUrl" class="avatar-img me-2" alt="avatar"
+                        style="width: 40px; height: 40px; border-radius: 50%" />
                       <div>
                         <h6 class="mb-0">
                           {{ authStore.fullName }}
@@ -202,16 +145,10 @@
                       </div>
                     </div>
                     <div class="post-actions">
-                      <button
-                        class="btn-action-menu"
-                        @click.stop="toggleMenu(post.id)"
-                      >
+                      <button class="btn-action-menu" @click.stop="toggleMenu(post.id)">
                         <i class="fas fa-ellipsis-v"></i>
                       </button>
-                      <div
-                        class="action-dropdown"
-                        v-if="activeMenu === post.id"
-                      >
+                      <div class="action-dropdown" v-if="activeMenu === post.id">
                         <button @click="openEditModal(post)">
                           <i class="fas fa-edit me-2"></i>Edit
                         </button>
@@ -226,30 +163,31 @@
                     <p>{{ post.message }}</p>
                   </div>
 
-                  <div
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="assignment-card-link d-flex align-items-center border rounded-3 shadow-sm overflow-hidden mt-3 mb-2"
-                  >
-                    <div
-                      class="d-flex align-items-center justify-content-center"
-                      style="
-                        width: 80px;
-                        height: 80px;
+                  <div v-if="post.exam_link || post.examLink"
+                    class="assignment-card-link d-flex align-items-center border rounded-3 shadow-sm overflow-hidden mt-3 mb-2 bg-white p-2">
+                    <div class="d-flex align-items-center justify-content-center cursor-pointer"
+                      @click="openExamLink(post.exam_link || post.examLink)" style="
+                        width: 70px;
+                        height: 70px;
                         background-color: #f6993f;
                         flex-shrink: 0;
-                      "
-                    >
+                        border-radius: 8px;
+                      ">
                       <i class="fas fa-laptop-code text-white fa-2x"></i>
                     </div>
-                    <div class="p-3 flex-grow-1">
-                      <h6 class="mb-0 fw-bold text-dark">{{ post.title }}</h6>
-                      <small class="text-muted"
-                        >តេស្ត • ចុចដើម្បីបើកវិញ្ញាសា</small
-                      >
+                    <div class="p-3 flex-grow-1 cursor-pointer" @click="openExamLink(post.exam_link || post.examLink)">
+                      <h6 class="mb-0 fw-bold text-dark">{{ post.title || 'វិញ្ញាសាប្រឡង' }}</h6>
+                      <small class="text-muted">តេស្ត • ចុចដើម្បីបើកលីងវិញ្ញាសា</small>
                     </div>
-                    <div class="p-3">
-                      <!-- <span class="btn btn-sm px-3 rounded-pill" style="background-color: #e6fffa; color: #38b2ac; font-weight: 600;">មើលលម្អិត</span> -->
+                    <div class="pe-3">
+                      <button class="btn btn-sm px-3 rounded-pill" style="
+                          background-color: #e6fffa;
+                          color: #38b2ac;
+                          font-weight: 600;
+                          border: 1px solid #b2f5ea;
+                        " @click="viewExamResults(post.exam_id)">
+                        <i class="fas fa-chart-bar me-1"></i> មើលលទ្ធផល
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -258,12 +196,10 @@
           </div>
         </div>
 
-        <!-- Tab: People -->
         <div v-if="currentTab === 'people'" class="tab-pane active">
           <div class="roster-container">
             <div class="roster-header">
-              <h3>សិស្ស​សរុប ({{ roomData?.students?.length || 0 }})</h3>
-              <!-- <button class="btn btn-sm btn-emerald">Invite</button> -->
+              <h3>សិស្សសរុប ({{ roomData?.students?.length || 0 }})</h3>
             </div>
             <table class="roster-table">
               <thead>
@@ -285,10 +221,7 @@
                     </div>
                   </td>
                   <td class="text-end">
-                    <button
-                      class="btn-remove-student"
-                      @click="openDeleteModal(student)"
-                    >
+                    <button class="btn-remove-student" @click="openDeleteModal(student)">
                       លុបចេញ
                     </button>
                   </td>
@@ -298,36 +231,26 @@
           </div>
         </div>
 
-        <!-- Tab: Results (With Filter & Pagination) -->
         <div v-if="currentTab === 'results'" class="tab-pane active">
-          <!-- Loading State -->
-          <div
-            v-if="loading"
-            class="d-flex flex-column align-items-center justify-content-center p-5 text-muted"
-          >
+          <div v-if="loading" class="d-flex flex-column align-items-center justify-content-center p-5 text-muted">
             <div class="spinner-border text-primary mb-3" role="status">
               <span class="visually-hidden">កំពុងផ្ទុក...</span>
             </div>
             <span class="fw-medium text-secondary">កំពុងផ្ទុកទិន្នន័យ...</span>
           </div>
 
-          <!-- Empty State -->
-          <div
-            v-else-if="studentResults.length === 0"
-            class="d-flex flex-column align-items-center justify-content-center p-5 text-muted border border-dashed rounded-4 bg-light"
-          >
+          <div v-else-if="studentResults.length === 0"
+            class="d-flex flex-column align-items-center justify-content-center p-5 text-muted border border-dashed rounded-4 bg-light">
             <div class="empty-state-icon mb-3 text-secondary-50">
               <i class="far fa-folder-open fa-3x"></i>
             </div>
-            <p class="mb-0 fw-medium">មិនមានលទ្ធផលសម្រាប់សិស្សទេ។</p>
+            <p class="mb-0 fw-medium">មិនមានលទ្ធផលសម្រាប់សិស្សទេ។ សូមត្រលប់ទៅកាន់ Tab "ថ្នាក់រៀន" រួចចុចលើប៊ូតុង
+              "មើលលទ្ធផល" នៃវិញ្ញាសាណាមួយ។</p>
           </div>
 
-          <!-- Content State -->
           <div v-else class="card border-0 shadow-sm rounded-4 overflow-hidden">
-            <!-- Header with integrated filter controls -->
             <div
-              class="card-header bg-white border-bottom-0 pt-4 px-4 pb-3 d-flex align-items-center justify-content-between flex-wrap gap-3"
-            >
+              class="card-header bg-white border-bottom-0 pt-4 px-4 pb-3 d-flex align-items-center justify-content-between flex-wrap gap-3">
               <div>
                 <h5 class="card-title fw-bold text-dark mb-1">លទ្ធផលសិស្ស</h5>
                 <p class="text-muted small mb-0">
@@ -335,99 +258,67 @@
                 </p>
               </div>
 
-              <!-- Filter Selector and Stats -->
               <div class="d-flex align-items-center gap-3 flex-wrap">
                 <div class="d-flex align-items-center gap-2">
-                  <span class="text-muted small fw-semibold text-nowrap"
-                    >តម្រងវិញ្ញាសា៖</span
-                  >
-                  <select
-                    v-model="selectedExam"
+                  <span class="text-muted small fw-semibold text-nowrap">តម្រងវិញ្ញាសា៖</span>
+                  <select v-model="selectedExam"
                     class="form-select form-select-sm border border-secondary-subtle rounded-pill px-3 py-2 text-dark"
                     style="
                       min-width: 180px;
                       font-size: 0.82rem;
                       font-weight: 600;
                       background-color: #f8fafc;
-                    "
-                  >
+                    ">
                     <option value="all">ទាំងអស់</option>
-                    <option
-                      v-for="title in availableExams"
-                      :key="title"
-                      :value="title"
-                    >
+                    <option v-for="title in availableExams" :key="title" :value="title">
                       {{ title }}
                     </option>
                   </select>
                 </div>
-                <span
-                  class="badge bg-light text-dark border px-3 py-2 rounded-pill fw-semibold"
-                >
+                <span class="badge bg-light text-dark border px-3 py-2 rounded-pill fw-semibold">
                   សរុប៖ {{ filteredResults.length }} នាក់
                 </span>
               </div>
             </div>
 
-            <!-- Table content wrapper with pagination bottom row -->
             <div class="px-4 pb-4">
               <div class="table-responsive">
                 <table class="table align-middle mb-0 custom-results-table">
                   <thead>
                     <tr>
-                      <th
-                        class="text-secondary text-uppercase py-3 ps-3"
-                        style="font-size: 0.75rem; letter-spacing: 0.5px"
-                      >
+                      <th class="text-secondary text-uppercase py-3 ps-3"
+                        style="font-size: 0.75rem; letter-spacing: 0.5px">
                         សិស្ស
                       </th>
-                      <th
-                        class="text-secondary text-uppercase py-3"
-                        style="font-size: 0.75rem; letter-spacing: 0.5px"
-                      >
+                      <th class="text-secondary text-uppercase py-3" style="font-size: 0.75rem; letter-spacing: 0.5px">
                         វិញ្ញាសា
                       </th>
-                      <th
-                        class="text-secondary text-uppercase py-3 text-center"
-                        style="font-size: 0.75rem; letter-spacing: 0.5px"
-                      >
+                      <th class="text-secondary text-uppercase py-3 text-center"
+                        style="font-size: 0.75rem; letter-spacing: 0.5px">
                         ពិន្ទុ
                       </th>
-                      <th
-                        class="text-secondary text-uppercase py-3 text-center"
-                        style="font-size: 0.75rem; letter-spacing: 0.5px"
-                      >
-                        កាលបរិច្ឆេទ
+                      <th class="text-secondary text-uppercase py-3 text-center"
+                        style="font-size: 0.75rem; letter-spacing: 0.5px">
+                        Kanalparichethe
                       </th>
-                      <th
-                        class="text-secondary text-uppercase py-3"
-                        style="
+                      <th class="text-secondary text-uppercase py-3" style="
                           font-size: 0.75rem;
                           letter-spacing: 0.5px;
                           min-width: 240px;
-                        "
-                      >
+                        ">
                         មតិកែលម្អ
                       </th>
-                      <th
-                        class="text-center text-secondary text-uppercase py-3 pe-3"
-                        style="
+                      <th class="text-center text-secondary text-uppercase py-3 pe-3" style="
                           font-size: 0.75rem;
                           letter-spacing: 0.5px;
                           width: 90px;
-                        "
-                      >
+                        ">
                         សកម្មភាព
                       </th>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr
-                      v-for="res in paginatedResults"
-                      :key="res.submission_id"
-                      class="card-row"
-                    >
-                      <!-- Student Column -->
+                    <tr v-for="res in paginatedResults" :key="res.submission_id" class="card-row">
                       <td class="ps-3 py-3">
                         <div class="d-flex align-items-center gap-3">
                           <div class="avatar-circle-custom">
@@ -446,62 +337,37 @@
                         </div>
                       </td>
 
-                      <!-- Exam Title -->
                       <td class="py-3">
                         <span class="fw-medium text-dark-emphasis">{{
                           res.exam_title
                         }}</span>
                       </td>
 
-                      <!-- Score Badge -->
                       <td class="py-3 text-center">
-                        <span
-                          class="badge rounded-pill px-3 py-2 fw-semibold d-inline-flex align-items-center gap-1"
-                          :class="
-                            res.score >= 50
-                              ? 'bg-success-subtle text-success'
-                              : 'bg-danger-subtle text-danger'
-                          "
-                        >
-                          <i
-                            class="fas"
-                            :class="
-                              res.score >= 50
-                                ? 'fa-check-circle'
-                                : 'fa-times-circle'
-                            "
-                          ></i>
-                          {{ parseFloat(res.score).toFixed(0) }}.00 / 100
+                        <span class="badge rounded-pill px-3 py-2 fw-semibold d-inline-flex align-items-center gap-1"
+                          :class="getScoreClass(res)">
+                          <i class="fas" :class="getScoreIcon(res)"></i>
+                          {{ formatScore(res) }}
                         </span>
                       </td>
 
-                      <!-- Date -->
                       <td class="py-3 text-center text-muted small">
                         {{ new Date(res.submitted_at).toLocaleDateString() }}
                       </td>
 
-                      <!-- Feedback Input -->
                       <td class="py-3">
-                        <input
-                          type="text"
+                        <input type="text"
                           class="form-control form-control-sm border-0 bg-light rounded-3 px-3 py-2 feedback-input-field"
-                          v-model="res.feedback"
-                          placeholder="សរសេរមតិកែលម្អនៅទីនេះ..."
-                        />
+                          v-model="res.feedback" placeholder="សរសេរមតិកែលម្អនៅទីនេះ..." />
                       </td>
 
-                      <!-- Action Button -->
                       <td class="text-center pe-3 py-3">
-                        <button
-                          class="btn btn-action-send btn-sm rounded-3"
-                          @click="sendFeedback(res.submission_id, res.feedback)"
-                          title="ផ្ញើមតិកែលម្អ"
-                        >
+                        <button class="btn btn-action-send btn-sm rounded-3"
+                          @click="sendFeedback(res.submission_id, res.feedback)" title="ផ្ញើមតិកែលម្អ">
                           <i class="fas fa-paper-plane"></i>
                         </button>
                       </td>
                     </tr>
-                    <!-- Filter result fall-through empty state -->
                     <tr v-if="paginatedResults.length === 0">
                       <td colspan="6" class="text-center py-5 text-muted">
                         មិនមានលទ្ធផលត្រូវគ្នានឹងការចម្រោះរបស់អ្នកឡើយ។
@@ -511,11 +377,8 @@
                 </table>
               </div>
 
-              <!-- Pagination Footer Controls -->
-              <div
-                v-if="totalPages > 1"
-                class="d-flex align-items-center justify-content-between mt-4 border-top pt-3 flex-wrap gap-2"
-              >
+              <div v-if="totalPages > 1"
+                class="d-flex align-items-center justify-content-between mt-4 border-top pt-3 flex-wrap gap-2">
                 <div class="text-muted small fw-medium">
                   បង្ហាញ {{ (currentPage - 1) * itemsPerPage + 1 }} ដល់
                   {{
@@ -524,53 +387,29 @@
                   នៃលទ្ធផលសរុប {{ filteredResults.length }} នាក់
                 </div>
                 <nav aria-label="Result pagination">
-                  <ul
-                    class="pagination pagination-sm mb-0 align-items-center gap-1"
-                  >
-                    <li
-                      class="page-item"
-                      :class="{ disabled: currentPage === 1 }"
-                    >
+                  <ul class="pagination pagination-sm mb-0 align-items-center gap-1">
+                    <li class="page-item" :class="{ disabled: currentPage === 1 }">
                       <button
                         class="page-link border-0 rounded-circle d-flex align-items-center justify-content-center p-0"
-                        @click="prevPage"
-                        style="width: 32px; height: 32px"
-                      >
-                        <i
-                          class="fas fa-chevron-left"
-                          style="font-size: 0.8rem"
-                        ></i>
+                        @click="prevPage" style="width: 32px; height: 32px">
+                        <i class="fas fa-chevron-left" style="font-size: 0.8rem"></i>
                       </button>
                     </li>
 
-                    <li
-                      v-for="page in totalPages"
-                      :key="page"
-                      class="page-item"
-                      :class="{ active: currentPage === page }"
-                    >
+                    <li v-for="page in totalPages" :key="page" class="page-item"
+                      :class="{ active: currentPage === page }">
                       <button
                         class="page-link border-0 rounded-circle d-flex align-items-center justify-content-center p-0 fw-semibold"
-                        @click="goToPage(page)"
-                        style="width: 32px; height: 32px; font-size: 0.82rem"
-                      >
+                        @click="goToPage(page)" style="width: 32px; height: 32px; font-size: 0.82rem">
                         {{ page }}
                       </button>
                     </li>
 
-                    <li
-                      class="page-item"
-                      :class="{ disabled: currentPage === totalPages }"
-                    >
+                    <li class="page-item" :class="{ disabled: currentPage === totalPages }">
                       <button
                         class="page-link border-0 rounded-circle d-flex align-items-center justify-content-center p-0"
-                        @click="nextPage"
-                        style="width: 32px; height: 32px"
-                      >
-                        <i
-                          class="fas fa-chevron-right"
-                          style="font-size: 0.8rem"
-                        ></i>
+                        @click="nextPage" style="width: 32px; height: 32px">
+                        <i class="fas fa-chevron-right" style="font-size: 0.8rem"></i>
                       </button>
                     </li>
                   </ul>
@@ -583,25 +422,12 @@
     </div>
   </div>
 
-  <!-- Edit Modal -->
-  <div
-    class="modal-overlay"
-    v-if="isEditModalOpen"
-    @click.self="isEditModalOpen = false"
-  >
+  <div class="modal-overlay" v-if="isEditModalOpen" @click.self="isEditModalOpen = false">
     <div class="edit-modal">
       <h6>Edit Post</h6>
-      <input
-        v-model="editPost.title"
-        class="form-control mb-2"
-        placeholder="ចំណងជើង..."
-      />
-      <textarea
-        v-model="editPost.message"
-        class="form-control mb-2"
-        rows="3"
-        placeholder="សរសេរការប្រកាស..."
-      ></textarea>
+      <input v-model="editPost.title" class="form-control mb-2" placeholder="ចំណងជើង..." />
+      <textarea v-model="editPost.message" class="form-control mb-2" rows="3"
+        placeholder="សរសេរការប្រកាស..."></textarea>
       <input v-model="editPost.exam_link" type="hidden" />
       <div class="d-flex justify-content-end gap-2 mt-3">
         <button class="btn-cancel" @click="isEditModalOpen = false">
@@ -612,14 +438,8 @@
     </div>
   </div>
 
-  <!-- Remove Student Modal -->
-  <RemoveStudentModal
-    :is-open="isDeleteModalOpen"
-    :student="studentToDelete"
-    :loading="loading"
-    @close="isDeleteModalOpen = false"
-    @confirm="confirmDelete"
-  />
+  <RemoveStudentModal :is-open="isDeleteModalOpen" :student="studentToDelete" :loading="loading"
+    @close="isDeleteModalOpen = false" @confirm="confirmDelete" />
 </template>
 
 <script setup>
@@ -662,6 +482,7 @@ const studentToDelete = ref(null);
 
 const activeMenu = ref(null);
 const studentResults = ref([]);
+const currentSelectedExamId = ref(null);
 
 // --- FILTER & PAGINATION STATE ---
 const selectedExam = ref("all");
@@ -729,7 +550,6 @@ const averageGrade = computed(() => {
     return sum + Number(res.score || 0);
   }, 0);
 
-  // Return rounded average
   return Math.round(totalScore / studentResults.value.length);
 });
 
@@ -780,9 +600,8 @@ const fetchRoomData = async () => {
 const fetchPosts = async () => {
   try {
     const res = await getPosts(props.roomId);
-    // posts.value = (res.data.data || []).reverse();
-    posts.value = (res.data.data || res.data || []).reverse();
-    console.log("POSTS:", posts.value);
+
+    posts.value = (res.data.data || []).reverse();
   } catch (err) {
 console.error("getPosts error status:", err.response?.status);
     console.error("getPosts error message:", err.response?.data);  }
@@ -854,9 +673,7 @@ const confirmDelete = async () => {
 
   try {
     await removeStudentFromRoom(props.roomId, studentToDelete.value.id);
-
     await fetchRoomData();
-
     toast.success("បានលុបសិស្សជោគជ័យ!");
   } catch (error) {
     toast.error("មិនអាចលុបសិស្សបាន");
@@ -886,33 +703,76 @@ const openEditModal = (post) => {
 //open exam link
 const openExamLink = (url) => {
   if (!url) return;
-
   const fullUrl = url.startsWith("http") ? url : `https://${url}`;
-
   window.open(fullUrl, "_blank");
 };
 
-const extractExamCode = (url) => {
-  if (!url) return null;
-  const parts = url.split("/");
-  return parts[parts.length - 1]; // deb9e1c6
+const viewExamResults = (examId) => {
+  if (!examId) {
+    toast.error("មិនអាចមើលលទ្ធផលបានទេ!");
+    return;
+  }
+  currentSelectedExamId.value = examId;
+  currentTab.value = "results";
+  fetchStudentResults(examId);
+};
+
+const handleTabChange = (tab) => {
+  currentTab.value = tab;
+
+  if (tab === "results") {
+    if (currentSelectedExamId.value) {
+      fetchStudentResults(currentSelectedExamId.value);
+    } else {
+      studentResults.value = [];
+    }
+  }
 };
 
 const fetchStudentResults = async (examId) => {
+  if (!examId) return;
   loading.value = true;
-
+  studentResults.value = [];
   try {
     const res = await getStudentResultsByExam(examId);
-    console.log(res.data.data);
     const rawData = res.data?.data || res.data || [];
-
     studentResults.value = Array.isArray(rawData) ? rawData : [];
+    if (studentResults.value.length === 0) {
+      toast.info("វិញ្ញាសានេះ មិនទាន់មានសិស្សធ្វើការប្រឡងឡើយ");
+    }
   } catch (err) {
     console.error(err);
+    toast.error("មានកំហុសក្នុងការទាញយកលទ្ធផល");
+    studentResults.value = [];
   } finally {
     loading.value = false;
   }
 };
+
+const formatScore = (res) => {
+  const score = Number(res.score || 0);
+  const total = Number(res.total_points || 1);
+
+  return `${score.toFixed(0)} / ${total}`;
+};
+
+const getScoreClass = (res) => {
+  const score = Number(res.score || 0);
+  const total = Number(res.total_points || 1);
+
+  const percent = (score / total) * 100;
+
+  if (percent >= 50) return "bg-success-subtle text-success";
+  return "bg-danger-subtle text-danger";
+};
+
+const getScoreIcon = (res) => {
+  const score = Number(res.score || 0);
+  const total = Number(res.total_points || 1);
+
+  return (score / total) * 100 >= 50 ? "fa-check-circle" : "fa-times-circle";
+};
+
 const sendFeedback = async (subId, feedbackText) => {
   try {
     await addFeedback(subId, feedbackText);
@@ -922,33 +782,11 @@ const sendFeedback = async (subId, feedbackText) => {
     toast.error("មានកំហុសក្នុងការផ្ញើ Feedback");
   }
 };
-const handleTabChange = (tab) => {
-  currentTab.value = tab;
-
-  if (tab === "results") {
-    const firstExamLink = posts.value?.[0]?.exam_link;
-
-    if (firstExamLink) {
-      fetchStudentResults(firstExamLink);
-    } else {
-      studentResults.value = [];
-    }
-  }
-};
-
-const loadAllResultsFromPosts = async () => {
-  const examIds = posts.value.map((p) => p.examId).filter((id) => id);
-
-  if (examIds.length > 0) {
-    await fetchStudentResults(examIds[0]);
-  }
-};
 
 //mounted
 onMounted(() => {
   fetchRoomData();
   fetchPosts();
-  fetchStudentResults();
   authStore.fetchUserProfile();
 });
 </script>
@@ -956,14 +794,16 @@ onMounted(() => {
 <style scoped>
 .custom-results-table {
   border-collapse: separate !important;
-  border-spacing: 0 12px !important; /* Adds vertical spacing between floating card-rows */
+  border-spacing: 0 12px !important;
+  /* Adds vertical spacing between floating card-rows */
   width: 100%;
 }
 
 /* Header Row Styling & Padding */
 .custom-results-table thead tr th {
   border: none;
-  background-color: #f8f9fa; /* Sleek light gray track for headers */
+  background-color: #f8f9fa;
+  /* Sleek light gray track for headers */
   padding: 0.85rem 1rem;
 }
 
@@ -972,6 +812,7 @@ onMounted(() => {
   border-top-left-radius: 8px;
   border-bottom-left-radius: 8px;
 }
+
 .custom-results-table thead tr th:last-child {
   border-top-right-radius: 8px;
   border-bottom-right-radius: 8px;
@@ -994,7 +835,8 @@ onMounted(() => {
 .custom-results-table tbody tr.card-row td {
   border-top: 1px solid rgba(0, 0, 0, 0.03);
   border-bottom: 1px solid rgba(0, 0, 0, 0.03);
-  padding: 1.25rem 1rem; /* Generous internal cell padding */
+  padding: 1.25rem 1rem;
+  /* Generous internal cell padding */
 }
 
 /* Row-edge paddings for alignment with container boundaries */
@@ -1045,7 +887,8 @@ onMounted(() => {
   font-size: 0.875rem;
   background-color: #f4f5f7 !important;
   border: 1px solid transparent !important;
-  padding: 0.625rem 1rem !important; /* Enhanced internal padding */
+  padding: 0.625rem 1rem !important;
+  /* Enhanced internal padding */
   transition: all 0.2s ease-in-out;
   width: 100%;
 }
@@ -1110,10 +953,12 @@ onMounted(() => {
   overflow: hidden;
   padding-bottom: 20px;
 }
+
 .results-table {
   border-collapse: separate !important;
   border-spacing: 0 10px !important;
 }
+
 .results-table thead th {
   border: none !important;
   padding: 15px !important;
@@ -1243,14 +1088,17 @@ onMounted(() => {
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03) !important;
   transition: 0.2s;
 }
+
 .card-row td {
   padding: 18px 15px !important;
   border: none !important;
 }
+
 .card-row td:first-child {
   border-top-left-radius: 12px;
   border-bottom-left-radius: 12px;
 }
+
 .card-row td:last-child {
   border-top-right-radius: 12px;
   border-bottom-right-radius: 12px;
@@ -1268,6 +1116,7 @@ onMounted(() => {
   justify-content: center;
   font-weight: 700;
 }
+
 .score-pill {
   padding: 6px 14px;
   color: white;
@@ -1276,6 +1125,7 @@ onMounted(() => {
   font-weight: 700;
   display: inline-block;
 }
+
 .feedback-input {
   border-radius: 20px;
   background: #f8fafc;
@@ -1284,6 +1134,7 @@ onMounted(() => {
   padding: 8px 15px;
   transition: 0.2s;
 }
+
 .btn-emerald-soft {
   background: #f0fdf4;
   color: #059669;
@@ -1292,15 +1143,18 @@ onMounted(() => {
   height: 38px;
   border: none;
 }
+
 .btn-emerald-soft:hover {
   background: #d1fae5;
 }
+
 .app-shell {
   display: flex;
   height: 100vh;
   overflow: hidden;
   width: 100%;
 }
+
 .sidebar {
   width: 240px;
   border-right: 1px solid var(--bdr);
@@ -1310,6 +1164,7 @@ onMounted(() => {
   flex-direction: column;
   flex-shrink: 0;
 }
+
 .nav-item {
   display: flex;
   align-items: center;
@@ -1322,14 +1177,17 @@ onMounted(() => {
   font-weight: 600;
   transition: 0.15s;
 }
+
 .nav-item.active {
   background: var(--em-soft);
   color: var(--em);
 }
+
 .nav-item:hover:not(.active) {
   background: #f8fafc;
   color: var(--txt);
 }
+
 .class-sidebar {
   width: 220px;
   background: #ffffff;
@@ -1339,12 +1197,14 @@ onMounted(() => {
   flex-direction: column;
   gap: 20px;
 }
+
 .sidebar-header {
   font-size: 0.75rem;
   font-weight: 800;
   color: var(--txt-mu);
   text-transform: uppercase;
 }
+
 .class-item {
   display: flex;
   align-items: center;
@@ -1354,10 +1214,12 @@ onMounted(() => {
   cursor: pointer;
   transition: 0.2s;
 }
+
 .class-item.active {
   background: var(--em-soft);
   color: var(--em);
 }
+
 .class-initial {
   width: 35px;
   height: 35px;
@@ -1369,15 +1231,18 @@ onMounted(() => {
   border-radius: 8px;
   font-weight: 700;
 }
+
 .class-info h6 {
   font-size: 0.85rem;
   margin: 0;
   font-weight: 700;
 }
+
 .class-info span {
   font-size: 0.7rem;
   color: var(--txt-mu);
 }
+
 .btn-add-class {
   margin-top: auto;
   padding: 10px;
@@ -1387,12 +1252,14 @@ onMounted(() => {
   font-weight: 700;
   cursor: pointer;
 }
+
 .main-col {
   flex: 1;
   display: flex;
   flex-direction: column;
   overflow: hidden;
 }
+
 .topbar {
   height: 70px;
   background: rgba(255, 255, 255, 0.85);
@@ -1403,6 +1270,7 @@ onMounted(() => {
   justify-content: space-between;
   padding: 12px 28px;
 }
+
 .search-bar {
   background: white;
   border-radius: 30px;
@@ -1413,6 +1281,7 @@ onMounted(() => {
   align-items: center;
   gap: 10px;
 }
+
 .search-bar input {
   border: none;
   outline: none;
@@ -1429,6 +1298,7 @@ onMounted(() => {
   background: #fff;
   border: 1px solid var(--bdr);
 }
+
 .profile-pill img {
   width: 34px;
   height: 34px;
@@ -1441,23 +1311,24 @@ onMounted(() => {
   overflow-y: auto;
   padding: 24px;
 }
+
 .class-banner {
-  background: linear-gradient(
-    135deg,
-    rgba(16, 185, 129, 0.95),
-    rgba(5, 150, 105, 0.95)
-  );
+  background: linear-gradient(135deg,
+      rgba(16, 185, 129, 0.95),
+      rgba(5, 150, 105, 0.95));
   border-radius: 24px;
   padding: 36px;
   color: white;
   margin-bottom: 24px;
   box-shadow: 0 10px 30px rgba(16, 185, 129, 0.15);
 }
+
 .class-title {
   font-size: 1.8rem;
   font-weight: 700;
   margin-bottom: 6px;
 }
+
 .class-meta {
   font-size: 0.9rem;
   opacity: 0.9;
@@ -1467,6 +1338,7 @@ onMounted(() => {
 .class-tabs-container {
   margin-bottom: 24px;
 }
+
 .class-tabs {
   display: inline-flex;
   background: #fff;
@@ -1476,6 +1348,7 @@ onMounted(() => {
   gap: 4px;
   box-shadow: var(--sh-sm);
 }
+
 .class-tab {
   padding: 8px 20px;
   font-size: 0.82rem;
@@ -1485,11 +1358,13 @@ onMounted(() => {
   border-radius: 24px;
   transition: 0.2s;
 }
+
 .class-tab.active {
   color: #fff;
   background: var(--em);
   box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
 }
+
 .results-table {
   border-collapse: separate !important;
   border-spacing: 0 16px !important;
@@ -1507,6 +1382,7 @@ onMounted(() => {
   border-top-left-radius: 12px;
   border-bottom-left-radius: 12px;
 }
+
 .results-table tbody tr td:last-child {
   border-top-right-radius: 12px;
   border-bottom-right-radius: 12px;
@@ -1530,6 +1406,7 @@ onMounted(() => {
   gap: 24px;
   align-items: start;
 }
+
 @media (max-width: 992px) {
   .stream-grid {
     grid-template-columns: 1fr;
@@ -1544,6 +1421,7 @@ onMounted(() => {
   padding: 20px;
   box-shadow: var(--sh-md);
 }
+
 .overview-lbl {
   font-size: 0.68rem;
   font-weight: 700;
@@ -1551,28 +1429,33 @@ onMounted(() => {
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
+
 .stat-num {
   font-weight: 700;
   color: var(--txt);
   font-size: 1.15rem;
 }
+
 .stat-lbl {
   font-size: 0.62rem;
   color: var(--txt-mu);
   font-weight: 600;
 }
+
 .panel-title {
   font-size: 0.85rem;
   font-weight: 700;
   color: var(--txt);
   margin-bottom: 12px;
 }
+
 .upcoming-item {
   display: flex;
   gap: 10px;
   align-items: flex-start;
   margin-bottom: 12px;
 }
+
 .upcoming-icon {
   width: 30px;
   height: 30px;
@@ -1585,12 +1468,14 @@ onMounted(() => {
   font-size: 0.75rem;
   flex-shrink: 0;
 }
+
 .upcoming-text h6 {
   font-size: 0.78rem;
   font-weight: 700;
   margin: 0;
   color: var(--txt);
 }
+
 .upcoming-text p {
   font-size: 0.68rem;
   margin: 0;
@@ -1602,6 +1487,7 @@ onMounted(() => {
   flex-direction: column;
   gap: 24px;
 }
+
 .composer-card {
   background: #fff;
   border-radius: 20px;
@@ -1609,12 +1495,14 @@ onMounted(() => {
   padding: 20px;
   box-shadow: var(--sh-md);
 }
+
 .avatar-img {
   width: 38px;
   height: 38px;
   border-radius: 50%;
   object-fit: cover;
 }
+
 .composer-input {
   width: 100%;
   border: none;
@@ -1623,6 +1511,7 @@ onMounted(() => {
   font-size: 0.92rem;
   resize: none;
 }
+
 .composer-actions {
   display: flex;
   justify-content: space-between;
@@ -1631,10 +1520,12 @@ onMounted(() => {
   padding-top: 14px;
   border-top: 1px solid var(--bdr);
 }
+
 .attach-btns {
   display: flex;
   gap: 10px;
 }
+
 .btn-attach {
   border: 1px solid var(--bdr);
   background: #fff;
@@ -1644,12 +1535,15 @@ onMounted(() => {
   border-radius: 30px;
   color: var(--txt-m);
 }
+
 .btn-attach.quiz {
   color: #2563eb;
 }
+
 .btn-attach.assignment {
   color: #d97706;
 }
+
 .btn-post {
   background: var(--em);
   color: #fff;
@@ -1669,10 +1563,12 @@ onMounted(() => {
   padding: 20px;
   box-shadow: var(--sh-md);
 }
+
 .pinned-banner {
   background: var(--em-soft) !important;
   border-color: var(--em-mid) !important;
 }
+
 .pin-wrap {
   width: 30px;
   height: 30px;
@@ -1685,11 +1581,13 @@ onMounted(() => {
   font-size: 0.8rem;
   flex-shrink: 0;
 }
+
 .pinned-text {
   font-size: 0.85rem;
   font-weight: 700;
   color: var(--txt);
 }
+
 .pinned-meta {
   font-size: 0.68rem;
   color: var(--txt-mu);
@@ -1702,20 +1600,24 @@ onMounted(() => {
   justify-content: space-between;
   margin-bottom: 12px;
 }
+
 .post-author {
   display: flex;
   align-items: center;
   gap: 10px;
 }
+
 .post-author-info h6 {
   margin: 0;
   font-size: 0.9rem;
   font-weight: 700;
 }
+
 .post-author-info span {
   font-size: 0.72rem;
   color: var(--txt-mu);
 }
+
 .role-badge {
   font-size: 0.58rem;
   font-weight: 700;
@@ -1725,11 +1627,13 @@ onMounted(() => {
   color: var(--em);
   margin-left: 4px;
 }
+
 .post-content {
   font-size: 0.9rem;
   color: var(--txt-m);
   line-height: 1.5;
 }
+
 .table {
   border-collapse: separate !important;
   border-spacing: 0 12px !important;
@@ -1747,21 +1651,25 @@ tbody tr {
 .table th {
   padding: 16px 12px;
 }
+
 tbody tr td:first-child {
   border-top-left-radius: 12px;
   border-bottom-left-radius: 12px;
 }
+
 tbody tr td:last-child {
   border-top-right-radius: 12px;
   border-bottom-right-radius: 12px;
 }
+
 .table td {
   padding: 18px 15px !important;
 }
 
-.table > :not(caption) > * > * {
+.table> :not(caption)>*>* {
   border-bottom-width: 0 !important;
 }
+
 .card-row {
   background: #ffffff !important;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05) !important;
@@ -1777,10 +1685,12 @@ tbody tr td:last-child {
   border-top-left-radius: 12px;
   border-bottom-left-radius: 12px;
 }
+
 .card-row td:last-child {
   border-top-right-radius: 12px;
   border-bottom-right-radius: 12px;
 }
+
 .avatar-circle {
   width: 35px;
   height: 35px;
@@ -1802,6 +1712,7 @@ tbody tr td:last-child {
   font-weight: 700;
   display: inline-block;
 }
+
 .avatar-circle {
   width: 35px;
   height: 35px;
@@ -1832,6 +1743,7 @@ tbody tr td:last-child {
   height: 35px;
   border-radius: 50%;
 }
+
 .btn-emerald-soft:hover {
   background: #d1fae5;
 }
@@ -1844,17 +1756,20 @@ tbody tr td:last-child {
   padding: 24px;
   box-shadow: var(--sh-sm);
 }
+
 .roster-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 20px;
 }
+
 .roster-header h3 {
   font-size: 1.15rem;
   font-weight: 700;
   margin: 0;
 }
+
 .btn-emerald {
   background: var(--em);
   color: #fff;
@@ -1864,10 +1779,12 @@ tbody tr td:last-child {
   padding: 8px 16px;
   border-radius: 8px;
 }
+
 .roster-table {
   width: 100%;
   border-collapse: collapse;
 }
+
 .roster-table th {
   padding: 12px 16px;
   font-size: 0.7rem;
@@ -1877,44 +1794,53 @@ tbody tr td:last-child {
   border-bottom: 1px solid var(--bdr);
   text-align: left;
 }
+
 .roster-table td {
   padding: 14px 16px;
   border-bottom: 1px solid var(--bdr);
   vertical-align: middle;
 }
+
 .student-info {
   display: flex;
   align-items: center;
   gap: 10px;
 }
+
 .student-info img {
   width: 36px;
   height: 36px;
   border-radius: 8px;
   object-fit: cover;
 }
+
 .student-info h6 {
   margin: 0;
   font-size: 0.88rem;
   font-weight: 700;
 }
+
 .student-info span {
   font-size: 0.7rem;
   color: var(--txt-mu);
 }
+
 .bg-online {
   background: rgba(16, 185, 129, 0.1);
   color: var(--em-dk);
 }
+
 .bg-offline {
   background: #f1f5f9;
   color: #64748b;
 }
+
 .date-lbl {
   font-size: 0.8rem;
   font-weight: 600;
   color: var(--txt-m);
 }
+
 .btn-remove-student {
   padding: 4px 12px;
   border-radius: 6px;
@@ -1932,6 +1858,7 @@ tbody tr td:last-child {
   font-weight: 600;
   color: var(--txt-m);
 }
+
 .result-grid-container {
   display: flex;
   flex-direction: column;
@@ -1941,6 +1868,7 @@ tbody tr td:last-child {
   overflow: hidden;
   margin-top: 12px;
 }
+
 .rg-header {
   display: grid;
   grid-template-columns: 2.5fr 1.5fr 1.5fr 1.2fr 1fr 100px;
@@ -1952,6 +1880,7 @@ tbody tr td:last-child {
   background: #f8fafc;
   border-bottom: 1px solid var(--bdr);
 }
+
 .rg-row {
   display: grid;
   grid-template-columns: 2.5fr 1.5fr 1.5fr 1.2fr 1fr 100px;
@@ -1960,9 +1889,11 @@ tbody tr td:last-child {
   align-items: center;
   font-size: 0.82rem;
 }
+
 .rg-row:last-child {
   border-bottom: none;
 }
+
 .badge-status {
   display: inline-flex;
   align-items: center;
@@ -1971,34 +1902,43 @@ tbody tr td:last-child {
   font-size: 0.68rem;
   font-weight: 700;
 }
+
 .badge-review {
   background: #fef3c7;
   color: #b45309;
 }
+
 .badge-graded {
   background: var(--em-soft);
   color: var(--em-dk);
 }
+
 .time-text {
   font-weight: 600;
   color: var(--txt);
 }
+
 .time-muted {
   color: var(--txt-mu);
 }
+
 .score-val {
   font-weight: 700;
   font-size: 1rem;
 }
+
 .score-green {
   color: var(--em);
 }
+
 .score-orange {
   color: #f59e0b;
 }
+
 .score-muted {
   color: var(--txt-mu);
 }
+
 .btn-row-action {
   padding: 5px 12px;
   border-radius: 6px;
@@ -2009,11 +1949,13 @@ tbody tr td:last-child {
   color: var(--txt-m);
   cursor: pointer;
 }
+
 .btn-row-review {
   background: var(--em-soft);
   color: var(--em-dk);
   border-color: transparent;
 }
+
 .btn-exams-link {
   background: transparent;
   color: #10b981;
@@ -2048,6 +1990,7 @@ tbody tr td:last-child {
 .post-actions {
   position: relative;
 }
+
 .btn-action-menu {
   background: none;
   border: none;
@@ -2056,9 +1999,11 @@ tbody tr td:last-child {
   cursor: pointer;
   border-radius: 6px;
 }
+
 .btn-action-menu:hover {
   background: #f1f5f9;
 }
+
 .action-dropdown {
   position: absolute;
   right: 0;
@@ -2071,6 +2016,7 @@ tbody tr td:last-child {
   min-width: 130px;
   overflow: hidden;
 }
+
 .action-dropdown button {
   display: flex;
   align-items: center;
@@ -2083,12 +2029,15 @@ tbody tr td:last-child {
   cursor: pointer;
   color: var(--txt);
 }
+
 .action-dropdown button:hover {
   background: #f8fafc;
 }
+
 .action-dropdown button.danger {
   color: #ef4444;
 }
+
 .modal-overlay {
   position: fixed;
   inset: 0;
@@ -2098,6 +2047,7 @@ tbody tr td:last-child {
   align-items: center;
   justify-content: center;
 }
+
 .edit-modal {
   background: #fff;
   border-radius: 20px;
@@ -2105,11 +2055,13 @@ tbody tr td:last-child {
   width: 480px;
   box-shadow: var(--sh-md);
 }
+
 .edit-modal h6 {
   font-size: 1rem;
   font-weight: 700;
   margin-bottom: 16px;
 }
+
 .btn-cancel {
   padding: 8px 20px;
   border-radius: 30px;
