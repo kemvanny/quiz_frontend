@@ -138,7 +138,6 @@ const confirmSignOut = async () => {
 </script>
 
 <style scoped>
-/* Ensure the sidebar acts as a flex container so footer stays at bottom */
 .sidebar {
   display: flex;
   flex-direction: column;
@@ -172,10 +171,9 @@ const confirmSignOut = async () => {
   color: white !important;
 }
 
-/* ================= MODERN LOGOUT BUTTON STYLES ================= */
 .sidebar-footer {
   padding: 15px 16px;
-  border-top: 1px solid #f1f5f9; /* Subtle top border separator */
+  border-top: 1px solid #f1f5f9; 
   background-color: #ffffff;
 }
 
@@ -188,7 +186,7 @@ const confirmSignOut = async () => {
   background-color: transparent;
   border: none;
   border-radius: 8px;
-  color: #ef4444; /* Modern tailwind crimson red */
+  color: #ef4444;
   font-weight: 550;
   font-size: 0.95rem;
   text-align: left;
@@ -201,21 +199,19 @@ const confirmSignOut = async () => {
   transition: transform 0.2s ease;
 }
 
-/* Elegant hover state matching modern application menus */
 .btn-logout:hover {
-  background-color: #fef2f2; /* Soft tint red background */
+  background-color: #fef2f2; 
   color: #dc2626;
 }
 
 .btn-logout:hover i {
-  transform: translateX(-2px); /* Subtle nudge animation on sign-out icon */
+  transform: translateX(-2px); 
 }
 
 .btn-logout:active {
   transform: scale(0.98);
 }
 
-/* ================= UTILITY / CARRIED OVER STYLES ================= */
 .dropdown-enter-active,
 .dropdown-leave-active {
   transition: all 0.7s ease;
