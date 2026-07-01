@@ -44,7 +44,7 @@
           />
           <div class="profile-details">
             <span class="profile-name">{{ authStore.fullName }}</span>
-            <span class="profile-role">Instructor</span>
+            <span class="profile-role">គ្រូបង្រៀន</span>
           </div>
         </div>
       </div>

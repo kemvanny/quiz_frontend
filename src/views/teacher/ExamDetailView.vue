@@ -338,7 +338,6 @@ onMounted(fetchAll);
   overflow: hidden;
   font-family: "Kantumruy Pro", "Inter", sans-serif;
   color: var(--txt);
-  background-color: #f8fafc;
 }
 
 .app-shell {
