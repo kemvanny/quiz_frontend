@@ -38,10 +38,10 @@
 
         <!-- Instructor Profile Pill -->
         <div class="instructor-profile">
-          <img :src="authStore.avatarUrl" alt="avatar" class="profile-avatar" />
+          <img :src="authStore?.avatarUrl" alt="avatar" class="profile-avatar" />
           <router-link to="/teacher/profile" class="d-none d-sm-flex flex-column justify-content-center pe-2"
             style="line-height: 1.1;">
-            <span class="fw-bold" style="font-size: .8rem; color: var(--txt);">{{ authStore.fullName }}</span>
+            <span class="fw-bold" style="font-size: .8rem; color: var(--txt);">{{ authStore?.fullName }}</span>
             <span style="font-size: .65rem; color: var(--txt-mu); font-weight: 500;">គ្រូបង្រៀន</span>
           </router-link>
         </div>
@@ -49,7 +49,7 @@
     </div>
   </div>
 
-  <CreateRoomModal :is-open="isCreateRoomOpen" :existing-rooms="backendRooms" @close="isCreateRoomOpen = false"
+  <CreateRoomModal :is-open="isCreateRoomOpen"  @close="isCreateRoomOpen = false"
     @created="onRoomCreated" />
 </template>
 
@@ -68,8 +68,8 @@ const onRoomCreated = (roomData) => {
   emit('room-created', roomData);
 };
 
-onMounted(() => {
-  authStore.fetchUserProfile();
+onMounted(async () => {
+  await authStore.fetchUserProfile();
 });
 </script>
 

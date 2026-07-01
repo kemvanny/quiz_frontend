@@ -51,7 +51,6 @@ defineEmits(['update:modelValue']);
 
 const authStore = useAuthStore();
 
-// Logic សម្រាប់ត្រងយកលទ្ធផលស្វែងរក
 const filteredExams = computed(() => {
   if (!props.allExams) return [];
   return props.allExams.filter(exam =>
@@ -59,8 +58,8 @@ const filteredExams = computed(() => {
   );
 });
 
-onMounted(() => {
-  authStore.fetchUserProfile();
+onMounted(async () => {
+  await authStore.fetchUserProfile();
 });
 </script>
 

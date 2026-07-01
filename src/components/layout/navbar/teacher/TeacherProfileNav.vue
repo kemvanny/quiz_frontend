@@ -12,11 +12,11 @@
             </div>
 
             <div class="profile-pill flex-shrink-0 pe-2">
-                <img :src="authStore.avatarUrl" alt="avatar" class="profile-ava" />
+                <img :src="authStore?.avatarUrl" alt="avatar" class="profile-ava" />
                 
                 <div class="d-none d-sm-flex flex-column justify-content-center" style="line-height: 1.1;">
                     <span class="fw-bold" style="font-size: .8rem; color: var(--txt);">
-                        {{ authStore.fullName }}
+                        {{ authStore?.fullName }}
                     </span>
                     <span style="font-size: .65rem; color: var(--txt-mu); font-weight: 500;">គ្រូបង្រៀន</span>
                 </div>
@@ -34,8 +34,8 @@ defineProps(({
 
 const authStore = useAuthStore();
 
-onMounted(() => {
-  authStore.fetchUserProfile();
+onMounted(async () => {
+  await authStore.fetchUserProfile();
 });
 </script>
 

@@ -222,7 +222,7 @@ const removeChoice = (qIdx, cIdx) => {
   questions.value[qIdx].choices.splice(cIdx, 1);
 };
 
-// Fetch API Data
+
 const fetchAll = async () => {
   loading.value = true;
   try {
@@ -268,11 +268,10 @@ const fetchAll = async () => {
   }
 };
 
-// Computed Points Sum
+
 const totalPoints = computed(() => questions.value.reduce((sum, q) => sum + (Number(q.pts) || 0), 0));
 const selectQuestion = (idx) => { selectedQuestionIndex.value = idx; };
 
-// Action: Update Question
 const handleSingleQuestionSave = async (idx) => {
   const q = questions.value[idx];
   try {
@@ -310,7 +309,9 @@ const handleDeleteQuestion = async (qId, idx) => {
 
 const goBack = () => router.push('/teacher/room-management');
 
-onMounted(fetchAll);
+onMounted(() => {
+  fetchAll();
+});
 </script>
 
 <style scoped>

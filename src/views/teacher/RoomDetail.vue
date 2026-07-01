@@ -371,11 +371,11 @@ const confirmDeleteExam = async () => {
   }
 }
 
-onMounted(() => {
-  authStore.fetchUserProfile()
-  fetchRoomInformation()
-  fetchExamsData()
-})
+onMounted(async () => {
+  await authStore.fetchUserProfile();
+  fetchRoomInformation();
+  fetchExamsData();
+});
 </script>
 
 <style scoped>

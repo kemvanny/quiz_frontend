@@ -5,6 +5,7 @@
       <div class="col-12 col-lg-8">
 
         <div class="row g-3 mb-4">
+          
           <div class="col-12 col-md-4" v-for="stat in stats" :key="stat.title">
             <div
               class="premium-stat-card d-flex flex-column align-items-center text-center justify-content-center gap-2"
@@ -17,8 +18,10 @@
               </div>
 
               <div>
+              
                 <div class="premium-stat-title">{{ stat.title }}</div>
                 <div class="d-flex align-items-baseline justify-content-center gap-2 mt-1">
+                  <span v-if="isLoadingDashboard" class="skeleton skeleton-text"></span>
                   <div class="premium-stat-value">{{ stat.value }}</div>
                   <span :class="stat.trendClass" class="small fw-bold" style="font-size: 0.75rem">
                     <i :class="stat.trendIcon" v-if="stat.trendIcon"></i>
@@ -206,6 +209,8 @@ import { getExams } from "@/api/exam.api";
 const isCreateRoomOpen = ref(false);
 const backendRooms = ref([]);
 const loadingRooms = ref(false);
+const isLoadingDashboard = ref(false);
+
 const totalStudents = computed(() => {
   return backendRooms.value.reduce(
     (total, room) => total + Number(room.student_count || room.count || 0),
@@ -222,14 +227,13 @@ const itemsPerPage = 4;
 
 const searchQuery = inject("searchQuery");
 
+
 const fetchBackendRooms = async () => {
   try {
     loadingRooms.value = true;
     const res = await getMyRooms();
-
     backendRooms.value = res.data?.data || res.data || [];
   } catch (err) {
-    console.error("Error fetching dashboard rooms:", err);
   } finally {
     loadingRooms.value = false;
   }
@@ -312,7 +316,23 @@ const totalPages = computed(() => {
 </script>
 
 <style scoped>
-/* Base Premium Design */
+.skeleton {
+  background-color: #e0e0e0;
+  display: inline-block;
+  height: 1.2rem;
+  border-radius: 4px;
+  animation: pulse 1.5s infinite ease-in-out;
+}
+
+@keyframes pulse {
+  0% { opacity: 0.6; }
+  50% { opacity: 1; }
+  100% { opacity: 0.6; }
+}
+
+.skeleton-text {
+  width: 100%;
+}
 .premium-card {
   background: #ffffff;
   border: 1px solid #e2e8f0;

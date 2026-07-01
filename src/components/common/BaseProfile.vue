@@ -26,8 +26,12 @@ const imgBaseUrl = import.meta.env.VITE_BASE_URL_FOR_IMAGE;
 const authStore = useAuthStore();
 import defaultImage from "../../assets/images/default.png";
 
-onMounted(async () => {
+const fetchProfiles = async () => {
     await authStore.fetchProfile();
+};
+
+onMounted( () => {
+    fetchProfiles();
 });
 
 </script>

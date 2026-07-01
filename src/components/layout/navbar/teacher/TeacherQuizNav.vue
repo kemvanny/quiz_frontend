@@ -46,12 +46,12 @@
       <!-- Right Section: Profile Pill Trigger -->
       <div class="tb-section gap-3 pe-0 border-0 flex-shrink-0 align-items-center">
         <div class="d-flex align-items-center gap-2.5 profile-pill-trigger" @click="goToProfile">
-          <img :src="authStore.avatarUrl || 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=facearea&facepad=2&w=256&h=256&q=80'" alt="avatar" class="user-avatar-img"/>
+          <img :src="authStore?.avatarUrl || 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=facearea&facepad=2&w=256&h=256&q=80'" alt="avatar" class="user-avatar-img"/>
           <div class="d-none d-sm-flex flex-column justify-content-center text-start" style="line-height: 1.2;">
-            <span class="fw-bold user-name-text">{{ authStore.fullName || 'គណនីគ្រូ' }}</span>
+            <span class="fw-bold user-name-text">{{ authStore?.fullName || 'គណនីគ្រូ' }}</span>
             <span class="user-role-text">គ្រូបង្រៀន</span>
           </div>
-          <i class="fas fa-chevron-down ms-0.5 text-muted d-none d-sm-block arrow-down-icon"></i>
+         
         </div>
       </div>
 
@@ -79,8 +79,8 @@ const goToProfile = () => {
   router.push('/teacher/profile'); 
 };
 
-onMounted(() => {
-  authStore.fetchUserProfile();
+onMounted(async () => {
+  await authStore.fetchUserProfile();
 });
 </script>
 

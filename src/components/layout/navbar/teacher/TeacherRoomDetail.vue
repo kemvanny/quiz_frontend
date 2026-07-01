@@ -39,12 +39,12 @@
       <div class="right-section">
         <div class="instructor-profile">
           <img 
-            :src="authStore.avatarUrl" 
+            :src="authStore?.avatarUrl" 
             alt="avatar" 
             class="profile-avatar" 
           />
           <div class="profile-details">
-            <span class="profile-name">{{ authStore.fullName }}</span>
+            <span class="profile-name">{{ authStore?.fullName }}</span>
             <span class="profile-role">គ្រូបង្រៀន</span>
           </div>
         </div>
@@ -59,24 +59,20 @@ import { useRouter } from 'vue-router';
 import { useAuthStore } from '@/stores/auth'; 
 import { useExamStore } from '@/stores/examStore';
 
-// Stores & Router
 const authStore = useAuthStore();
 const examStore = useExamStore();
 const router = useRouter();
 
-// Navigation Logic
 const goBack = () => {
   router.push({ name: 'ClassStream' }); 
 };
 
-// Lifecycle Hooks
-onMounted(() => {
-  authStore.fetchUserProfile();
+onMounted(async () => {
+  await authStore.fetchUserProfile();
 });
 </script>
 
 <style scoped>
-/* Glassmorphism Header Structure */
 .topbar {
   display: flex;
   align-items: center;

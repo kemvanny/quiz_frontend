@@ -427,9 +427,6 @@ const questions = ref([
   },
 ]);
 
-// --- Fix the component to exactly the remaining viewport height,
-// no matter what header/topbar sits above it. This guarantees the
-// whole page never scrolls; only the center feed column scrolls.
 const containerHeight = ref("100vh");
 
 const updateContainerHeight = () => {
@@ -443,7 +440,7 @@ onMounted(async () => {
   await nextTick();
   updateContainerHeight();
   window.addEventListener("resize", updateContainerHeight);
-  // Also react if fonts/late content shift the header height slightly
+
   resizeObserver = new ResizeObserver(() => updateContainerHeight());
   if (containerRef.value?.parentElement) {
     resizeObserver.observe(containerRef.value.parentElement);
