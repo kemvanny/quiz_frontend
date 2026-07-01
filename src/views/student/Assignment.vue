@@ -207,7 +207,11 @@ const todoCount = computed(() => {
   ).length;
 });
 
+
+
 const filteredExams = computed(() => {
+  let list = [...processedExams.value];
+
   if (activeTab.value === "todo") {
     return processedExams.value.filter(exam =>
       exam.is_completed === 0 && (exam.time_status === 'ongoing' || exam.time_status === 'upcoming')
@@ -216,7 +220,7 @@ const filteredExams = computed(() => {
   if (activeTab.value === "completed") {
     return processedExams.value.filter(exam => exam.is_completed === 1 || exam.time_status === 'completed');
   }
-  return processedExams.value;
+  return list.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
 });
 
 const paginatedExams = computed(() => {
@@ -243,6 +247,7 @@ async function fetchStudentExams() {
     const response = await getAllStudentExams();
     if (response.data && response.data.result) {
       examList.value = response.data.data || [];
+      currentPage.value = 1; 
     } else {
       throw new Error(response.data?.msg || "Failed to fetch exam data.");
     }
