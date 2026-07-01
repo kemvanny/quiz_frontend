@@ -24,10 +24,10 @@
           <i class="fas fa-users"></i> គ្រប់គ្រងថ្នាក់រៀន
         </router-link>
         <router-link :to="{ name: 'AllExams' }" class="nav-link">
-          <i class="fas fa-file-alt"></i> បញ្ជីវិញ្ញាសារ
+          <i class="fas fa-file-alt"></i> បញ្ជីវិញ្ញាសា
         </router-link>
         <router-link :to="{ name: 'StudentResults' }" class="nav-link">
-          <i class="fas fa-chart-bar"></i> លទ្ធផលសិក្សារបស់សិស្ស
+          <i class="fas fa-chart-bar"></i> លទ្ធផលសិស្ស
         </router-link>
         <router-link :to="{ name: 'Profile' }" class="nav-link">
           <i class="fas fa-user-circle"></i> ប្រវត្តិរូប
