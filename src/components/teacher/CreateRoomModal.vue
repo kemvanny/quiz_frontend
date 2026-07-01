@@ -2,7 +2,7 @@
   <BaseModal
     :is-open="isOpen"
     title="បង្កើតថ្នាក់រៀនថ្មី"
-    subtitle="រៀបចំបង្កើតបន្ទប់សិក្សាសម្រាប់សិស្សរបស់អ្នក។"
+    subtitle="រៀបចំបង្កើតបន្ទប់សិក្សាសម្រាប់សិស្សរបស់អ្នក"
     tag="ការគ្រប់គ្រងថ្នាក់រៀន"
     width="500px"
     @close="handleClose"
@@ -17,7 +17,7 @@
             v-model="form.name" 
             @keydown.enter.prevent="handleCreateRoom"
             class="form-control border-0 shadow-none px-2 focus-ring-emerald" 
-            placeholder="ឧទាហរណ៍៖ គណិតវិទ្យា - ថ្នាក់ទី ១០" 
+            placeholder="សូមបញ្ចូលបន្ទប់រៀន" 
             style="font-size: .95rem; background: #fafbfc;"
           >
         </div>

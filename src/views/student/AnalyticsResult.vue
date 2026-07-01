@@ -240,7 +240,7 @@
         </div>
         <div class="filter-strip px-4 pb-2">
           <button class="filter-chip active" style="cursor: default">
-            ទាំងអស់
+            សរុបចំនួន
             <span class="chip-count">{{ examResultsList.length }}</span>
           </button>
         </div>

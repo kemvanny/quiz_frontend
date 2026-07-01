@@ -4,31 +4,15 @@
     <div class="workspace-toolbar mb-4">
       <div class="search-wrapper position-relative" @keydown.esc="isFocused = false">
         <i class="fas fa-search search-icon"></i>
-        <input 
-          v-model="searchQuery" 
-          type="text" 
-          class="form-control search-input" 
-          placeholder="ស្វែងរកថ្នាក់រៀន..."
-          @focus="isFocused = true"
-          @blur="onBlur"
-          @keydown.down.prevent="onArrowDown"
-          @keydown.up.prevent="onArrowUp"
-          @keydown.enter.prevent="onEnter"
-        />
+        <input v-model="searchQuery" type="text" class="form-control search-input" placeholder="ស្វែងរកថ្នាក់រៀន..."
+          @focus="isFocused = true" @blur="onBlur" @keydown.down.prevent="onArrowDown" @keydown.up.prevent="onArrowUp"
+          @keydown.enter.prevent="onEnter" />
 
         <!-- Google-Like Suggestions Dropdown -->
-        <div 
-          v-if="isFocused && suggestions.length > 0" 
-          class="search-suggestions-dropdown"
-        >
-          <div 
-            v-for="(room, index) in suggestions" 
-            :key="'suggest-' + (room.id || index)"
-            class="suggestion-item"
-            :class="{ 'active': index === activeIndex }"
-            @mousedown.prevent="selectSuggestion(room)"
-            @mouseenter="activeIndex = index"
-          >
+        <div v-if="isFocused && suggestions.length > 0" class="search-suggestions-dropdown">
+          <div v-for="(room, index) in suggestions" :key="'suggest-' + (room.id || index)" class="suggestion-item"
+            :class="{ 'active': index === activeIndex }" @mousedown.prevent="selectSuggestion(room)"
+            @mouseenter="activeIndex = index">
             <div class="d-flex align-items-center gap-2 min-w-0">
               <i class="fas fa-search suggestion-icon"></i>
               <div class="suggestion-text-wrapper text-truncate">
@@ -55,12 +39,8 @@
     <!-- Classroom Grid -->
     <div v-else-if="paginatedRooms.length > 0">
       <div class="classroom-grid">
-        <div 
-          v-for="(room, index) in paginatedRooms" 
-          :key="room.id || index" 
-          class="classroom-card"
-          @click="goToRoomDetail(room.id)"
-        >
+        <div v-for="(room, index) in paginatedRooms" :key="room.id || index" class="classroom-card"
+          @click="goToRoomDetail(room.id)">
           <!-- Main Top Content Block -->
           <div class="card-main-content">
             <div class="d-flex align-items-start justify-content-between gap-3">
@@ -78,7 +58,7 @@
                   </span>
                 </div>
               </div>
-              
+
               <!-- Modern Minimalist Actions -->
               <div class="card-actions-wrapper" @click.stop>
                 <button class="action-circle-btn btn-edit" @click="openUpdateModal(room)" title="កែប្រែបន្ទប់">
@@ -98,9 +78,7 @@
               <span class="small-text">Active</span>
             </div>
 
-            <button 
-              class="btn btn-pill-invite d-flex align-items-center gap-1"
-              @click.stop="handleInviteStudent(room)">
+            <button class="btn btn-pill-invite d-flex align-items-center gap-1" @click.stop="handleInviteStudent(room)">
               <i class="fas fa-user-plus"></i> <span>Invite</span>
             </button>
           </div>
@@ -108,7 +86,8 @@
       </div>
 
       <!-- Pagination Controls (Clean & Minimalist Layout) -->
-      <div v-if="totalPages > 1" class="pagination-container d-flex align-items-center justify-content-between flex-wrap gap-3">
+      <div v-if="totalPages > 1"
+        class="pagination-container d-flex align-items-center justify-content-between flex-wrap gap-3">
         <div class="pagination-info">
           បង្ហាញ {{ (currentPage - 1) * itemsPerPage + 1 }} ដល់
           {{ Math.min(currentPage * itemsPerPage, filteredRooms.length) }} នៃថ្នាក់រៀនសរុប {{ filteredRooms.length }}
@@ -116,29 +95,17 @@
         <nav aria-label="Classroom pagination">
           <ul class="pagination-list d-flex align-items-center gap-1 mb-0 p-0">
             <li>
-              <button 
-                class="page-nav-btn" 
-                :disabled="currentPage === 1" 
-                @click="prevPage"
-              >
+              <button class="page-nav-btn" :disabled="currentPage === 1" @click="prevPage">
                 <i class="fas fa-chevron-left"></i>
               </button>
             </li>
             <li v-for="page in totalPages" :key="page">
-              <button 
-                class="page-number-btn" 
-                :class="{ 'active': currentPage === page }"
-                @click="goToPage(page)"
-              >
+              <button class="page-number-btn" :class="{ 'active': currentPage === page }" @click="goToPage(page)">
                 {{ page }}
               </button>
             </li>
             <li>
-              <button 
-                class="page-nav-btn" 
-                :disabled="currentPage === totalPages" 
-                @click="nextPage"
-              >
+              <button class="page-nav-btn" :disabled="currentPage === totalPages" @click="nextPage">
                 <i class="fas fa-chevron-right"></i>
               </button>
             </li>
@@ -155,8 +122,10 @@
 
     <!-- Modals -->
     <CreateRoomModal :is-open="isCreateOpen" @close="isCreateOpen = false" @created="handleRoomCreatedSuccess" />
-    <UpdateRoomModal :is-open="isUpdateOpen" :room-data="selectedRoom" @close="closeUpdateModal" @updated="fetchRooms" />
-    <DeleteRoomModal :is-open="isDeleteOpen" :room-data="selectedRoom" @close="closeDeleteModal" @deleted="fetchRooms" />
+    <UpdateRoomModal :is-open="isUpdateOpen" :room-data="selectedRoom" @close="closeUpdateModal"
+      @updated="fetchRooms" />
+    <DeleteRoomModal :is-open="isDeleteOpen" :room-data="selectedRoom" @close="closeDeleteModal"
+      @deleted="fetchRooms" />
     <InviteStudentModal :is-open="isInviteOpen" :room-data="selectedRoom" @close="isInviteOpen = false" />
   </div>
 </template>
@@ -165,7 +134,7 @@
 import { ref, computed, onMounted, watch, inject } from 'vue'
 import { useRouter } from 'vue-router'
 import { getMyRooms } from '@/api/teacher.api'
-import { storeToRefs } from 'pinia'            
+import { storeToRefs } from 'pinia'
 import { useRoomStore } from '@/stores/roomStore'
 
 import CreateRoomModal from '@/components/teacher/CreateRoomModal.vue'
@@ -191,18 +160,18 @@ const activeIndex = ref(-1)
 
 // PAGINATION STATE
 const currentPage = ref(1)
-const itemsPerPage = ref(9) 
+const itemsPerPage = ref(9)
 
 const suggestions = computed(() => {
   if (!searchQuery.value) return []
-  return rooms.value.filter(room => 
+  return rooms.value.filter(room =>
     room.name.toLowerCase().includes(searchQuery.value.toLowerCase())
   ).slice(0, 6)
 })
 
 watch(searchQuery, () => {
   activeIndex.value = -1
-  currentPage.value = 1 
+  currentPage.value = 1
 })
 
 const onBlur = () => {
@@ -242,7 +211,7 @@ const onEnter = () => {
 
 const filteredRooms = computed(() => {
   if (!searchQuery.value) return rooms.value
-  return rooms.value.filter(room => 
+  return rooms.value.filter(room =>
     room.name.toLowerCase().includes(searchQuery.value.toLowerCase())
   )
 })
@@ -272,7 +241,7 @@ const goToPage = (page) => {
 
 const goToRoomDetail = (roomId) => {
   router.push({
-    name: 'ClassStream', 
+    name: 'ClassStream',
     params: { roomId: roomId }
   })
 }
@@ -292,7 +261,7 @@ const refreshRoomsSignal = inject('refreshRoomsSignal', null)
 
 if (refreshRoomsSignal) {
   watch(refreshRoomsSignal, () => {
-    fetchRooms(); 
+    fetchRooms();
   })
 }
 
@@ -301,8 +270,8 @@ const handleRoomCreatedSuccess = async (newRoom) => {
   if (newRoom) {
     rooms.value.unshift({
       id: newRoom.id,
-      name: newRoom.name || newRoom.title || 'បន្ទប់គ្មានឈ្មោះ', 
-      student_count: 0 
+      name: newRoom.name || newRoom.title || 'បន្ទប់គ្មានឈ្មោះ',
+      student_count: 0
     });
   }
   isCreateOpen.value = false;
@@ -343,26 +312,25 @@ onMounted(() => {
 
 <style scoped>
 .workspace-container {
-  --em:      #10b981;
-  --em-dk:   #059669;
+  --em: #10b981;
+  --em-dk: #059669;
   --em-soft: #ecfdf5;
-  --em-mid:  rgba(16,185,129,.12);
-  --txt:     #0f172a;
-  --txt-m:   #334155;
-  --txt-mu:  #64748b;
-  --surf:    #ffffff;
-  --bdr:     #e2e8f0;
-  --r-md:    12px;
-  --r-lg:    16px;
-  --r-xl:    20px;
-  --sh-sm:   0 4px 18px rgba(0,0,0,.03);
-  --sh-md:   0 8px 24px rgba(0,0,0,.06);
+  --em-mid: rgba(16, 185, 129, .12);
+  --txt: #0f172a;
+  --txt-m: #334155;
+  --txt-mu: #64748b;
+  --surf: #ffffff;
+  --bdr: #e2e8f0;
+  --r-md: 12px;
+  --r-lg: 16px;
+  --r-xl: 20px;
+  --sh-sm: 0 4px 18px rgba(0, 0, 0, .03);
+  --sh-md: 0 8px 24px rgba(0, 0, 0, .06);
 
   padding: 24px 8px;
   font-family: 'Kantumruy Pro', 'Inter', sans-serif;
 }
 
-/* Modern Minimal Search Box Styles */
 .search-wrapper {
   max-width: 360px;
   width: 100%;
@@ -395,7 +363,6 @@ onMounted(() => {
   box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1) !important;
 }
 
-/* Google-Like Autocomplete Suggestions Dropdown */
 .search-suggestions-dropdown {
   position: absolute;
   top: calc(100% + 5px);
@@ -448,7 +415,7 @@ onMounted(() => {
   font-size: 0.75rem;
   color: var(--em);
   opacity: 0;
-  transform: scaleHorizontally(-1); 
+  transform: scaleHorizontally(-1);
   transition: opacity 0.15s ease, transform 0.15s ease;
 }
 
@@ -457,14 +424,12 @@ onMounted(() => {
   opacity: 1;
 }
 
-/* Classroom Cards Grid Layout */
 .classroom-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   gap: 1.5rem;
 }
 
-/* Premium Floating Card Element */
 .classroom-card {
   background: var(--surf);
   border: 1px solid var(--bdr);
@@ -483,13 +448,11 @@ onMounted(() => {
   transform: translateY(-3px);
 }
 
-/* Upper Content Layout */
 .card-main-content {
   padding: 24px;
   flex-grow: 1;
 }
 
-/* Elegant Mint Avatar Blocks */
 .icon-avatar-box {
   width: 44px;
   height: 44px;
@@ -510,10 +473,14 @@ onMounted(() => {
 }
 
 .classroom-title-text {
-  font-size: 1.1rem;
-  font-weight: 800;
-  color: var(--txt);
-  margin: 0 0 4px 0;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0;
+  line-height: 1.4;
+  white-space: normal;
+  word-break: break-word;
+  overflow-wrap: break-word;
 }
 
 .student-count-subtext {
@@ -529,7 +496,12 @@ onMounted(() => {
   margin-right: 4px;
 }
 
-/* Clean Decoupled Control Group Actions */
+.card-actions-wrapper {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
 .card-actions-wrapper {
   display: flex;
   align-items: center;
@@ -553,6 +525,7 @@ onMounted(() => {
 .btn-edit {
   color: #d97706;
 }
+
 .btn-edit:hover {
   background-color: #fef3c7;
   border-color: #fde047;
@@ -561,12 +534,12 @@ onMounted(() => {
 .btn-delete {
   color: #ef4444;
 }
+
 .btn-delete:hover {
   background-color: #fef2f2;
   border-color: #fecaca;
 }
 
-/* Seamless Shaded Footer Tray */
 .card-footer-tray {
   padding: 14px 24px;
   border-top: 1px solid #f1f5f9;
@@ -597,7 +570,6 @@ onMounted(() => {
   letter-spacing: 0.5px;
 }
 
-/* Pill-Shaped Invite Action CTA */
 .btn-pill-invite {
   background-color: var(--surf);
   border: 1px solid var(--bdr);
@@ -621,7 +593,6 @@ onMounted(() => {
   transform: scale(0.96);
 }
 
-/* Premium Emerald Loader Spinner */
 .spinner-custom {
   width: 2.2rem;
   height: 2.2rem;
@@ -633,10 +604,11 @@ onMounted(() => {
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
-/* Empty State illustration wrapper */
 .empty-state-container {
   text-align: center;
   padding: 60px 20px;
@@ -650,17 +622,16 @@ onMounted(() => {
 .empty-icon {
   font-size: 2.5rem;
   color: #cbd5e1;
-  margin-bottom: 12px;
   display: block;
+  margin: auto;
 }
 
 .empty-text {
   font-size: 0.9rem;
   font-weight: 600;
-  margin: 0;
+  margin: 20px 0px;
 }
 
-/* PAGINATION CONTROLS */
 .pagination-container {
   border-top: 1px solid var(--bdr);
   padding-top: 20px;
@@ -676,7 +647,7 @@ onMounted(() => {
   list-style: none;
 }
 
-.page-number-btn, 
+.page-number-btn,
 .page-nav-btn {
   width: 36px;
   height: 36px;
@@ -693,7 +664,7 @@ onMounted(() => {
   cursor: pointer;
 }
 
-.page-number-btn:hover, 
+.page-number-btn:hover,
 .page-nav-btn:not(:disabled):hover {
   border-color: var(--em);
   color: var(--em);

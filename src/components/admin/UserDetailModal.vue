@@ -1,7 +1,7 @@
 <template>
   <Teleport to="body">
     <Transition name="modal-fade">
-      <div v-if="show" class="custom-modal-overlay" @click.self="emit('close')">
+      <div v-if="show" class="custom-modal-overlay" @click="emit('close')">
         <div class="custom-modal-card">
           <div class="modal-header-custom">
             <div class="d-flex align-items-center gap-3">
@@ -47,10 +47,7 @@
                 </div>
                 <div class="info-item">
                   <label>ភេទ</label>
-                  <p>{{
-                    detailedUser?.gender?.toLowerCase() === 'female' ? 'ស្រី' :
-                      detailedUser?.gender?.toLowerCase() === 'male' ? 'ប្រុស' : 'មិនទាន់បំពេញ'
-                    }}</p>
+                  <p>{{ genderDisplay}}</p>
                 </div>
                 <div class="info-item">
                   <label>ថ្ងៃបង្កើត</label>
@@ -122,7 +119,6 @@ const fetchUserDetails = async (id) => {
   try {
     const res = await getUserByID(id);
     fetchedUser.value = res.data?.data || res.data || res;
-    console.log("User Data from API:", fetchedUser.value);
   } catch {
     toast.error("មិនអាចទាញយកព័ត៌មាន!");
   } finally {
@@ -174,13 +170,24 @@ const avatarSrc = computed(() => {
       ? av
       : `${imgBaseUrl}${av}`;
 });
-
+const genderDisplay = computed(() => {
+  const g = detailedUser.value?.gender; 
+  if (!g) return 'មិនទាន់បំពេញ'; 
+  const map = {
+    'female': 'ស្រី',
+    'male': 'ប្រុស',
+    'other': 'ផ្សេងៗ'
+  };
+  return map[g.toLowerCase()] || 'មិនទាន់បំពេញ';
+});
 const copyToClipboard = (txt, field) =>
   txt &&
   navigator.clipboard
     .writeText(txt)
     .then(() => toast.success(`ចម្លង${field}ជោគជ័យ!`));
+
 const formatDate = (d) => (d ? new Date(d).toISOString().split("T")[0] : "---");
+
 </script>
 
 <style scoped>

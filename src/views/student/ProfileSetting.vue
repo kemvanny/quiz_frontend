@@ -170,10 +170,19 @@
         </div>
         <div class="profile-field">
           <label>ភេទ</label>
-          <input v-model="editForm.gender" type="text" placeholder="មិនទាន់បំពេញ"/>
-          <span v-if="errors.gender" class="error-text">{{
-            errors.gender
-          }}</span>
+
+          <div class="input-wrapper">
+            <select v-model="editForm.gender" class="info-input selector-custom" @change="validateGender">
+              <option value="" disabled selected>ជ្រើសរើសភេទ</option>
+              <option value="male">ប្រុស</option>
+              <option value="female">ស្រី</option>
+              <option value="other">ផ្សេងៗ</option>
+            </select>
+          </div>
+
+          <span v-if="errors.gender" class="error-text">
+            {{ errors.gender }}
+          </span>
         </div>
         <div class="profile-field">
           <label>ឆ្នាំសិក្សា</label>
@@ -203,10 +212,13 @@
       </div>
 
       <template #footer>
-        <button class="btn btn-outline" @click="closeEditModal">បោះបង់</button>
+        <button class="btn btn-outline" @click="closeEditModal" :disabled="isLoading">
+          បោះបង់
+        </button>
 
-        <button class="btn btn-green" @click="handleUpdateProfile" :disabled="isSaveDisabled">
-          រក្សាទុក
+        <button class="btn btn-green" @click="handleUpdateProfile" :disabled="isSaveDisabled || isLoading">
+          <i v-if="isLoading" class="fa-solid fa-spinner fa-spin" style="margin-right: 8px;"></i>
+          {{ isLoading ? 'កំពុងរក្សាទុក...' : 'រក្សាទុក' }}
         </button>
       </template>
     </BaseModal>
@@ -335,6 +347,8 @@ const {
   validateGender
 } = useFormValidation();
 
+const isLoading = ref(false);
+
 const imgBaseUrl = import.meta.env.VITE_BASE_URL_FOR_IMAGE;
 const avatarInput = ref(null);
 const imageRefresh = ref(Date.now());
@@ -396,12 +410,16 @@ const closePasswordModal = () => {
 
 const formattedGender = computed(() => {
   const g = authStore.profile.gender?.toLowerCase();
-  if (!g) return 'មិនទាន់បំពេញ';
   
-  return g === 'female' ? 'ស្រី' : (g === 'male' ? 'ប្រុស' : g);
+  if (!g) return 'មិនទាន់បំពេញ';
+
+  if (g === 'female') return 'ស្រី';
+  if (g === 'male') return 'ប្រុស';
+  if (g === 'other') return 'ផ្សេងៗ';
+  
+  return g;
 });
 
-//Change Password
 const handleChangePassword = async () => {
   oldPasswordError.value = "";
   newPasswordError.value = "";
@@ -461,7 +479,6 @@ const handleChangePassword = async () => {
   }
 };
 
-//Upload Picture
 const uploadAvatar = async (event) => {
   const file = event.target.files[0];
   if (!file) return;
@@ -563,6 +580,8 @@ const isSaveDisabled = computed(() => {
 
 //Update info profile
 const handleUpdateProfile = async () => {
+  isLoading.value = true;
+
   validateFirstName(editForm.value.firstName);
   validateLastName(editForm.value.lastName);
   validatePhone(editForm.value.phone);
@@ -597,6 +616,9 @@ const handleUpdateProfile = async () => {
     closeEditModal();
   } catch (err) {
     triggerToast("មានបញ្ហាក្នុងការអាប់ដេត!", "fa-solid fa-circle-xmark");
+  }
+  finally {
+    isLoading.value = false;
   }
 };
 

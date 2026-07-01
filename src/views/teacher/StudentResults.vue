@@ -22,7 +22,7 @@
         <!-- Filter Selector and Stats -->
         <div class="d-flex align-items-center gap-3 flex-wrap">
           <div class="d-flex align-items-center gap-2">
-            <span class="text-muted small fw-semibold text-nowrap">តម្រងវិញ្ញាសា៖</span>
+            <span class="text-muted small fw-semibold text-nowrap">កម្រងវិញ្ញាសា៖</span>
             <select v-model="selectedExam"
               class="form-select form-select-sm border border-secondary-subtle rounded-pill px-3 py-2 text-dark" style="
                 min-width: 180px;
@@ -37,7 +37,7 @@
             </select>
           </div>
           <span class="badge bg-light text-dark border px-3 py-2 rounded-pill fw-semibold">
-            សរុប៖ {{ filteredResults.length }} បញ្ជូល
+            សរុប {{ filteredResults.length }} លទ្ធផល
           </span>
         </div>
       </div>
@@ -50,6 +50,9 @@
               <tr>
                 <th class="text-secondary text-uppercase py-3 ps-3" style="font-size: 0.75rem; letter-spacing: 0.5px">
                   សិស្ស
+                </th>
+                <th class="text-secondary text-uppercase py-3 ps-3" style="font-size: 0.75rem; letter-spacing: 0.5px">
+                  បន្ទប់
                 </th>
                 <th class="text-secondary text-uppercase py-3" style="font-size: 0.75rem; letter-spacing: 0.5px">
                   វិញ្ញាសា
@@ -102,6 +105,12 @@
                       }}</span>
                     </div>
                   </div>
+                </td>
+
+                <td class="py-3">
+                  <span class="fw-medium text-dark-emphasis">{{
+                    res.room
+                  }}</span>
                 </td>
 
                 <!-- Exam Title -->

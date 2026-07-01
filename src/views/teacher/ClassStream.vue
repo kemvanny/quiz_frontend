@@ -21,8 +21,8 @@
               <i class="fas fa-stream"></i> ថ្នាក់រៀន
             </div>
             <div class="class-tab" :class="{ active: currentTab === 'people' }" @click="handleTabChange('people')">
-              <i class="fas fa-users"></i> សិស្សសរុប
-              <span class="badge-count ms-2">({{ roomData?.students?.length || 0 }})</span>
+              <i class="fas fa-users"></i>សិស្សសរុប
+              <span class="badge-count ">{{ roomData?.students?.length || 0 }}</span>
             </div>
             <div class="class-tab" :class="{ active: currentTab === 'results' }" @click="handleTabChange('results')">
               <i class="fas fa-chart-bar"></i> លទ្ធផលសិស្ស
@@ -600,10 +600,11 @@ const fetchRoomData = async () => {
 const fetchPosts = async () => {
   try {
     const res = await getPosts(props.roomId);
+
     posts.value = (res.data.data || []).reverse();
   } catch (err) {
-    console.error(err);
-  }
+console.error("getPosts error status:", err.response?.status);
+    console.error("getPosts error message:", err.response?.data);  }
 };
 
 //create post
@@ -779,7 +780,7 @@ const sendFeedback = async (subId, feedbackText) => {
   } catch (err) {
     console.error(err);
     toast.error("មានកំហុសក្នុងការផ្ញើ Feedback");
-  }
+  }  
 };
 
 //mounted
