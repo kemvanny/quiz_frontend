@@ -19,9 +19,9 @@
           <div class="select-wrapper">
             <i class="fas fa-filter select-icon"></i>
             <select class="sort-select" v-model="statusFilter">
-              <option value="all">ស្ថានភាពទាំងអស់ (All)</option>
-              <option value="active">សកម្ម (Active)</option>
-              <option value="draft">ព្រាង (Draft)</option>
+              <option value="all">ស្ថានភាពទាំងអស់</option>
+              <option value="active">សកម្ម </option>
+              <option value="draft">ព្រាង </option>
             </select>
           </div>
         </div>
@@ -65,7 +65,7 @@
                 <span class="sub-item"><i class="far fa-user"></i> {{ exam.teacher_name || 'Hean Liza' }}</span>
                 <div class="dot"></div>
                 <span class="row-pts">
-                  <i class="fas fa-star text-warning me-1"></i>{{ exam.total_points !== undefined && exam.total_points !== null ? exam.total_points : 0 }} pts
+                  <i class="fas fa-star text-warning me-1"></i>{{ exam.total_points !== undefined && exam.total_points !== null ? exam.total_points : 0 }} ពិន្ទុ
                 </span>
               </div>
             </div>

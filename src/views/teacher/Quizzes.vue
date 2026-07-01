@@ -50,7 +50,7 @@
                   rows="2" placeholder="សូមសរសេរការណែនាំខ្លីៗសម្រាប់សិស្ស"></textarea>
               </div>
               <div class="mb-3">
-                <label class="form-label fw-bold small text-uppercase text-muted">រយៈពេលប្រឡង (នាទី)</label>
+                <label class="form-label fw-bold small text-uppercase text-muted">រយៈពេលប្រឡង-នាទី</label>
                 <input type="number" v-model.number="quizDuration"
                   class="form-control rounded-3 py-2 px-3 border-0 shadow-sm" min="1" placeholder="ឧ. 60" />
               </div>

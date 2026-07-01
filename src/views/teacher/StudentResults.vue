@@ -22,7 +22,7 @@
         <!-- Filter Selector and Stats -->
         <div class="d-flex align-items-center gap-3 flex-wrap">
           <div class="d-flex align-items-center gap-2">
-            <span class="text-muted small fw-semibold text-nowrap">តម្រងវិញ្ញាសា៖</span>
+            <span class="text-muted small fw-semibold text-nowrap">កម្រងវិញ្ញាសា៖</span>
             <select v-model="selectedExam"
               class="form-select form-select-sm border border-secondary-subtle rounded-pill px-3 py-2 text-dark" style="
                 min-width: 180px;
@@ -37,7 +37,7 @@
             </select>
           </div>
           <span class="badge bg-light text-dark border px-3 py-2 rounded-pill fw-semibold">
-            សរុប៖ {{ filteredResults.length }} បញ្ជូល
+            សរុប {{ filteredResults.length }} លទ្ធផល
           </span>
         </div>
       </div>
