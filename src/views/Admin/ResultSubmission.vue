@@ -121,7 +121,6 @@ const fetchResultSubmission = async () => {
       page: currentPage.value,
       limit: limit.value
     });
-    console.log(res);
     if (res.data && res.data.result) {
       const rawSubmissions = res.data.data.submissions || [];
 
