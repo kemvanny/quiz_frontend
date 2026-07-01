@@ -38,12 +38,12 @@
       <div class="right-section">
         <div class="instructor-profile">
           <img 
-            :src="authStore.avatarUrl" 
+            :src="authStore?.avatarUrl" 
             alt="avatar" 
             class="profile-avatar" 
           />
           <div class="profile-details">
-            <span class="profile-name">{{ authStore.fullName }}</span>
+            <span class="profile-name">{{ authStore?.fullName }}</span>
             <span class="profile-role">គ្រូបង្រៀន</span>
           </div>
         </div>
@@ -69,8 +69,8 @@ const goBack = () => {
 };
 
 // Lifecycle Hooks
-onMounted(() => {
-  authStore.fetchUserProfile();
+onMounted(async () => {
+  await authStore.fetchUserProfile();
 });
 </script>
 

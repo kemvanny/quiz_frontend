@@ -29,12 +29,12 @@
                     onmouseover="this.style.borderColor='var(--em-mid)';"
                     onmouseout="this.style.borderColor='var(--bdr)';">
                     
-                    <img :src="authStore.avatarUrl"
+                    <img :src="authStore?.avatarUrl"
                         alt="avatar"
                         style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover; border: 1.5px solid var(--em-mid);" />
                     
                     <router-link to="/teacher/profile" class="d-none d-sm-flex flex-column justify-content-center pe-2" style="line-height: 1.1;">
-                        <span class="fw-bold" style="font-size: .8rem; color: var(--txt);">{{ authStore.fullName }}</span>
+                        <span class="fw-bold" style="font-size: .8rem; color: var(--txt);">{{ authStore?.fullName }}</span>
                         <span style="font-size: .65rem; color: var(--txt-mu); font-weight: 500;">គ្រូបង្រៀន</span>
                     </router-link>
                 </div>
@@ -49,9 +49,10 @@ import { useAuthStore } from '@/stores/auth';
 
 const authStore = useAuthStore();
 
-onMounted(() => {
-  authStore.fetchUserProfile();
+onMounted(async () => {
+  await authStore.fetchUserProfile();
 });
+
 </script>
 
 <style scoped>

@@ -484,7 +484,7 @@ const activeMenu = ref(null);
 const studentResults = ref([]);
 const currentSelectedExamId = ref(null);
 
-// --- FILTER & PAGINATION STATE ---
+
 const selectedExam = ref("all");
 const currentPage = ref(1);
 const itemsPerPage = ref(10);
@@ -501,7 +501,6 @@ const getStudentAvatar = (student) => {
   )}`
 }
 
-// Computed value to pull unique list of Exam Titles dynamically
 const availableExams = computed(() => {
   if (!studentResults.value) return [];
   const titles = studentResults.value
@@ -510,7 +509,6 @@ const availableExams = computed(() => {
   return [...new Set(titles)];
 });
 
-// Computed value to apply filter based on selected exam title
 const filteredResults = computed(() => {
   if (!studentResults.value) return [];
   if (selectedExam.value === "all") {
@@ -521,26 +519,23 @@ const filteredResults = computed(() => {
   );
 });
 
-// Computed value containing only the current page's sliced subset of results
 const paginatedResults = computed(() => {
   const startIndex = (currentPage.value - 1) * itemsPerPage.value;
   const endIndex = startIndex + itemsPerPage.value;
   return filteredResults.value.slice(startIndex, endIndex);
 });
 
-// Computed value to determine total number of page buttons required
+
 const totalPages = computed(() => {
   return Math.ceil(filteredResults.value.length / itemsPerPage.value) || 1;
 });
 
-// Methods to handle page switches
 const prevPage = () => {
   if (currentPage.value > 1) {
     currentPage.value--;
   }
 };
 
-// Calculate the dynamic average grade based on student results
 const averageGrade = computed(() => {
   if (!studentResults.value || studentResults.value.length === 0) {
     return 0;
@@ -783,11 +778,11 @@ const sendFeedback = async (subId, feedbackText) => {
   }
 };
 
-//mounted
-onMounted(() => {
+
+onMounted(async () => {
   fetchRoomData();
   fetchPosts();
-  authStore.fetchUserProfile();
+  await authStore.fetchUserProfile();
 });
 </script>
 
@@ -795,19 +790,16 @@ onMounted(() => {
 .custom-results-table {
   border-collapse: separate !important;
   border-spacing: 0 12px !important;
-  /* Adds vertical spacing between floating card-rows */
   width: 100%;
 }
 
-/* Header Row Styling & Padding */
 .custom-results-table thead tr th {
   border: none;
   background-color: #f8f9fa;
-  /* Sleek light gray track for headers */
+
   padding: 0.85rem 1rem;
 }
 
-/* Rounded corners for the gray header track */
 .custom-results-table thead tr th:first-child {
   border-top-left-radius: 8px;
   border-bottom-left-radius: 8px;
@@ -818,7 +810,6 @@ onMounted(() => {
   border-bottom-right-radius: 8px;
 }
 
-/* Individual Floating Card Rows */
 .custom-results-table tbody tr.card-row {
   background-color: #ffffff;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
