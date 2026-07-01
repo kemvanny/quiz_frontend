@@ -78,8 +78,8 @@
 
         <div v-else>
           <div v-if="streamPosts.length === 0" class="text-center card p-5 border-dashed text-muted">
-            <i class="far fa-folder-open display-4 mb-3 text-secondary"></i>
-            <p class="mb-0">មិនទាន់មានការបង្ហោះ ឬសេចក្តីប្រកាសណាមួយនៅក្នុងបន្ទប់សិក្សានេះទេ!</p>
+            <i class="far fa-folder-open display-4 m-auto text-secondary"></i>
+            <p class="mb-0 mt-4">មិនទាន់មានការបង្ហោះ ឬសេចក្តីប្រកាសណាមួយនៅក្នុងបន្ទប់សិក្សានេះទេ!</p>
           </div>
 
           <div v-for="post in displayedPosts" :key="post.id" class="stream-post-card mb-4">
