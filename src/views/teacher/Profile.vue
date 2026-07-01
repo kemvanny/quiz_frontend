@@ -81,8 +81,17 @@
           <i class="fas fa-lock"></i>
           ផ្លាស់ប្តូរពាក្យសម្ងាត់
         </button>
-        <button type="button" class="btn btn-danger" @click="openLogoutModal">
-          <i class="fas fa-sign-out-alt"></i> ចាកចេញពីគណនី
+
+        <button
+          type="button"
+          :class="[
+            'btn',
+            currentTab === 'delete' ? 'btn-danger' : 'btn-danger-outline',
+          ]"
+          @click="currentTab = 'delete'"
+        >
+          <i class="fas fa-user-times"></i>
+          លុបគណនីចោល
         </button>
       </div>
     </div>
@@ -304,15 +313,38 @@
               :disabled="passwordLoading"
             >
               <i v-if="passwordLoading" class="fas fa-spinner fa-spin me-2"></i>
-
-              {{
-                passwordLoading
-                  ? "កំពុងរក្សាទុក..."
-                  : "ធ្វើបច្ចុប្បន្នភាពពាក្យសម្ងាត់"
-              }}
+              {{ passwordLoading ? "កំពុងរក្សាទុក..." : "ធ្វើបច្ចុប្បន្នភាពពាក្យសម្ងាត់" }}
             </button>
           </div>
         </form>
+      </div>
+
+      <div
+        v-if="currentTab === 'delete'"
+        id="tab-delete"
+        class="fade-in-panel w-100"
+      >
+        <h2>លុបគណនីចោល</h2>
+        <div class="p-4 border rounded bg-light mt-4">
+          <div class="text-danger mb-3">
+            <i class="fas fa-exclamation-triangle fa-2x"></i>
+          </div>
+          <h5 class="fw-bold text-dark mb-2">តើអ្នកប្រាកដជាចង់លុបគណនីមែនទេ?</h5>
+          <p class="text-muted mb-4 small" style="line-height: 1.6">
+            ការលុបគណនីនឹងលុបព័ត៌មានផ្ទាល់ខ្លួន រូបភាពប្រវត្តិរូប និងទិន្នន័យដែលពាក់ព័ន្ធទាំងអស់ចេញពីប្រព័ន្ធជាអចិន្ត្រៃយ៍។ 
+            សកម្មភាពនេះមិនអាចទាញត្រឡប់មកវិញបានឡើយ។
+          </p>
+          <div class="d-flex justify-content-start">
+            <button
+              type="button"
+              class="btn btn-danger"
+              style="width: auto; padding: 10px 24px"
+              @click="openDeleteAccountModal"
+            >
+              <i class="fas fa-user-times me-2"></i> លុបគណនីរបស់ខ្ញុំ
+            </button>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -329,8 +361,7 @@
           លុបរូបភាពប្រវត្តិរូប?
         </h5>
         <p class="text-muted mb-4 small" style="line-height: 1.5">
-          តើអ្នកពិតជាចង់លុបរូបភាពបច្ចុប្បន្ននេះមែនទេ?
-          សកម្មភាពនេះមិនអាចទាញត្រឡប់មកវិញបានឡើយ។
+          តើអ្នកពិតជាចង់លុបរូបភាពបច្ចុប្បន្ននេះមែនទេ? សកម្មភាពនេះមិនអាចទាញត្រឡប់មកវិញបានឡើយ។
         </p>
         <div class="d-flex gap-2 w-100">
           <button
@@ -345,44 +376,58 @@
             @click="confirmDeleteAvatar"
             :disabled="loadingAvatar"
           >
-            <span
-              v-if="loadingAvatar"
-              class="spinner-border spinner-border-sm me-1"
-            ></span
-            >លុបចេញ
+            <span v-if="loadingAvatar" class="spinner-border spinner-border-sm me-1"></span>លុបចេញ
           </button>
         </div>
       </div>
     </BaseModal>
 
     <BaseModal
-      :isOpen="isLogoutModalOpen"
-      @close="isLogoutModalOpen = false"
-      width="350px"
+      :isOpen="isDeleteAccountModalOpen"
+      @close="isDeleteAccountModalOpen = false"
+      width="400px"
     >
-      <div class="p-3 text-center">
-        <div class="modal-icon-alert text-warning mb-3">
-          <i class="fas fa-sign-out-alt fa-2x"></i>
+      <div class="p-3">
+        <div class="text-center">
+          <div class="modal-icon-alert text-danger mb-3">
+            <i class="fas fa-user-slash fa-2x"></i>
+          </div>
+          <h5 class="fw-bold text-dark mb-2" style="font-size: 1.1rem">
+            បញ្ជាក់ការលុបគណនី
+          </h5>
+          <p class="text-muted mb-4 small" style="line-height: 1.5">
+            ដើម្បីសុវត្ថិភាព សូមបញ្ចូលពាក្យសម្ងាត់បច្ចុប្បន្នរបស់អ្នក ដើម្បីបន្តដំណើរការលុបគណនីនេះជាអចិន្ត្រៃយ៍។
+          </p>
         </div>
-        <h5 class="fw-bold text-dark mb-2" style="font-size: 1.1rem">
-          ចាកចេញពីប្រព័ន្ធ?
-        </h5>
-        <p class="text-muted mb-4 small" style="line-height: 1.5">
-          តើអ្នកពិតជាចង់បញ្ចប់ការងារ និងចាកចេញពីគណនីបច្ចុប្បន្ននេះមែនទេ?
-        </p>
+
+        <div class="mb-4">
+          <label class="form-label small fw-bold text-secondary mb-1">ពាក្យសម្ងាត់បច្ចុប្បន្ន</label>
+          <div class="password-input">
+            <input
+              type="password"
+              v-model="deleteAccountPassword"
+              placeholder="បញ្ចូលលេខសម្ងាត់បច្ចុប្បន្ន"
+              style="width: 100%; padding: 10px; border: 1px solid #ced4da; border-radius: 4px;"
+            />
+          </div>
+        </div>
+
         <div class="d-flex gap-2 w-100">
           <button
             class="btn btn-outline flex-fill"
-            @click="isLogoutModalOpen = false"
+            @click="isDeleteAccountModalOpen = false"
+            :disabled="deletingAccount"
           >
             បោះបង់
           </button>
           <button
             class="btn btn-danger flex-fill"
             style="margin-top: 0"
-            @click="confirmSignOut"
+            @click="confirmDeleteAccount"
+            :disabled="deletingAccount || !deleteAccountPassword"
           >
-            ចាកចេញ
+            <span v-if="deletingAccount" class="spinner-border spinner-border-sm me-1"></span>
+            លុបជាដាច់ខាត
           </button>
         </div>
       </div>
@@ -399,11 +444,12 @@ import {
   updateAvatar,
   deleteAvatar,
 } from "@/api/teacher.api";
-import { changePasswordAPI } from "@/api/auth.api";
 
-import { logoutAPI } from "@/api/auth.api";
+import { changePasswordAPI, deleteAccountAPI } from "@/api/auth.api";
+
 import BaseModal from "@/components/common/BaseModal.vue";
 import { useAuthStore } from "@/stores/auth";
+
 const toast = useToast();
 const authStore = useAuthStore();
 
@@ -413,6 +459,9 @@ const loadingData = ref(false);
 const updatingProfile = ref(false);
 const loadingAvatar = ref(false);
 const passwordLoading = ref(false);
+const deletingAccount = ref(false); 
+
+const deleteAccountPassword = ref(""); 
 
 const passwordForm = reactive({
   oldPassword: "",
@@ -430,7 +479,7 @@ const fileInput = ref(null);
 const localUploadedUrl = ref("");
 
 const isDeleteModalOpen = ref(false);
-const isLogoutModalOpen = ref(false);
+const isDeleteAccountModalOpen = ref(false); 
 
 const profileData = reactive({
   userId: "",
@@ -452,30 +501,22 @@ const toastConfig = {
 
 const fetchUserProfile = async () => {
   if (loadingData.value) return;
-
   try {
     loadingData.value = true;
     const res = await getProfile();
     const responseData = res.data;
 
     if (responseData?.result === false) {
-      toast.error(
-        responseData?.msg || "សូមចូលប្រើប្រាស់ប្រព័ន្ធជាមុនសិន!",
-        toastConfig,
-      );
+      toast.error(responseData?.msg || "សូមចូលប្រើប្រាស់ប្រព័ន្ធជាមុនសិន!", toastConfig);
       return;
     }
 
     const user = responseData?.data || responseData;
-
     if (user) {
       profileData.userId = user.code || "N/A";
       profileData.firstName = user.firstName || "";
       profileData.lastName = user.lastName || "";
-
-      // FIX: Standardize value to uppercase to match template option keys
       profileData.gender = user.gender ? user.gender.toUpperCase() : "";
-
       profileData.email = user.email || "";
       profileData.phone = user.phone || "";
       profileData.address = user.address || "";
@@ -489,9 +530,7 @@ const fetchUserProfile = async () => {
         } else {
           const url = new URL(import.meta.env.VITE_BASE_URL);
           const serverOrigin = url.origin;
-          const cleanAvatarPath = user.avatar.startsWith("/")
-            ? user.avatar.slice(1)
-            : user.avatar;
+          const cleanAvatarPath = user.avatar.startsWith("/") ? user.avatar.slice(1) : user.avatar;
           profileData.avatarUrl = `${serverOrigin}/${cleanAvatarPath}`;
         }
       } else {
@@ -511,22 +550,18 @@ const handleChangePassword = async () => {
     toast.error("សូមបញ្ចូលលេខសម្ងាត់ចាស់!", toastConfig);
     return;
   }
-
   if (!passwordForm.newPassword) {
     toast.error("សូមបញ្ចូលលេខសម្ងាត់ថ្មី!", toastConfig);
     return;
   }
-
   if (!passwordForm.confirmPassword) {
     toast.error("សូមបញ្ជាក់លេខសម្ងាត់ថ្មី!", toastConfig);
     return;
   }
-
   if (passwordForm.newPassword.length < 8) {
     toast.error("លេខសម្ងាត់ថ្មីត្រូវមានយ៉ាងតិច 8 តួអក្សរ!", toastConfig);
     return;
   }
-
   if (passwordForm.newPassword !== passwordForm.confirmPassword) {
     toast.error("លេខសម្ងាត់ថ្មី និងការបញ្ជាក់មិនដូចគ្នា!", toastConfig);
     return;
@@ -534,29 +569,19 @@ const handleChangePassword = async () => {
 
   try {
     passwordLoading.value = true;
-
-    const res = await changePasswordAPI(
-      passwordForm.oldPassword,
-      passwordForm.newPassword,
-    );
+    const res = await changePasswordAPI(passwordForm.oldPassword, passwordForm.newPassword);
 
     if (!res.data.result) {
       toast.error(res.data.msg, toastConfig);
       return;
     }
-
     toast.success("ផ្លាស់ប្តូរលេខសម្ងាត់ជោគជ័យ!", toastConfig);
-
     passwordForm.oldPassword = "";
     passwordForm.newPassword = "";
     passwordForm.confirmPassword = "";
   } catch (error) {
     console.error(error);
-
-    toast.error(
-      error?.response?.data?.msg || "មានបញ្ហាក្នុងការផ្លាស់ប្តូរលេខសម្ងាត់!",
-      toastConfig,
-    );
+    toast.error(error?.response?.data?.msg || "មានបញ្ហាក្នុងការផ្លាស់ប្តូរលេខសម្ងាត់!", toastConfig);
   } finally {
     passwordLoading.value = false;
   }
@@ -578,7 +603,6 @@ onMounted(() => {
 const handleSaveProfile = async () => {
   try {
     updatingProfile.value = true;
-
     const payload = {
       firstName: profileData.firstName.trim(),
       lastName: profileData.lastName.trim(),
@@ -589,7 +613,6 @@ const handleSaveProfile = async () => {
 
     await updateProfile(payload);
     toast.success("រក្សាទុកព័ត៌មានផ្ទាល់ខ្លួនជោគជ័យ", toastConfig);
-
     isEditing.value = false;
     await fetchUserProfile();
     await authStore.fetchUserProfile(true);
@@ -602,9 +625,7 @@ const handleSaveProfile = async () => {
 };
 
 const triggerFileInput = () => {
-  if (fileInput.value) {
-    fileInput.value.click();
-  }
+  if (fileInput.value) fileInput.value.click();
 };
 
 const handleAvatarUpload = async (event) => {
@@ -622,7 +643,6 @@ const handleAvatarUpload = async (event) => {
     loadingAvatar.value = true;
     await updateAvatar(formData);
     toast.success("ផ្លាស់ប្តូររូបភាពប្រវត្តិរូបជោគជ័យ", toastConfig);
-
     await fetchUserProfile();
     await authStore.fetchUserProfile(true);
   } catch (err) {
@@ -644,7 +664,6 @@ const confirmDeleteAvatar = async () => {
     await deleteAvatar();
     localUploadedUrl.value = "";
     toast.success("លុបរូបភាពប្រវត្តិរូបជោគជ័យ", toastConfig);
-
     await fetchUserProfile();
     await authStore.fetchUserProfile(true);
   } catch (err) {
@@ -655,22 +674,44 @@ const confirmDeleteAvatar = async () => {
   }
 };
 
-const openLogoutModal = () => {
-  isLogoutModalOpen.value = true;
+const openDeleteAccountModal = () => {
+  deleteAccountPassword.value = ""; 
+  isDeleteAccountModalOpen.value = true;
 };
 
-const confirmSignOut = async () => {
-  isLogoutModalOpen.value = false;
+const confirmDeleteAccount = async () => {
+  if (!deleteAccountPassword.value) {
+    toast.error("សូមបញ្ចូលពាក្យសម្ងាត់បច្ចុប្បន្នរបស់អ្នក!", toastConfig);
+    return;
+  }
+
   try {
-    await logoutAPI();
-  } catch (err) {
-    console.error("Logout API Error:", err);
-  } finally {
-    localStorage.clear();
-    toast.success("ចាកចេញពីប្រព័ន្ធបានជោគជ័យ!", toastConfig);
-    setTimeout(() => {
+    deletingAccount.value = true;
+    
+    const res = await deleteAccountAPI(deleteAccountPassword.value);
+    
+    if (res.data?.result === false) {
+      toast.error(res.data?.msg || "លេខសម្ងាត់មិនត្រឹមត្រូវ!", toastConfig);
+      return;
+    }
+    
+    toast.success("គណនីរបស់អ្នកត្រូវបានលុបដោយជោគជ័យ!", toastConfig);
+    isDeleteAccountModalOpen.value = false;
+    
+    if (authStore?.logout) {
+      authStore.logout();
+    } else {
+      localStorage.clear();
       window.location.href = "/login";
-    }, 1500);
+    }
+  } catch (err) {
+    console.error("Delete account error:", err);
+    toast.error(
+      err?.response?.data?.msg || "លេខសម្ងាត់មិនត្រឹមត្រូវ ឬការលុបគណនីបានបរាជ័យ!", 
+      toastConfig
+    );
+  } finally {
+    deletingAccount.value = false;
   }
 };
 </script>
@@ -799,6 +840,16 @@ const confirmSignOut = async () => {
   width: 14px;
   height: 14px;
   color: var(--red);
+}
+.btn-danger-outline{
+  color: var(--red);
+  background-color: #fff5f5;
+  border: 1px solid #fed7d7 !important;
+}
+.btn-danger-outline:hover {
+  color: var(--red);
+  background-color: #ffe8e8;
+  border: 1px solid #fed7d7 !important;
 }
 
 .user-name {

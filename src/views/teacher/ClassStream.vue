@@ -780,7 +780,7 @@ const sendFeedback = async (subId, feedbackText) => {
   } catch (err) {
     console.error(err);
     toast.error("មានកំហុសក្នុងការផ្ញើ Feedback");
-  }
+  }  
 };
 
 //mounted

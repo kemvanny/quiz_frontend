@@ -420,7 +420,6 @@ const formattedGender = computed(() => {
   return g;
 });
 
-//Change Password
 const handleChangePassword = async () => {
   oldPasswordError.value = "";
   newPasswordError.value = "";
@@ -480,7 +479,6 @@ const handleChangePassword = async () => {
   }
 };
 
-//Upload Picture
 const uploadAvatar = async (event) => {
   const file = event.target.files[0];
   if (!file) return;

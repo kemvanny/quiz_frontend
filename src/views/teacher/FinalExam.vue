@@ -341,11 +341,7 @@
 import { ref, reactive, computed } from 'vue'
 
 const emit = defineEmits(['new-room'])
-
-// ── Exam meta ──
 const exam = reactive({ title: '', subject: '', duration: 120 })
-
-// ── Sections ──
 const SECTIONS = reactive([
   { id: 'mcq',   title: 'Part 1: Multiple Choice',   type: 'mcq',   pts: 5 },
   { id: 'tf',    title: 'Part 2: True/False',         type: 'tf',    pts: 2 },
@@ -353,13 +349,11 @@ const SECTIONS = reactive([
   { id: 'essay', title: 'Part 4: Essay / File Upload',type: 'essay', pts: 20 },
 ])
 
-// ── Questions ──
 const questions = reactive([
   { id: 1, type: 'mcq', prompt: '', choices: ['', ''], correctChoice: 0 }
 ])
 const currentQId = ref(1)
 
-// ── Computed helpers ──
 const currentQ = computed(() => questions.find(q => q.id === currentQId.value) || null)
 
 const currentBadge = computed(() => {
