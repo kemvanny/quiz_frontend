@@ -84,6 +84,9 @@ import { onMounted, ref } from "vue";
 import { getAllExams, getDashboardExamData, getQuizDetail } from "@/api/admin.api";
 import StatusBadge from "@/components/common/StatusBadge.vue";
 import QuizDetailModal from "@/components/admin/QuizDetailModal.vue";
+import { useToast } from '@/composables/useToast';
+
+const {triggerToast} = useToast();
 
 const exam = ref([]);
 const examDashboardData = ref();
@@ -107,7 +110,7 @@ const openQuizDetail = async (item) => {
             isOpenQuizDetail.value = true;
         }
     } catch (err) {
-        console.error("មិនអាចទាញយកទិន្នន័យបានទេ៖", err);
+        triggerToast("error", "មិនអាចទាញយកទិន្នន័យបានទេ៖ " + err.message);
     }
 };
 
@@ -141,7 +144,7 @@ const fetchExam = async () => {
             limit.value = res.data.data.limit || 10;
         }
     } catch (error) {
-        console.log("Cannot get quizzes", error);
+        triggerToast("error", "មិនអាចទាញយកទិន្នន័យបានទេ៖ " + error.message);
     } finally {
         isLoading.value = false;
     }
@@ -153,7 +156,7 @@ const fetchExamDashboardData = async () => {
         const res = await getDashboardExamData();
         examDashboardData.value = res.data.data;
     } catch (error) {
-        console.log("Cannot get exam dashboard data", error);
+        triggerToast("error", "មិនអាចទាញយកទិន្នន័យបានទេ៖ " + error.message);
     } finally {
         isLoadingQuiz.value = false;
     }

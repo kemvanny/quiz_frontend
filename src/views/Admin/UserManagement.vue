@@ -79,14 +79,14 @@
 
                 <div class="glass-field">
                     <label>នាមខ្លួន</label>
-                    <input type="text" placeholder="សូមបញ្ចូលនាមខ្លួន" v-model="form.firstName"
+                    <input type="text" placeholder="សូមបញ្ចូលនាមខ្លួន" v-model="form.firstName" @input="handleInput"
                         :class="{ 'input-error': errors.firstName }">
                     <span v-if="errors.firstName" class="text-danger-msg">{{ errors.firstName }}</span>
                 </div>
 
                 <div class="glass-field full">
                     <label>អ៊ីមែល</label>
-                    <input type="email" placeholder="សូមបញ្ចូលអ៊ីមែល" @input="validateEmail(form.email, false)" v-model="form.email"
+                    <input type="email" placeholder="សូមបញ្ចូលអ៊ីមែល" @input="validateEmail(form.email, false)" v-model="form.email" 
                         :class="{ 'input-error': errors.email }">
                     <span v-if="errors.email" class="text-danger-msg">{{ errors.email }}</span>
                 </div>
@@ -107,7 +107,7 @@
             </div>
 
             <template #footer>
-                <button class="btn btn-outline-secondary" @click="isModalOpen = false"
+                <button class="btn btn-outline-secondary" @click="closeModal"
                     :disabled="loadingSubmit">បោះបង់</button>
                 <BaseButton @click="handleCreate" :disabled="loadingSubmit">
                     {{ loadingSubmit ? 'កំពុងបង្កើត...' : 'បង្កើតអ្នកប្រើប្រាស់' }}
@@ -149,6 +149,8 @@ const currentPage = ref(1);
 const limit = ref(10);
 const totalRecords = ref(0);
 
+const isDirty = ref(false);
+
 
 const selectedRoleForCreate = ref('student');
 const form = ref({ firstName: '', lastName: '', email: '' })
@@ -157,13 +159,27 @@ watch(() => form.value.firstName, (val) => validateFirstName(val));
 watch(() => form.value.lastName, (val) => validateLastName(val));
 watch(() => form.value.email, (val) => validateEmail(val));
 
+const handleInput = () => {
+  isDirty.value = true; 
+};
+
+const resetForm = () => {
+    form.value = { firstName: '', lastName: '', email: '', role: 'student' };
+    errors.value = { firstName: '', lastName: '', email: '' };
+};
+
 watch(isModalOpen, (isOpen) => {
-    if (!isOpen) {
-        errors.value.firstName = '';
-        errors.value.lastName = '';
-        errors.value.email = '';
-    }
+    if (!isOpen) resetForm();
+    isDirty.value = false;
 });
+
+const closeModal = () => {
+   isDirty.value = false; 
+    
+    resetForm(); 
+    
+    isModalOpen.value = false;
+};
 
 const openUserDetail = async (user) => {
     selectedUser.value = user;
@@ -180,7 +196,7 @@ const userHeaders = [
     { label: "សកម្មភាព", key: "actions" },
 ];
 
-const usersList = ref([]);
+
 const changePage = async (newPage) => {
     currentPage.value = newPage;
     await fetchUsers();
@@ -224,6 +240,7 @@ const fetchUsers = async () => {
 
         if (res.data && res.data.data) {
             const rawUsers = res.data.data.users || [];
+            console.log("Fetched users:", rawUsers);
 
             users.value = rawUsers;
 
@@ -239,10 +256,11 @@ const fetchUsers = async () => {
 }
 
 const handleCreate = async () => {
+    
     validateFirstName(form.value.firstName);
     validateLastName(form.value.lastName);
     validateEmail(form.value.email, true);
-
+   
     if (errors.value.firstName || errors.value.lastName || errors.value.email) {
         return;
     }
