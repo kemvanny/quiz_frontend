@@ -600,10 +600,11 @@ const fetchRoomData = async () => {
 const fetchPosts = async () => {
   try {
     const res = await getPosts(props.roomId);
+
     posts.value = (res.data.data || []).reverse();
   } catch (err) {
-    console.error(err);
-  }
+console.error("getPosts error status:", err.response?.status);
+    console.error("getPosts error message:", err.response?.data);  }
 };
 
 //create post

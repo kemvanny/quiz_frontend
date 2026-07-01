@@ -62,7 +62,10 @@
               <div class="row-sub">
                 <span class="sub-item"><i class="far fa-clock"></i> {{ exam.duration }} នាទី</span>
                 <div class="dot"></div>
-                <span class="sub-item"><i class="far fa-user"></i> {{ exam.teacher_name || 'Hean Liza' }}</span>
+                <span class="sub-item"><i class="far fa-user"></i>  {{ authStore.user?.firstName || authStore.user?.lastName 
+                  ? `${authStore.user.firstName || ''} ${authStore.user.lastName || ''}`.trim() 
+                  : 'Defualt' }}
+                </span>
                 <div class="dot"></div>
                 <span class="row-pts">
                   <i class="fas fa-star text-warning me-1"></i>{{ exam.total_points !== undefined && exam.total_points !== null ? exam.total_points : 0 }} pts
@@ -271,7 +274,7 @@ const fetchExamsData = async () => {
   try {
     loading.value = true
     const res = await getExamsInRoom(route.params.roomId);
-    console.log('RAW EXAM DATA:', res.data?.data) 
+    // console.log('RAW EXAM DATA:', res.data?.data) 
     allExams.value = res.data?.data || [];
   } catch (err) {
     console.error("កំហុស API:", err);

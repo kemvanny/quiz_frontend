@@ -51,6 +51,9 @@
                 <th class="text-secondary text-uppercase py-3 ps-3" style="font-size: 0.75rem; letter-spacing: 0.5px">
                   សិស្ស
                 </th>
+                <th class="text-secondary text-uppercase py-3 ps-3" style="font-size: 0.75rem; letter-spacing: 0.5px">
+                  បន្ទប់
+                </th>
                 <th class="text-secondary text-uppercase py-3" style="font-size: 0.75rem; letter-spacing: 0.5px">
                   វិញ្ញាសា
                 </th>
@@ -102,6 +105,12 @@
                       }}</span>
                     </div>
                   </div>
+                </td>
+
+                <td class="py-3">
+                  <span class="fw-medium text-dark-emphasis">{{
+                    res.room
+                  }}</span>
                 </td>
 
                 <!-- Exam Title -->
