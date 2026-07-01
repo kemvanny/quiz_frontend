@@ -43,8 +43,8 @@ app.component('LogoutModal',LogoutModal)
 app.use(createPinia())
 
 app.use(Toast, {
-  position: POSITION.BOTTOM_CENTER, 
-  containerClassName: "custom-toast-container",
+  position: POSITION.BOTTOM_RIGHT,
+  transition: "Vue-Toastification__bounce",
   timeout: 3000,
   closeOnClick: true,
   pauseOnFocusLoss: true,

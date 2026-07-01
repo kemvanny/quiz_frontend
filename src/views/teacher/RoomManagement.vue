@@ -331,7 +331,6 @@ onMounted(() => {
   font-family: 'Kantumruy Pro', 'Inter', sans-serif;
 }
 
-/* Modern Minimal Search Box Styles */
 .search-wrapper {
   max-width: 360px;
   width: 100%;
@@ -364,7 +363,6 @@ onMounted(() => {
   box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1) !important;
 }
 
-/* Google-Like Autocomplete Suggestions Dropdown */
 .search-suggestions-dropdown {
   position: absolute;
   top: calc(100% + 5px);
@@ -426,14 +424,12 @@ onMounted(() => {
   opacity: 1;
 }
 
-/* Classroom Cards Grid Layout */
 .classroom-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   gap: 1.5rem;
 }
 
-/* Premium Floating Card Element */
 .classroom-card {
   background: var(--surf);
   border: 1px solid var(--bdr);
@@ -452,13 +448,11 @@ onMounted(() => {
   transform: translateY(-3px);
 }
 
-/* Upper Content Layout */
 .card-main-content {
   padding: 24px;
   flex-grow: 1;
 }
 
-/* Elegant Mint Avatar Blocks */
 .icon-avatar-box {
   width: 44px;
   height: 44px;
@@ -508,7 +502,6 @@ onMounted(() => {
   align-items: center;
 }
 
-/* Clean Decoupled Control Group Actions */
 .card-actions-wrapper {
   display: flex;
   align-items: center;
@@ -547,7 +540,6 @@ onMounted(() => {
   border-color: #fecaca;
 }
 
-/* Seamless Shaded Footer Tray */
 .card-footer-tray {
   padding: 14px 24px;
   border-top: 1px solid #f1f5f9;
@@ -578,7 +570,6 @@ onMounted(() => {
   letter-spacing: 0.5px;
 }
 
-/* Pill-Shaped Invite Action CTA */
 .btn-pill-invite {
   background-color: var(--surf);
   border: 1px solid var(--bdr);
@@ -602,7 +593,6 @@ onMounted(() => {
   transform: scale(0.96);
 }
 
-/* Premium Emerald Loader Spinner */
 .spinner-custom {
   width: 2.2rem;
   height: 2.2rem;
@@ -619,7 +609,6 @@ onMounted(() => {
   }
 }
 
-/* Empty State illustration wrapper */
 .empty-state-container {
   text-align: center;
   padding: 60px 20px;
@@ -633,17 +622,16 @@ onMounted(() => {
 .empty-icon {
   font-size: 2.5rem;
   color: #cbd5e1;
-  margin-bottom: 12px;
   display: block;
+  margin: auto;
 }
 
 .empty-text {
   font-size: 0.9rem;
   font-weight: 600;
-  margin: 0;
+  margin: 20px 0px;
 }
 
-/* PAGINATION CONTROLS */
 .pagination-container {
   border-top: 1px solid var(--bdr);
   padding-top: 20px;

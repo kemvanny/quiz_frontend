@@ -75,8 +75,8 @@
 
       <!-- Empty State -->
       <div v-else class="text-center py-5 bg-white shadow-sm rounded-4">
-        <i class="far fa-folder-open fa-2x mb-2 text-muted opacity-50"></i>
-        <h6 class="fw-bold text-secondary">មិនមានវិញ្ញាសាឡើយ</h6>
+        <i class="far fa-folder-open fa-2x mb-4 text-muted opacity-50"></i>
+        <h6 class="fw-semibold text-secondary">មិនមានវិញ្ញាសាឡើយ</h6>
       </div>
       <div v-if="totalPages > 1" class="d-flex align-items-center justify-content-between pt-3 flex-wrap gap-2">
         <div class="text-muted small fw-medium">

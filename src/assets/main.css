@@ -139,6 +139,12 @@ a {
   color: inherit;
 }
 
+.Vue-Toastification__toast,
+.Vue-Toastification__toast-body,
+.Vue-Toastification__close-button {
+    font-family: "Poppins", "Kantumruy Pro", "Inter", sans-serif !important;
+}
+
 .app-layout {
   display: flex;
   height: 100vh;
@@ -447,5 +453,123 @@ a {
         opacity: 1;
         transform: translateY(0);
     }
+}
+
+
+.Vue-Toastification__toast {
+  font-family: "Poppins", "Kantumruy Pro", "Inter", sans-serif !important;
+
+  border-radius: 18px !important;
+  overflow: hidden;
+
+  backdrop-filter: blur(12px);
+
+  box-shadow:
+    0 20px 45px rgba(0, 0, 0, 0.18),
+    0 10px 25px rgba(16, 185, 129, 0.15);
+
+  animation: toastBurst 0.55s cubic-bezier(.18, 1.4, .32, 1) !important;
+}
+
+/* Success */
+.Vue-Toastification__toast--success {
+  border-left: 5px solid #10b981;
+}
+
+/* Error */
+.Vue-Toastification__toast--error {
+  border-left: 5px solid #ef4444;
+}
+
+/* Warning */
+.Vue-Toastification__toast--warning {
+  border-left: 5px solid #f59e0b;
+}
+
+/* Info */
+.Vue-Toastification__toast--info {
+  border-left: 5px solid #3b82f6;
+}
+
+.Vue-Toastification__toast::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+
+  background:
+    linear-gradient(
+      120deg,
+      transparent 0%,
+      rgba(255,255,255,.65) 45%,
+      transparent 100%
+    );
+
+  transform: translateX(-120%);
+  animation: toastShine 0.8s ease;
+  pointer-events: none;
+}
+
+.Vue-Toastification__icon {
+  animation: iconBounce .6s ease;
+}
+
+@keyframes iconBounce {
+  0% {
+    transform: scale(.4) rotate(-25deg);
+  }
+
+  60% {
+    transform: scale(1.25) rotate(10deg);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes toastShine {
+  to {
+    transform: translateX(120%);
+  }
+}
+
+@keyframes toastBurst {
+  0% {
+    opacity: 0;
+    transform:
+      translateY(70px)
+      scale(0.3)
+      rotate(-8deg);
+  }
+
+  50% {
+    opacity: 1;
+    transform:
+      translateY(-10px)
+      scale(1.08)
+      rotate(2deg);
+  }
+
+  75% {
+    transform:
+      translateY(4px)
+      scale(0.97);
+  }
+
+  100% {
+    opacity: 1;
+    transform:
+      translateY(0)
+      scale(1)
+      rotate(0);
+  }
+}
+/* Toast must always stay above Bootstrap modal */
+.Vue-Toastification__container {
+    z-index: 999999999 !important;
+}
+
+.Vue-Toastification__toast {
+    z-index: 999999999 !important;
 }
 
