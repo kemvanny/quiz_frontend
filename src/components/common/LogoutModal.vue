@@ -17,9 +17,9 @@
               <button type="button" class="btn btn-light rounded-3 w-50 fw-semibold text-muted" @click="$emit('close')">
                 បោះបង់
               </button>
-              <button type="button" class="btn btn-logout rounded-3 w-50 fw-semibold text-white"
+              <button type="button" class="btn btn-logout rounded-3 w-75 fw-semibold text-white"
                 @click="$emit('confirm')" :disabled="isLoading">
-                <span v-if="isLoading" style="font-size: 15px;">
+                <span v-if="isLoading" style="font-size: 16px;">
                   <i class="fas fa-spinner fa-spin"></i>ចាកចេញ...
                 </span>
                 <span v-else>ចាកចេញ</span>

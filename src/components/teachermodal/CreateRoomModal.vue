@@ -59,6 +59,17 @@ const form = reactive({ name: '' });
 
 const handleCreateRoom = async () => {
   if (!form.name.trim()) return;
+  const roomName = form.name.trim();
+
+  
+  if (roomName.length < 3) {
+    toast.error("ឈ្មោះបន្ទប់ត្រូវមានយ៉ាងតិច ៣ អក្សរ!");
+    return;
+  }
+  if (roomName.length > 50) {
+    toast.error("ឈ្មោះបន្ទប់មិនអាចលើសពី ៥០ អក្សរទេ!");
+    return;
+  }
 
   try {
     createLoading.value = true;
@@ -71,8 +82,9 @@ const handleCreateRoom = async () => {
     toast.success("បង្កើតថ្នាក់រៀនជោគជ័យ");
     handleClose();
   } catch (err) {
-    console.error(err);
-    toast.error(err.response?.data?.message || "មានបញ្ហាក្នុងការបង្កើតថ្នាក់រៀន");
+    if (err.response?.status === 422 || err.response?.status === 409) {
+    toast.error("មិនអាចបង្កើតឈ្មោះថ្នាក់ដូចគ្នាបានទេ");
+  } 
   } finally {
     createLoading.value = false;
   }
