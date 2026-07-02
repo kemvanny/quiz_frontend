@@ -429,11 +429,9 @@
                       >
                         ពិន្ទុ
                       </th>
-                      <th
-                        class="text-secondary text-uppercase py-3 text-center"
-                        style="font-size: 0.75rem; letter-spacing: 0.5px"
-                      >
-                        Kanalparichethe
+                      <th class="text-secondary text-uppercase py-3 text-center"
+                        style="font-size: 0.75rem; letter-spacing: 0.5px">
+                        កាលបរិច្ឆេទ
                       </th>
                       <th
                         class="text-secondary text-uppercase py-3"
