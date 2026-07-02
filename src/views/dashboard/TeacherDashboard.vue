@@ -203,7 +203,7 @@ import { ref, computed, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { useToast } from "vue-toastification";
 import { inject } from "vue";
-import { getMyRooms } from "@/api/teacher.api";
+import { getMyRooms, getStatisticsTotalStudent } from "@/api/teacher.api";
 import { getExams } from "@/api/exam.api";
 
 const isCreateRoomOpen = ref(false);
@@ -211,12 +211,7 @@ const backendRooms = ref([]);
 const loadingRooms = ref(false);
 const isLoadingDashboard = ref(false);
 
-const totalStudents = computed(() => {
-  return backendRooms.value.reduce(
-    (total, room) => total + Number(room.student_count || room.count || 0),
-    0
-  );
-});
+const totalStudents = ref(0);
 
 const examList = ref([]);
 const isLoading = ref(false);
@@ -239,6 +234,16 @@ const fetchBackendRooms = async () => {
   }
 };
 
+const fetchStatisticsTotalStudent = async () => {
+  try {
+    const res = await getStatisticsTotalStudent();
+
+    totalStudents.value = res.data.data.totalStudents;
+  } catch (err) {
+    console.error("Failed to fetch total students:", err);
+  }
+};
+
 const fetchAllExams = async () => {
   try {
     isLoading.value = true;
@@ -255,11 +260,16 @@ const fetchAllExams = async () => {
 onMounted(() => {
   fetchBackendRooms();
   fetchAllExams();
+  fetchStatisticsTotalStudent();
 });
 
 const onRoomCreated = async () => {
   isCreateRoomOpen.value = false;
-  await fetchBackendRooms();
+
+  await Promise.all([
+    fetchBackendRooms(),
+    fetchStatisticsTotalStudent(),
+  ]);
 };
 
 const router = useRouter();
