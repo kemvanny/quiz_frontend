@@ -624,8 +624,8 @@ const openDeleteAccountModal = () => {
 };
 
 const confirmDeleteAccount = async () => {
-  if (!deleteAccountPassword.value) {
-    triggerToast.error("សូមបញ្ចូលពាក្យសម្ងាត់បច្ចុប្បន្នរបស់អ្នក!", toastConfig);
+  if (!deleteAccountPassword.value?.trim()) {
+    triggerToast("សូមបញ្ចូលពាក្យសម្ងាត់បច្ចុប្បន្នរបស់អ្នក!", "fa-solid fa-triangle-exclamation");
     return;
   }
 
@@ -635,24 +635,26 @@ const confirmDeleteAccount = async () => {
     const res = await deleteAccountAPI(deleteAccountPassword.value);
 
     if (res.data?.result === false) {
-      triggerToast.error(res.data?.msg || "លេខសម្ងាត់មិនត្រឹមត្រូវ!", toastConfig);
+      triggerToast(res.data?.msg || "លេខសម្ងាត់មិនត្រឹមត្រូវ!", "fa-solid fa-circle-xmark");
       return;
     }
- 
-    triggerToast.success("គណនីរបស់អ្នកត្រូវបានលុបដោយជោគជ័យ!", toastConfig);
-    isDeleteAccountModalOpen.value = false;
 
-    if (authStore?.logout) {
-      authStore.logout();
-    } else {
-      localStorage.clear();
-      window.location.href = "/login";
-    }
+    isDeleteAccountModalOpen.value = false;
+  
+    triggerToast("គណនីរបស់អ្នកត្រូវបានលុបដោយជោគជ័យ!", "fa-solid fa-circle-check");
+    setTimeout(() => {
+      if (authStore?.logout) {
+        authStore.logout();
+      } else {
+        localStorage.clear();
+        window.location.href = "/login";
+      }
+    }, 1000); 
+
   } catch (err) {
-    console.error("Delete account error:", err);
-    triggerToast.error(
+    triggerToast(
       err?.response?.data?.msg || "លេខសម្ងាត់មិនត្រឹមត្រូវ ឬការលុបគណនីបានបរាជ័យ!",
-      toastConfig
+      "fa-solid fa-circle-xmark"
     );
   } finally {
     deletingAccount.value = false;
