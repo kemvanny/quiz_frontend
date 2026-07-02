@@ -202,10 +202,8 @@
 import { ref, onMounted, computed, watch } from "vue";
 import { useRouter } from "vue-router";
 import { useToast } from "vue-toastification";
-// import { useAuthStore } from "@/stores/auth";
 import { getAllStudentResults, addFeedback } from "@/api/exam.api";
 
-// const {authStore} = useAuthStore();
 const loading = ref(true);
 const studentResults = ref([]);
 const selectedExam = ref("all");
