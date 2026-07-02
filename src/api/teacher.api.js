@@ -26,3 +26,7 @@ export const updatePost = (postId, data) => {
 export const deletePost = (roomId, postId) => {
   return api.delete(`/exams/rooms/${roomId}/posts/${postId}`);
 };
+
+export const getStatisticsTotalStudent = () => {
+  return api.get("/teacher/totalStudent");
+};
