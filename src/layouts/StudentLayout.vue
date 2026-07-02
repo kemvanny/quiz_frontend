@@ -41,12 +41,12 @@
 <script setup>
 import { computed, ref, onMounted, watch } from "vue";
 import { useRoute } from "vue-router";
-import DashboardNav from "@/components/layout/navbar/student/DashboardNav.vue";
-import ClassroomNav from "@/components/layout/navbar/student/ClassroomNav.vue";
-import AnalyticsResultNav from "@/components/layout/navbar/student/AnalyticsResultNav.vue";
-import ProfilesettingNav from "@/components/layout/navbar/student/ProfilesettingNav.vue";
-import AssignmentNav from "@/components/layout/navbar/student/AssignmentNav.vue";
-import RoomDetialNav from "@/components/layout/navbar/student/RoomDetialNav.vue";
+import DashboardNav from "@/components/studentnavbar/DashboardNav.vue";
+import ClassroomNav from "@/components/studentnavbar/ClassroomNav.vue";
+import AnalyticsResultNav from "@/components/studentnavbar/AnalyticsResultNav.vue";
+import ProfilesettingNav from "@/components/studentnavbar/ProfilesettingNav.vue";
+import AssignmentNav from "@/components/studentnavbar/AssignmentNav.vue";
+import RoomDetialNav from "@/components/studentnavbar/RoomDetialNav.vue";
 import { useRouter } from "vue-router";
 import { useAuthStore } from "@/stores/authStore";
 import defaultImage from "../assets/images/default.png";
