@@ -298,7 +298,7 @@
                       </th>
                       <th class="text-secondary text-uppercase py-3 text-center"
                         style="font-size: 0.75rem; letter-spacing: 0.5px">
-                        Kanalparichethe
+                        កាលបរិច្ឆេទ
                       </th>
                       <th class="text-secondary text-uppercase py-3" style="
                           font-size: 0.75rem;
