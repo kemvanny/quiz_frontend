@@ -43,7 +43,7 @@
 
 <script setup>
 import { ref } from 'vue';
-import CreateRoomModal from '@/components/teacher/CreateRoomModal.vue';
+import CreateRoomModal from '@/components/teachermodal/CreateRoomModal.vue';
 
 const isCreateRoomOpen = ref(false);
 const emit = defineEmits(['room-created']);

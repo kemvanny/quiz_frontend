@@ -137,10 +137,10 @@ import { getMyRooms } from '@/api/teacher.api'
 import { storeToRefs } from 'pinia'
 import { useRoomStore } from '@/stores/roomStore'
 
-import CreateRoomModal from '@/components/teacher/CreateRoomModal.vue'
-import UpdateRoomModal from '@/components/teacher/UpdateRoomModal.vue'
-import DeleteRoomModal from '@/components/teacher/DeleteRoomModal.vue'
-import InviteStudentModal from '@/components/teacher/InviteStudentModal.vue'
+import CreateRoomModal from '@/components/teachermodal/CreateRoomModal.vue'
+import UpdateRoomModal from '@/components/teachermodal/UpdateRoomModal.vue'
+import DeleteRoomModal from '@/components/teachermodal/DeleteRoomModal.vue'
+import InviteStudentModal from '@/components/teachermodal/InviteStudentModal.vue'
 
 const router = useRouter()
 const roomStore = useRoomStore()
