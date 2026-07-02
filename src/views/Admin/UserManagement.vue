@@ -128,6 +128,9 @@ import StatusBadge from "@/components/common/StatusBadge.vue";
 import Swal from 'sweetalert2';
 import UserDetailModal from "@/components/adminmodal/UserDetailModal.vue";
 import { useToast } from "@/composables/useToast";
+import {useAuthStore} from "@/stores/authStore";
+
+const authStore = useAuthStore();
 
 const { triggerToast } = useToast();
 
@@ -237,7 +240,6 @@ const fetchUsers = async () => {
             role: selectedRoleForFilter.value,
             status: selectedStatusForFilter.value
         });
-
         if (res.data && res.data.data) {
             const rawUsers = res.data.data.users || [];
 
@@ -320,6 +322,12 @@ const handleCreate = async () => {
 }
 
 const handleToggleStatus = async (user) => {
+   
+    if (user.role === 'admin' || user.is_admin === 1) {
+        triggerToast("អ្នកមិនអាចបិទគណនីរបស់ Admin បានទេ!", 'fa-solid fa-triangle-exclamation');
+        return; 
+    }
+
     const currentStatus = user.is_active === 1 || user.is_active === true;
 
     const titleText = currentStatus

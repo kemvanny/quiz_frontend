@@ -21,7 +21,7 @@
               <i class="fas fa-stream"></i> ថ្នាក់រៀន
             </div>
             <div class="class-tab" :class="{ active: currentTab === 'people' }" @click="handleTabChange('people')">
-              <i class="fas fa-users"></i>សិស្សសរុប
+              <i class="fas fa-users"></i>  សិស្សសរុប
               <span class="badge-count ">{{ roomData?.students?.length || 0 }}</span>
             </div>
             <div class="class-tab" :class="{ active: currentTab === 'results' }" @click="handleTabChange('results')">
@@ -198,7 +198,7 @@
         <div v-if="currentTab === 'people'" class="tab-pane active">
           <div class="roster-container">
             <div class="roster-header">
-              <h3>សិស្សសរុប ({{ roomData?.students?.length || 0 }})</h3>
+              <h3 >សិស្សសរុប {{ roomData?.students?.length || 0 }}</h3>
             </div>
             <table class="roster-table">
               <thead>
