@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
-import { ref } from "vue";
+import { ref,computed } from "vue";
+
 
 import {
   getProfileAPI,
@@ -130,16 +131,39 @@ export const useAuthStore = defineStore("auth", () => {
       loading.value = false;
     }
   };
+   
+  const fullName = computed(() => {
+    if (!profile.value) return 'Defualt Name';
+    return `${profile.value.firstName || ''} ${profile.value.lastName || ''}`.trim() || 'Defualt Name';
+  });
 
+  const avatarUrl = computed(() => {
+    if (!profile.value || !profile.value.avatar || profile.value.avatar === 'default.png') {
+      return `https://ui-avatars.com/api/?name=${encodeURIComponent(fullName.value)}&background=random`;
+    }
+
+    if (profile.value.avatar.startsWith('http')) {
+      return profile.value.avatar;
+    }
+
+    const url = new URL(import.meta.env.VITE_BASE_URL);
+    const serverOrigin = url.origin;
+    const cleanAvatarPath = profile.value.avatar.startsWith('/') ? profile.value.avatar.slice(1) : profile.value.avatar;
+    
+    return `${serverOrigin}/${cleanAvatarPath}`;
+  });
   return {
     profile,
     loading,
     error,
+    avatarUrl,
+    fullName,
     fetchProfile,
     uploadAvatar,
     updateProfile,
     changePassword,
     deleteAvatar,
     deleteAccount,
+    
   };
 });
