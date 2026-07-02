@@ -229,7 +229,7 @@
         <label>លេខសម្ងាត់ចាស់</label>
 
         <div class="password-input">
-          <input v-model="passwordForm.oldPassword" :type="showPassword.oldPassword ? 'text' : 'password'"
+          <input v-model.trim="passwordForm.oldPassword" :type="showPassword.oldPassword ? 'text' : 'password'"
             :class="{ 'input-error': oldPasswordError }" @input="oldPasswordError = ''" />
 
           <button type="button" class="password-eye" @click="togglePassword('oldPassword')">
@@ -247,7 +247,7 @@
         <label>លេខសម្ងាត់ថ្មី</label>
 
         <div class="password-input">
-          <input v-model="passwordForm.newPassword" :type="showPassword.newPassword ? 'text' : 'password'"
+          <input v-model.trim="passwordForm.newPassword" :type="showPassword.newPassword ? 'text' : 'password'"
             :class="{ 'input-error': newPasswordError }" @input="newPasswordError = ''" />
 
           <button type="button" class="password-eye" @click="togglePassword('newPassword')">
@@ -265,7 +265,7 @@
         <label>បញ្ជាក់លេខសម្ងាត់ថ្មី</label>
 
         <div class="password-input">
-          <input v-model="passwordForm.confirmPassword" :type="showPassword.confirmPassword ? 'text' : 'password'"
+          <input v-model.trim="passwordForm.confirmPassword" :type="showPassword.confirmPassword ? 'text' : 'password'"
             :class="{ 'input-error': confirmPasswordError }" @input="confirmPasswordError = ''" />
 
           <button type="button" class="password-eye" @click="togglePassword('confirmPassword')">

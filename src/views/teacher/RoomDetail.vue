@@ -177,7 +177,7 @@
 import { ref, computed, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useToast } from 'vue-toastification'
-import { useAuthStore } from '@/stores/auth'
+import { useAuthStore } from '@/stores/authStore'
 import { getExams, updateExam, deleteExam, getExamsInRoom } from '@/api/exam.api'
 import { getOneRoom } from '@/api/teacher.api'
 
@@ -253,10 +253,9 @@ const fetchRoomData = async () => {
     loading.value = true;
     const response = await getOneRoom(props.roomId);
     
-    // if in response also have list exam
     roomData.value = response.data.data;
     
-    //show in ui exam
+   
     exams.value = roomData.value.exams || []; 
   } catch (error) {
     console.error("Error:", error);
@@ -274,7 +273,7 @@ const fetchExamsData = async () => {
   try {
     loading.value = true
     const res = await getExamsInRoom(route.params.roomId);
-    // console.log('RAW EXAM DATA:', res.data?.data) 
+   
     allExams.value = res.data?.data || [];
   } catch (err) {
     console.error("កំហុស API:", err);
@@ -302,7 +301,7 @@ const submitUpdateExam = async () => {
   try {
     isProcessing.value = true
     
-    // autometic (YYYY-MM-DD H:mm) 
+   
     const today = new Date()
     const year = today.getFullYear()
     const month = String(today.getMonth() + 1).padStart(2, '0')
@@ -316,7 +315,7 @@ const submitUpdateExam = async () => {
     const endDay = String(nextWeek.getDate()).padStart(2, '0')
     const end_date_formatted = `${endYear}-${endMonth}-${endDay} 23:59`
 
-    //Payload 
+   
     const fullUpdatePayload = {
       title: editForm.value.title.trim(),
       type: editForm.value.type,
@@ -372,21 +371,20 @@ const confirmDeleteExam = async () => {
 }
 
 onMounted(async () => {
-  await authStore.fetchUserProfile();
+  // await authStore.fetchProfile();
   fetchRoomInformation();
   fetchExamsData();
 });
 </script>
 
 <style scoped>
-/* Page Layout Container */
+
 .room-page {
   padding: 4px 24px 24px 24px;
   width: 100%;
   box-sizing: border-box;
 }
 
-/* Unified White Card Styles (Matches Student Results) */
 .custom-exams-card {
   background: #ffffff;
   border-radius: 20px;
@@ -395,7 +393,6 @@ onMounted(async () => {
   overflow: hidden;
 }
 
-/* Modernized Minimalist Toolbar Inside Card Header */
 .toolbar {
   display: flex;
   align-items: center;
@@ -409,7 +406,6 @@ onMounted(async () => {
   align-items: center;
 }
 
-/* Professional context metrics capsule badge */
 .stats-badge {
   display: inline-flex;
   align-items: center;
@@ -438,7 +434,6 @@ onMounted(async () => {
   align-items: center;
 }
 
-/* Modernized Selector Wrapper with Leading Icon */
 .select-wrapper {
   position: relative;
   display: flex;
@@ -481,7 +476,6 @@ onMounted(async () => {
   box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
 }
 
-/* Exam Row List Design */
 .exam-list {
   display: flex;
   flex-direction: column;
@@ -506,7 +500,6 @@ onMounted(async () => {
   border-color: #10b981;
 }
 
-/* Icon Containers */
 .row-icon {
   width: 44px;
   height: 44px;
@@ -529,7 +522,6 @@ onMounted(async () => {
   border: 1px dashed #cbd5e1;
 }
 
-/* Text Elements */
 .row-main {
   flex: 1;
   min-width: 0;
@@ -592,7 +584,6 @@ onMounted(async () => {
   align-items: center;
 }
 
-/* Action Groups Layout */
 .row-meta-actions {
   display: flex;
   align-items: center;
@@ -673,7 +664,7 @@ onMounted(async () => {
   display: block;
 }
 
-/* MODAL OVERLAY STYLES */
+
 .modal-backdrop-custom {
   position: fixed;
   top: 0;

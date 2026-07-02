@@ -34,48 +34,28 @@
         </div>
       </div>
 
-      <!-- Right Column: Premium User Profile Pill -->
-      <div class="right-section">
-        <div class="instructor-profile">
-          <img 
-            :src="authStore?.avatarUrl" 
-            alt="avatar" 
-            class="profile-avatar" 
-          />
-          <div class="profile-details">
-            <span class="profile-name">{{ authStore?.fullName }}</span>
-            <span class="profile-role">គ្រូបង្រៀន</span>
-          </div>
-        </div>
-      </div>
+    <base-profile/>
     </div>
   </div>
 </template>
 
 <script setup>
-import { onMounted } from 'vue';
+
 import { useRouter } from 'vue-router';
-import { useAuthStore } from '@/stores/auth'; 
 import { useExamStore } from '@/stores/examStore';
 
-// Stores & Router
-const authStore = useAuthStore();
 const examStore = useExamStore();
 const router = useRouter();
 
-// Navigation Logic
+
 const goBack = () => {
   router.push({ name: 'RoomManagement' }); 
 };
 
-// Lifecycle Hooks
-onMounted(async () => {
-  await authStore.fetchUserProfile();
-});
+
 </script>
 
 <style scoped>
-/* Glassmorphism Header Structure */
 .topbar {
   display: flex;
   align-items: center;
@@ -92,7 +72,6 @@ onMounted(async () => {
   box-sizing: border-box;
 }
 
-/* Left Section: Buttons & Titles */
 .left-section {
   display: flex;
   align-items: center;
@@ -109,7 +88,6 @@ onMounted(async () => {
   user-select: none;
 }
 
-/* Breadcrumbs (Crumb Trail) */
 .crumb {
   display: flex;
   align-items: center;
@@ -140,7 +118,6 @@ onMounted(async () => {
   font-weight: 600; 
 }
 
-/* Page Title Styles */
 .page-title {
   font-size: 1.15rem;
   font-weight: 800;
@@ -161,7 +138,6 @@ onMounted(async () => {
   color: #f15a24;
 }
 
-/* Control Buttons (Toggle & Back) */
 .btn-control {
   background: #ffffff;
   border: 1px solid var(--bdr);
@@ -190,7 +166,6 @@ onMounted(async () => {
   box-shadow: var(--sh-sm);
 }
 
-/* Right Section: Profile Pill */
 .right-section {
   display: flex;
   align-items: center;
@@ -251,7 +226,6 @@ onMounted(async () => {
   letter-spacing: 0.5px;
 }
 
-/* Responsive Styles */
 @media (max-width: 768px) {
   .title-text {
     max-width: 180px;
@@ -263,7 +237,7 @@ onMounted(async () => {
     padding: 10px 16px;
   }
   .crumb {
-    display: none; /* Simplifies header layout on mobile */
+    display: none; 
   }
   .page-title {
     font-size: 1rem;

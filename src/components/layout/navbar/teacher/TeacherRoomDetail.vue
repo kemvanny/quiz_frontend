@@ -1,7 +1,6 @@
 <template>
   <div class="main-content">
     <div class="topbar">
-      <!-- Left Column: Controls + Dynamic Breadcrumbs + Title -->
       <div class="left-section">
         <button 
           class="btn-control d-lg-none" 
@@ -19,7 +18,6 @@
           <i class="fas fa-arrow-left"></i>
         </button>
 
-        <!-- Breadcrumb & Page Title Stack -->
         <div class="title-area">
           <div class="crumb">
             <router-link to="/teacher/room-management">គ្រប់គ្រងថ្នាក់រៀន</router-link>
@@ -35,31 +33,16 @@
         </div>
       </div>
 
-      <!-- Right Column: Premium User Profile Pill -->
-      <div class="right-section">
-        <div class="instructor-profile">
-          <img 
-            :src="authStore?.avatarUrl" 
-            alt="avatar" 
-            class="profile-avatar" 
-          />
-          <div class="profile-details">
-            <span class="profile-name">{{ authStore?.fullName }}</span>
-            <span class="profile-role">គ្រូបង្រៀន</span>
-          </div>
-        </div>
-      </div>
+      <base-profile/>
     </div>
   </div>
 </template>
 
 <script setup>
-import { onMounted } from 'vue';
 import { useRouter } from 'vue-router';
-import { useAuthStore } from '@/stores/auth'; 
 import { useExamStore } from '@/stores/examStore';
 
-const authStore = useAuthStore();
+
 const examStore = useExamStore();
 const router = useRouter();
 
@@ -67,9 +50,6 @@ const goBack = () => {
   router.push({ name: 'ClassStream' }); 
 };
 
-onMounted(async () => {
-  await authStore.fetchUserProfile();
-});
 </script>
 
 <style scoped>
