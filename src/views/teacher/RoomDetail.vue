@@ -62,8 +62,8 @@
               <div class="row-sub">
                 <span class="sub-item"><i class="far fa-clock"></i> {{ exam.duration }} នាទី</span>
                 <div class="dot"></div>
-                <span class="sub-item"><i class="far fa-user"></i>  {{ authStore.user?.firstName || authStore.user?.lastName 
-                  ? `${authStore.user.firstName || ''} ${authStore.user.lastName || ''}`.trim() 
+                <span class="sub-item"><i class="far fa-user"></i>  {{ authStore.profile?.firstName || authStore.profile?.lastName 
+                  ? `${authStore.profile.firstName || ''} ${authStore.profile.lastName || ''}`.trim() 
                   : 'Defualt' }}
                 </span>
                 <div class="dot"></div>
