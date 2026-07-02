@@ -14,14 +14,14 @@ import './assets/main.css'
 import "vue-toastification/dist/index.css";
 
 
-import BaseSidebar from './components/layout/common/BaseSidebar.vue'
-import BaseNavbar from './components/layout/common/BaseNavbar.vue'
+import BaseSidebar from './components/common/BaseSidebar.vue'
+import BaseNavbar from './components/common/BaseNavbar.vue'
 import DataTable from './components/common/DataTable.vue'
 import SearchFilter from './components/common/SearchFilter.vue'
 import BaseButton from './components/common/BaseButton.vue'
 import BaseModal from './components/common/BaseModal.vue'
 import StatusBadge from './components/common/StatusBadge.vue'
-import TeacherNavbarExam from './components/layout/common/TeacherNavbarExam.vue'
+import TeacherNavbarExam from './components/layout/navbar/teacher/TeacherNavbarExam.vue'
 import CreateRoomModal from '@/components/teacher/CreateRoomModal.vue'
 import BasePagination from '@/components/common/BasePagination.vue'
 import LogoutModal from '@/components/common/LogoutModal.vue'

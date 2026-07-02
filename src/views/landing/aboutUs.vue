@@ -469,8 +469,8 @@
 </template>
 
 <script setup>
-import Footer from "@/components/layout/navbar/landing/FooterLandingPage.vue";
-import NavbarLandingPage from "@/components/layout/navbar/landing/LandingPageNavebar.vue";
+import Footer from "@/components/landing/FooterLandingPage.vue";
+import NavbarLandingPage from "@/components/landing/LandingPageNavebar.vue";
 import socheata from "@/assets/images/team/socheata.jpg";
 import votey from "@/assets/images/team/votey.png";
 import liza from "@/assets/images/team/liza.JPG";
