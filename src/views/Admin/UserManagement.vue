@@ -126,7 +126,7 @@ import { getAllUsers, createUser, ChangeStatusUser } from "@/api/admin.api";
 import { useFormValidation } from "@/composables/useFormValidation";
 import StatusBadge from "@/components/common/StatusBadge.vue";
 import Swal from 'sweetalert2';
-import UserDetailModal from "@/components/admin/UserDetailModal.vue";
+import UserDetailModal from "@/components/adminmodal/UserDetailModal.vue";
 import { useToast } from "@/composables/useToast";
 
 const { triggerToast } = useToast();

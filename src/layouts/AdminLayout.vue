@@ -157,7 +157,7 @@ import { ref, onMounted, onUnmounted, watch, computed } from "vue";
 import { useRouter } from "vue-router";
 import { getSearchUsers, getUserByID } from "@/api/admin.api";
 import defaultImage from "../assets/images/default.png";
-import UserDetailModal from "@/components/admin/UserDetailModal.vue";
+import UserDetailModal from "@/components/adminmodal/UserDetailModal.vue";
 import { useToast } from "@/composables/useToast";
 import { logoutAPI } from "@/api/auth.api";
 

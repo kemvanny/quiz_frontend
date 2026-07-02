@@ -104,7 +104,7 @@ import { ref, computed, watch } from "vue";
 import { useToast } from "vue-toastification";
 import { getUserByID } from "@/api/admin.api.js";
 import defaultAvatar from "@/assets/images/default.png";
-import StatusBadge from "../common/StatusBadge.vue";
+import StatusBadge from "@/components/common/StatusBadge.vue";
 
 const props = defineProps({ user: Object, show: Boolean });
 const emit = defineEmits(["close"]);
