@@ -12,7 +12,8 @@
         </div>
         <h1 class="course-title mt-2">{{ roomInfo.room_name }}</h1>
         <p class="course-instructor-meta mb-0">
-          <i class="fas fa-chalkboard-teacher me-2"></i> បង្រៀនដោយ៖ <strong class="ms-1">{{ roomInfo.teacher_name }}</strong>
+          <i class="fas fa-chalkboard-teacher me-2"></i> បង្រៀនដោយ៖ <strong class="ms-1">{{ roomInfo.teacher_name
+            }}</strong>
         </p>
       </div>
       <div class="banner-floating-icon">
@@ -85,8 +86,9 @@
           <div v-for="post in displayedPosts" :key="post.id" class="stream-post-card mb-4">
             <div class="post-header">
               <div class="author-avatar" style="background-color: var(--em-soft); color: var(--em-dk);">
-                <i class="fas fa-user"></i>
+                <i class="fas fa-user"></i>    
               </div>
+          
               <div class="author-info">
                 <h6 class="author-name">{{ roomInfo?.teacher_name || 'គ្រូបង្រៀន' }} <span
                     class="badge-teacher">គ្រូបង្រៀន</span></h6>
@@ -100,10 +102,10 @@
               <p class="post-text mb-0">{{ post.message }}</p>
 
               <div v-if="post.exam_link" class="exam-action-block mt-3">
-                <a :href="post.exam_link" target="_blank"
+                <a :href="isExamExpired(post.exam_expired_at) ? undefined : post.exam_link" target="_blank"
                   class="btn w-100 py-2 shadow-sm d-flex align-items-center justify-content-center gap-2"
-                  :class="isExamExpired(post.exam_expired_at) ? 'btn-secondary disabled-btn' : 'btn-success text-white'">
-
+                  :class="isExamExpired(post.exam_expired_at) ? 'btn-secondary disabled-btn-style' : 'btn-success text-white'"
+                  :style="isExamExpired(post.exam_expired_at) ? 'pointer-events: none; cursor: not-allowed; opacity: 0.65;' : ''">
                   <template v-if="isExamExpired(post.exam_expired_at)">
                     <i class="fas fa-lock"></i> ការប្រឡងត្រូវបានបិទ/ហួសពេលកំណត់ហើយ
                   </template>
@@ -181,7 +183,6 @@ const fetchRoomData = async () => {
     if (postsRes.data && postsRes.data.result === true) {
       streamPosts.value = postsRes.data.data;
     }
-
   } catch (error) {
     errorMessage.value = "មិនអាចទាញយកទិន្នន័យថ្នាក់រៀនបានទេ! សូមព្យាយាមម្ដងទៀត។";
   } finally {
@@ -192,10 +193,20 @@ const fetchRoomData = async () => {
 };
 
 const isExamExpired = (expiredDateString) => {
-  if (!expiredDateString) return false;
+  if (!expiredDateString || expiredDateString === 'null' || expiredDateString.trim() === '') {
+    return true; 
+  }
   const now = new Date();
-  const expiryLimit = new Date(expiredDateString);
-  return now > expiryLimit;
+  let formattedDateStr = expiredDateString;
+  if (!formattedDateStr.includes('Z') && !formattedDateStr.includes('+')) {
+    formattedDateStr = formattedDateStr.replace(' ', 'T') + '+07:00';
+  }
+
+  const expiryLimit = new Date(formattedDateStr);
+  if (isNaN(expiryLimit.getTime())) {
+    return true; 
+  }
+  return now.getTime() > expiryLimit.getTime();
 };
 
 const formatDate = (dateString) => {
@@ -230,11 +241,12 @@ onMounted(() => {
   --sh-sm: 0 4px 12px rgba(0, 0, 0, 0.03);
   --sh-md: 0 10px 25px rgba(0, 0, 0, 0.05);
 }
+
 .btn-modern-back {
   background: #ffffff;
   border: 1px solid #e2e8f0;
   padding: 8px 18px;
-  border-radius: 25px; 
+  border-radius: 25px;
   color: #334155;
   font-size: 14px;
   font-weight: 600;
@@ -250,12 +262,13 @@ onMounted(() => {
   background: #f8fafc;
   color: #10b981;
   border-color: #10b981;
-  transform: translateX(-4px); 
+  transform: translateX(-4px);
   box-shadow: 0 4px 12px rgba(16, 185, 129, 0.08);
 }
+
 .course-hero-banner {
   position: relative;
-  background: linear-gradient(135deg, #f0fdf4 0%, #bbf7d0 100%) !important; 
+  background: linear-gradient(135deg, #f0fdf4 0%, #bbf7d0 100%) !important;
   border-radius: 16px;
   border: 1px solid rgba(16, 185, 129, 0.15);
   overflow: hidden;
@@ -265,7 +278,7 @@ onMounted(() => {
 .banner-content {
   position: relative;
   z-index: 2;
-  text-align: left; 
+  text-align: left;
 }
 
 .course-badge {
@@ -291,13 +304,14 @@ onMounted(() => {
   font-size: 14px;
   color: #047857;
 }
+
 .banner-floating-icon {
   position: absolute;
   right: 5%;
   top: 50%;
   transform: translateY(-50%);
   font-size: 80px;
-  color: rgba(6, 95, 70, 0.05); 
+  color: rgba(6, 95, 70, 0.05);
   z-index: 1;
   pointer-events: none;
 }
