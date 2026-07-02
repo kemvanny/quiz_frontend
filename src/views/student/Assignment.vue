@@ -210,17 +210,21 @@ const todoCount = computed(() => {
 
 
 const filteredExams = computed(() => {
-  let list = [...processedExams.value];
-
+  const sortedExams = [...processedExams.value].sort((a, b) => {
+    return new Date(b.start_time).getTime() - new Date(a.start_time).getTime();
+  });
   if (activeTab.value === "todo") {
-    return processedExams.value.filter(exam =>
+    return sortedExams.filter(exam =>
       exam.is_completed === 0 && (exam.time_status === 'ongoing' || exam.time_status === 'upcoming')
     );
   }
+  
   if (activeTab.value === "completed") {
-    return processedExams.value.filter(exam => exam.is_completed === 1 || exam.time_status === 'completed');
+    return sortedExams.filter(exam => 
+      exam.is_completed === 1 || exam.time_status === 'completed'
+    );
   }
-  return list.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+  return sortedExams;
 });
 
 const paginatedExams = computed(() => {
@@ -266,8 +270,8 @@ function startExam(exam) {
   if (exam.time_status === 'upcoming') {
     return;
   }
-  sessionStorage.setItem("active_exam_id", exam.id);
-  sessionStorage.setItem("active_exam", JSON.stringify(exam));
+  localStorage.setItem("active_exam_id", exam.id);
+  localStorage.setItem("active_exam", JSON.stringify(exam));
   router.push(`/take-exam/${exam.exam_code}`);
 }
 
