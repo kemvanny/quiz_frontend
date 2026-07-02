@@ -102,13 +102,12 @@
 
             <div class="feed-container">
               <div class="composer-card">
-                <input v-model="newPost.title" class="form-control mb-2" placeholder="ចំណងជើង..." />
-                <textarea v-model="newPost.message" class="composer-input mb-2" rows="2"
+                <input v-model="newPost.title" class="form-control mb-4" placeholder="ចំណងជើង..." />
+                <textarea v-model="newPost.message" class="composer-input " rows="2"
                   placeholder="សរសេរការប្រកាស..."></textarea>
-                <input v-model="newPost.examLink" class="form-control mb-2" placeholder="បញ្ចូល Link ការប្រឡង..." />
                 <div class="composer-actions">
                   <button class="btn-post" @click="handleCreatePost">
-                    Post
+                    ការបង្ហោះ
                   </button>
                 </div>
               </div>
@@ -165,8 +164,8 @@
 
                   <div v-if="post.exam_link || post.examLink"
                     class="assignment-card-link d-flex align-items-center border rounded-3 shadow-sm overflow-hidden mt-3 mb-2 bg-white p-2">
-                    <div class="d-flex align-items-center justify-content-center cursor-pointer"
-                      @click="openExamLink(post.exam_link || post.examLink)" style="
+                    <div class="d-flex align-items-center justify-content-center"
+                   style="
                         width: 70px;
                         height: 70px;
                         background-color: #f6993f;
@@ -175,9 +174,9 @@
                       ">
                       <i class="fas fa-laptop-code text-white fa-2x"></i>
                     </div>
-                    <div class="p-3 flex-grow-1 cursor-pointer" @click="openExamLink(post.exam_link || post.examLink)">
+                    <div class="p-3 flex-grow-1">
                       <h6 class="mb-0 fw-bold text-dark">{{ post.title || 'វិញ្ញាសាប្រឡង' }}</h6>
-                      <small class="text-muted">តេស្ត • ចុចដើម្បីបើកលីងវិញ្ញាសា</small>
+                    
                     </div>
                     <div class="pe-3">
                       <button class="btn btn-sm px-3 rounded-pill" style="
@@ -694,12 +693,6 @@ const openEditModal = (post) => {
   activeMenu.value = null;
 };
 
-//open exam link
-const openExamLink = (url) => {
-  if (!url) return;
-  const fullUrl = url.startsWith("http") ? url : `https://${url}`;
-  window.open(fullUrl, "_blank");
-};
 
 const viewExamResults = (examId) => {
   if (!examId) {
@@ -779,9 +772,10 @@ const sendFeedback = async (subId, feedbackText) => {
 
 
 onMounted(async () => {
+  await authStore.fetchProfile;
   fetchRoomData();
   fetchPosts();
-  await authStore.fetchProfile;
+ 
 });
 </script>
 
