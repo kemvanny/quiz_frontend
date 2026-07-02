@@ -338,7 +338,7 @@
                         </div>
 
                         <div class="d-flex justify-content-center gap-3 actions-buttons-group">
-                            <button class="btn btn-theme-submit px-4 py-2.5 border-0" @click="goToLobby">
+                            <button class="btn btn-theme-submit px-4 py-2.5 border-0" @click="goToLobby()">
                                 <i class="fa-solid fa-house me-2"></i> ទៅកាន់ទំព័រដើម
                             </button>
                             <button class="btn btn-action-outline px-4 py-2.5" @click="printResult">
@@ -822,7 +822,7 @@ const startTimer = () => {
     }, 1000);
 };
 
-const goToLobby = () => { window.location.reload(); };
+const goToLobby = () => { window.location.href = '/student/dashboard'; };
 const printResult = () => { window.print(); };
 </script>
 
