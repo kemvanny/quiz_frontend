@@ -30,3 +30,7 @@ export const deletePost = (roomId, postId) => {
 export const getStatisticsTotalStudent = () => {
   return api.get("/teacher/totalStudent");
 };
+
+export const getStudentsInRoom = (roomId) => {
+  return api.get(`/teacher/rooms/${roomId}/students`);
+};

@@ -644,5 +644,6 @@ onMounted(() => {
 
 .border-dashed {
   border-style: dashed !important;
+  border-radius: 15px;
 }
 </style>
