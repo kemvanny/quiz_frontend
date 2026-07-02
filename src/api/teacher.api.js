@@ -26,12 +26,3 @@ export const updatePost = (postId, data) => {
 export const deletePost = (roomId, postId) => {
   return api.delete(`/exams/rooms/${roomId}/posts/${postId}`);
 };
-// ================= PROFILE =================
-export const getProfile = () => api.get('/user/profile');
-export const updateProfile = (profileData) => api.put('/user/profile', profileData);
-export const updateAvatar = (formData) => api.put('/user/profile/avatar', formData, {
-    headers: {
-      'Content-Type': 'multipart/form-data'
-    }
-  });
-export const deleteAvatar = () => api.delete('/user/profile/avatar');

@@ -1,13 +1,25 @@
 <template>
   <div class="app-layout">
     <BaseSidebar :role-name="'TEACHER'" :main-menus="teacherMainMenus">
-      <template #user-profile>
-       
-        <div class="sidebar-footer">
-          <button type="button" class="btn-logout" @click="openLogoutModal">
-            <i class="fas fa-sign-out-alt"></i>
-            <span>ចាកចេញពីគណនី</span>
+         <template #user-profile>
+        <div class="profile-card">
+          <div class="profile-info">
+            <img
+              :src="authStore.profile?.avatar && authStore.profile?.avatar !== 'default.png' ? `${imgBaseUrl}${authStore.profile?.avatar}?t=${layoutImageRefresh}` : defaultImage"
+              alt="Profile" class="profile-img" />
+            <div class="profile-text">
+              <span class="profile-name">{{ authStore.profile?.firstName }} {{ authStore.profile?.lastName }}</span>
+              <span class="profile-role">{{ authStore.profile?.role }}</span>
+            </div>
+          </div>
+
+          <button class="logout-btn" @click.prevent="isLogoutModalOpen = true" title="ចាកចេញ">
+            <i class="bi bi-box-arrow-right"></i>
           </button>
+
+          <LogoutModal :show="isLogoutModalOpen" title="Student" @close="isLogoutModalOpen = false"
+            @confirm="handleLogout" :is-loading="isLogoutLoading"/>
+
         </div>
       </template>
     </BaseSidebar>
@@ -22,54 +34,16 @@
         </div>
       </main>
     </div>
-    <CreateRoomModal
-      :is-open="isCreateRoomOpen"
-      @close="isCreateRoomOpen = false"
-      @created="onRoomCreated"
-    />
-
-    <BaseModal
-      :isOpen="isLogoutModalOpen"
-      @close="isLogoutModalOpen = false"
-      width="350px"
-    >
-      <div class="p-3 text-center">
-        <div class="modal-icon-alert text-warning mb-3">
-          <i class="fas fa-sign-out-alt fa-2x"></i>
-        </div>
-        <h5 class="fw-bold text-dark mb-2" style="font-size: 1.1rem">
-          ចាកចេញពីប្រព័ន្ធ?
-        </h5>
-        <p class="text-muted mb-4 small" style="line-height: 1.5">
-          តើអ្នកពិតជាចង់បញ្ចប់ការងារ និងចាកចេញពីគណនីបច្ចុប្បន្ននេះមែនទេ?
-        </p>
-        <div class="d-flex gap-2 w-100">
-          <button
-            class="btn btn-outline flex-fill"
-            @click="isLogoutModalOpen = false"
-          >
-            បោះបង់
-          </button>
-          <button
-            class="btn btn-danger flex-fill"
-            style="margin-top: 0"
-            @click="confirmSignOut"
-          >
-            ចាកចេញ
-          </button>
-        </div>
-      </div>
-    </BaseModal>
   </div>
 </template>
 
 <script setup>
-import { computed, ref, provide } from "vue";
+import { computed, ref, provide,onMounted,watch } from "vue";
 import { useRoute } from "vue-router";
 import { useRouter } from "vue-router";
-import { useToast } from "vue-toastification";
+import { useAuthStore } from "@/stores/authStore";
+import defaultImage from "../assets/images/default.png";
 import { logoutAPI } from "@/api/auth.api";
-import { useAuthStore } from "@/stores/auth";
 import TeacherAssignmentNav from "@/components/layout/navbar/teacher/TeacherAssignmentNav.vue";
 import TeacherDashboardNav from "@/components/layout/navbar/teacher/TeacherDashboardNav.vue";
 import TeacherRoommanagementNav from "@/components/layout/navbar/teacher/TeacherRoommanagementNav.vue";
@@ -86,52 +60,44 @@ import TeacherAllexamNav from "@/components/layout/navbar/teacher/TeacherAllexam
 
 const router = useRouter();
 const route = useRoute();
-const toast = useToast();
+
 const authStore = useAuthStore();
+const isLogoutModalOpen = ref(false);
+
+const layoutImageRefresh = ref(Date.now())
+const imgBaseUrl = import.meta.env.VITE_BASE_URL_FOR_IMAGE
 
 const searchQuery = ref("");
 
-const toastConfig = {
-  position: "bottom-right",
-  timeout: 3000,
-  closeOnClick: true,
-  pauseOnHover: true,
-};
+const isLogoutLoading = ref(false);
 
-const isLogoutModalOpen = ref(false);
 const openLogoutModal = () => {
   isLogoutModalOpen.value = true;
 };
 
-const confirmSignOut = async () => {
-  isLogoutModalOpen.value = false;
+onMounted(async () => {
 
+  if (typeof authStore.fetchProfile === 'function') {
+    await authStore.fetchProfile()
+  }
+})
+
+const handleLogout = async () => {
+  isLogoutLoading.value = true;
   try {
-    await logoutAPI(); 
+     await logoutAPI(); 
   } catch (err) {
-    console.error("Logout API error (Safe to ignore):", err);
+     console.error("Logout failed", err);
+  } finally {
+     localStorage.clear();
+     isLogoutLoading.value = false;
+     isLogoutModalOpen.value = false;
+     router.push('/login');
   }
-
-  try {
-    if (typeof authStore.$reset === 'function') {
-      authStore.$reset();
-    }
-  } catch (e) {
-    console.error("Store reset failed:", e);
-  }
-  
-  localStorage.clear();
-  sessionStorage.clear();
-
-  toast.success("ចាកចេញជោគជ័យ", toastConfig);
-
-  setTimeout(() => {
-    router.replace({ name: "Home" }).catch((err) => {
-      console.error("Vue Router blocked navigation. Forcing hard redirect...", err);
-      window.location.href = "/";
-    });
-  }, 1200);
-};
+}
+watch(() => authStore.profile?.avatar, () => {
+  layoutImageRefresh.value = Date.now()
+})
 
 
 const teacherMainMenus = [

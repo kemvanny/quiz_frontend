@@ -368,7 +368,7 @@
 import { ref, computed, nextTick, onMounted, onUnmounted, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useToast } from "vue-toastification";
-import { useAuthStore } from "@/stores/auth";
+import { useAuthStore } from "@/stores/authStore"
 import { createExam, createQuestion } from "@/api/exam.api";
 import { getMyRooms } from "@/api/teacher.api";
 
@@ -448,7 +448,7 @@ onMounted(async () => {
 
   await getAllRooms();
   if (!authStore.user) {
-    authStore.fetchUserProfile();
+    authStore.fetchProfile();
   }
 });
 
@@ -683,8 +683,7 @@ const copyLinkToClipboard = async () => {
 
   display: flex;
   flex-direction: column;
-  /* height is set dynamically via :style binding to exactly fill
-     whatever space is left below your app's header — see containerHeight */
+
   width: 100%;
   overflow: hidden;
   font-family: "Kantumruy Pro", "Poppins", sans-serif;
@@ -712,11 +711,9 @@ const copyLinkToClipboard = async () => {
   flex-direction: column;
   height: 100%;
   min-height: 0;
-  overflow: hidden; /* the page itself never scrolls */
+  overflow: hidden; 
 }
 
-/* Grid layout is ALWAYS on, at every screen size — side panels stay
-   pinned to the container's fixed height; only the center feed scrolls */
 .workspace {
   flex: 1;
   min-height: 0;
@@ -773,7 +770,7 @@ const copyLinkToClipboard = async () => {
   flex-direction: column;
   height: 100%;
   min-height: 0;
-  overflow: hidden; /* panel is fixed as a block, never scrolls itself, never resizes with center content */
+  overflow: hidden; 
 }
 
 .panel-head {
@@ -799,7 +796,6 @@ const copyLinkToClipboard = async () => {
   color: var(--em);
 }
 
-/* Left panel: only this inner list scrolls; header + add-buttons stay fixed */
 .q-nav-scroll {
   flex: 1 1 0%;
   height: 0;
@@ -855,7 +851,6 @@ const copyLinkToClipboard = async () => {
   color: var(--em);
 }
 
-/* Center column: this is the ONLY thing that scrolls */
 .feed-col {
   min-height: 0;
   height: 100%;
@@ -1020,7 +1015,7 @@ const copyLinkToClipboard = async () => {
   box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.14);
 }
 
-/* Type toggle (multiple choice / true-false) */
+
 .type-toggle {
   display: flex;
   background: #f1f5f9;
