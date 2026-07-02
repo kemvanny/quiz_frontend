@@ -41,7 +41,7 @@
 
       <div v-else>
         <div class="small fw-bold text-muted mb-2 text-uppercase" style="font-size: 0.72rem; letter-spacing: 0.5px;">
-          ប្រវត្តិការអញ្ជើញក្នុងថ្នាក់ ({{ invitationsList.length }})
+          ប្រវត្តិការអញ្ជើញក្នុងថ្នាក់ {{ invitationsList.length }}
         </div>
         
         <div v-if="invitationsList.length === 0" class="text-center py-3 text-muted small">

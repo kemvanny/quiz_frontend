@@ -62,8 +62,8 @@
 
         <DataTable :headers="quizHeaders" :items="exam" :is-loading="isLoading" :current-page="currentPage"
             :limit="limit" :total="totalRecords" @update:page="changePage">
-            <template #row="{ item, index }">
-                <td>{{ (currentPage - 1) * limit + index + 1 }}</td>
+            <template #row="{ item}">
+                <td>{{ item.user_id}}</td>
                 <td>{{ item.teacher_name }}</td>
                 <td>{{ item.title }}</td>
                 
@@ -135,7 +135,6 @@ const fetchExam = async () => {
             page: currentPage.value,
             limit: limit.value,
         });
-        console.log(res.data);
         if (res.data && res.data.data) {
             const rawExams = res.data.data.quizzes || [];
             exam.value = rawExams.sort(
