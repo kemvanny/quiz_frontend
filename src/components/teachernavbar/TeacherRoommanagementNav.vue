@@ -1,20 +1,18 @@
 <template>
   <div class="main-content">
     <div class="topbar">
-      <!-- Left Column: Controls, Header Icon, and Dashboard Title -->
       <div class="left-section">
-        <!-- Mobile Sidebar Toggle -->
         <button class="btn-control d-lg-none" data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu"
           aria-label="Toggle Sidebar">
           <i class="fas fa-bars"></i>
         </button>
 
-        <!-- Elegant Dashboard Header Icon -->
+  
         <div class="dashboard-icon d-none d-sm-flex">
           <i class="fas fa-users-cog"></i>
         </div>
 
-        <!-- Title Stack -->
+
         <div class="title-area">
           <h1 class="page-title">
             ការគ្រប់គ្រងថ្នាក់រៀន<span class="title-dot">.</span>
@@ -25,56 +23,40 @@
         </div>
       </div>
 
-      <!-- Right Column: Actions & Instructor Pill -->
+
       <div class="right-section">
-        <!-- Modern New Room Button -->
         <button class="btn-create-room" @click="isCreateRoomOpen = true">
           <i class="fas fa-plus"></i>
-          <span class="d-none d-sm-inline">ថ្នាក់ថ្មី</span>
+          <span class="d-none d-sm-inline">បង្កើតថ្នាក់ថ្មី</span>
         </button>
 
-        <!-- Divider Line -->
         <div class="divider d-none d-sm-block"></div>
 
-        <!-- Instructor Profile Pill -->
-        <div class="instructor-profile">
-          <img :src="authStore.avatarUrl" alt="avatar" class="profile-avatar" />
-          <router-link to="/teacher/profile" class="d-none d-sm-flex flex-column justify-content-center pe-2"
-            style="line-height: 1.1;">
-            <span class="fw-bold" style="font-size: .8rem; color: var(--txt);">{{ authStore.fullName }}</span>
-            <span style="font-size: .65rem; color: var(--txt-mu); font-weight: 500;">គ្រូបង្រៀន</span>
-          </router-link>
-        </div>
+        <base-profile/>
       </div>
     </div>
   </div>
 
-  <CreateRoomModal :is-open="isCreateRoomOpen" :existing-rooms="backendRooms" @close="isCreateRoomOpen = false"
+  <CreateRoomModal :is-open="isCreateRoomOpen"  @close="isCreateRoomOpen = false"
     @created="onRoomCreated" />
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
-import CreateRoomModal from '@/components/teacher/CreateRoomModal.vue';
-import { useAuthStore } from '@/stores/auth';
+import { ref } from 'vue';
+import CreateRoomModal from '@/components/teachermodal/CreateRoomModal.vue';
 
 const isCreateRoomOpen = ref(false);
 const emit = defineEmits(['room-created']);
-
-const authStore = useAuthStore();
 
 const onRoomCreated = (roomData) => {
   isCreateRoomOpen.value = false;
   emit('room-created', roomData);
 };
 
-onMounted(() => {
-  authStore.fetchUserProfile();
-});
 </script>
 
 <style scoped>
-/* Glassmorphism Header Structure */
+
 .topbar {
   display: flex;
   align-items: center;
@@ -91,7 +73,6 @@ onMounted(() => {
   box-sizing: border-box;
 }
 
-/* Left Section: Icon & Titles */
 .left-section {
   display: flex;
   align-items: center;
@@ -123,7 +104,6 @@ onMounted(() => {
   user-select: none;
 }
 
-/* Dashboard Titles */
 .page-title {
   font-size: 1.15rem;
   font-weight: 800;
@@ -147,7 +127,6 @@ onMounted(() => {
   text-truncate: ellipsis;
 }
 
-/* Control Buttons (Mobile Sidebar Trigger) */
 .btn-control {
   background: #ffffff;
   border: 1px solid var(--bdr);
@@ -175,7 +154,6 @@ onMounted(() => {
   transform: translateY(1px);
 }
 
-/* Right Section: Button, Divider & Profile Pill */
 .right-section {
   display: flex;
   align-items: center;
@@ -184,7 +162,6 @@ onMounted(() => {
   flex-shrink: 0;
 }
 
-/* Premium New Room CTA */
 .btn-create-room {
   display: inline-flex;
   align-items: center;
@@ -212,14 +189,12 @@ onMounted(() => {
   box-shadow: var(--sh-sm);
 }
 
-/* Dynamic Vertical Separator */
 .divider {
   width: 1px;
   height: 24px;
   background-color: var(--bdr);
 }
 
-/* Profile Pill component */
 .instructor-profile {
   display: flex;
   align-items: center;
@@ -274,7 +249,6 @@ onMounted(() => {
   letter-spacing: 0.5px;
 }
 
-/* Responsive Rulesets */
 @media (max-width: 576px) {
   .topbar {
     padding: 10px 16px;

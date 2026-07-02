@@ -11,32 +11,18 @@
                 </div>
             </div>
 
-            <div class="profile-pill flex-shrink-0 pe-2">
-                <img :src="authStore.avatarUrl" alt="avatar" class="profile-ava" />
-                
-                <div class="d-none d-sm-flex flex-column justify-content-center" style="line-height: 1.1;">
-                    <span class="fw-bold" style="font-size: .8rem; color: var(--txt);">
-                        {{ authStore.fullName }}
-                    </span>
-                    <span style="font-size: .65rem; color: var(--txt-mu); font-weight: 500;">គ្រូបង្រៀន</span>
-                </div>
-            </div>
+            <base-profile/>
         </div>
     </div>
 </template>
 
 <script setup>
-import { onMounted } from 'vue';
-import { useAuthStore } from '@/stores/auth';
+
 defineProps(({
     title: { type: String, default: 'ការកំណត់គណនី' }
 }))
 
-const authStore = useAuthStore();
 
-onMounted(() => {
-  authStore.fetchUserProfile();
-});
 </script>
 
 <style>

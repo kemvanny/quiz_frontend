@@ -30,7 +30,7 @@
 </template>
 
 <script setup>
-import logoImage from '../../../assets/images/pralong-logo.png';
+import logoImage from '@/assets/images/pralong-logo.png';
 defineProps({
   roleName: {
     type: String,

@@ -45,7 +45,7 @@
             :show="isLogoutModalOpen"
             title="Admin"
             @close="isLogoutModalOpen = false"
-            @confirm="handleLogout"
+            @confirm="handleLogout" :is-loading="isLogoutLoading" 
           />
         </div>
       </template>
@@ -157,8 +157,9 @@ import { ref, onMounted, onUnmounted, watch, computed } from "vue";
 import { useRouter } from "vue-router";
 import { getSearchUsers, getUserByID } from "@/api/admin.api";
 import defaultImage from "../assets/images/default.png";
-import UserDetailModal from "@/components/admin/UserDetailModal.vue";
+import UserDetailModal from "@/components/adminmodal/UserDetailModal.vue";
 import { useToast } from "@/composables/useToast";
+import { logoutAPI } from "@/api/auth.api";
 
 import { useAuthStore } from "@/stores/authStore";
 const authStore = useAuthStore();
@@ -168,6 +169,7 @@ const { toastState } = useToast();
 const router = useRouter();
 const imgBaseUrl = import.meta.env.VITE_BASE_URL_FOR_IMAGE;
 const isLogoutModalOpen = ref(false);
+const isLogoutLoading = ref(false);
 
 const isUserModalOpen = ref(false);
 const selectedUser = ref(null);
@@ -231,11 +233,19 @@ const adminSystemMenus = [
   },
 ];
 
-const handleLogout = () => {
-  isLogoutModalOpen.value = false;
-  localStorage.clear();
-  router.push("/login");
-};
+const handleLogout = async () => {
+  isLogoutLoading.value = true;
+  try {
+     await logoutAPI(); 
+  } catch (err) {
+     console.error("Logout failed", err);
+  } finally {
+     localStorage.clear();
+     isLogoutLoading.value = false;
+     isLogoutModalOpen.value = false;
+     router.push('/login');
+  }
+}
 
 const fetchSearchResults = async (search = "") => {
   if (!search) {

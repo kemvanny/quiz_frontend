@@ -1,7 +1,7 @@
 <template>
   <div class="main-content">
     <div class="topbar">
-      <!-- Left Column: Controls + Breadcrumbs + Room Title -->
+      <!-- Left Column: Controls + Breadcrumbs + Exam Details -->
       <div class="left-section">
         <button 
           class="btn-control d-lg-none" 
@@ -24,58 +24,38 @@
           <div class="crumb">
             <router-link to="/teacher/room-management">គ្រប់គ្រងថ្នាក់រៀន</router-link>
             <i class="fas fa-chevron-right"></i>
-            <span class="crumb-cur">ថ្នាក់រៀន</span>
+            <span class="text-truncate" style="max-width: 150px;">{{ examStore.currentRoomName || '...' }}</span>
+            <i class="fas fa-chevron-right"></i>
+            <span class="crumb-cur">វិញ្ញាសា</span>
           </div>
           
           <h1 class="page-title">
-            <span class="text-truncate title-text">{{ examStore.currentRoomName || 'ថ្នាក់រៀន' }}</span>
+            <span class="text-truncate title-text">{{ examStore.currentExamTitle || 'កំពុងផ្ទុក...' }}</span>
             <span class="title-dot">.</span>
+            <span class="hd-count">{{ examStore.currentQuestionCount }} សំណួរ</span>
           </h1>
         </div>
       </div>
 
-      <!-- Right Column: Premium User Profile Pill -->
-      <div class="right-section">
-        <div class="instructor-profile">
-          <img 
-            :src="authStore.avatarUrl" 
-            alt="avatar" 
-            class="profile-avatar" 
-          />
-          <div class="profile-details">
-            <span class="profile-name">{{ authStore.fullName }}</span>
-            <span class="profile-role">គ្រូបង្រៀន</span>
-          </div>
-        </div>
-      </div>
+      <base-profile/>
     </div>
   </div>
 </template>
 
 <script setup>
-import { onMounted } from 'vue';
 import { useRouter } from 'vue-router';
-import { useAuthStore } from '@/stores/auth'; 
 import { useExamStore } from '@/stores/examStore';
 
-// Stores & Router
-const authStore = useAuthStore();
 const examStore = useExamStore();
 const router = useRouter();
 
-// Navigation Logic
 const goBack = () => {
-  router.push({ name: 'RoomManagement' }); 
+  router.push({ name: 'RoomDetails' }); 
 };
 
-// Lifecycle Hooks
-onMounted(() => {
-  authStore.fetchUserProfile();
-});
 </script>
 
 <style scoped>
-/* Glassmorphism Header Structure */
 .topbar {
   display: flex;
   align-items: center;
@@ -140,7 +120,7 @@ onMounted(() => {
   font-weight: 600; 
 }
 
-/* Page Title Styles */
+/* Page Title with Count Badge */
 .page-title {
   font-size: 1.15rem;
   font-weight: 800;
@@ -150,7 +130,6 @@ onMounted(() => {
   display: flex;
   align-items: center;
   min-width: 0;
-  letter-spacing: -0.2px;
 }
 
 .title-text {
@@ -159,6 +138,17 @@ onMounted(() => {
 
 .title-dot {
   color: #f15a24;
+  margin-right: 8px;
+}
+
+.hd-count {
+  font-size: 11px;
+  font-weight: 600;
+  color: #475569;
+  background: #e2e8f0;
+  border-radius: 20px;
+  padding: 3px 10px;
+  white-space: nowrap;
 }
 
 /* Control Buttons (Toggle & Back) */
@@ -263,7 +253,7 @@ onMounted(() => {
     padding: 10px 16px;
   }
   .crumb {
-    display: none; /* Simplifies header layout on mobile */
+    display: none; /* Keeps header clean and un-wrapped on mobile */
   }
   .page-title {
     font-size: 1rem;

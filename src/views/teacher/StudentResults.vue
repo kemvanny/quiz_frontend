@@ -202,10 +202,8 @@
 import { ref, onMounted, computed, watch } from "vue";
 import { useRouter } from "vue-router";
 import { useToast } from "vue-toastification";
-import { useAuthStore } from "@/stores/auth";
 import { getAllStudentResults, addFeedback } from "@/api/exam.api";
 
-// --- State ---
 const loading = ref(true);
 const studentResults = ref([]);
 const selectedExam = ref("all");
@@ -214,7 +212,6 @@ const itemsPerPage = ref(6);
 const toast = useToast();
 const imgBaseUrl = import.meta.env.VITE_BASE_URL_FOR_IMAGE;
 
-// --- Computed (Filter & Pagination) ---
 const availableExams = computed(() => {
   if (!studentResults.value) return [];
   return [
@@ -334,9 +331,8 @@ const getAvatarUrl = (avatar) => {
   return `${imgBaseUrl}${avatar}`;
 };
 
-onMounted(() => {
+onMounted(async () => {
   fetchStudentResults();
-  useAuthStore().fetchUserProfile();
 });
 </script>
 

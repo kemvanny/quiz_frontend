@@ -8,27 +8,44 @@
             <div class="class-meta d-flex align-items-center gap-4 flex-wrap">
               <span>
                 <i class="fas fa-users me-2"></i>
-                {{ roomData?.student_count ?? roomData?.students?.length ?? 0 }}
+                {{ students.length }}
                 Students
               </span>
             </div>
           </div>
         </div>
 
-        <div class="class-tabs-container d-flex align-items-center justify-content-between">
+        <div
+          class="class-tabs-container d-flex align-items-center justify-content-between"
+        >
           <div class="class-tabs">
-            <div class="class-tab" :class="{ active: currentTab === 'stream' }" @click="handleTabChange('stream')">
+            <div
+              class="class-tab"
+              :class="{ active: currentTab === 'stream' }"
+              @click="handleTabChange('stream')"
+            >
               <i class="fas fa-stream"></i> ថ្នាក់រៀន
             </div>
-            <div class="class-tab" :class="{ active: currentTab === 'people' }" @click="handleTabChange('people')">
-              <i class="fas fa-users"></i>សិស្សសរុប
-              <span class="badge-count ">{{ roomData?.students?.length || 0 }}</span>
+            <div
+              class="class-tab"
+              :class="{ active: currentTab === 'people' }"
+              @click="handleTabChange('people')"
+            >
+              <i class="fas fa-users"></i> សិស្សសរុប
+              <span class="badge-count">{{ students.length }}</span>
             </div>
-            <div class="class-tab" :class="{ active: currentTab === 'results' }" @click="handleTabChange('results')">
+            <div
+              class="class-tab"
+              :class="{ active: currentTab === 'results' }"
+              @click="handleTabChange('results')"
+            >
               <i class="fas fa-chart-bar"></i> លទ្ធផលសិស្ស
             </div>
           </div>
-          <RouterLink :to="`/teacher/room-management/${props.roomId}/exams`" class="btn-exams-link">
+          <RouterLink
+            :to="`/teacher/room-management/${props.roomId}/exams`"
+            class="btn-exams-link"
+          >
             <i class="fas fa-file-alt me-2"></i>មើលការប្រឡងទាំងអស់
           </RouterLink>
         </div>
@@ -36,64 +53,81 @@
         <div v-if="currentTab === 'stream'" class="tab-pane active">
           <div class="stream-grid">
             <div class="side-panel">
-              <div class="d-flex align-items-center justify-content-between mb-2">
-                <span style="
+              <div
+                class="d-flex align-items-center justify-content-between mb-2"
+              >
+                <span
+                  style="
                     font-size: 0.7rem;
                     font-weight: 700;
                     color: var(--txt-mu);
                     text-transform: uppercase;
                     letter-spacing: 1px;
-                  ">ទិដ្ឋភាពទូទៅនៃថ្នាក់រៀន</span>
+                  "
+                  >ទិដ្ឋភាពទូទៅនៃថ្នាក់រៀន</span
+                >
                 <button class="btn btn-sm text-muted p-0">
                   <i class="fas fa-chart-line"></i>
                 </button>
               </div>
               <div class="d-flex gap-2 mt-2">
                 <div class="text-center flex-fill">
-                  <div style="
+                  <div
+                    style="
                       font-weight: 700;
                       color: var(--txt);
                       font-size: 1.2rem;
-                    ">
-                    {{ roomData?.students?.length || 0 }}
+                    "
+                  >
+                    {{ students.length }}
                   </div>
-                  <div style="
+                  <div
+                    style="
                       font-size: 0.65rem;
                       color: var(--txt-mu);
                       font-weight: 600;
-                    ">
+                    "
+                  >
                     សិស្ស
                   </div>
                 </div>
                 <div class="text-center flex-fill border-start border-end">
-                  <div style="
+                  <div
+                    style="
                       font-weight: 700;
                       color: var(--em);
                       font-size: 1.2rem;
-                    ">
+                    "
+                  >
                     {{ averageGrade }}%
                   </div>
-                  <div style="
+                  <div
+                    style="
                       font-size: 0.65rem;
                       color: var(--txt-mu);
                       font-weight: 600;
-                    ">
+                    "
+                  >
                     មធ្យមភាគ
                   </div>
                 </div>
                 <div class="text-center flex-fill">
-                  <div style="
+                  <div
+                    style="
                       font-weight: 700;
                       color: var(--txt);
                       font-size: 1.2rem;
-                    ">
+                    "
+                  >
                     {{ posts?.length || 0 }}
                   </div>
-                  <div style="
+                  <div
+                    style="
                       font-size: 0.65rem;
                       color: var(--txt-mu);
                       font-weight: 600;
-                    ">
+                    "
+                  >
                     ដាក់ផ្សាយ
                   </div>
                 </div>
@@ -102,23 +136,36 @@
 
             <div class="feed-container">
               <div class="composer-card">
-                <input v-model="newPost.title" class="form-control mb-2" placeholder="ចំណងជើង..." />
-                <textarea v-model="newPost.message" class="composer-input mb-2" rows="2"
-                  placeholder="សរសេរការប្រកាស..."></textarea>
-                <input v-model="newPost.examLink" class="form-control mb-2" placeholder="បញ្ចូល Link ការប្រឡង..." />
+                <input
+                  v-model="newPost.title"
+                  class="form-control mb-4"
+                  placeholder="ចំណងជើង..."
+                />
+                <textarea
+                  v-model="newPost.message"
+                  class="composer-input"
+                  rows="2"
+                  placeholder="សរសេរការប្រកាស..."
+                ></textarea>
                 <div class="composer-actions">
                   <button class="btn-post" @click="handleCreatePost">
-                    Post
+                    ការបង្ហោះ
                   </button>
                 </div>
               </div>
 
               <div class="d-flex flex-column gap-4">
                 <div class="post-card" v-for="post in posts" :key="post.id">
-                  <div class="post-header d-flex justify-content-between align-items-center">
+                  <div
+                    class="post-header d-flex justify-content-between align-items-center"
+                  >
                     <div class="d-flex align-items-center">
-                      <img :src="authStore.avatarUrl" class="avatar-img me-2" alt="avatar"
-                        style="width: 40px; height: 40px; border-radius: 50%" />
+                      <img
+                        :src="authStore.avatarUrl"
+                        class="avatar-img me-2"
+                        alt="avatar"
+                        style="width: 40px; height: 40px; border-radius: 50%"
+                      />
                       <div>
                         <h6 class="mb-0">
                           {{ authStore.fullName }}
@@ -145,10 +192,16 @@
                       </div>
                     </div>
                     <div class="post-actions">
-                      <button class="btn-action-menu" @click.stop="toggleMenu(post.id)">
+                      <button
+                        class="btn-action-menu"
+                        @click.stop="toggleMenu(post.id)"
+                      >
                         <i class="fas fa-ellipsis-v"></i>
                       </button>
-                      <div class="action-dropdown" v-if="activeMenu === post.id">
+                      <div
+                        class="action-dropdown"
+                        v-if="activeMenu === post.id"
+                      >
                         <button @click="openEditModal(post)">
                           <i class="fas fa-edit me-2"></i>Edit
                         </button>
@@ -163,29 +216,38 @@
                     <p>{{ post.message }}</p>
                   </div>
 
-                  <div v-if="post.exam_link || post.examLink"
-                    class="assignment-card-link d-flex align-items-center border rounded-3 shadow-sm overflow-hidden mt-3 mb-2 bg-white p-2">
-                    <div class="d-flex align-items-center justify-content-center cursor-pointer"
-                      @click="openExamLink(post.exam_link || post.examLink)" style="
+                  <div
+                    v-if="post.exam_link || post.examLink"
+                    class="assignment-card-link d-flex align-items-center border rounded-3 shadow-sm overflow-hidden mt-3 mb-2 bg-white p-2"
+                  >
+                    <div
+                      class="d-flex align-items-center justify-content-center"
+                      style="
                         width: 70px;
                         height: 70px;
                         background-color: #f6993f;
                         flex-shrink: 0;
                         border-radius: 8px;
-                      ">
+                      "
+                    >
                       <i class="fas fa-laptop-code text-white fa-2x"></i>
                     </div>
-                    <div class="p-3 flex-grow-1 cursor-pointer" @click="openExamLink(post.exam_link || post.examLink)">
-                      <h6 class="mb-0 fw-bold text-dark">{{ post.title || 'វិញ្ញាសាប្រឡង' }}</h6>
-                      <small class="text-muted">តេស្ត • ចុចដើម្បីបើកលីងវិញ្ញាសា</small>
+                    <div class="p-3 flex-grow-1">
+                      <h6 class="mb-0 fw-bold text-dark">
+                        {{ post.title || "វិញ្ញាសាប្រឡង" }}
+                      </h6>
                     </div>
                     <div class="pe-3">
-                      <button class="btn btn-sm px-3 rounded-pill" style="
+                      <button
+                        class="btn btn-sm px-3 rounded-pill"
+                        style="
                           background-color: #e6fffa;
                           color: #38b2ac;
                           font-weight: 600;
                           border: 1px solid #b2f5ea;
-                        " @click="viewExamResults(post.exam_id)">
+                        "
+                        @click="viewExamResults(post.exam_id)"
+                      >
                         <i class="fas fa-chart-bar me-1"></i> មើលលទ្ធផល
                       </button>
                     </div>
@@ -198,59 +260,112 @@
 
         <div v-if="currentTab === 'people'" class="tab-pane active">
           <div class="roster-container">
-            <div class="roster-header">
-              <h3>សិស្សសរុប ({{ roomData?.students?.length || 0 }})</h3>
+            <div
+              class="roster-header d-flex justify-content-between align-items-center"
+            >
+              <h3>សិស្សសរុប {{ students.length }}</h3>
             </div>
-            <table class="roster-table">
-              <thead>
-                <tr>
-                  <th>សិស្ស</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="student in roomData?.students" :key="student.id">
-                  <td>
-                    <div class="student-info">
-                      <img :src="getStudentAvatar(student)" alt="student avatar" />
-                      <div>
-                        <h6>
-                          {{ student.first_name }} {{ student.last_name }}
-                        </h6>
-                        <span>{{ student.student_card_id }}</span>
-                      </div>
-                    </div>
-                  </td>
-                  <td class="text-end">
-                    <button class="btn-remove-student" @click="openDeleteModal(student)">
-                      លុបចេញ
-                    </button>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+
+            <div class="table-responsive">
+              <table class="table align-middle table-hover roster-table">
+                <thead>
+                  <tr>
+                    <th style="font-size: 15px; font-weight: 600; width: 80px">
+                      រូបភាព
+                    </th>
+                    <th style="font-size: 15px; font-weight: 600">លេខសិស្ស</th>
+                    <th style="font-size: 15px; font-weight: 600">ឈ្មោះ</th>
+                    <th style="font-size: 15px; font-weight: 600">ជំនាញ</th>
+                    <th style="font-size: 15px; font-weight: 600">
+                      ថ្ងៃចូលរៀន
+                    </th>
+                    <th
+                      class="text-center"
+                      style="font-size: 15px; font-weight: 600; width: 140px"
+                    >
+                      សកម្មភាព
+                    </th>
+                  </tr>
+                </thead>
+
+                <tbody v-if="students.length">
+                  <tr v-for="student in students" :key="student.id">
+                    <td>
+                      <img
+                        :src="getRoomStudentAvatar(student)"
+                        class="student-avatar"
+                        alt="Student Avatar"
+                      />
+                    </td>
+
+                    <td>
+                      {{ student.student_card_id }}
+                    </td>
+
+                    <td>
+                      {{ student.first_name }}
+                      {{ student.last_name }}
+                    </td>
+
+                    <td>
+                      {{ student.major || "មិនទាន់បំពេញ" }}
+                    </td>
+
+                    <td>
+                      {{ formatDate(student.joined_at) }}
+                    </td>
+
+                    <td class="text-center">
+                      <button
+                        class="btn-remove-students"
+                        @click="openDeleteModal(student)"
+                      >
+                        លុបចេញពីបន្ទប់
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+
+                <tbody v-else>
+                  <tr>
+                    <td colspan="6" class="text-center py-5 text-muted">
+                      មិនទាន់មានសិស្សនៅក្នុងថ្នាក់នេះទេ
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
 
         <div v-if="currentTab === 'results'" class="tab-pane active">
-          <div v-if="loading" class="d-flex flex-column align-items-center justify-content-center p-5 text-muted">
+          <div
+            v-if="loading"
+            class="d-flex flex-column align-items-center justify-content-center p-5 text-muted"
+          >
             <div class="spinner-border text-primary mb-3" role="status">
               <span class="visually-hidden">កំពុងផ្ទុក...</span>
             </div>
             <span class="fw-medium text-secondary">កំពុងផ្ទុកទិន្នន័យ...</span>
           </div>
 
-          <div v-else-if="studentResults.length === 0"
-            class="d-flex flex-column align-items-center justify-content-center p-5 text-muted border border-dashed rounded-4 bg-light">
+          <div
+            v-else-if="studentResults.length === 0"
+            class="d-flex flex-column align-items-center justify-content-center p-5 text-muted border border-dashed rounded-4 bg-light"
+          >
             <div class="empty-state-icon mb-3 text-secondary-50">
               <i class="far fa-folder-open fa-3x"></i>
             </div>
-            <p class="mb-0 fw-medium">មិនមានលទ្ធផលសម្រាប់សិស្សទេ។ សូមត្រលប់ទៅកាន់ Tab "ថ្នាក់រៀន" រួចចុចលើប៊ូតុង
-              "មើលលទ្ធផល" នៃវិញ្ញាសាណាមួយ។</p>
+            <p class="mb-0 fw-medium">
+              មិនមានលទ្ធផលសម្រាប់សិស្សទេ។ សូមត្រលប់ទៅកាន់ Tab "ថ្នាក់រៀន"
+              រួចចុចលើប៊ូតុង "មើលលទ្ធផល" នៃវិញ្ញាសាណាមួយ។
+            </p>
           </div>
 
           <div v-else class="card border-0 shadow-sm rounded-4 overflow-hidden">
             <div
-              class="card-header bg-white border-bottom-0 pt-4 px-4 pb-3 d-flex align-items-center justify-content-between flex-wrap gap-3">
+              class="card-header bg-white border-bottom-0 pt-4 px-4 pb-3 d-flex align-items-center justify-content-between flex-wrap gap-3"
+            >
               <div>
                 <h5 class="card-title fw-bold text-dark mb-1">លទ្ធផលសិស្ស</h5>
                 <p class="text-muted small mb-0">
@@ -260,22 +375,32 @@
 
               <div class="d-flex align-items-center gap-3 flex-wrap">
                 <div class="d-flex align-items-center gap-2">
-                  <span class="text-muted small fw-semibold text-nowrap">តម្រងវិញ្ញាសា៖</span>
-                  <select v-model="selectedExam"
+                  <span class="text-muted small fw-semibold text-nowrap"
+                    >តម្រងវិញ្ញាសា៖</span
+                  >
+                  <select
+                    v-model="selectedExam"
                     class="form-select form-select-sm border border-secondary-subtle rounded-pill px-3 py-2 text-dark"
                     style="
                       min-width: 180px;
                       font-size: 0.82rem;
                       font-weight: 600;
                       background-color: #f8fafc;
-                    ">
+                    "
+                  >
                     <option value="all">ទាំងអស់</option>
-                    <option v-for="title in availableExams" :key="title" :value="title">
+                    <option
+                      v-for="title in availableExams"
+                      :key="title"
+                      :value="title"
+                    >
                       {{ title }}
                     </option>
                   </select>
                 </div>
-                <span class="badge bg-light text-dark border px-3 py-2 rounded-pill fw-semibold">
+                <span
+                  class="badge bg-light text-dark border px-3 py-2 rounded-pill fw-semibold"
+                >
                   សរុប៖ {{ filteredResults.length }} នាក់
                 </span>
               </div>
@@ -286,39 +411,56 @@
                 <table class="table align-middle mb-0 custom-results-table">
                   <thead>
                     <tr>
-                      <th class="text-secondary text-uppercase py-3 ps-3"
-                        style="font-size: 0.75rem; letter-spacing: 0.5px">
+                      <th
+                        class="text-secondary text-uppercase py-3 ps-3"
+                        style="font-size: 0.75rem; letter-spacing: 0.5px"
+                      >
                         សិស្ស
                       </th>
-                      <th class="text-secondary text-uppercase py-3" style="font-size: 0.75rem; letter-spacing: 0.5px">
+                      <th
+                        class="text-secondary text-uppercase py-3"
+                        style="font-size: 0.75rem; letter-spacing: 0.5px"
+                      >
                         វិញ្ញាសា
                       </th>
-                      <th class="text-secondary text-uppercase py-3 text-center"
-                        style="font-size: 0.75rem; letter-spacing: 0.5px">
+                      <th
+                        class="text-secondary text-uppercase py-3 text-center"
+                        style="font-size: 0.75rem; letter-spacing: 0.5px"
+                      >
                         ពិន្ទុ
                       </th>
                       <th class="text-secondary text-uppercase py-3 text-center"
                         style="font-size: 0.75rem; letter-spacing: 0.5px">
-                        Kanalparichethe
+                        កាលបរិច្ឆេទ
                       </th>
-                      <th class="text-secondary text-uppercase py-3" style="
+                      <th
+                        class="text-secondary text-uppercase py-3"
+                        style="
                           font-size: 0.75rem;
                           letter-spacing: 0.5px;
                           min-width: 240px;
-                        ">
+                        "
+                      >
                         មតិកែលម្អ
                       </th>
-                      <th class="text-center text-secondary text-uppercase py-3 pe-3" style="
+                      <th
+                        class="text-center text-secondary text-uppercase py-3 pe-3"
+                        style="
                           font-size: 0.75rem;
                           letter-spacing: 0.5px;
                           width: 90px;
-                        ">
+                        "
+                      >
                         សកម្មភាព
                       </th>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr v-for="res in paginatedResults" :key="res.submission_id" class="card-row">
+                    <tr
+                      v-for="res in paginatedResults"
+                      :key="res.submission_id"
+                      class="card-row"
+                    >
                       <td class="ps-3 py-3">
                         <div class="d-flex align-items-center gap-3">
                           <div class="avatar-circle-custom">
@@ -344,8 +486,10 @@
                       </td>
 
                       <td class="py-3 text-center">
-                        <span class="badge rounded-pill px-3 py-2 fw-semibold d-inline-flex align-items-center gap-1"
-                          :class="getScoreClass(res)">
+                        <span
+                          class="badge rounded-pill px-3 py-2 fw-semibold d-inline-flex align-items-center gap-1"
+                          :class="getScoreClass(res)"
+                        >
                           <i class="fas" :class="getScoreIcon(res)"></i>
                           {{ formatScore(res) }}
                         </span>
@@ -356,14 +500,20 @@
                       </td>
 
                       <td class="py-3">
-                        <input type="text"
+                        <input
+                          type="text"
                           class="form-control form-control-sm border-0 bg-light rounded-3 px-3 py-2 feedback-input-field"
-                          v-model="res.feedback" placeholder="សរសេរមតិកែលម្អនៅទីនេះ..." />
+                          v-model="res.feedback"
+                          placeholder="សរសេរមតិកែលម្អនៅទីនេះ..."
+                        />
                       </td>
 
                       <td class="text-center pe-3 py-3">
-                        <button class="btn btn-action-send btn-sm rounded-3"
-                          @click="sendFeedback(res.submission_id, res.feedback)" title="ផ្ញើមតិកែលម្អ">
+                        <button
+                          class="btn btn-action-send btn-sm rounded-3"
+                          @click="sendFeedback(res.submission_id, res.feedback)"
+                          title="ផ្ញើមតិកែលម្អ"
+                        >
                           <i class="fas fa-paper-plane"></i>
                         </button>
                       </td>
@@ -377,8 +527,10 @@
                 </table>
               </div>
 
-              <div v-if="totalPages > 1"
-                class="d-flex align-items-center justify-content-between mt-4 border-top pt-3 flex-wrap gap-2">
+              <div
+                v-if="totalPages > 1"
+                class="d-flex align-items-center justify-content-between mt-4 border-top pt-3 flex-wrap gap-2"
+              >
                 <div class="text-muted small fw-medium">
                   បង្ហាញ {{ (currentPage - 1) * itemsPerPage + 1 }} ដល់
                   {{
@@ -387,29 +539,53 @@
                   នៃលទ្ធផលសរុប {{ filteredResults.length }} នាក់
                 </div>
                 <nav aria-label="Result pagination">
-                  <ul class="pagination pagination-sm mb-0 align-items-center gap-1">
-                    <li class="page-item" :class="{ disabled: currentPage === 1 }">
+                  <ul
+                    class="pagination pagination-sm mb-0 align-items-center gap-1"
+                  >
+                    <li
+                      class="page-item"
+                      :class="{ disabled: currentPage === 1 }"
+                    >
                       <button
                         class="page-link border-0 rounded-circle d-flex align-items-center justify-content-center p-0"
-                        @click="prevPage" style="width: 32px; height: 32px">
-                        <i class="fas fa-chevron-left" style="font-size: 0.8rem"></i>
+                        @click="prevPage"
+                        style="width: 32px; height: 32px"
+                      >
+                        <i
+                          class="fas fa-chevron-left"
+                          style="font-size: 0.8rem"
+                        ></i>
                       </button>
                     </li>
 
-                    <li v-for="page in totalPages" :key="page" class="page-item"
-                      :class="{ active: currentPage === page }">
+                    <li
+                      v-for="page in totalPages"
+                      :key="page"
+                      class="page-item"
+                      :class="{ active: currentPage === page }"
+                    >
                       <button
                         class="page-link border-0 rounded-circle d-flex align-items-center justify-content-center p-0 fw-semibold"
-                        @click="goToPage(page)" style="width: 32px; height: 32px; font-size: 0.82rem">
+                        @click="goToPage(page)"
+                        style="width: 32px; height: 32px; font-size: 0.82rem"
+                      >
                         {{ page }}
                       </button>
                     </li>
 
-                    <li class="page-item" :class="{ disabled: currentPage === totalPages }">
+                    <li
+                      class="page-item"
+                      :class="{ disabled: currentPage === totalPages }"
+                    >
                       <button
                         class="page-link border-0 rounded-circle d-flex align-items-center justify-content-center p-0"
-                        @click="nextPage" style="width: 32px; height: 32px">
-                        <i class="fas fa-chevron-right" style="font-size: 0.8rem"></i>
+                        @click="nextPage"
+                        style="width: 32px; height: 32px"
+                      >
+                        <i
+                          class="fas fa-chevron-right"
+                          style="font-size: 0.8rem"
+                        ></i>
                       </button>
                     </li>
                   </ul>
@@ -422,12 +598,24 @@
     </div>
   </div>
 
-  <div class="modal-overlay" v-if="isEditModalOpen" @click.self="isEditModalOpen = false">
+  <div
+    class="modal-overlay"
+    v-if="isEditModalOpen"
+    @click.self="isEditModalOpen = false"
+  >
     <div class="edit-modal">
       <h6>Edit Post</h6>
-      <input v-model="editPost.title" class="form-control mb-2" placeholder="ចំណងជើង..." />
-      <textarea v-model="editPost.message" class="form-control mb-2" rows="3"
-        placeholder="សរសេរការប្រកាស..."></textarea>
+      <input
+        v-model="editPost.title"
+        class="form-control mb-2"
+        placeholder="ចំណងជើង..."
+      />
+      <textarea
+        v-model="editPost.message"
+        class="form-control mb-2"
+        rows="3"
+        placeholder="សរសេរការប្រកាស..."
+      ></textarea>
       <input v-model="editPost.exam_link" type="hidden" />
       <div class="d-flex justify-content-end gap-2 mt-3">
         <button class="btn-cancel" @click="isEditModalOpen = false">
@@ -438,19 +626,25 @@
     </div>
   </div>
 
-  <RemoveStudentModal :is-open="isDeleteModalOpen" :student="studentToDelete" :loading="loading"
-    @close="isDeleteModalOpen = false" @confirm="confirmDelete" />
+  <RemoveStudentModal
+    :is-open="isDeleteModalOpen"
+    :student="studentToDelete"
+    :loading="isDeleting"
+    @close="isDeleteModalOpen = false"
+    @confirm="confirmDelete"
+  />
 </template>
 
 <script setup>
 import { ref, onMounted, computed, watch } from "vue";
 import { useRouter } from "vue-router";
 import { useToast } from "vue-toastification";
-import { useAuthStore } from "@/stores/auth";
+import { useAuthStore } from "@/stores/authStore";
 import { getStudentResultsByExam, addFeedback } from "@/api/exam.api";
 
 import {
   getOneRoom,
+  getStudentsInRoom,
   removeStudentFromRoom,
   createPost,
   getPosts,
@@ -458,17 +652,15 @@ import {
   updatePost,
 } from "@/api/teacher.api";
 
-import RemoveStudentModal from "@/components/teacher/RemoveStudentModal.vue";
+import RemoveStudentModal from "@/components/teachermodal/RemoveStudentModal.vue";
+import defaultAvatar from "@/assets/images/default.png";
 
-//router
 const router = useRouter();
 const toast = useToast();
 const authStore = useAuthStore();
 
-//props
 const props = defineProps(["roomId"]);
 
-//state
 const roomData = ref(null);
 const posts = ref([]);
 
@@ -479,29 +671,42 @@ const isDeleteModalOpen = ref(false);
 const isEditModalOpen = ref(false);
 
 const studentToDelete = ref(null);
+const students = ref([]);
 
 const activeMenu = ref(null);
 const studentResults = ref([]);
 const currentSelectedExamId = ref(null);
 
-// --- FILTER & PAGINATION STATE ---
 const selectedExam = ref("all");
 const currentPage = ref(1);
 const itemsPerPage = ref(10);
+const isDeleting = ref(false);
 
-const BASE_IMAGE_URL = import.meta.env.VITE_BASE_URL_FOR_IMAGE
+const BASE_IMAGE_URL = import.meta.env.VITE_BASE_URL_FOR_IMAGE;
 
 const getStudentAvatar = (student) => {
   if (student.profile_image) {
-    return `${BASE_IMAGE_URL}/${student.profile_image}`.replace('//uploads', '/uploads')
+    return `${BASE_IMAGE_URL}/${student.profile_image}`.replace(
+      "//uploads",
+      "/uploads",
+    );
   }
 
   return `https://ui-avatars.com/api/?name=${encodeURIComponent(
-    student.first_name + ' ' + student.last_name
-  )}`
-}
+    student.first_name + " " + student.last_name,
+  )}`;
+};
 
-// Computed value to pull unique list of Exam Titles dynamically
+const formatDate = (date) => {
+  if (!date) return "-";
+
+  return new Date(date).toLocaleDateString("en-GB", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  });
+};
+
 const availableExams = computed(() => {
   if (!studentResults.value) return [];
   const titles = studentResults.value
@@ -510,7 +715,6 @@ const availableExams = computed(() => {
   return [...new Set(titles)];
 });
 
-// Computed value to apply filter based on selected exam title
 const filteredResults = computed(() => {
   if (!studentResults.value) return [];
   if (selectedExam.value === "all") {
@@ -521,26 +725,22 @@ const filteredResults = computed(() => {
   );
 });
 
-// Computed value containing only the current page's sliced subset of results
 const paginatedResults = computed(() => {
   const startIndex = (currentPage.value - 1) * itemsPerPage.value;
   const endIndex = startIndex + itemsPerPage.value;
   return filteredResults.value.slice(startIndex, endIndex);
 });
 
-// Computed value to determine total number of page buttons required
 const totalPages = computed(() => {
   return Math.ceil(filteredResults.value.length / itemsPerPage.value) || 1;
 });
 
-// Methods to handle page switches
 const prevPage = () => {
   if (currentPage.value > 1) {
     currentPage.value--;
   }
 };
 
-// Calculate the dynamic average grade based on student results
 const averageGrade = computed(() => {
   if (!studentResults.value || studentResults.value.length === 0) {
     return 0;
@@ -563,7 +763,6 @@ const goToPage = (page) => {
   currentPage.value = page;
 };
 
-// Reset current page index back to 1 if filter settings change
 watch(selectedExam, () => {
   currentPage.value = 1;
 });
@@ -582,6 +781,26 @@ const editPost = ref({
   message: "",
   exam_link: "",
 });
+
+const fetchStudents = async () => {
+  try {
+    const res = await getStudentsInRoom(props.roomId);
+    students.value = res.data.data || [];
+  } catch (err) {
+    console.error(err);
+    students.value = [];
+  }
+};
+
+const getRoomStudentAvatar = (student) => {
+  const avatar = student?.avatar;
+
+  if (!avatar || avatar === "default.png" || avatar.includes("default")) {
+    return defaultAvatar;
+  }
+
+  return `${BASE_IMAGE_URL}${avatar}`;
+};
 
 //fetch room
 const fetchRoomData = async () => {
@@ -603,8 +822,9 @@ const fetchPosts = async () => {
 
     posts.value = (res.data.data || []).reverse();
   } catch (err) {
-console.error("getPosts error status:", err.response?.status);
-    console.error("getPosts error message:", err.response?.data);  }
+    console.error("getPosts error status:", err.response?.status);
+    console.error("getPosts error message:", err.response?.data);
+  }
 };
 
 //create post
@@ -672,17 +892,26 @@ const confirmDelete = async () => {
   if (!studentToDelete.value) return;
 
   try {
-    await removeStudentFromRoom(props.roomId, studentToDelete.value.id);
-    await fetchRoomData();
+    isDeleting.value = true;
+
+    // IMPORTANT: make sure this is correct ID
+    const studentId = studentToDelete.value.id;
+
+    await removeStudentFromRoom(props.roomId, studentId);
+
+    // update UI locally first (NO reload flicker)
+    students.value = students.value.filter((s) => s.id !== studentId);
+
     toast.success("បានលុបសិស្សជោគជ័យ!");
   } catch (error) {
+    console.error(error);
     toast.error("មិនអាចលុបសិស្សបាន");
   } finally {
+    isDeleting.value = false;
     isDeleteModalOpen.value = false;
     studentToDelete.value = null;
   }
 };
-
 //toggle menu
 const toggleMenu = (postId) => {
   activeMenu.value = activeMenu.value === postId ? null : postId;
@@ -698,13 +927,6 @@ const openEditModal = (post) => {
   };
   isEditModalOpen.value = true;
   activeMenu.value = null;
-};
-
-//open exam link
-const openExamLink = (url) => {
-  if (!url) return;
-  const fullUrl = url.startsWith("http") ? url : `https://${url}`;
-  window.open(fullUrl, "_blank");
 };
 
 const viewExamResults = (examId) => {
@@ -780,14 +1002,13 @@ const sendFeedback = async (subId, feedbackText) => {
   } catch (err) {
     console.error(err);
     toast.error("មានកំហុសក្នុងការផ្ញើ Feedback");
-  }  
+  }
 };
 
-//mounted
-onMounted(() => {
-  fetchRoomData();
-  fetchPosts();
-  authStore.fetchUserProfile();
+onMounted(async () => {
+  await authStore.fetchProfile;
+
+  await Promise.all([fetchRoomData(), fetchStudents(), fetchPosts()]);
 });
 </script>
 
@@ -795,19 +1016,16 @@ onMounted(() => {
 .custom-results-table {
   border-collapse: separate !important;
   border-spacing: 0 12px !important;
-  /* Adds vertical spacing between floating card-rows */
   width: 100%;
 }
 
-/* Header Row Styling & Padding */
 .custom-results-table thead tr th {
   border: none;
   background-color: #f8f9fa;
-  /* Sleek light gray track for headers */
+
   padding: 0.85rem 1rem;
 }
 
-/* Rounded corners for the gray header track */
 .custom-results-table thead tr th:first-child {
   border-top-left-radius: 8px;
   border-bottom-left-radius: 8px;
@@ -818,7 +1036,6 @@ onMounted(() => {
   border-bottom-right-radius: 8px;
 }
 
-/* Individual Floating Card Rows */
 .custom-results-table tbody tr.card-row {
   background-color: #ffffff;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
@@ -1313,9 +1530,11 @@ onMounted(() => {
 }
 
 .class-banner {
-  background: linear-gradient(135deg,
-      rgba(16, 185, 129, 0.95),
-      rgba(5, 150, 105, 0.95));
+  background: linear-gradient(
+    135deg,
+    rgba(16, 185, 129, 0.95),
+    rgba(5, 150, 105, 0.95)
+  );
   border-radius: 24px;
   padding: 36px;
   color: white;
@@ -1666,7 +1885,7 @@ tbody tr td:last-child {
   padding: 18px 15px !important;
 }
 
-.table> :not(caption)>*>* {
+.table > :not(caption) > * > * {
   border-bottom-width: 0 !important;
 }
 
@@ -1852,7 +2071,6 @@ tbody tr td:last-child {
   cursor: pointer;
 }
 
-/* TAB 3: Results Grid View */
 .small-meta-lbl {
   font-size: 0.78rem;
   font-weight: 600;
@@ -2070,5 +2288,39 @@ tbody tr td:last-child {
   font-weight: 700;
   font-size: 0.8rem;
   cursor: pointer;
+}
+.student-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #e5e7eb;
+}
+
+.roster-table th {
+  background: #f8fafc;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.roster-table td {
+  vertical-align: middle;
+}
+
+.btn-remove-students {
+  width: 125px;
+  padding: 8px 18px;
+  border: 1px solid #ef4444;
+  color: #ef4444;
+  background: white;
+  font-size: 0.9rem;
+  border-radius: 8px;
+  font-weight: 600;
+  transition: 0.2s;
+}
+
+.btn-remove-students:hover {
+  background: #ef4444;
+  color: white;
 }
 </style>

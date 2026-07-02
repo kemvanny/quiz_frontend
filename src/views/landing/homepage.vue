@@ -295,8 +295,8 @@
 </template>
 
 <script setup>
-import NavbarLandingPage from "@/components/layout/navbar/landing/LandingPageNavebar.vue";
-import Footer from "@/components/layout/navbar/landing/FooterLandingPage.vue";
+import NavbarLandingPage from "@/components/landing/LandingPageNavebar.vue";
+import Footer from "@/components/landing/FooterLandingPage.vue";
 
 import { onMounted, onBeforeUnmount, ref } from "vue";
 import BannerImage from "@/assets/images/homepage/banner.png";

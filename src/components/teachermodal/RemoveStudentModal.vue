@@ -6,15 +6,27 @@
       </div>
 
       <h4 class="title">លុបសិស្សចេញពីថ្នាក់?</h4>
+
       <p class="message">
-        តើអ្នកពិតជាចង់លុប <strong>{{ student?.first_name }} {{ student?.last_name }}</strong> 
-        ចេញពីថ្នាក់នេះមែនទេ? សកម្មភាពនេះមិនអាចលុបចោលបានទេ។
+        តើអ្នកពិតជាចង់លុប
+        <strong>
+          {{ student?.first_name || "" }} {{ student?.last_name || "" }}
+        </strong>
+        ចេញពីថ្នាក់នេះមែនទេ?
+        សកម្មភាពនេះមិនអាចលុបចោលបានទេ។
       </p>
 
       <div class="actions">
-        <button class="btn-cancel" @click="$emit('close')">បោះបង់</button>
-        <button class="btn-remove" @click="$emit('confirm')" :disabled="loading">
-          {{ loading ? 'កំពុងលុប...' : 'លុបសិស្ស' }}
+        <button class="btn-cancel" @click="$emit('close')">
+          បោះបង់
+        </button>
+
+        <button
+          class="btn-remove"
+          @click="$emit('confirm')"
+          :disabled="loading"
+        >
+          {{ loading ? "កំពុងលុប..." : "លុបសិស្ស" }}
         </button>
       </div>
     </div>
@@ -27,7 +39,8 @@ defineProps({
   student: Object,
   loading: Boolean
 });
-defineEmits(['close', 'confirm']);
+
+defineEmits(["close", "confirm"]);
 </script>
 
 <style scoped>

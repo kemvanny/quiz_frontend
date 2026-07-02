@@ -1,50 +1,54 @@
 <template>
   <Teleport to="body">
-      <div v-if="show" class="custom-modal-overlay" @click="emit('close')">
-          <div class="custom-modal-card ">
-            <div class="modal-header-custom">
-              <div class="d-flex align-items-center gap-3">
-                <div class="quiz-icon-wrap"><i class="bi bi-mortarboard-fill"></i></div>
-                <h5 class="modal-title-custom">{{ exam?.title }}</h5>
-              </div>
-              <button class="btn-close-custom" @click="emit('close')">
-                <i class="bi bi-x-lg"></i>
-              </button>
+    <div v-if="show" class="custom-modal-overlay" @click="emit('close')">
+      <div class="custom-modal-card ">
+        <div class="modal-header-custom">
+          <div class="d-flex align-items-center gap-3">
+            <div class="quiz-logo-wrap">
+              <img :src="logo" alt="Logo" class="quiz-logo-img">
             </div>
-<!-- Status Bar -->
-          <div class="status-bar">
-            <span class="status-pill status-active">
-              <span class="status-dot"></span>Active
-            </span>
-            <span class="status-divider">·</span>
-            <span class="status-type"><i class="bi bi-tag me-1"></i>Quiz</span>
+            <h5 class="modal-title-custom">{{ exam?.title }}</h5>
           </div>
 
-            <div class="modal-body px-4 pb-4 pt-3">
-              <div class="row g-3 mb-4">
-                <div class="col-4" v-for="stat in stats" :key="stat.label">
-                  <div class="stat-card">
-                    <div class="stat-value">{{ stat.value }}<span class="stat-unit">{{ stat.unit }}</span></div>
-                    <div class="stat-label">{{ stat.label }}</div>
-                  </div>
-                </div>
-              </div>
+          <button class="btn-close-custom" @click="emit('close')">
+            <i class="bi bi-x-lg"></i>
+          </button>
+        </div>
+        <!-- Status Bar -->
+        <div class="status-bar">
+          <span class="status-pill status-active">
+            <span class="status-dot"></span>Active
+          </span>
+          <span class="status-divider">·</span>
+          <span class="status-type"><i class="bi bi-tag me-1"></i>Quiz</span>
+        </div>
 
-              <div class="row g-3">
-                <div class="col-md-6" v-for="field in formFields" :key="field.id">
-                  <label class="form-label text-muted small fw-bold">{{ field.label }}</label>
-                  <div class="input-shadow">
-                    <input type="text" class="form-control custom-input" v-model="formData[field.id]">
-                  </div>
-                </div>
+        <div class="modal-body px-4 pb-4 pt-3">
+          <div class="row g-3 mb-4">
+            <div class="col-4" v-for="stat in stats" :key="stat.label">
+              <div class="stat-card">
+                <div class="stat-value">{{ stat.value }}<span class="stat-unit">{{ stat.unit }}</span></div>
+                <div class="stat-label">{{ stat.label }}</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="row g-3">
+            <div class="col-md-6" v-for="field in formFields" :key="field.id">
+              <label class="form-label text-muted small fw-bold">{{ field.label }}</label>
+              <div class="input-shadow">
+                <input type="text" class="form-control custom-input" v-model="formData[field.id]">
               </div>
             </div>
           </div>
         </div>
+      </div>
+    </div>
   </Teleport>
 </template>
 <script setup>
-import { ref, reactive, watch ,computed} from 'vue';
+import { ref, reactive, watch, computed } from 'vue';
+import logo from '@/assets/images/logo.png';
 
 const emit = defineEmits(["close"]);
 
@@ -74,12 +78,12 @@ const formatDate = (dateString) => {
   if (!dateString) return 'N/A';
   const date = new Date(dateString);
 
-  return date.toLocaleString('km-KH', { 
-    year: 'numeric', 
-    month: '2-digit', 
-    day: '2-digit', 
-    hour: '2-digit', 
-    minute: '2-digit' 
+  return date.toLocaleString('km-KH', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit'
   });
 };
 watch(() => props.exam, (newExam) => {
@@ -114,6 +118,7 @@ watch(() => props.exam, (newExam) => {
   box-shadow: 0 6px 22px rgba(31, 158, 103, 0.35);
   color: #fff;
 }
+
 .custom-modal-overlay {
   position: fixed;
   inset: 0;
@@ -134,25 +139,27 @@ watch(() => props.exam, (newExam) => {
 }
 
 .modal-backdrop-custom {
-  position: fixed;      
+  position: fixed;
   top: 0;
   left: 0;
-  width: 100vw;         
-  height: 100vh;        
+  width: 100vw;
+  height: 100vh;
   background: rgba(0, 0, 0, 0.5) !important;
-  display: flex;       
+  display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 9999;        
+  z-index: 9999;
 }
-.modal-body{
+
+.modal-body {
   background: var(--emerald-soft) !important;
 }
+
 .modal-dialog {
   width: 100%;
   max-width: 800px;
   margin: auto;
-  pointer-events: auto; 
+  pointer-events: auto;
 }
 
 .modal-backdrop.show {
@@ -160,26 +167,36 @@ watch(() => props.exam, (newExam) => {
 }
 
 .modal-header-custom {
-  background: var(--green-light);
-  border-bottom: 1.5px solid var(--green-light);
-  padding: 1rem 1.5rem;
   display: flex;
-  align-items: center;
   justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
 }
 
-.quiz-icon-wrap {
-  width: 44px;
-  height: 44px;
-  background: var(--green-soft);
-  border: 1.5px solid var(--green-accent);
-  border-radius: 12px;
+.quiz-logo-wrap {
+  width: 60px;
+  height: 60px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.4rem;
-  color: var(--green-accent);
   flex-shrink: 0;
+  background: var(--emerald-soft);
+  border-radius: 10px;
+  border: 1px solid rgb(87, 222, 137);
+
+}
+
+.quiz-logo-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.modal-title-custom {
+  margin: 0;
+  font-weight: bold;
+  white-space: nowrap;
+  
 }
 
 .modal-eyebrow {
@@ -264,7 +281,7 @@ watch(() => props.exam, (newExam) => {
 }
 
 .status-type {
-  color: var( --text-muted);
+  color: var(--text-muted);
   font-size: 0.8rem;
 }
 
