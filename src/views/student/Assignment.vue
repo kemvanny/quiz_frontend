@@ -56,11 +56,11 @@
             </span>
             <span v-else-if="exam.time_status === 'upcoming'" class="meta-chip"
               style="background: #dbeafe; color: #1e40af">
-              <i class="fas fa-hourglass-start"></i> ជិតមកដល់ (Upcoming)
+              <i class="fas fa-hourglass-start"></i> ជិតមកដល់
             </span>
             <span v-else-if="exam.time_status === 'expired'" class="meta-chip"
               style="background: #fef2f2; color: #991b1b">
-              <i class="fas fa-calendar-times"></i> ហួសកំណត់ (អត់បានប្រឡង)
+              <i class="fas fa-calendar-times"></i> ហួសកំណត់ 
             </span>
             <span v-else class="meta-chip" style="background: #ecfdf5; color: #059669">
               <i class="fas fa-play-circle"></i> កំពុងដំណើរការ
