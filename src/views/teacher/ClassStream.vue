@@ -458,7 +458,7 @@ import {
   updatePost,
 } from "@/api/teacher.api";
 
-import RemoveStudentModal from "@/components/teacher/RemoveStudentModal.vue";
+import RemoveStudentModal from "@/components/teachermodal/RemoveStudentModal.vue";
 
 //router
 const router = useRouter();
