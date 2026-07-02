@@ -446,7 +446,7 @@
 import { ref, onMounted, computed, watch } from "vue";
 import { useRouter } from "vue-router";
 import { useToast } from "vue-toastification";
-import { useAuthStore } from "@/stores/auth";
+import { useAuthStore } from "@/stores/authStore";
 import { getStudentResultsByExam, addFeedback } from "@/api/exam.api";
 
 import {
@@ -558,7 +558,6 @@ const goToPage = (page) => {
   currentPage.value = page;
 };
 
-// Reset current page index back to 1 if filter settings change
 watch(selectedExam, () => {
   currentPage.value = 1;
 });
@@ -782,7 +781,7 @@ const sendFeedback = async (subId, feedbackText) => {
 onMounted(async () => {
   fetchRoomData();
   fetchPosts();
-  await authStore.fetchUserProfile();
+  await authStore.fetchProfile;
 });
 </script>
 

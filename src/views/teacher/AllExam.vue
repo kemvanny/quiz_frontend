@@ -109,18 +109,17 @@
 import { ref, onMounted, computed } from "vue";
 import { useRouter } from "vue-router";
 import { useToast } from "vue-toastification";
-import { useAuthStore } from "@/stores/auth";
+import { useAuthStore } from "@/stores/authStore";
 import { getExams } from "@/api/exam.api";
 
-// --- State ---
 const loading = ref(true);
 const studentResults = ref([]);
 const currentPage = ref(1);
 const itemsPerPage = ref(6);
 const toast = useToast();
 const router = useRouter();
+const authStore = useAuthStore();
 
-// --- Computed ---
 const filteredResults = computed(() => studentResults.value || []);
 const paginatedResults = computed(() => {
   const startIndex = (currentPage.value - 1) * itemsPerPage.value;
@@ -146,12 +145,11 @@ const visiblePages = computed(() => {
   return pages;
 });
 
-// --- Navigation ---
 const prevPage = () => { if (currentPage.value > 1) currentPage.value--; };
 const nextPage = () => { if (currentPage.value < totalPages.value) currentPage.value++; };
 const goToPage = (page) => { currentPage.value = page; };
 
-// --- API Integration ---
+
 const fetchStudentResults = async () => {
   loading.value = true;
   try {
@@ -159,20 +157,16 @@ const fetchStudentResults = async () => {
     const rawData = res?.data?.data || res.data || [];
     studentResults.value = Array.isArray(rawData) ? rawData : rawData ? [rawData] : [];
   } catch (err) {
-    console.error(err);
     if (toast) toast.error("មានកំហុសក្នុងការទាញយកបញ្ជីវិញ្ញាសា");
   } finally {
     loading.value = false;
   }
 };
 
-onMounted(() => {
+onMounted( async () => {
   fetchStudentResults();
-  try {
-    useAuthStore().fetchUserProfile();
-  } catch (e) {
-    console.log("Auth store feature ignored or not implemented.");
-  }
+  await authStore.fetchProfile;
+  
 });
 </script>
 
