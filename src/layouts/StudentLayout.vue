@@ -18,7 +18,9 @@
           </button>
 
           <LogoutModal :show="isLogoutModalOpen" title="Student" @close="isLogoutModalOpen = false"
-            @confirm="handleLogout" />
+            @confirm="handleLogout" :is-loading="isLogoutLoading" />
+
+
 
         </div>
       </template>
@@ -48,13 +50,17 @@ import RoomDetialNav from "@/components/layout/navbar/student/RoomDetialNav.vue"
 import { useRouter } from "vue-router";
 import { useAuthStore } from "@/stores/authStore";
 import defaultImage from "../assets/images/default.png";
+import { logoutAPI } from "@/api/auth.api";
 
 const router = useRouter()
 const authStore = useAuthStore()
 const route = useRoute();
 
 const imgBaseUrl = import.meta.env.VITE_BASE_URL_FOR_IMAGE
+
 const isLogoutModalOpen = ref(false)
+const isLogoutLoading = ref(false);
+
 const layoutImageRefresh = ref(Date.now())
 
 const studentMainMenus = [
@@ -70,7 +76,7 @@ const studentMainMenus = [
   },
   {
     name: "ការប្រឡង",
-    routeName: "Assignment", 
+    routeName: "Assignment",
     icon: "bi bi-list-task"
   },
   {
@@ -101,10 +107,19 @@ const activeNavbar = computed(() => {
       return ProfilesettingNav;
   }
 });
-const handleLogout = () => {
-  isLogoutModalOpen.value = false
-  localStorage.clear()
-  router.push('/login')
+
+const handleLogout = async () => {
+  isLogoutLoading.value = true;
+  try {
+     await logoutAPI(); 
+  } catch (err) {
+     console.error("Logout failed", err);
+  } finally {
+     localStorage.clear();
+     isLogoutLoading.value = false;
+     isLogoutModalOpen.value = false;
+     router.push('/login');
+  }
 }
 
 watch(() => authStore.profile?.avatar, () => {
@@ -153,7 +168,6 @@ onMounted(async () => {
     radial-gradient(at 100% 100%, hsla(209, 43%, 80%, 0.6) 0, transparent 50%);
 }
 
-/* add new */
 
 .profile-pill {
   display: flex;

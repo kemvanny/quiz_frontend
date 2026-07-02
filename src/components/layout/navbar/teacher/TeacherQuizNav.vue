@@ -43,26 +43,15 @@
 
       <div class="d-none d-sm-block divider-line"></div>
 
-      <!-- Right Section: Profile Pill Trigger -->
-      <div class="tb-section gap-3 pe-0 border-0 flex-shrink-0 align-items-center">
-        <div class="d-flex align-items-center gap-2.5 profile-pill-trigger" @click="goToProfile">
-          <img :src="authStore?.avatarUrl || 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=facearea&facepad=2&w=256&h=256&q=80'" alt="avatar" class="user-avatar-img"/>
-          <div class="d-none d-sm-flex flex-column justify-content-center text-start" style="line-height: 1.2;">
-            <span class="fw-bold user-name-text">{{ authStore?.fullName || 'គណនីគ្រូ' }}</span>
-            <span class="user-role-text">គ្រូបង្រៀន</span>
-          </div>
-         
-        </div>
-      </div>
+      <base-profile/>
 
     </header>
   </div>
 </template>
 
 <script setup>
-import { onMounted } from 'vue';
 import { useRouter } from 'vue-router'; 
-import { useAuthStore } from '@/stores/auth'; 
+
 
 defineProps({
   quizTitle: { type: String, default: 'បង្កើតការប្រឡង' },
@@ -72,16 +61,12 @@ defineProps({
 
 defineEmits(['update:quizTitle', 'update:duration', 'update:status']);
 
-const authStore = useAuthStore();
 const router = useRouter(); 
 
 const goToProfile = () => {
   router.push('/teacher/profile'); 
 };
 
-onMounted(async () => {
-  await authStore.fetchUserProfile();
-});
 </script>
 
 <style scoped>
