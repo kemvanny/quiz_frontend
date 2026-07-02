@@ -27,8 +27,8 @@
     </SearchFilter>
 
     <DataTable :headers="submissionHeaders" :items="filteredSubmissions" :is-loading="isLoading" :current-page="currentPage" :limit="limit" :total="totalRecords" @update:page="changePage">
-      <template #row="{ item, index }">
-        <td>{{ index + 1 }}</td>
+      <template #row="{ item }">
+        <td>{{item.user_id }}</td>
         <td>{{ item.display_student_name }}</td>
         <td>{{ item.display_quiz_title }}</td>
         <td class="fw-bold text-success">{{ item.display_score }}</td>

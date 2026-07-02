@@ -64,8 +64,9 @@
             :limit="limit" :total="totalRecords" @update:page="changePage">
             <template #row="{ item, index }">
                 <td>{{ (currentPage - 1) * limit + index + 1 }}</td>
-                <td>{{ item.title }}</td>
                 <td>{{ item.teacher_name }}</td>
+                <td>{{ item.title }}</td>
+                
                 <td>
                     <StatusBadge :type="item.status" />
                 </td>
@@ -83,7 +84,7 @@
 import { onMounted, ref } from "vue";
 import { getAllExams, getDashboardExamData, getQuizDetail } from "@/api/admin.api";
 import StatusBadge from "@/components/common/StatusBadge.vue";
-import QuizDetailModal from "@/components/admin/QuizDetailModal.vue";
+import QuizDetailModal from "@/components/adminmodal/QuizDetailModal.vue";
 import { useToast } from '@/composables/useToast';
 
 const {triggerToast} = useToast();
@@ -116,8 +117,8 @@ const openQuizDetail = async (item) => {
 
 const quizHeaders = [
     { label: "លេខសម្គាល់", key: "id" },
-    { label: "ចំណងជើង", key: "title" },
     { label: "គ្រូបង្រៀន", key: "teacher" },
+    { label: "ចំណងជើង", key: "title" },
     { label: "ស្ថានភាព", key: "status" },
     { label: "សកម្មភាព", key: "actions" },
 ];
@@ -134,6 +135,7 @@ const fetchExam = async () => {
             page: currentPage.value,
             limit: limit.value,
         });
+        console.log(res.data);
         if (res.data && res.data.data) {
             const rawExams = res.data.data.quizzes || [];
             exam.value = rawExams.sort(
