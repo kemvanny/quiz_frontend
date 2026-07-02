@@ -72,16 +72,16 @@
             <div class="glass-grid">
                 <div class="glass-field">
                     <label>នាមត្រកូល</label>
-                    <input type="text" placeholder="សូមបញ្ចូលនាមត្រកូល" v-model="form.lastName"
-                        :class="{ 'input-error': errors.lastName }">
-                    <span v-if="errors.lastName" class="text-danger-msg">{{ errors.lastName }}</span>
+                    <input type="text" placeholder="សូមបញ្ចូលនាមត្រកូល" v-model="form.firstName"
+                        :class="{ 'input-error': errors.firstName }">
+                    <span v-if="errors.firstName" class="text-danger-msg">{{ errors.firstName }}</span>
                 </div>
 
                 <div class="glass-field">
                     <label>នាមខ្លួន</label>
-                    <input type="text" placeholder="សូមបញ្ចូលនាមខ្លួន" v-model="form.firstName" @input="handleInput"
-                        :class="{ 'input-error': errors.firstName }">
-                    <span v-if="errors.firstName" class="text-danger-msg">{{ errors.firstName }}</span>
+                    <input type="text" placeholder="សូមបញ្ចូលនាមខ្លួន" v-model="form.lastName" @input="handleInput"
+                        :class="{ 'input-error': errors.lastName }">
+                    <span v-if="errors.lastName" class="text-danger-msg">{{ errors.lastName }}</span>
                 </div>
 
                 <div class="glass-field full">

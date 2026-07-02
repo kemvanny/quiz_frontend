@@ -9,8 +9,8 @@
                 style="width:34px;height:34px;border-radius:50%;border:2px solid var(--em-soft);">
 
             <div style="line-height:1.15;">
-                <div class="fw-bold" style="font-size:.83rem;">{{ authStore.profile?.lastName }} {{
-                    authStore.profile?.firstName }}</div>
+                <div class="fw-bold" style="font-size:.83rem;">{{ authStore.profile?.firstName }} {{
+                    authStore.profile?.lastName }}</div>
                 <div
                     style="font-size:.6rem; color:var(--txt-mu); font-weight:600; text-transform: uppercase; letter-spacing: 0.5px;">
                     {{ authStore.profile?.role }}
