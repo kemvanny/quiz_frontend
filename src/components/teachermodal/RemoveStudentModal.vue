@@ -1,36 +1,38 @@
 <template>
-  <div class="modal-overlay" v-if="isOpen">
-    <div class="clean-modal">
-      <div class="icon-box">
-        <i class="fas fa-trash-alt"></i>
-      </div>
+  <Teleport to="body">
+    <div class="modal-overlay" v-if="isOpen">
+      <div class="clean-modal">
+        <div class="icon-box">
+          <i class="fas fa-trash-alt"></i>
+        </div>
 
-      <h4 class="title">លុបសិស្សចេញពីថ្នាក់?</h4>
+        <h4 class="title">លុបសិស្សចេញពីថ្នាក់?</h4>
 
-      <p class="message">
-        តើអ្នកពិតជាចង់លុប
-        <strong>
-          {{ student?.first_name || "" }} {{ student?.last_name || "" }}
-        </strong>
-        ចេញពីថ្នាក់នេះមែនទេ?
-        សកម្មភាពនេះមិនអាចលុបចោលបានទេ។
-      </p>
+        <p class="message">
+          តើអ្នកពិតជាចង់លុប
+          <strong>
+            {{ student?.first_name || "" }} {{ student?.last_name || "" }}
+          </strong>
+          ចេញពីថ្នាក់នេះមែនទេ?
+          សកម្មភាពនេះមិនអាចលុបចោលបានទេ។
+        </p>
 
-      <div class="actions">
-        <button class="btn-cancel" @click="$emit('close')">
-          បោះបង់
-        </button>
+        <div class="actions">
+          <button class="btn-cancel" @click="$emit('close')">
+            បោះបង់
+          </button>
 
-        <button
-          class="btn-remove"
-          @click="$emit('confirm')"
-          :disabled="loading"
-        >
-          {{ loading ? "កំពុងលុប..." : "លុបសិស្ស" }}
-        </button>
+          <button
+            class="btn-remove"
+            @click="$emit('confirm')"
+            :disabled="loading"
+          >
+            {{ loading ? "កំពុងលុប..." : "លុបសិស្ស" }}
+          </button>
+        </div>
       </div>
     </div>
-  </div>
+  </Teleport>
 </template>
 
 <script setup>
@@ -45,8 +47,13 @@ defineEmits(["close", "confirm"]);
 
 <style scoped>
 .modal-overlay {
-  position: fixed; inset: 0; background: rgba(0,0,0,0.4);
-  display: flex; align-items: center; justify-content: center; z-index: 1050;
+  position: fixed; 
+  inset: 0; 
+  background: rgba(0, 0, 0, 0.5); 
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
+  z-index: 9999; 
 }
 .clean-modal {
   background: white; padding: 2rem; border-radius: 16px;
@@ -61,6 +68,7 @@ defineEmits(["close", "confirm"]);
 .title { font-weight: 700; margin-bottom: 0.5rem; }
 .message { color: #666; font-size: 0.95rem; margin-bottom: 1.5rem; }
 .actions { display: flex; gap: 10px; }
-.btn-cancel { flex: 1; padding: 10px; border: 1px solid #ddd; background: #f9f9f9; border-radius: 8px; }
-.btn-remove { flex: 1; padding: 10px; border: none; background: #e53e3e; color: white; border-radius: 8px; }
+.btn-cancel { flex: 1; padding: 10px; border: 1px solid #ddd; background: #f9f9f9; border-radius: 8px; cursor: pointer; }
+.btn-remove { flex: 1; padding: 10px; border: none; background: #e53e3e; color: white; border-radius: 8px; cursor: pointer; }
+.btn-remove:disabled { opacity: 0.6; cursor: not-allowed; }
 </style>
