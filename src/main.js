@@ -26,6 +26,7 @@ import CreateRoomModal from '@/components/teachermodal/CreateRoomModal.vue'
 import BasePagination from '@/components/common/BasePagination.vue'
 import LogoutModal from '@/components/common/LogoutModal.vue'
 import BaseProfile from '@/components/common/BaseProfile.vue'
+import TeacherDashboardNav from '@/components/teachernavbar/TeacherDashboardNav.vue'
 
 const app = createApp(App)
 
@@ -41,6 +42,7 @@ app.component('CreateRoomModal',CreateRoomModal)
 app.component('BasePagination',BasePagination)
 app.component('LogoutModal',LogoutModal)
 app.component('BaseProfile',BaseProfile)
+app.component('TeacherDashboardNav',TeacherDashboardNav)
 
 app.use(createPinia())
 
