@@ -2,12 +2,7 @@
   <div class="main-content">
     <div class="topbar">
       <div class="left-section">
-        <button class="btn-control d-lg-none" data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu"
-          aria-label="Toggle Sidebar">
-          <i class="fas fa-bars"></i>
-        </button>
 
-  
         <div class="dashboard-icon d-none d-sm-flex">
           <i class="fas fa-users-cog"></i>
         </div>

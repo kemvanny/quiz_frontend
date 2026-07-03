@@ -376,7 +376,7 @@
               <div class="d-flex align-items-center gap-3 flex-wrap">
                 <div class="d-flex align-items-center gap-2">
                   <span class="text-muted small fw-semibold text-nowrap"
-                    >តម្រងវិញ្ញាសា៖</span
+                    >កម្រងវិញ្ញាសា</span
                   >
                   <select
                     v-model="selectedExam"
@@ -401,7 +401,7 @@
                 <span
                   class="badge bg-light text-dark border px-3 py-2 rounded-pill fw-semibold"
                 >
-                  សរុប៖ {{ filteredResults.length }} នាក់
+                  សរុប {{ filteredResults.length }} នាក់
                 </span>
               </div>
             </div>
