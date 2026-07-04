@@ -961,6 +961,8 @@ onMounted(async () => {
       rawMsg.includes("finished")
     ) {
       khmerMessage = "ការប្រឡងត្រូវបានបញ្ចប់រួចរាល់ហើយ!";
+    } else if (rawMsg.includes("Exam is draft.")) {
+      khmerMessage = "វិញ្ញាសាស្ថិតក្នុងទម្រង់ព្រាង!";
     } else if (rawMsg.includes("invalid") || rawMsg.includes("not found")) {
       khmerMessage = "លេខកូដវិញ្ញាសាមិនត្រឹមត្រូវ ឬរកមិនឃើញឡើយ!";
     } else if (rawMsg) {
