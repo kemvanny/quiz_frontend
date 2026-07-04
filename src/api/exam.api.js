@@ -13,12 +13,4 @@ export const joinExam = (examCode) => { return api.get(`/exams/join/${encodeURIC
 export const getExamsInRoom = (roomId) => api.get(`/exams/teacher/rooms/${roomId}`);
 export const getStudentResultsByExam = (examId) => {return api.get(`/exams/results/${examId}`); };
 export const getAllStudentResults = () => {return api.get('/exams/results/all'); };
-export const addFeedback = (submissionId, feedbackData) => {
-  return api.post('/exams/feedback', {
-    submissionId: submissionId,   
-    feedback: feedbackData
-  });
-};
-
-
-  
+export const addFeedback = (submissionId, feedbackData) => {return api.post('/exams/feedback', {submissionId: submissionId,   feedback: feedbackData});};
