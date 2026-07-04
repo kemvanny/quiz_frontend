@@ -1,7 +1,6 @@
 <template>
   <div class="main-content">
     <div class="topbar">
-      <!-- Left Column: Controls + Breadcrumbs + Exam Details -->
       <div class="left-section">
         <button 
           class="btn-control d-lg-none" 
@@ -19,7 +18,6 @@
           <i class="fas fa-arrow-left"></i>
         </button>
 
-        <!-- Dynamic Breadcrumb Trail & Title Stack -->
         <div class="title-area">
           <div class="crumb">
             <router-link to="/teacher/room-management">គ្រប់គ្រងថ្នាក់រៀន</router-link>

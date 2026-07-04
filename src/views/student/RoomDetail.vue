@@ -4,7 +4,10 @@
       <i class="fas fa-arrow-left"></i> <span>ត្រឡប់ក្រោយ</span>
     </button>
 
-    <div v-if="isLoading" class="skeleton-hero-banner skeleton-shimmer mb-4"></div>
+    <div
+      v-if="isLoading"
+      class="skeleton-hero-banner skeleton-shimmer mb-4"
+    ></div>
     <div v-else-if="roomInfo" class="course-hero-banner mb-4">
       <div class="banner-content">
         <div class="course-badge">
@@ -12,8 +15,8 @@
         </div>
         <h1 class="course-title mt-2">{{ roomInfo.room_name }}</h1>
         <p class="course-instructor-meta mb-0">
-          <i class="fas fa-chalkboard-teacher me-2"></i> បង្រៀនដោយ៖ <strong class="ms-1">{{ roomInfo.teacher_name
-            }}</strong>
+          <i class="fas fa-chalkboard-teacher me-2"></i> បង្រៀនដោយ៖
+          <strong class="ms-1">{{ roomInfo.teacher_name }}</strong>
         </p>
       </div>
       <div class="banner-floating-icon">
@@ -28,38 +31,44 @@
     <div v-else class="row g-4 mt-1">
       <div class="col-4 col-md-3">
         <div v-if="isLoading" class="skeleton-sidebar-card">
-          <div class="sk-line-title skeleton-shimmer mb-3" style="width: 60%;"></div>
-          <div class="sk-line-text skeleton-shimmer mb-2" style="width: 100%;"></div>
-          <div class="sk-line-text skeleton-shimmer" style="width: 40%;"></div>
+          <div
+            class="sk-line-title skeleton-shimmer mb-3"
+            style="width: 60%"
+          ></div>
+          <div
+            class="sk-line-text skeleton-shimmer mb-2"
+            style="width: 100%"
+          ></div>
+          <div class="sk-line-text skeleton-shimmer" style="width: 40%"></div>
         </div>
 
         <div v-if="!isLoading" class="stream-sidebar-card">
-          <h5 class="sidebar-card-title"><i class="fas fa-graduation-cap me-2 text-success"></i>ការណែនាំសិក្សា</h5>
+          <h5 class="sidebar-card-title">
+            <i class="fas fa-graduation-cap me-2 text-success"></i
+            >ការណែនាំសិក្សា
+          </h5>
           <div class="sidebar-card-body">
-            <ul class="list-unstyled mb-0 small text-muted d-flex flex-column gap-2">
-              <li><i class="fas fa-check-circle text-success me-2"></i> ពិនិត្យមើលសេចក្តីប្រកាសប្រចាំថ្ងៃ</li>
-              <li><i class="fas fa-check-circle text-success me-2"></i> ចូលធ្វើវិញ្ញាសាឱ្យបានមុនម៉ោងកំណត់</li>
-              <li><i class="fas fa-check-circle text-success me-2"></i> អាចសួរនាំក្នុងប្រអប់មតិយោបល់</li>
+            <ul
+              class="list-unstyled mb-0 small text-muted d-flex flex-column gap-2"
+            >
+              <li>
+                <i class="fas fa-check-circle text-success me-2"></i>
+                ពិនិត្យមើលសេចក្តីប្រកាសប្រចាំថ្ងៃ
+              </li>
+              <li>
+                <i class="fas fa-check-circle text-success me-2"></i>
+                ចូលធ្វើវិញ្ញាសាឱ្យបានមុនម៉ោងកំណត់
+              </li>
+              <li>
+                <i class="fas fa-check-circle text-success me-2"></i>
+                អាចសួរនាំក្នុងប្រអប់មតិយោបល់
+              </li>
             </ul>
           </div>
         </div>
       </div>
 
       <div class="col-8 col-md-9">
-
-        <div v-if="!isLoading" class="announcement-input-box mb-4">
-          <div class="d-flex align-items-center gap-3">
-            <div class="user-avatar-placeholder">
-              <i class="fas fa-user"></i>
-            </div>
-            <div class="flex-grow-1">
-              <button class="fake-input-trigger text-start w-100">
-                ចែករំលែកអ្វីមួយទៅកាន់ថ្នាក់រៀនរបស់អ្នក...
-              </button>
-            </div>
-          </div>
-        </div>
-
         <div v-if="isLoading">
           <div v-for="n in 2" :key="n" class="skeleton-post-card mb-4">
             <div class="sk-header d-flex align-items-center gap-3">
@@ -70,78 +79,144 @@
               </div>
             </div>
             <div class="sk-body">
-              <div class="sk-line-text skeleton-shimmer mb-2" style="width: 100%;"></div>
-              <div class="sk-line-text skeleton-shimmer mb-2" style="width: 85%;"></div>
-              <div class="sk-line-text skeleton-shimmer" style="width: 50%;"></div>
+              <div
+                class="sk-line-text skeleton-shimmer mb-2"
+                style="width: 100%"
+              ></div>
+              <div
+                class="sk-line-text skeleton-shimmer mb-2"
+                style="width: 85%"
+              ></div>
+              <div
+                class="sk-line-text skeleton-shimmer"
+                style="width: 50%"
+              ></div>
             </div>
           </div>
         </div>
 
         <div v-else>
-          <div v-if="streamPosts.length === 0" class="text-center card p-5 border-dashed text-muted">
+          <div
+            v-if="streamPosts.length === 0"
+            class="text-center card p-5 border-dashed text-muted"
+          >
             <i class="far fa-folder-open display-4 m-auto text-secondary"></i>
-            <p class="mb-0 mt-4">មិនទាន់មានការបង្ហោះ ឬសេចក្តីប្រកាសណាមួយនៅក្នុងបន្ទប់សិក្សានេះទេ!</p>
+            <p class="mb-0 mt-4">
+              មិនទាន់មានការបង្ហោះ ឬសេចក្តីប្រកាសណាមួយនៅក្នុងបន្ទប់សិក្សានេះទេ!
+            </p>
           </div>
 
-          <div v-for="post in displayedPosts" :key="post.id" class="stream-post-card mb-4">
+          <div
+            v-for="post in displayedPosts"
+            :key="post.id"
+            class="stream-post-card mb-4"
+          >
             <div class="post-header">
-              <div class="author-avatar" style="background-color: var(--em-soft); color: var(--em-dk);">
-                <i class="fas fa-user"></i>    
+              <div
+                class="author-avatar"
+                style="background-color: var(--em-soft); color: var(--em-dk)"
+              >
+                <i class="fas fa-user"></i>
               </div>
-          
+
               <div class="author-info">
-                <h6 class="author-name">{{ roomInfo?.teacher_name || 'គ្រូបង្រៀន' }} <span
-                    class="badge-teacher">គ្រូបង្រៀន</span></h6>
-                <span class="post-date">បានបង្ហោះនៅ៖ {{ formatDate(post.created_at) }}</span>
+                <h6 class="author-name">
+                  {{ roomInfo?.teacher_name || "គ្រូបង្រៀន" }}
+                  <span class="badge-teacher">គ្រូបង្រៀន</span>
+                </h6>
+                <span class="post-date"
+                  >បានបង្ហោះនៅ៖ {{ formatDate(post.created_at) }}</span
+                >
               </div>
-              <button class="btn-more-options"><i class="fas fa-ellipsis-v"></i></button>
+              <button class="btn-more-options">
+                <i class="fas fa-ellipsis-v"></i>
+              </button>
             </div>
 
             <div class="post-body">
-              <h5 v-if="post.title" class="post-title-text mb-2">{{ post.title }}</h5>
+              <h5 v-if="post.title" class="post-title-text mb-2">
+                {{ post.title }}
+              </h5>
               <p class="post-text mb-0">{{ post.message }}</p>
 
-              <div v-if="post.exam_link" class="exam-action-block mt-3">
-                <a :href="isExamExpired(post.exam_expired_at) ? undefined : post.exam_link" target="_blank"
+              <div
+                v-if="post.exam_link || post.exam_id === null"
+                class="exam-action-block mt-3"
+              >
+                <div
+                  v-if="post.exam_id === null"
+                  class="d-flex align-items-center justify-content-center p-3 rounded-3 border bg-light text-center"
+                  style="border-style: dashed"
+                >
+                  <i class="fas fa-trash-alt text-danger fa-2x me-3"></i>
+
+                  <div>
+                    <h6 class="mb-1 fw-bold text-danger">
+                      វិញ្ញាសានេះត្រូវបានលុប
+                    </h6>
+                    <small class="text-muted">
+                      វិញ្ញាសានេះត្រូវបានគ្រូរបស់អ្នកលុបចេញហើយ
+                      មិនអាចចូលធ្វើបានទៀតទេ។
+                    </small>
+                  </div>
+                </div>
+
+                <a
+                  v-else
+                  :href="
+                    isExamExpired(post.exam_expired_at)
+                      ? undefined
+                      : post.exam_link
+                  "
+                  target="_blank"
                   class="btn w-100 py-2 shadow-sm d-flex align-items-center justify-content-center gap-2"
-                  :class="isExamExpired(post.exam_expired_at) ? 'btn-secondary disabled-btn-style' : 'btn-success text-white'"
-                  :style="isExamExpired(post.exam_expired_at) ? 'pointer-events: none; cursor: not-allowed; opacity: 0.65;' : ''">
+                  :class="
+                    isExamExpired(post.exam_expired_at)
+                      ? 'btn-secondary disabled-btn-style'
+                      : 'btn-success text-white'
+                  "
+                  :style="
+                    isExamExpired(post.exam_expired_at)
+                      ? 'pointer-events: none; cursor: not-allowed; opacity: 0.65;'
+                      : ''
+                  "
+                >
                   <template v-if="isExamExpired(post.exam_expired_at)">
-                    <i class="fas fa-lock"></i> ការប្រឡងត្រូវបានបិទ/ហួសពេលកំណត់ហើយ
+                    <i class="fas fa-lock"></i>
+                    ការប្រឡងត្រូវបានបិទ/ហួសពេលកំណត់/គ្រូរបស់អ្នកបានលុបចេញ
                   </template>
+
                   <template v-else>
-                    <i class="fas fa-file-signature"></i> ចុចទីនេះដើម្បីចូលទៅធ្វើការប្រឡង
+                    <i class="fas fa-file-signature"></i>
+                    ចុចទីនេះដើម្បីចូលទៅធ្វើការប្រឡង
                   </template>
                 </a>
               </div>
             </div>
-
-            <div class="post-footer">
-              <button class="footer-action-btn">
-                <i class="far fa-comment-alt me-2"></i> បន្ថែមមតិយោបល់ក្នុងថ្នាក់...
-              </button>
-            </div>
           </div>
 
-          <div v-if="!isAllLoaded && streamPosts.length > 0" class="text-center my-4">
-            <button @click="loadMorePosts" class="btn btn-outline-success px-4 py-2 rounded-pill fw-bold shadow-sm">
+          <div
+            v-if="!isAllLoaded && streamPosts.length > 0"
+            class="text-center my-4"
+          >
+            <button
+              @click="loadMorePosts"
+              class="btn btn-outline-success px-4 py-2 rounded-pill fw-bold shadow-sm"
+            >
               មើលបន្ថែម <i class="fas fa-chevron-down ms-1"></i>
             </button>
           </div>
-
         </div>
-
       </div>
     </div>
-
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue';
-import { useRoute } from 'vue-router';
-import studentApi from '@/api/student.api';
-import { useRouter } from 'vue-router';
+import { ref, onMounted, computed } from "vue";
+import { useRoute } from "vue-router";
+import studentApi from "@/api/student.api";
+import { useRouter } from "vue-router";
 
 const router = useRouter();
 
@@ -151,9 +226,11 @@ const roomId = route.params.room_id || route.params.id;
 const roomInfo = ref(null);
 const streamPosts = ref([]);
 const isLoading = ref(false);
-const errorMessage = ref('');
+const errorMessage = ref("");
 const visibleCount = ref(3);
-const isAllLoaded = computed(() => visibleCount.value >= streamPosts.value.length);
+const isAllLoaded = computed(
+  () => visibleCount.value >= streamPosts.value.length,
+);
 const displayedPosts = computed(() => {
   return streamPosts.value.slice(0, visibleCount.value);
 });
@@ -168,12 +245,12 @@ const goBack = () => {
 
 const fetchRoomData = async () => {
   isLoading.value = true;
-  errorMessage.value = '';
+  errorMessage.value = "";
 
   try {
     const [roomRes, postsRes] = await Promise.all([
       studentApi.getRoomDetail(roomId),
-      studentApi.getRoomPosts(roomId)
+      studentApi.getRoomPosts(roomId),
     ]);
 
     if (roomRes.data && roomRes.data.result === true) {
@@ -184,7 +261,8 @@ const fetchRoomData = async () => {
       streamPosts.value = postsRes.data.data;
     }
   } catch (error) {
-    errorMessage.value = "មិនអាចទាញយកទិន្នន័យថ្នាក់រៀនបានទេ! សូមព្យាយាមម្ដងទៀត។";
+    errorMessage.value =
+      "មិនអាចទាញយកទិន្នន័យថ្នាក់រៀនបានទេ! សូមព្យាយាមម្ដងទៀត។";
   } finally {
     setTimeout(() => {
       isLoading.value = false;
@@ -193,29 +271,33 @@ const fetchRoomData = async () => {
 };
 
 const isExamExpired = (expiredDateString) => {
-  if (!expiredDateString || expiredDateString === 'null' || expiredDateString.trim() === '') {
-    return true; 
+  if (
+    !expiredDateString ||
+    expiredDateString === "null" ||
+    expiredDateString.trim() === ""
+  ) {
+    return true;
   }
   const now = new Date();
   let formattedDateStr = expiredDateString;
-  if (!formattedDateStr.includes('Z') && !formattedDateStr.includes('+')) {
-    formattedDateStr = formattedDateStr.replace(' ', 'T') + '+07:00';
+  if (!formattedDateStr.includes("Z") && !formattedDateStr.includes("+")) {
+    formattedDateStr = formattedDateStr.replace(" ", "T") + "+07:00";
   }
 
   const expiryLimit = new Date(formattedDateStr);
   if (isNaN(expiryLimit.getTime())) {
-    return true; 
+    return true;
   }
   return now.getTime() > expiryLimit.getTime();
 };
 
 const formatDate = (dateString) => {
-  if (!dateString) return '';
+  if (!dateString) return "";
   const date = new Date(dateString);
-  return date.toLocaleDateString('km-KH', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
+  return date.toLocaleDateString("km-KH", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
   });
 };
 

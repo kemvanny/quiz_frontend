@@ -148,8 +148,19 @@
                   placeholder="សរសេរការប្រកាស..."
                 ></textarea>
                 <div class="composer-actions">
-                  <button class="btn-post" @click="handleCreatePost">
-                    ការបង្ហោះ
+                  <button
+                    class="btn-post"
+                    @click="handleCreatePost"
+                    :disabled="isPosting"
+                  >
+                    <span
+                      v-if="isPosting"
+                      class="spinner-border spinner-border-sm me-2"
+                      role="status"
+                      aria-hidden="true"
+                    ></span>
+
+                    {{ isPosting ? "កំពុងបង្ហោះ..." : "ការបង្ហោះ" }}
                   </button>
                 </div>
               </div>
@@ -202,11 +213,18 @@
                         class="action-dropdown"
                         v-if="activeMenu === post.id"
                       >
-                        <button @click="openEditModal(post)">
-                          <i class="fas fa-edit me-2"></i>Edit
+                        <button
+                          class="text-warning"
+                          @click="openEditModal(post)"
+                        >
+                          <i class="fas fa-edit me-2 text-warning"></i>Edit
                         </button>
-                        <button class="danger" @click="handleDelete(post.id)">
-                          <i class="fas fa-trash me-2"></i>Delete
+                        <button
+                          class="danger"
+                          @click="openDeletePostModal(post)"
+                        >
+                          <i class="fas fa-trash me-2"></i>
+                          Delete
                         </button>
                       </div>
                     </div>
@@ -216,40 +234,80 @@
                     <p>{{ post.message }}</p>
                   </div>
 
+                  <!-- EXAM BLOCK -->
                   <div
-                    v-if="post.exam_link || post.examLink"
-                    class="assignment-card-link d-flex align-items-center border rounded-3 shadow-sm overflow-hidden mt-3 mb-2 bg-white p-2"
+                    v-if="
+                      post.exam_link || post.examLink || post.exam_id === null
+                    "
+                    class="mt-3 mb-2"
                   >
+                    <!-- CASE 1: Exam was deleted -->
                     <div
-                      class="d-flex align-items-center justify-content-center"
-                      style="
-                        width: 70px;
-                        height: 70px;
-                        background-color: #f6993f;
-                        flex-shrink: 0;
-                        border-radius: 8px;
-                      "
+                      v-if="post.exam_id === null"
+                      class="d-flex align-items-center border rounded-3 shadow-sm bg-light p-3"
                     >
-                      <i class="fas fa-laptop-code text-white fa-2x"></i>
-                    </div>
-                    <div class="p-3 flex-grow-1">
-                      <h6 class="mb-0 fw-bold text-dark">
-                        {{ post.title || "វិញ្ញាសាប្រឡង" }}
-                      </h6>
-                    </div>
-                    <div class="pe-3">
-                      <button
-                        class="btn btn-sm px-3 rounded-pill"
+                      <div
+                        class="d-flex align-items-center justify-content-center me-3"
                         style="
-                          background-color: #e6fffa;
-                          color: #38b2ac;
-                          font-weight: 600;
-                          border: 1px solid #b2f5ea;
+                          width: 60px;
+                          height: 60px;
+                          background-color: #f8d7da;
+                          border-radius: 8px;
                         "
-                        @click="viewExamResults(post.exam_id)"
                       >
-                        <i class="fas fa-chart-bar me-1"></i> មើលលទ្ធផល
-                      </button>
+                        <i
+                          class="fas fa-exclamation-triangle text-danger fa-2x"
+                        ></i>
+                      </div>
+
+                      <div class="flex-grow-1">
+                        <h6 class="mb-1 fw-bold text-danger">
+                          វិញ្ញាសាត្រូវបានលុប
+                        </h6>
+                        <small class="text-muted">
+                          វិញ្ញាសានេះត្រូវបានលុបចេញហើយ មិនអាចចូលមើលបានទៀតទេ។
+                        </small>
+                      </div>
+                    </div>
+
+                    <!-- CASE 2: Exam still exists -->
+                    <div
+                      v-else
+                      class="assignment-card-link d-flex align-items-center border rounded-3 shadow-sm overflow-hidden bg-white p-2"
+                    >
+                      <div
+                        class="d-flex align-items-center justify-content-center"
+                        style="
+                          width: 70px;
+                          height: 70px;
+                          background-color: #f6993f;
+                          flex-shrink: 0;
+                          border-radius: 8px;
+                        "
+                      >
+                        <i class="fas fa-laptop-code text-white fa-2x"></i>
+                      </div>
+
+                      <div class="p-3 flex-grow-1">
+                        <h6 class="mb-0 fw-bold text-dark">
+                          {{ post.title || "វិញ្ញាសាប្រឡង" }}
+                        </h6>
+                      </div>
+
+                      <div class="pe-3">
+                        <button
+                          class="btn btn-sm px-3 rounded-pill"
+                          style="
+                            background-color: #e6fffa;
+                            color: #38b2ac;
+                            font-weight: 600;
+                            border: 1px solid #b2f5ea;
+                          "
+                          @click="viewExamResults(post.exam_id)"
+                        >
+                          <i class="fas fa-chart-bar me-1"></i> មើលលទ្ធផល
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -429,8 +487,10 @@
                       >
                         ពិន្ទុ
                       </th>
-                      <th class="text-secondary text-uppercase py-3 text-center"
-                        style="font-size: 0.75rem; letter-spacing: 0.5px">
+                      <th
+                        class="text-secondary text-uppercase py-3 text-center"
+                        style="font-size: 0.75rem; letter-spacing: 0.5px"
+                      >
                         កាលបរិច្ឆេទ
                       </th>
                       <th
@@ -604,24 +664,107 @@
     @click.self="isEditModalOpen = false"
   >
     <div class="edit-modal">
-      <h6>Edit Post</h6>
-      <input
-        v-model="editPost.title"
-        class="form-control mb-2"
-        placeholder="ចំណងជើង..."
-      />
-      <textarea
-        v-model="editPost.message"
-        class="form-control mb-2"
-        rows="3"
-        placeholder="សរសេរការប្រកាស..."
-      ></textarea>
-      <input v-model="editPost.exam_link" type="hidden" />
-      <div class="d-flex justify-content-end gap-2 mt-3">
-        <button class="btn-cancel" @click="isEditModalOpen = false">
-          Cancel
+      <!-- Header -->
+      <div class="modal-header">
+        <div>
+          <h5 class="modal-title">កែប្រែការបង្ហោះ</h5>
+          <p class="modal-subtitle">កែប្រែព័ត៌មាននៃការបង្ហោះរបស់អ្នក</p>
+        </div>
+
+        <button class="btn-close-modal" @click="isEditModalOpen = false">
+          <i class="fas fa-times"></i>
         </button>
-        <button class="btn-post" @click="handleUpdate">Save</button>
+      </div>
+
+      <!-- Body -->
+      <div class="modal-body">
+        <label class="form-label">ចំណងជើង</label>
+        <input
+          v-model="editPost.title"
+          class="form-control modern-input"
+          placeholder="បញ្ចូលចំណងជើង..."
+        />
+
+        <label class="form-label mt-3">ខ្លឹមសារ</label>
+        <textarea
+          v-model="editPost.message"
+          class="form-control modern-input"
+          rows="5"
+          placeholder="សរសេរការប្រកាស..."
+        ></textarea>
+
+        <input v-model="editPost.exam_link" type="hidden" />
+      </div>
+
+      <!-- Footer -->
+      <div class="modal-footer">
+        <button
+          class="btn-modern btn-cancel-modern"
+          @click="isEditModalOpen = false"
+        >
+          <i class="fas fa-times me-2"></i>
+          បោះបង់
+        </button>
+
+        <button
+          class="btn-modern btn-save-modern"
+          @click="handleUpdate"
+          :disabled="isUpdating"
+        >
+          <span
+            v-if="isUpdating"
+            class="spinner-border spinner-border-sm me-2"
+            role="status"
+            aria-hidden="true"
+          ></span>
+
+          <i v-else class="fas fa-save me-2"></i>
+
+          {{ isUpdating ? "កំពុងរក្សាទុក..." : "រក្សាទុក" }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div
+    v-if="isDeletePostModalOpen"
+    class="modal-overlay"
+    @click.self="isDeletePostModalOpen = false"
+  >
+    <div class="delete-modal">
+      <div class="delete-icon">
+        <i class="fas fa-trash-alt"></i>
+      </div>
+
+      <h4>លុបការបង្ហោះ?</h4>
+
+      <p>
+        តើអ្នកប្រាកដថាចង់លុបការបង្ហោះនេះមែនទេ?
+        <br />
+        សកម្មភាពនេះមិនអាចត្រឡប់វិញបានទេ។
+      </p>
+
+      <div class="delete-actions">
+        <button
+          class="btn-cancel-delete"
+          @click="isDeletePostModalOpen = false"
+          :disabled="isDeletingPost"
+        >
+          បោះបង់
+        </button>
+
+        <button
+          class="btn-confirm-delete"
+          @click="confirmDeletePost"
+          :disabled="isDeletingPost"
+        >
+          <span
+            v-if="isDeletingPost"
+            class="spinner-border spinner-border-sm me-2"
+          ></span>
+
+          {{ isDeletingPost ? "កំពុងលុប..." : "លុប" }}
+        </button>
       </div>
     </div>
   </div>
@@ -681,6 +824,11 @@ const selectedExam = ref("all");
 const currentPage = ref(1);
 const itemsPerPage = ref(10);
 const isDeleting = ref(false);
+const isPosting = ref(false);
+const isUpdating = ref(false);
+const isDeletePostModalOpen = ref(false);
+const postToDelete = ref(null);
+const isDeletingPost = ref(false);
 
 const BASE_IMAGE_URL = import.meta.env.VITE_BASE_URL_FOR_IMAGE;
 
@@ -827,11 +975,12 @@ const fetchPosts = async () => {
   }
 };
 
-//create post
 const handleCreatePost = async () => {
-  if (!newPost.value.message.trim()) return;
+  if (!newPost.value.message.trim() || isPosting.value) return;
 
   try {
+    isPosting.value = true;
+
     await createPost(props.roomId, {
       title: newPost.value.title,
       message: newPost.value.message,
@@ -845,11 +994,20 @@ const handleCreatePost = async () => {
       message: "",
       examLink: "",
     };
+
     await fetchPosts();
   } catch (err) {
     console.error("កំហុស:", err.response?.data);
     toast.error("មានកំហុស");
+  } finally {
+    isPosting.value = false;
   }
+};
+
+const openDeletePostModal = (post) => {
+  postToDelete.value = post;
+  isDeletePostModalOpen.value = true;
+  activeMenu.value = null;
 };
 
 //delete post
@@ -863,13 +1021,17 @@ const handleDelete = async (postId) => {
   }
 };
 
-//update post
 const handleUpdate = async () => {
+  if (isUpdating.value) return;
+
   try {
+    isUpdating.value = true;
+
     const payload = {
       title: editPost.value.title,
       message: editPost.value.message,
     };
+
     await updatePost(editPost.value.id, payload);
 
     toast.success("បានកែប្រែជោគជ័យ!");
@@ -878,6 +1040,8 @@ const handleUpdate = async () => {
   } catch (err) {
     console.error("កំហុស:", err.response?.data);
     toast.error("មិនអាចកែប្រែបាន");
+  } finally {
+    isUpdating.value = false;
   }
 };
 
@@ -894,12 +1058,10 @@ const confirmDelete = async () => {
   try {
     isDeleting.value = true;
 
-    // IMPORTANT: make sure this is correct ID
     const studentId = studentToDelete.value.id;
 
     await removeStudentFromRoom(props.roomId, studentId);
 
-    // update UI locally first (NO reload flicker)
     students.value = students.value.filter((s) => s.id !== studentId);
 
     toast.success("បានលុបសិស្សជោគជ័យ!");
@@ -912,9 +1074,29 @@ const confirmDelete = async () => {
     studentToDelete.value = null;
   }
 };
-//toggle menu
 const toggleMenu = (postId) => {
   activeMenu.value = activeMenu.value === postId ? null : postId;
+};
+
+const confirmDeletePost = async () => {
+  if (!postToDelete.value || isDeletingPost.value) return;
+
+  try {
+    isDeletingPost.value = true;
+
+    await deletePost(props.roomId, postToDelete.value.id);
+
+    toast.success("បានលុបការបង្ហោះជោគជ័យ!");
+
+    posts.value = posts.value.filter((p) => p.id !== postToDelete.value.id);
+
+    isDeletePostModalOpen.value = false;
+    postToDelete.value = null;
+  } catch (err) {
+    toast.error("មិនអាចលុបបាន");
+  } finally {
+    isDeletingPost.value = false;
+  }
 };
 
 //open edit modal
@@ -1017,6 +1199,22 @@ onMounted(async () => {
   border-collapse: separate !important;
   border-spacing: 0 12px !important;
   width: 100%;
+}
+.btn-post:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.btn-post {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.btn-modern:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+  pointer-events: none;
 }
 
 .custom-results-table thead tr th {
@@ -2322,5 +2520,219 @@ tbody tr td:last-child {
 .btn-remove-students:hover {
   background: #ef4444;
   color: white;
+}
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.55);
+  backdrop-filter: blur(5px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  animation: fadeIn 0.25s ease;
+}
+
+.edit-modal {
+  width: 95%;
+  max-width: 560px;
+  background: #fff;
+  border-radius: 22px;
+  overflow: hidden;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.18);
+  animation: popup 0.25s ease;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 24px 28px;
+  border-bottom: 1px solid #edf2f7;
+}
+
+.modal-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin: 0;
+  color: #1e293b;
+}
+
+.modal-subtitle {
+  margin-top: 6px;
+  margin-bottom: 0;
+  color: #64748b;
+  font-size: 0.9rem;
+}
+
+.btn-close-modal {
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 50%;
+  background: #f8fafc;
+  color: #64748b;
+  cursor: pointer;
+  transition: 0.25s;
+}
+
+.btn-close-modal:hover {
+  background: #e2e8f0;
+  color: #0f172a;
+  transform: rotate(90deg);
+}
+
+.modal-body {
+  padding: 24px 28px;
+}
+
+.form-label {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #475569;
+  margin-bottom: 8px;
+}
+
+.modern-input {
+  border: 1px solid #dbe4ee;
+  border-radius: 14px;
+  padding: 12px 16px;
+  transition: 0.25s;
+  box-shadow: none;
+}
+
+.modern-input:focus {
+  border-color: #6366f1;
+  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.12);
+}
+
+textarea.modern-input {
+  resize: none;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 20px 28px;
+  border-top: 1px solid #edf2f7;
+}
+
+.btn-modern {
+  border: none;
+  padding: 11px 22px;
+  border-radius: 12px;
+  font-weight: 600;
+  transition: 0.25s;
+}
+
+.btn-cancel-modern {
+  background: #f1f5f9;
+  color: #475569;
+}
+
+.btn-cancel-modern:hover {
+  background: #e2e8f0;
+}
+
+.btn-save-modern {
+  background: linear-gradient(135deg, #3fba7f, #49d390);
+  color: white;
+  box-shadow: 0 8px 20px rgba(99, 102, 241, 0.25);
+}
+
+.btn-save-modern:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 28px rgba(99, 102, 241, 0.35);
+}
+
+@keyframes popup {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.delete-modal {
+  width: 420px;
+  max-width: 95%;
+  background: #fff;
+  border-radius: 20px;
+  padding: 30px;
+  text-align: center;
+  animation: popup 0.25s;
+}
+
+.delete-icon {
+  width: 75px;
+  height: 75px;
+  margin: auto;
+  margin-bottom: 18px;
+  border-radius: 50%;
+  background: #fff1f2;
+  color: #ef4444;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+}
+
+.delete-modal h4 {
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.delete-modal p {
+  color: #64748b;
+  line-height: 1.6;
+  margin-bottom: 28px;
+}
+
+.delete-actions {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+.btn-cancel-delete {
+  padding: 10px 24px;
+  border: none;
+  border-radius: 10px;
+  background: #f1f5f9;
+  font-weight: 600;
+}
+
+.btn-confirm-delete {
+  padding: 10px 24px;
+  border: none;
+  border-radius: 10px;
+  background: #ef4444;
+  color: #fff;
+  font-weight: 600;
+  transition: 0.25s;
+}
+
+.btn-confirm-delete:hover:not(:disabled) {
+  background: #dc2626;
+}
+
+.btn-confirm-delete:disabled,
+.btn-cancel-delete:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
 }
 </style>

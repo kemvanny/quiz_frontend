@@ -1,12 +1,11 @@
 <template>
   <div class="room-page">
-    
-    <!-- Unified White Card Container (Matching Student Results Aesthetic) -->
-    <div class="card border-0 shadow-sm rounded-4 overflow-hidden custom-exams-card">
-      
-      <!-- Card Header containing the integrated Toolbar -->
-      <div class="card-header bg-white border-bottom-0 pt-4 px-4 pb-0 d-flex align-items-center justify-content-between flex-wrap gap-3">
-        <!-- Left side: Interactive Stats Badge -->
+    <div
+      class="card border-0 shadow-sm rounded-4 overflow-hidden custom-exams-card"
+    >
+      <div
+        class="card-header bg-white border-bottom-0 pt-4 px-4 pb-0 d-flex align-items-center justify-content-between flex-wrap gap-3"
+      >
         <div class="toolbar-left">
           <span class="stats-badge">
             <i class="fas fa-clipboard-list me-2"></i>
@@ -14,89 +13,123 @@
           </span>
         </div>
 
-        <!-- Right side: Polished Dropdown Selector -->
         <div class="toolbar-right">
           <div class="select-wrapper">
             <i class="fas fa-filter select-icon"></i>
             <select class="sort-select" v-model="statusFilter">
               <option value="all">ស្ថានភាពទាំងអស់</option>
-              <option value="active">សកម្ម </option>
-              <option value="draft">ព្រាង </option>
+              <option value="active">សកម្ម</option>
+              <option value="draft">ព្រាង</option>
             </select>
           </div>
         </div>
       </div>
 
-      <!-- Card Body containing the Exam Rows -->
       <div class="card-body px-4 pb-4 pt-3">
-        
-        <!-- Loading State -->
         <div v-if="loading" class="state-empty border-0 shadow-none">
-          <div class="spinner-border text-success spinner-border-sm" role="status"></div>
+          <div
+            class="spinner-border text-success spinner-border-sm"
+            role="status"
+          ></div>
           <p class="mt-2 mb-0">កំពុងទាញយក...</p>
         </div>
 
-        <!-- Empty State -->
-        <div v-else-if="filteredByStatus.length === 0" class="state-empty border-0 shadow-none">
-          <i class="fas fa-folder-open empty-icon"></i>
-          <p class="mb-0">មិនមានវិញ្ញាសា</p>
+        <div
+          v-else-if="filteredByStatus.length === 0"
+          class="state-empty border-0 shadow-none"
+        >
+          <i class="fas fa-folder-open empty-icon m-auto"></i>
+          <p class="mb-0 mt-3">មិនមានវិញ្ញាសារ</p>
         </div>
 
-        <!-- Exam Row Lists -->
-        <div  class="exam-list">
+        <div class="exam-list">
           <div
-            class="exam-row" 
-            v-for="exam in paginatedExams" 
-            :key="exam.id" 
-            @click="viewExamDetails(exam.id)" 
+            class="exam-row"
+            v-for="exam in paginatedExams"
+            :key="exam.id"
+            @click="viewExamDetails(exam.id)"
           >
-            <div class="row-icon" :class="exam.status === 'active' ? 'ic-active' : 'ic-draft'">
+            <div
+              class="row-icon"
+              :class="exam.status === 'active' ? 'ic-active' : 'ic-draft'"
+            >
               <i class="fas fa-file-alt"></i>
             </div>
 
             <div class="row-main">
               <div class="row-title-container">
                 <h3 class="row-title">{{ exam.title }}</h3>
-                <span class="row-tag text-uppercase">{{ exam.type || 'quiz' }}</span>
+                <span class="row-tag text-uppercase">{{
+                  exam.type || "quiz"
+                }}</span>
               </div>
               <div class="row-sub">
-                <span class="sub-item"><i class="far fa-clock"></i> {{ exam.duration }} នាទី</span>
+                <span class="sub-item"
+                  ><i class="far fa-clock"></i> {{ exam.duration }} នាទី</span
+                >
                 <div class="dot"></div>
-                <span class="sub-item"><i class="far fa-user"></i>  {{ authStore.profile?.firstName || authStore.profile?.lastName 
-                  ? `${authStore.profile.firstName || ''} ${authStore.profile.lastName || ''}`.trim() 
-                  : 'Defualt' }}
+                <span class="sub-item"
+                  ><i class="far fa-user"></i>
+                  {{
+                    authStore.profile?.firstName || authStore.profile?.lastName
+                      ? `${authStore.profile.firstName || ""} ${authStore.profile.lastName || ""}`.trim()
+                      : "Defualt"
+                  }}
                 </span>
                 <div class="dot"></div>
                 <span class="row-pts">
-                  <i class="fas fa-star text-warning me-1"></i>{{ exam.total_points !== undefined && exam.total_points !== null ? exam.total_points : 0 }} ពិន្ទុ
+                  <i class="fas fa-star text-warning me-1"></i
+                  >{{
+                    exam.total_points !== undefined &&
+                    exam.total_points !== null
+                      ? exam.total_points
+                      : 0
+                  }}
+                  ពិន្ទុ
                 </span>
               </div>
             </div>
 
             <div class="row-meta-actions" @click.stop>
-              <span class="ec-badge" :class="exam.status === 'active' ? 'b-active' : 'b-draft'">
+              <span
+                class="ec-badge"
+                :class="exam.status === 'active' ? 'b-active' : 'b-draft'"
+              >
                 {{ exam.status }}
               </span>
-              
+
               <div class="vertical-divider"></div>
 
               <div class="action-buttons">
-                <button class="icon-btn btn-edit" @click.stop="handleUpdate(exam)" title="កែប្រែ">
+                <button
+                  class="icon-btn btn-edit"
+                  @click.stop="handleUpdate(exam)"
+                  title="កែប្រែ"
+                >
                   <i class="far fa-edit"></i>
                 </button>
-                <button class="icon-btn btn-del" @click.stop="handleDelete(exam)" title="លុប">
+                <button
+                  class="icon-btn btn-del"
+                  @click.stop="handleDelete(exam)"
+                  title="លុប"
+                >
                   <i class="far fa-trash-alt"></i>
                 </button>
               </div>
             </div>
           </div>
         </div>
-
       </div>
-      <!-- Pagination -->
-      <div v-if="totalPages > 1" class="card-footer bg-white border-top-0 px-4 pb-4 pt-0 d-flex justify-content-center">
+      <div
+        v-if="totalPages > 1"
+        class="card-footer bg-white border-top-0 px-4 pb-4 pt-0 d-flex justify-content-center"
+      >
         <div class="pagination-wrapper">
-          <button class="pg-btn pg-arrow" :disabled="currentPage === 1" @click="currentPage--">
+          <button
+            class="pg-btn pg-arrow"
+            :disabled="currentPage === 1"
+            @click="currentPage--"
+          >
             <i class="fas fa-chevron-left"></i>
           </button>
 
@@ -110,275 +143,343 @@
             {{ page }}
           </button>
 
-          <button class="pg-btn pg-arrow" :disabled="currentPage === totalPages" @click="currentPage++">
+          <button
+            class="pg-btn pg-arrow"
+            :disabled="currentPage === totalPages"
+            @click="currentPage++"
+          >
             <i class="fas fa-chevron-right"></i>
           </button>
         </div>
       </div>
     </div>
 
-    <!-- Edit Modal -->
-    <div v-if="showUpdateModal" class="modal-backdrop-custom d-flex align-items-center justify-content-center" @click.self="showUpdateModal = false">
-      <div class="modal-dialog-custom p-4 bg-white rounded-4 shadow-lg slide-in" style="width: 100%; max-width: 460px;">
+    <div
+      v-if="showUpdateModal"
+      class="modal-backdrop-custom d-flex align-items-center justify-content-center"
+      @click.self="showUpdateModal = false"
+    >
+      <div
+        class="modal-dialog-custom p-4 bg-white rounded-4 shadow-lg slide-in"
+        style="width: 100%; max-width: 460px"
+      >
         <div class="d-flex justify-content-between align-items-center mb-3">
-          <h5 class="fw-bold text-dark m-0"><i class="far fa-edit text-success me-2"></i>កែប្រែព័ត៌មានវិញ្ញាសា</h5>
-          <button class="btn-close shadow-none" style="font-size: 0.8rem;" @click="showUpdateModal = false"></button>
+          <h5 class="fw-bold text-dark m-0">
+            <i class="far fa-edit text-success me-2"></i>កែប្រែព័ត៌មានវិញ្ញាសា
+          </h5>
+          <button
+            class="btn-close shadow-none"
+            style="font-size: 0.8rem"
+            @click="showUpdateModal = false"
+          ></button>
         </div>
-        
+
         <form @submit.prevent="submitUpdateExam">
           <div class="mb-3 text-start">
-            <label class="form-label small fw-bold text-muted">ចំណងជើងវិញ្ញាសា</label>
-            <input type="text" v-model="editForm.title" class="form-control rounded-3 border-light-subtle shadow-sm small-input" required>
+            <label class="form-label small fw-bold text-muted"
+              >ចំណងជើងវិញ្ញាសា</label
+            >
+            <input
+              type="text"
+              v-model="editForm.title"
+              class="form-control rounded-3 border-light-subtle shadow-sm small-input"
+              required
+            />
           </div>
-          
+
           <div class="mb-3 text-start">
-            <label class="form-label small fw-bold text-muted">រយៈពេលប្រឡង-នាទី</label>
-            <input type="number" v-model.number="editForm.duration" class="form-control rounded-3 border-light-subtle shadow-sm small-input" required min="1">
+            <label class="form-label small fw-bold text-muted"
+              >រយៈពេលប្រឡង-នាទី</label
+            >
+            <input
+              type="number"
+              v-model.number="editForm.duration"
+              class="form-control rounded-3 border-light-subtle shadow-sm small-input"
+              required
+              min="1"
+            />
           </div>
 
           <div class="mb-4 text-start">
-            <label class="form-label small fw-bold text-muted">ការពិពណ៌នា</label>
-            <textarea v-model="editForm.description" class="form-control rounded-3 border-light-subtle shadow-sm small-input" rows="3"></textarea>
+            <label class="form-label small fw-bold text-muted"
+              >ការពិពណ៌នា</label
+            >
+            <textarea
+              v-model="editForm.description"
+              class="form-control rounded-3 border-light-subtle shadow-sm small-input"
+              rows="3"
+            ></textarea>
           </div>
 
           <div class="d-flex gap-2 justify-content-end border-top pt-3">
-            <button type="button" class="btn btn-light rounded-3 px-4 fw-bold text-muted small" @click="showUpdateModal = false" :disabled="isProcessing">បោះបង់</button>
-            <button type="submit" class="btn btn-emerald rounded-3 px-4 fw-bold small d-flex align-items-center gap-2" :disabled="isProcessing">
-              <span v-if="isProcessing" class="spinner-border spinner-border-sm" role="status"></span>
-              {{ isProcessing ? 'កំពុងរក្សាទុក...' : 'រក្សាទុកការកែប្រែ' }}
+            <button
+              type="button"
+              class="btn btn-light rounded-3 px-4 fw-semibold text-muted small"
+              @click="showUpdateModal = false"
+              :disabled="isProcessing"
+            >
+              បោះបង់
+            </button>
+            <button
+              type="submit"
+              class="btn btn-emerald rounded-3 px-4 fw-semibold small d-flex align-items-center gap-2"
+              :disabled="isProcessing"
+            >
+              <span
+                v-if="isProcessing"
+                class="spinner-border spinner-border-sm"
+                role="status"
+              ></span>
+              {{ isProcessing ? "កំពុងរក្សាទុក..." : "រក្សាទុក" }}
             </button>
           </div>
         </form>
       </div>
     </div>
 
-    <!-- Delete Modal -->
-    <div v-if="showDeleteModal" class="modal-backdrop-custom d-flex align-items-center justify-content-center" @click.self="showDeleteModal = false">
-      <div class="modal-dialog-custom p-4 bg-white rounded-4 shadow-lg text-center slide-in" style="max-width: 420px;">
-        <div class="delete-icon-wrapper mb-3 mx-auto d-flex align-items-center justify-content-center rounded-circle bg-danger bg-opacity-10 text-danger" style="width: 54px; height: 54px;">
+    <div
+      v-if="showDeleteModal"
+      class="modal-backdrop-custom d-flex align-items-center justify-content-center"
+      @click.self="showDeleteModal = false"
+    >
+      <div
+        class="modal-dialog-custom p-4 bg-white rounded-4 shadow-lg text-center slide-in"
+        style="max-width: 420px"
+      >
+        <div
+          class="delete-icon-wrapper mb-3 mx-auto d-flex align-items-center justify-content-center rounded-circle bg-danger bg-opacity-10 text-danger"
+          style="width: 54px; height: 54px"
+        >
           <i class="fas fa-exclamation-triangle fa-lg"></i>
         </div>
-        <h5 class="fw-bold text-dark mb-2">តើអ្នកពិតជាចង់លុបវិញ្ញាសានេះមែនទេ?</h5>
-        <p class="text-muted small mb-4">ទិន្នន័យសំណួរ និងចម្លើយទាំងអស់នៅក្នុងវិញ្ញាសា <strong>"{{ examToDelete?.title }}"</strong> នឹងត្រូវបាត់បង់ទាំងស្រុងពីប្រព័ន្ធ។</p>
+        <h5 class="fw-bold text-dark mb-2">
+          តើអ្នកពិតជាចង់លុបវិញ្ញាសានេះមែនទេ?
+        </h5>
+        <p class="text-muted small mb-4">
+          ទិន្នន័យសំណួរ និងចម្លើយទាំងអស់នៅក្នុងវិញ្ញាសា
+          <strong>"{{ examToDelete?.title }}"</strong>
+          នឹងត្រូវបាត់បង់ទាំងស្រុងពីប្រព័ន្ធ។
+        </p>
         <div class="d-flex gap-2 justify-content-center">
-          <button class="btn btn-light rounded-3 px-4 fw-bold text-muted small" @click="showDeleteModal = false" :disabled="isProcessing">បោះបង់</button>
-          <button class="btn btn-danger rounded-3 px-4 fw-bold small d-flex align-items-center gap-2" @click="confirmDeleteExam" :disabled="isProcessing">
-            <span v-if="isProcessing" class="spinner-border spinner-border-sm" role="status"></span>
-            {{ isProcessing ? 'កំពុងលុប...' : 'យល់ព្រមលុប' }}
+          <button
+            class="btn btn-light rounded-3 px-4 fw-bold text-muted small"
+            @click="showDeleteModal = false"
+            :disabled="isProcessing"
+          >
+            បោះបង់
+          </button>
+          <button
+            class="btn btn-danger rounded-3 px-4 fw-bold small d-flex align-items-center gap-2"
+            @click="confirmDeleteExam"
+            :disabled="isProcessing"
+          >
+            <span
+              v-if="isProcessing"
+              class="spinner-border spinner-border-sm"
+              role="status"
+            ></span>
+            {{ isProcessing ? "កំពុងលុប..." : "យល់ព្រមលុប" }}
           </button>
         </div>
-      </div> 
+      </div>
     </div>
-
   </div>
 </template>
 
 <script setup>
-import { ref, computed, onMounted, watch } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
-import { useToast } from 'vue-toastification'
-import { useAuthStore } from '@/stores/authStore'
-import { getExams, updateExam, deleteExam, getExamsInRoom } from '@/api/exam.api'
-import { getOneRoom } from '@/api/teacher.api'
+import { ref, computed, onMounted, watch } from "vue";
+import { useRoute, useRouter } from "vue-router";
+import { useToast } from "vue-toastification";
+import { useAuthStore } from "@/stores/authStore";
+import { updateExam, deleteExam, getExamsInRoom } from "@/api/exam.api";
+import { getOneRoom } from "@/api/teacher.api";
 
-const route = useRoute()
-const router = useRouter()
-const toast = useToast()
-const authStore = useAuthStore()
+const route = useRoute();
+const router = useRouter();
+const toast = useToast();
+const authStore = useAuthStore();
 
-const roomId = route.params.roomId
-const allExams = ref([])
+const roomId = route.params.roomId;
+const allExams = ref([]);
 
-const roomName = ref('កំពុងទាញយក...') 
-const loading = ref(false)
-const isProcessing = ref(false)
+const roomName = ref("កំពុងទាញយក...");
+const loading = ref(false);
+const isProcessing = ref(false);
 
-const roomData = ref(null); 
-const exams = ref([]);     
+const roomData = ref(null);
+const exams = ref([]);
 
-const activeFilter = ref('all')
-const statusFilter = ref('all')
-const sortBy = ref('date')
+const statusFilter = ref("all");
 
-const currentPage = ref(1)
-const itemsPerPage = 8
+const currentPage = ref(1);
+const itemsPerPage = 8;
 
-const showDeleteModal = ref(false)
-const examToDelete = ref(null)
+const showDeleteModal = ref(false);
+const examToDelete = ref(null);
 
-watch(statusFilter, () => { currentPage.value = 1 })
+watch(statusFilter, () => {
+  currentPage.value = 1;
+});
 
-const showUpdateModal = ref(false)
-const selectedExamId = ref(null)
+const showUpdateModal = ref(false);
+const selectedExamId = ref(null);
 const editForm = ref({
-  title: '',
+  title: "",
   duration: 60,
-  description: ''
-})
+  description: "",
+});
 
-const assignedExams = computed(() => {
-  return allExams.value.filter(exam => String(exam.room_id) === String(roomId))
-})
-
-const totalPages = computed(() => Math.ceil(filteredByStatus.value.length / itemsPerPage))
+const totalPages = computed(() =>
+  Math.ceil(filteredByStatus.value.length / itemsPerPage),
+);
 const filteredByStatus = computed(() => {
-  if (statusFilter.value === 'all') return allExams.value
-  return allExams.value.filter(e => e.status === statusFilter.value)
-})
+  if (statusFilter.value === "all") return allExams.value;
+  return allExams.value.filter((e) => e.status === statusFilter.value);
+});
 
 const paginatedExams = computed(() => {
-  const start = (currentPage.value - 1) * itemsPerPage
-  return filteredByStatus.value.slice(start, start + itemsPerPage)
-})
+  const start = (currentPage.value - 1) * itemsPerPage;
+  return filteredByStatus.value.slice(start, start + itemsPerPage);
+});
 
 const fetchRoomInformation = async () => {
-  if (!props.roomId) return  
+  if (!props.roomId) return;
   try {
-    const res = await getOneRoom(props.roomId)  
-    roomName.value = res.data?.data?.name || res.data?.name || 'Unknown Room'
+    const res = await getOneRoom(props.roomId);
+    roomName.value = res.data?.data?.name || res.data?.name || "Unknown Room";
   } catch (err) {
-    roomName.value = 'មិនអាចទាញយកឈ្មោះបន្ទប់បានទេ'
+    roomName.value = "មិនអាចទាញយកឈ្មោះបន្ទប់បានទេ";
   }
-}
+};
 
 const props = defineProps({
   roomId: {
     type: [String, Number],
-    required: true
-  }
-})
+    required: true,
+  },
+});
 
-const fetchRoomData = async () => {
+const fetchExamsData = async () => {
   try {
     loading.value = true;
-    const response = await getOneRoom(props.roomId);
-    
-    roomData.value = response.data.data;
-    
-   
-    exams.value = roomData.value.exams || []; 
-  } catch (error) {
-    console.error("Error:", error);
+    const res = await getExamsInRoom(route.params.roomId);
+
+    allExams.value = res.data?.data || [];
+  } catch (err) {
+    console.error("កំហុស API:", err);
   } finally {
     loading.value = false;
   }
 };
 
-const filteredExams = computed(() => {
-  if (!allExams.value) return []
-  return allExams.value.filter(exam => String(exam.room_id) === String(roomId))
-})
-
-const fetchExamsData = async () => {
-  try {
-    loading.value = true
-    const res = await getExamsInRoom(route.params.roomId);
-   
-    allExams.value = res.data?.data || [];
-  } catch (err) {
-    console.error("កំហុស API:", err);
-  } finally {
-    loading.value = false
-  }
-}
-
-const viewExamDetails = (examId) => router.push({ name: 'TeacherExamDetail', params: { examId } })
+const viewExamDetails = (examId) =>
+  router.push({ name: "TeacherExamDetail", params: { examId } });
 
 const handleUpdate = (exam) => {
-  selectedExamId.value = exam.id
+  selectedExamId.value = exam.id;
   editForm.value = {
     title: exam.title,
     duration: Number(exam.duration),
-    description: exam.description || '',
-    type: exam.type || 'quiz',     
-    status: exam.status || 'active'  
-  }
-  showUpdateModal.value = true
-}
+    description: exam.description || "",
+    type: exam.type || "quiz",
+    status: exam.status || "active",
+  };
+  showUpdateModal.value = true;
+};
 
 const submitUpdateExam = async () => {
-  if (!selectedExamId.value) return
+  if (!selectedExamId.value) return;
   try {
-    isProcessing.value = true
-    
-   
-    const today = new Date()
-    const year = today.getFullYear()
-    const month = String(today.getMonth() + 1).padStart(2, '0')
-    const day = String(today.getDate()).padStart(2, '0')
-    const start_date_formatted = `${year}-${month}-${day} 00:00`
-    
-    const nextWeek = new Date()
-    nextWeek.setDate(today.getDate() + 7)
-    const endYear = nextWeek.getFullYear()
-    const endMonth = String(nextWeek.getMonth() + 1).padStart(2, '0')
-    const endDay = String(nextWeek.getDate()).padStart(2, '0')
-    const end_date_formatted = `${endYear}-${endMonth}-${endDay} 23:59`
+    isProcessing.value = true;
 
-   
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, "0");
+    const day = String(today.getDate()).padStart(2, "0");
+    const start_date_formatted = `${year}-${month}-${day} 00:00`;
+
+    const nextWeek = new Date();
+    nextWeek.setDate(today.getDate() + 7);
+    const endYear = nextWeek.getFullYear();
+    const endMonth = String(nextWeek.getMonth() + 1).padStart(2, "0");
+    const endDay = String(nextWeek.getDate()).padStart(2, "0");
+    const end_date_formatted = `${endYear}-${endMonth}-${endDay} 23:59`;
+
     const fullUpdatePayload = {
       title: editForm.value.title.trim(),
       type: editForm.value.type,
-      description: editForm.value.description ? editForm.value.description.trim() : 'គ្មានការពិពណ៌នា',
+      description: editForm.value.description
+        ? editForm.value.description.trim()
+        : "គ្មានការពិពណ៌នា",
       duration: parseInt(editForm.value.duration),
       status: editForm.value.status,
       start_time: start_date_formatted,
-      end_time: end_date_formatted
-    }
-    await updateExam(selectedExamId.value, fullUpdatePayload)
-    
-    toast.success("ព័ត៌មានវិញ្ញាសាត្រូវបានកែប្រែដោយជោគជ័យ!")
-    
-    const examIndex = assignedExams.value.findIndex(e => e.id === selectedExamId.value)
+      end_time: end_date_formatted,
+    };
+    await updateExam(selectedExamId.value, fullUpdatePayload);
+
+    toast.success("ព័ត៌មានវិញ្ញាសាត្រូវបានកែប្រែដោយជោគជ័យ!");
+    await fetchExamsData()   
+    showUpdateModal.value = false
+    const examIndex = allExams.value.findIndex(
+      (e) => e.id === selectedExamId.value,
+    );
+
     if (examIndex !== -1) {
-      assignedExams.value[examIndex].title = editForm.value.title
-      assignedExams.value[examIndex].duration = editForm.value.duration
-      assignedExams.value[examIndex].description = editForm.value.description
+      allExams.value[examIndex] = {
+        ...allExams.value[examIndex],
+        title: editForm.value.title,
+        duration: editForm.value.duration,
+        description: editForm.value.description,
+        type: editForm.value.type,
+        status: editForm.value.status,
+      };
     }
 
-    showUpdateModal.value = false
+    showUpdateModal.value = false;
   } catch (err) {
-    console.error("Failed to update exam layout:", err)
-    toast.error("ការរក្សាទុកការកែប្រែបានបរាជ័យ! សូមពិនិត្យមើល Console។")
+    console.error("Failed to update exam layout:", err);
+    toast.error("ការរក្សាទុកការកែប្រែបានបរាជ័យ! សូមពិនិត្យមើល Console។");
   } finally {
-    isProcessing.value = false
+    isProcessing.value = false;
   }
-}
+};
 
 const handleDelete = (exam) => {
-  examToDelete.value = exam
-  showDeleteModal.value = true
-}
+  examToDelete.value = exam;
+  showDeleteModal.value = true;
+};
 
 const confirmDeleteExam = async () => {
-  if (!examToDelete.value) return
+  if (!examToDelete.value) return;
   try {
-    isProcessing.value = true
-    const targetId = examToDelete.value.id
-    
-    await deleteExam(targetId)
-    
-    toast.success("បានលុបវិញ្ញាសាចេញពីប្រព័ន្ធដោយជោគជ័យ!")
-    assignedExams.value = assignedExams.value.filter(e => e.id !== targetId)
-    showDeleteModal.value = false
+    isProcessing.value = true;
+    const targetId = examToDelete.value.id;
+
+    await deleteExam(targetId);
+
+    toast.success("បានលុបវិញ្ញាសាចេញពីប្រព័ន្ធដោយជោគជ័យ!");
+    await fetchExamsData() 
+    allExams.value = allExams.value.filter(
+      (e) => e.id !== examToDelete.value.id,
+    );
+    showDeleteModal.value = false;
   } catch (err) {
-    console.error("Failed to delete exam:", err)
-    toast.error("ការលុបវិញ្ញាសាបានបរាជ័យ!")
+    console.error("Failed to delete exam:", err);
+    toast.error("ការលុបវិញ្ញាសាបានបរាជ័យ!");
   } finally {
-    isProcessing.value = false
-    examToDelete.value = null
+    isProcessing.value = false;
+    examToDelete.value = null;
   }
-}
+};
 
 onMounted(async () => {
-  // await authStore.fetchProfile();
   fetchRoomInformation();
   fetchExamsData();
 });
 </script>
 
 <style scoped>
-
 .room-page {
   padding: 4px 24px 24px 24px;
   width: 100%;
@@ -511,14 +612,14 @@ onMounted(async () => {
   font-size: 16px;
 }
 
-.ic-active { 
-  background: rgba(16, 185, 129, 0.06); 
+.ic-active {
+  background: rgba(16, 185, 129, 0.06);
   color: #10b981;
 }
 
-.ic-draft  { 
-  background: #f8fafc; 
-  color: #94a3b8; 
+.ic-draft {
+  background: #f8fafc;
+  color: #94a3b8;
   border: 1px dashed #cbd5e1;
 }
 
@@ -600,8 +701,14 @@ onMounted(async () => {
   letter-spacing: 0.5px;
 }
 
-.b-active { background: rgba(16, 185, 129, 0.1); color: #047857; }
-.b-draft  { background: #f1f5f9; color: #64748b; }
+.b-active {
+  background: rgba(16, 185, 129, 0.1);
+  color: #047857;
+}
+.b-draft {
+  background: #f1f5f9;
+  color: #64748b;
+}
 
 .vertical-divider {
   width: 1px;
@@ -664,7 +771,6 @@ onMounted(async () => {
   display: block;
 }
 
-
 .modal-backdrop-custom {
   position: fixed;
   top: 0;
@@ -695,10 +801,12 @@ onMounted(async () => {
   background: #10b981;
   color: white;
   border: none;
+  font-weight: 600 !important;
 }
 
 .btn-emerald:hover {
   background: #059669;
+  color: white;
 }
 
 .slide-in {
@@ -750,7 +858,13 @@ onMounted(async () => {
   font-size: 11px;
 }
 @keyframes modalSlide {
-  from { opacity: 0; transform: scale(0.96) translateY(8px); }
-  to { opacity: 1; transform: scale(1) translateY(0); }
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
 }
 </style>
