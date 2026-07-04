@@ -43,7 +43,7 @@
 <script setup>
 defineProps({
   isOpen: { type: Boolean, required: true },
-  title: { type: String, default: "Modal Title" }, // បើមិនបោះ title មក វានឹងដឹងខ្លួនលាក់ Header
+  title: { type: String, default: "Modal Title" }, 
   subtitle: { type: String, default: "" },
   tag: { type: String, default: "" },
   width: { type: String, default: "500px" },
@@ -59,7 +59,7 @@ defineEmits(["close"]);
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(15, 23, 42, 0.4); /* បន្ថយពណ៌ងងឹតឱ្យមើលទៅស្រាលភ្នែក */
+  background: rgba(15, 23, 42, 0.4); 
   backdrop-filter: blur(8px);
   display: flex;
   align-items: center;
@@ -70,8 +70,8 @@ defineEmits(["close"]);
 .glass-box {
   width: 100%;
   background: rgba(255, 255, 255, 0.95);
-  border-radius: 24px; /* បង្កើនភាពមូលស្អាតបែប Modern */
-  box-shadow: 0 25px 70px rgba(15, 23, 42, 0.12); /* ស្រមោលបែបស្រាល Soft Shadow */
+  border-radius: 24px; 
+  box-shadow: 0 25px 70px rgba(15, 23, 42, 0.12); 
   overflow: hidden;
   position: relative;
   transition: all 0.3s ease;

@@ -1,7 +1,6 @@
 <template>
   <div class="main-content">
     <div class="topbar">
-      <!-- Left Column: Controls + Breadcrumbs + Exam Details -->
       <div class="left-section">
         <button 
           class="btn-control d-lg-none" 
@@ -19,67 +18,41 @@
           <i class="fas fa-arrow-left"></i>
         </button>
 
-        <!-- Dynamic Breadcrumb Trail & Title Stack -->
         <div class="title-area">
           <div class="crumb">
             <router-link to="/teacher/room-management">គ្រប់គ្រងថ្នាក់រៀន</router-link>
             <i class="fas fa-chevron-right"></i>
             <span class="text-truncate" style="max-width: 150px;">{{ examStore.currentRoomName || '...' }}</span>
             <i class="fas fa-chevron-right"></i>
-            <span class="crumb-cur">វិញ្ញាសា</span>
+            <span class="crumb-cur">វិញ្ញាសារទាំងអស់</span>
           </div>
           
           <h1 class="page-title">
-            <span class="text-truncate title-text">{{ examStore.currentExamTitle || 'កំពុងផ្ទុក...' }}</span>
-            <span class="title-dot">.</span>
-            <span class="hd-count">{{ examStore.currentQuestionCount }} សំណួរ</span>
+            វិញ្ញាសារទាំងអស់<span class="title-dot">.</span>
           </h1>
         </div>
       </div>
 
-      <!-- Right Column: Premium User Profile Pill -->
-      <div class="right-section">
-        <div class="instructor-profile">
-          <img 
-            :src="authStore.avatarUrl" 
-            alt="avatar" 
-            class="profile-avatar" 
-          />
-          <div class="profile-details">
-            <span class="profile-name">{{ authStore.fullName }}</span>
-            <span class="profile-role">គ្រូបង្រៀន</span>
-          </div>
-        </div>
-      </div>
+      <base-profile/>
     </div>
   </div>
 </template>
 
 <script setup>
-import { onMounted } from 'vue';
 import { useRouter } from 'vue-router';
-import { useAuthStore } from '@/stores/auth'; 
 import { useExamStore } from '@/stores/examStore';
 
-// Stores & Router
-const authStore = useAuthStore();
+
 const examStore = useExamStore();
 const router = useRouter();
 
-// Navigation Logic
-
 const goBack = () => {
-  router.push({ name: 'RoomDetails' }); 
+  router.push({ name: 'ClassStream' }); 
 };
 
-// Lifecycle Hooks
-onMounted(() => {
-  authStore.fetchUserProfile();
-});
 </script>
 
 <style scoped>
-/* Glassmorphism Header Structure */
 .topbar {
   display: flex;
   align-items: center;
@@ -144,7 +117,7 @@ onMounted(() => {
   font-weight: 600; 
 }
 
-/* Page Title with Count Badge */
+/* Page Title Styles */
 .page-title {
   font-size: 1.15rem;
   font-weight: 800;
@@ -154,25 +127,11 @@ onMounted(() => {
   display: flex;
   align-items: center;
   min-width: 0;
-}
-
-.title-text {
-  max-width: 280px;
+  letter-spacing: -0.2px;
 }
 
 .title-dot {
   color: #f15a24;
-  margin-right: 8px;
-}
-
-.hd-count {
-  font-size: 11px;
-  font-weight: 600;
-  color: #475569;
-  background: #e2e8f0;
-  border-radius: 20px;
-  padding: 3px 10px;
-  white-space: nowrap;
 }
 
 /* Control Buttons (Toggle & Back) */
@@ -266,18 +225,12 @@ onMounted(() => {
 }
 
 /* Responsive Styles */
-@media (max-width: 768px) {
-  .title-text {
-    max-width: 180px;
-  }
-}
-
 @media (max-width: 576px) {
   .topbar {
     padding: 10px 16px;
   }
   .crumb {
-    display: none; /* Keeps header clean and un-wrapped on mobile */
+    display: none; /* Keeps header layout simple and clean on mobile */
   }
   .page-title {
     font-size: 1rem;

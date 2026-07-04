@@ -13,8 +13,10 @@
               <div v-for="(q, idx) in questions" :key="idx" :id="`qnav-${idx}`" class="q-nav-item slide-in"
                 :class="{ active: selectedQuestionIndex === idx }" @click="selectQuestion(idx)">
                 <span class="d-flex align-items-center gap-1">
-                  <i :class="q.question_type === 'true_false' ? 'fas fa-toggle-on' : 'fas fa-list-ul'"
-                    style="font-size: 0.62rem"></i>
+                  <i :class="q.question_type === 'true_false'
+                    ? 'fas fa-toggle-on'
+                    : 'fas fa-list-ul'
+                    " style="font-size: 0.62rem"></i>
                   សំណួរទី {{ getKhmerNumber(idx + 1) }}
                 </span>
                 <span class="q-badge">{{ q.pts }} ពិន្ទុ</span>
@@ -61,7 +63,7 @@
                   rows="2" placeholder="សូមសរសេរការណែនាំខ្លីៗសម្រាប់សិស្ស"></textarea>
               </div>
               <div class="mb-3">
-                <label class="form-label fw-bold small text-uppercase text-muted">រយៈពេលប្រឡង (នាទី)</label>
+                <label class="form-label fw-bold small text-uppercase text-muted">រយៈពេលប្រឡង-នាទី</label>
                 <input type="number" v-model.number="quizDuration"
                   class="form-control rounded-3 py-2 px-3 border-0 shadow-sm" min="1" placeholder="ឧ. 60" />
               </div>
@@ -82,6 +84,14 @@
                   class="form-control rounded-3 py-2 px-3 border-0 shadow-sm bg-light" />
               </div>
 
+              <div class="mb-3 text-start">
+                <label class="form-label small fw-bold text-muted">ស្ថានភាពវិញ្ញាសា</label>
+                <select v-model="quizStatus" class="form-select rounded-3 border-light-subtle shadow-sm small-input">
+                  <option value="active">កំពុងបើកប្រឡង</option>
+                  <option value="draft">វិញ្ញាសាព្រាង</option>
+                </select>
+              </div>
+
               <div>
                 <label class="form-label fw-bold small text-uppercase text-muted">ជ្រើសរើសថ្នាក់រៀន</label>
                 <select v-model="selectedRoomId" class="form-select rounded-3 py-2 px-3 border-0 shadow-sm">
@@ -95,7 +105,8 @@
 
             <div v-for="(q, qIdx) in questions" :key="qIdx" :id="`qcard-${qIdx}`" class="q-card slide-in"
               :class="{ 'active-card': selectedQuestionIndex === qIdx }" @click="selectedQuestionIndex = qIdx">
-              <div class="d-flex align-items-center justify-content-between px-3 py-2 border-bottom bg-light flex-wrap gap-2">
+              <div
+                class="d-flex align-items-center justify-content-between px-3 py-2 border-bottom bg-light flex-wrap gap-2">
                 <div class="d-flex align-items-center gap-2">
                   <div class="q-num-badge">{{ qIdx + 1 }}</div>
                   <span class="fw-bold" style="font-size: 0.85rem; color: var(--txt)">
@@ -121,7 +132,8 @@
               </div>
 
               <div class="p-3 d-flex flex-column gap-2">
-                <textarea v-model="q.text" class="q-field" rows="3" placeholder="សូមវាយបញ្ចូលសំណួរនៅទីនេះ..."></textarea>
+                <textarea v-model="q.text" class="q-field" rows="3"
+                  placeholder="សូមវាយបញ្ចូលសំណួរនៅទីនេះ..."></textarea>
                 <div class="text-uppercase fw-bold text-muted" style="font-size: 0.6rem; letter-spacing: 1.1px">
                   ចម្លើយ និងជម្រើស
                 </div>
@@ -153,9 +165,8 @@
                       <i :class="cIdx === 0 ? 'fas fa-check' : 'fas fa-times'"></i>
                     </div>
                     <span class="tf-label">{{ choice.text }}</span>
-                    <input class="form-check-input cr shadow-none m-0 ms-auto" type="radio"
-                      :name="`q_correct_${qIdx}`" :checked="choice.isCorrect" @click.stop
-                      @change.stop="setCorrectChoice(qIdx, cIdx)" />
+                    <input class="form-check-input cr shadow-none m-0 ms-auto" type="radio" :name="`q_correct_${qIdx}`"
+                      :checked="choice.isCorrect" @click.stop @change.stop="setCorrectChoice(qIdx, cIdx)" />
                   </div>
                 </div>
               </div>
@@ -332,33 +343,29 @@
     <div v-if="showCodeModal" class="modal-backdrop-custom d-flex align-items-center justify-content-center"
       @click.self="showCodeModal = false">
       <div class="modal-dialog-custom p-4 bg-white rounded-4 shadow-lg text-center slide-in"
-        style="width: 100%; max-width: 480px; z-index: 9999">
+        style="width: 100%; max-width: 520px; z-index: 9999">
         <div
           class="success-icon-wrapper mb-3 mx-auto d-flex align-items-center justify-content-center rounded-circle bg-success bg-opacity-10 text-success"
-          style="width: 56px; height: 56px">
-          <i class="fas fa-check-circle fa-2x"></i>
+          style="width: 70px; height: 70px">
+          <i class="fas fa-check fa-2x"></i>
         </div>
 
-        <h4 class="fw-bold text-dark mb-1">បង្កើតវិញ្ញាសាជោគជ័យ!</h4>
-        <p class="text-muted small mb-4">
-          វិញ្ញាសារបស់អ្នកត្រូវបានដាក់ផ្សាយជាផ្លូវការរួចរាល់ហើយ។
-          សូមចម្លងតំណភ្ជាប់ខាងក្រោមដើម្បីផ្ញើជូនសិស្សានុសិស្ស៖
+        <h3 class="fw-bold mb-3" style="color: #1f2937">
+          បង្កើតវិញ្ញាសាបានជោគជ័យ!
+        </h3>
+
+        <p class="text-muted mb-4" style="font-size: 15px; line-height: 1.8">
+          វិញ្ញាសារបស់អ្នកត្រូវបានបង្កើត និងដាក់ប្រើប្រាស់ដោយជោគជ័យ។<br />
+
+          សិស្សអាចចូលប្រឡងបាននៅពេលដល់ម៉ោងដែលបានកំណត់។<br /><br />
+
+          <strong>សូមពិនិត្យមើលថ្នាក់រៀនដែលអ្នកបានជ្រើសរើស</strong>
+          ដើម្បីប្រាកដថាវិញ្ញាសានេះត្រូវបានបន្ថែមទៅក្នុងថ្នាក់ត្រឹមត្រូវ។
         </p>
 
-        <div class="d-flex align-items-center justify-content-between p-2.5 mb-4 rounded-3 border bg-light text-start">
-          <span class="text-dark text-truncate me-2 fw-medium" style="font-size: 0.88rem; max-width: 320px">{{
-            generatedExamLink }}</span>
-          <button class="btn btn-sm btn-dark rounded-2 px-3 fw-bold d-flex align-items-center gap-1 flex-shrink-0"
-            @click="copyLinkToClipboard">
-            <i class="far fa-copy"></i> Copy Link
-          </button>
-        </div>
-
-        <div class="w-100">
-          <button class="btn btn-light w-100 rounded-3 fw-bold py-2 text-muted" @click="showCodeModal = false">
-            បិទផ្ទាំងនេះ
-          </button>
-        </div>
+        <button class="btn btn-success w-100 rounded-3 fw-bold py-2" @click="showCodeModal = false">
+          យល់ព្រម
+        </button>
       </div>
     </div>
   </div>
@@ -368,7 +375,7 @@
 import { ref, computed, nextTick, onMounted, onUnmounted, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useToast } from "vue-toastification";
-import { useAuthStore } from "@/stores/auth";
+import { useAuthStore } from "@/stores/authStore";
 import { createExam, createQuestion } from "@/api/exam.api";
 import { getMyRooms } from "@/api/teacher.api";
 
@@ -389,25 +396,10 @@ const generatedExamLink = ref("");
 const quizTitle = ref("");
 const quizInstructions = ref("");
 const quizDuration = ref(60);
+const quizStatus = ref("active"); 
 
 const startTime = ref("");
 const endTime = ref("");
-watch([startTime, quizDuration], ([newStart, newDuration]) => {
-  if (!newStart || !newDuration) return;
-
-  const start = new Date(newStart);
-
-  start.setMinutes(start.getMinutes() + parseInt(newDuration || 0));
-
-  const year = start.getFullYear();
-  const month = String(start.getMonth() + 1).padStart(2, "0");
-  const day = String(start.getDate()).padStart(2, "0");
-  const hours = String(start.getHours()).padStart(2, "0");
-  const minutes = String(start.getMinutes()).padStart(2, "0");
-
-  endTime.value = `${year}-${month}-${day}T${hours}:${minutes}`;
-});
-
 const roomId = route.params.roomId;
 const allRooms = ref([]);
 const selectedRoomId = ref("");
@@ -427,10 +419,45 @@ const questions = ref([
   },
 ]);
 
-// --- Fix the component to exactly the remaining viewport height,
-// no matter what header/topbar sits above it. This guarantees the
-// whole page never scrolls; only the center feed column scrolls.
 const containerHeight = ref("100vh");
+
+const resetForm = () => {
+  quizTitle.value = "";
+  quizInstructions.value = "";
+  quizDuration.value = 60;
+  startTime.value = "";
+  endTime.value = "";
+  selectedRoomId.value = "";
+  quizStatus.value = "active";
+  selectedQuestionIndex.value = 0;
+
+  questions.value = [
+    {
+      text: "",
+      pts: 10,
+      question_type: "multiple_choice",
+      choices: [
+        { text: "", isCorrect: true },
+        { text: "", isCorrect: false },
+      ],
+    },
+  ];
+};
+
+watch([startTime, quizDuration], ([newStart, newDuration]) => {
+  if (!newStart || !newDuration) return;
+
+  const start = new Date(newStart);
+  start.setMinutes(start.getMinutes() + parseInt(newDuration || 0));
+
+  const year = start.getFullYear();
+  const month = String(start.getMonth() + 1).padStart(2, "0");
+  const day = String(start.getDate()).padStart(2, "0");
+  const hours = String(start.getHours()).padStart(2, "0");
+  const minutes = String(start.getMinutes()).padStart(2, "0");
+
+  endTime.value = `${year}-${month}-${day}T${hours}:${minutes}`;
+});
 
 const updateContainerHeight = () => {
   if (!containerRef.value) return;
@@ -443,7 +470,7 @@ onMounted(async () => {
   await nextTick();
   updateContainerHeight();
   window.addEventListener("resize", updateContainerHeight);
-  // Also react if fonts/late content shift the header height slightly
+
   resizeObserver = new ResizeObserver(() => updateContainerHeight());
   if (containerRef.value?.parentElement) {
     resizeObserver.observe(containerRef.value.parentElement);
@@ -451,7 +478,7 @@ onMounted(async () => {
 
   await getAllRooms();
   if (!authStore.user) {
-    authStore.fetchUserProfile();
+    authStore.fetchProfile();
   }
 });
 
@@ -480,14 +507,11 @@ const selectQuestion = (idx) => {
   }
 };
 
-// Dynamically counts total points from whatever values the teacher adds
 const totalPoints = computed(() => {
   return questions.value.reduce((sum, q) => sum + (parseInt(q.pts) || 0), 0);
 });
 
-// Visual dynamic properties for the tracking ring UI component
 const circleStrokeDashoffset = computed(() => {
-  // Since the base maximum is exactly totalPoints, the ring layout will show 100% full configuration
   return totalPoints.value > 0 ? 0 : 314;
 });
 
@@ -495,7 +519,6 @@ const progressColor = computed(() => {
   return "var(--em)";
 });
 
-// type can be "multiple_choice" or "true_false"; both use the same createQuestion API
 const addNewQuestion = (type = "multiple_choice") => {
   const isTF = type === "true_false";
   questions.value.push({
@@ -527,7 +550,6 @@ const addNewQuestion = (type = "multiple_choice") => {
   });
 };
 
-// Switch an existing question's type; converts its choices accordingly
 const setQuestionType = (qIdx, type) => {
   const q = questions.value[qIdx];
   if (q.question_type === type) return;
@@ -539,7 +561,10 @@ const setQuestionType = (qIdx, type) => {
       { text: "ត្រូវ", isCorrect: true },
       { text: "ខុស", isCorrect: false },
     ];
-  } else if (q.choices.length < 2 || q.choices.some((c) => ["ត្រូវ", "ខុស"].includes(c.text))) {
+  } else if (
+    q.choices.length < 2 ||
+    q.choices.some((c) => ["ត្រូវ", "ខុស"].includes(c.text))
+  ) {
     q.choices = [
       { text: "", isCorrect: true },
       { text: "", isCorrect: false },
@@ -586,6 +611,7 @@ const getAllRooms = async () => {
     console.error("មិនអាចទាញយកបញ្ជីថ្នាក់រៀនបានទេ:", err);
   }
 };
+
 const formatDateTime = (dateTime) => {
   return dateTime.replace("T", " ") + ":00";
 };
@@ -595,7 +621,6 @@ const finalizePublish = async () => {
   if (!quizTitle.value.trim()) return toast.error("សូមបញ្ចូលចំណងជើងវិញ្ញាសា!");
   if (!selectedRoomId.value) return toast.error("សូមជ្រើសរើសថ្នាក់រៀនសិន!");
   if (!startTime.value) return toast.error("សូមជ្រើសរើស Start Time!");
-
   if (!endTime.value) return toast.error("សូមជ្រើសរើស End Time!");
 
   if (new Date(startTime.value) >= new Date(endTime.value))
@@ -614,7 +639,6 @@ const finalizePublish = async () => {
 
   try {
     isSubmitting.value = true;
-
     const examPayload = {
       room_id: parseInt(selectedRoomId.value),
       title: quizTitle.value.trim(),
@@ -622,8 +646,7 @@ const finalizePublish = async () => {
       description: quizInstructions.value || "គ្មានការពិពណ៌នា",
       duration: parseInt(quizDuration.value) || 60,
       total_points: totalPoints.value,
-      status: "active",
-
+      status: quizStatus.value, 
       start_time: formatDateTime(startTime.value),
       end_time: formatDateTime(endTime.value),
     };
@@ -632,7 +655,6 @@ const finalizePublish = async () => {
     const examId = createRes.data?.data?.examId || createRes.data?.id;
 
     if (!examId) throw new Error("មិនទទួលបាន Exam ID ពី Server");
-
     for (const q of questions.value) {
       await createQuestion({
         exam_id: examId,
@@ -647,10 +669,11 @@ const finalizePublish = async () => {
     generatedExamLink.value = createRes.data?.data?.link || "";
     showCodeModal.value = true;
     toast.success("វិញ្ញាសាត្រូវបានដាក់ផ្សាយជោគជ័យ!");
+
+    resetForm();
   } catch (err) {
     console.error("កំហុសលម្អិតពី Server:", err.response?.data || err);
-    const errorMsg =
-      err.response?.data?.message || "មានកំហុសក្នុងការផ្សព្វផ្សាយវិញ្ញាសា!";
+    const errorMsg = err.response?.data?.message || "មានកំហុសក្នុងការផ្សព្វផ្សាយវិញ្ញាសា!";
     toast.error(errorMsg);
   } finally {
     isSubmitting.value = false;
@@ -686,8 +709,7 @@ const copyLinkToClipboard = async () => {
 
   display: flex;
   flex-direction: column;
-  /* height is set dynamically via :style binding to exactly fill
-     whatever space is left below your app's header — see containerHeight */
+
   width: 100%;
   overflow: hidden;
   font-family: "Kantumruy Pro", "Poppins", sans-serif;
@@ -715,11 +737,9 @@ const copyLinkToClipboard = async () => {
   flex-direction: column;
   height: 100%;
   min-height: 0;
-  overflow: hidden; /* the page itself never scrolls */
+  overflow: hidden;
 }
 
-/* Grid layout is ALWAYS on, at every screen size — side panels stay
-   pinned to the container's fixed height; only the center feed scrolls */
 .workspace {
   flex: 1;
   min-height: 0;
@@ -776,7 +796,7 @@ const copyLinkToClipboard = async () => {
   flex-direction: column;
   height: 100%;
   min-height: 0;
-  overflow: hidden; /* panel is fixed as a block, never scrolls itself, never resizes with center content */
+  overflow: hidden;
 }
 
 .panel-head {
@@ -802,7 +822,6 @@ const copyLinkToClipboard = async () => {
   color: var(--em);
 }
 
-/* Left panel: only this inner list scrolls; header + add-buttons stay fixed */
 .q-nav-scroll {
   flex: 1 1 0%;
   height: 0;
@@ -858,7 +877,6 @@ const copyLinkToClipboard = async () => {
   color: var(--em);
 }
 
-/* Center column: this is the ONLY thing that scrolls */
 .feed-col {
   min-height: 0;
   height: 100%;
@@ -1023,7 +1041,6 @@ const copyLinkToClipboard = async () => {
   box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.14);
 }
 
-/* Type toggle (multiple choice / true-false) */
 .type-toggle {
   display: flex;
   background: #f1f5f9;

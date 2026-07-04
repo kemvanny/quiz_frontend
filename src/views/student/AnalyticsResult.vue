@@ -240,7 +240,7 @@
         </div>
         <div class="filter-strip px-4 pb-2">
           <button class="filter-chip active" style="cursor: default">
-            ទាំងអស់
+            សរុបចំនួន
             <span class="chip-count">{{ examResultsList.length }}</span>
           </button>
         </div>
@@ -374,7 +374,6 @@
     </div>
   </div>
 </template>
-
 <script setup>
 import { getAllStudentExamResult } from "@/api/student.api";
 import { ref, onMounted, computed } from "vue";
@@ -390,8 +389,6 @@ const fetchStudentAllResults = async () => {
   errorMessage.value = "";
   try {
     const response = await getAllStudentExamResult();
-    console.log(response.data.data);
-
     if (response.data && response.data.result === true) {
       examResultsList.value = response.data.data;
       currentPage.value = 1;
@@ -407,25 +404,31 @@ const fetchStudentAllResults = async () => {
   }
 };
 
+const sortedExamResults = computed(() => {
+  return [...examResultsList.value].sort((a, b) => {
+    return new Date(b.submitted_at).getTime() - new Date(a.submitted_at).getTime();
+  });
+});
+
 const totalPages = computed(() => {
-  return Math.ceil(examResultsList.value.length / itemsPerPage.value) || 1;
+  return Math.ceil(sortedExamResults.value.length / itemsPerPage.value) || 1;
 });
 
 const paginatedExamResults = computed(() => {
   const startIndex = (currentPage.value - 1) * itemsPerPage.value;
   const endIndex = startIndex + itemsPerPage.value;
-  return examResultsList.value.slice(startIndex, endIndex);
+  return sortedExamResults.value.slice(startIndex, endIndex);
 });
 
 const rowRangeStart = computed(() => {
-  if (examResultsList.value.length === 0) return 0;
+  if (sortedExamResults.value.length === 0) return 0;
   return (currentPage.value - 1) * itemsPerPage.value + 1;
 });
 
 const rowRangeEnd = computed(() => {
   const currentEnd = currentPage.value * itemsPerPage.value;
-  return currentEnd > examResultsList.value.length
-    ? examResultsList.value.length
+  return currentEnd > sortedExamResults.value.length
+    ? sortedExamResults.value.length
     : currentEnd;
 });
 
@@ -522,7 +525,8 @@ const exportToCSV = () => {
     "ពិន្ទុ",
     "និទ្ទេស",
   ];
-  const rows = examResultsList.value.map((result) => [
+
+  const rows = sortedExamResults.value.map((result) => [
     `"${result.exam_title || ""}"`,
     `"${result.room || ""}"`,
     formatDate(result.submitted_at),

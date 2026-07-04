@@ -72,16 +72,16 @@
             <div class="glass-grid">
                 <div class="glass-field">
                     <label>នាមត្រកូល</label>
-                    <input type="text" placeholder="សូមបញ្ចូលនាមត្រកូល" v-model="form.lastName"
-                        :class="{ 'input-error': errors.lastName }">
-                    <span v-if="errors.lastName" class="text-danger-msg">{{ errors.lastName }}</span>
+                    <input type="text" placeholder="សូមបញ្ចូលនាមត្រកូល" v-model="form.firstName"
+                        :class="{ 'input-error': errors.firstName }">
+                    <span v-if="errors.firstName" class="text-danger-msg">{{ errors.firstName }}</span>
                 </div>
 
                 <div class="glass-field">
                     <label>នាមខ្លួន</label>
-                    <input type="text" placeholder="សូមបញ្ចូលនាមខ្លួន" v-model="form.firstName" @input="handleInput"
-                        :class="{ 'input-error': errors.firstName }">
-                    <span v-if="errors.firstName" class="text-danger-msg">{{ errors.firstName }}</span>
+                    <input type="text" placeholder="សូមបញ្ចូលនាមខ្លួន" v-model="form.lastName" @input="handleInput"
+                        :class="{ 'input-error': errors.lastName }">
+                    <span v-if="errors.lastName" class="text-danger-msg">{{ errors.lastName }}</span>
                 </div>
 
                 <div class="glass-field full">
@@ -126,8 +126,11 @@ import { getAllUsers, createUser, ChangeStatusUser } from "@/api/admin.api";
 import { useFormValidation } from "@/composables/useFormValidation";
 import StatusBadge from "@/components/common/StatusBadge.vue";
 import Swal from 'sweetalert2';
-import UserDetailModal from "@/components/admin/UserDetailModal.vue";
+import UserDetailModal from "@/components/adminmodal/UserDetailModal.vue";
 import { useToast } from "@/composables/useToast";
+import {useAuthStore} from "@/stores/authStore";
+
+const authStore = useAuthStore();
 
 const { triggerToast } = useToast();
 
@@ -237,10 +240,8 @@ const fetchUsers = async () => {
             role: selectedRoleForFilter.value,
             status: selectedStatusForFilter.value
         });
-
         if (res.data && res.data.data) {
             const rawUsers = res.data.data.users || [];
-            console.log("Fetched users:", rawUsers);
 
             users.value = rawUsers;
 
@@ -321,6 +322,12 @@ const handleCreate = async () => {
 }
 
 const handleToggleStatus = async (user) => {
+   
+    if (user.role === 'admin' || user.is_admin === 1) {
+        triggerToast("អ្នកមិនអាចបិទគណនីរបស់ Admin បានទេ!", 'fa-solid fa-triangle-exclamation');
+        return; 
+    }
+
     const currentStatus = user.is_active === 1 || user.is_active === true;
 
     const titleText = currentStatus

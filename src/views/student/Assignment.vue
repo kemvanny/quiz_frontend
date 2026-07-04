@@ -56,11 +56,11 @@
             </span>
             <span v-else-if="exam.time_status === 'upcoming'" class="meta-chip"
               style="background: #dbeafe; color: #1e40af">
-              <i class="fas fa-hourglass-start"></i> ជិតមកដល់ (Upcoming)
+              <i class="fas fa-hourglass-start"></i> ជិតមកដល់
             </span>
             <span v-else-if="exam.time_status === 'expired'" class="meta-chip"
               style="background: #fef2f2; color: #991b1b">
-              <i class="fas fa-calendar-times"></i> ហួសកំណត់ (អត់បានប្រឡង)
+              <i class="fas fa-calendar-times"></i> ហួសកំណត់ 
             </span>
             <span v-else class="meta-chip" style="background: #ecfdf5; color: #059669">
               <i class="fas fa-play-circle"></i> កំពុងដំណើរការ
@@ -120,11 +120,6 @@
         <i class="fas fa-triangle-exclamation"></i>
       </div>
       <div class="flex-grow-1">
-        <div class="task-meta">
-          <span class="meta-chip" style="background: #fef2f2; color: #dc2626">
-            <i class="fas fa-circle-exclamation"></i> មិនមានទិន្នន័យ
-          </span>
-        </div>
         <div class="task-title">
           <span v-if="activeTab === 'todo'">គ្មានការប្រឡងដែលត្រូវធ្វើទេ</span>
           <span v-else-if="activeTab === 'completed'">មិនទាន់មានការប្រឡងដែលបានបញ្ចប់ឡើយ</span>
@@ -132,7 +127,7 @@
         </div>
         <div class="task-details">
           <span class="task-detail" style="color: #dc2626; font-weight: 400">
-            <i class="fas fa-info-circle"></i> {{ examError || "ថ្ងៃនេះអ្នកគ្មានការប្រឡងដែលត្រូវបង្ហាញនោះទេ" }}
+            {{ examError || "ថ្ងៃនេះអ្នកគ្មានការប្រឡងដែលត្រូវបង្ហាញនោះទេ" }}
           </span>
         </div>
       </div>
@@ -157,31 +152,34 @@ const activeTab = ref("all");
 // Pagination States
 const currentPage = ref(1);
 const itemsPerPage = ref(4);
+
 const processedExams = computed(() => {
   const nowTime = new Date().getTime();
-
   return examList.value.map(exam => {
     let currentStatus = exam.time_status;
     const startTime = new Date(exam.start_time).getTime();
     let deadlineTime = exam.deadline ? new Date(exam.deadline).getTime() : null;
     if (!deadlineTime || isNaN(deadlineTime)) {
-      deadlineTime = startTime + (12 * 60 * 60 * 1000);
+      deadlineTime = startTime + (2 * 60 * 60 * 1000); 
     }
-    if (exam.is_completed === 1 || exam.is_completed === true) {
+  
+    if (exam.is_completed === 1 || exam.is_completed === true || exam.is_completed === '1') {
       currentStatus = 'completed';
     } else if (nowTime < startTime) {
       currentStatus = 'upcoming';
     } else if (nowTime >= startTime && nowTime <= deadlineTime) {
       currentStatus = 'ongoing';
     } else {
-      currentStatus = 'expired';
+      currentStatus = 'expired'; 
     }
+    
     return {
       ...exam,
       time_status: currentStatus
     };
   });
 });
+
 const currentKhmerDate = computed(() => {
   const now = new Date();
   const currentDay = now.getDate();
@@ -203,20 +201,29 @@ const currentKhmerDate = computed(() => {
 
 const todoCount = computed(() => {
   return processedExams.value.filter(exam =>
-    exam.is_completed === 0 && (exam.time_status === 'ongoing' || exam.time_status === 'upcoming')
+    (exam.is_completed === 0 || exam.is_completed === false) && 
+    (exam.time_status === 'ongoing' || exam.time_status === 'upcoming')
   ).length;
 });
 
 const filteredExams = computed(() => {
+  const sortedExams = [...processedExams.value].sort((a, b) => {
+    return new Date(b.start_time).getTime() - new Date(a.start_time).getTime();
+  });
+  
   if (activeTab.value === "todo") {
-    return processedExams.value.filter(exam =>
-      exam.is_completed === 0 && (exam.time_status === 'ongoing' || exam.time_status === 'upcoming')
+    return sortedExams.filter(exam =>
+      (exam.is_completed === 0 || exam.is_completed === false) && 
+      (exam.time_status === 'ongoing' || exam.time_status === 'upcoming')
     );
   }
+  
   if (activeTab.value === "completed") {
-    return processedExams.value.filter(exam => exam.is_completed === 1 || exam.time_status === 'completed');
+    return sortedExams.filter(exam => 
+      exam.is_completed === 1 || exam.is_completed === true || exam.time_status === 'completed'
+    );
   }
-  return processedExams.value;
+  return sortedExams;
 });
 
 const paginatedExams = computed(() => {
@@ -241,10 +248,19 @@ async function fetchStudentExams() {
     examList.value = [];
 
     const response = await getAllStudentExams();
-    if (response.data && response.data.result) {
-      examList.value = response.data.data || [];
+    if (response && response.data) {
+      if (Array.isArray(response.data)) {
+        examList.value = response.data;
+      } else if (response.data.result && Array.isArray(response.data.result)) {
+        examList.value = response.data.result;
+      } else if (response.data.data && Array.isArray(response.data.data)) {
+        examList.value = response.data.data;
+      } else {
+        examList.value = [];
+      }
+      currentPage.value = 1; 
     } else {
-      throw new Error(response.data?.msg || "Failed to fetch exam data.");
+      throw new Error(response?.data?.msg || "Failed to fetch exam data.");
     }
   } catch (error) {
     examList.value = [];
@@ -258,11 +274,12 @@ async function fetchStudentExams() {
 
 function startExam(exam) {
   if (!exam) return;
-  if (exam.time_status === 'upcoming') {
+  if (exam.time_status === 'upcoming' || exam.time_status === 'expired' || exam.time_status === 'completed') {
     return;
   }
-  sessionStorage.setItem("active_exam_id", exam.id);
-  sessionStorage.setItem("active_exam", JSON.stringify(exam));
+  
+  localStorage.setItem("active_exam_id", exam.id);
+  localStorage.setItem("active_exam", JSON.stringify(exam));
   router.push(`/take-exam/${exam.exam_code}`);
 }
 

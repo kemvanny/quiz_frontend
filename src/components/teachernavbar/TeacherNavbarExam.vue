@@ -13,9 +13,7 @@
                 </div>
             </div>
 
-            <!-- Extra settings/info -->
             <div class="tb-section border-0 gap-3">
-                <!-- Status Dropdown -->
                 <select class="form-select form-select-sm border-0 fw-bold shadow-none cursor-pointer"
                     style="background-color: var(--em-soft); color: var(--em); font-size:.75rem; border-radius: 8px;">
                     <option>ស្ថានភាព: ព្រាង</option>

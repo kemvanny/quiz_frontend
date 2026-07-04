@@ -18,7 +18,9 @@
           </button>
 
           <LogoutModal :show="isLogoutModalOpen" title="Student" @close="isLogoutModalOpen = false"
-            @confirm="handleLogout" />
+            @confirm="handleLogout" :is-loading="isLogoutLoading" />
+
+
 
         </div>
       </template>
@@ -39,22 +41,26 @@
 <script setup>
 import { computed, ref, onMounted, watch } from "vue";
 import { useRoute } from "vue-router";
-import DashboardNav from "@/components/layout/navbar/student/DashboardNav.vue";
-import ClassroomNav from "@/components/layout/navbar/student/ClassroomNav.vue";
-import AnalyticsResultNav from "@/components/layout/navbar/student/AnalyticsResultNav.vue";
-import ProfilesettingNav from "@/components/layout/navbar/student/ProfilesettingNav.vue";
-import AssignmentNav from "@/components/layout/navbar/student/AssignmentNav.vue";
-import RoomDetialNav from "@/components/layout/navbar/student/RoomDetialNav.vue";
+import DashboardNav from "@/components/studentnavbar/DashboardNav.vue";
+import ClassroomNav from "@/components/studentnavbar/ClassroomNav.vue";
+import AnalyticsResultNav from "@/components/studentnavbar/AnalyticsResultNav.vue";
+import ProfilesettingNav from "@/components/studentnavbar/ProfilesettingNav.vue";
+import AssignmentNav from "@/components/studentnavbar/AssignmentNav.vue";
+import RoomDetialNav from "@/components/studentnavbar/RoomDetialNav.vue";
 import { useRouter } from "vue-router";
 import { useAuthStore } from "@/stores/authStore";
 import defaultImage from "../assets/images/default.png";
+import { logoutAPI } from "@/api/auth.api";
 
 const router = useRouter()
 const authStore = useAuthStore()
 const route = useRoute();
 
 const imgBaseUrl = import.meta.env.VITE_BASE_URL_FOR_IMAGE
+
 const isLogoutModalOpen = ref(false)
+const isLogoutLoading = ref(false);
+
 const layoutImageRefresh = ref(Date.now())
 
 const studentMainMenus = [
@@ -70,16 +76,16 @@ const studentMainMenus = [
   },
   {
     name: "ការប្រឡង",
-    routeName: "Assignment", 
+    routeName: "Assignment",
     icon: "bi bi-list-task"
   },
   {
-    name: "ការវិភាគ និងលទ្ធផល",
+    name: "លទ្ធផលប្រឡង",
     routeName: "AnalyticsResult",
     icon: "bi bi-bar-chart-fill",
   },
   {
-    name: "ការកំណត់គណនី",
+    name: "ប្រវត្តិរូប",
     routeName: "ProfileSetting",
     icon: "bi bi-person-circle",
   },
@@ -101,10 +107,19 @@ const activeNavbar = computed(() => {
       return ProfilesettingNav;
   }
 });
-const handleLogout = () => {
-  isLogoutModalOpen.value = false
-  localStorage.clear()
-  router.push('/login')
+
+const handleLogout = async () => {
+  isLogoutLoading.value = true;
+  try {
+     await logoutAPI(); 
+  } catch (err) {
+     console.error("Logout failed", err);
+  } finally {
+     localStorage.clear();
+     isLogoutLoading.value = false;
+     isLogoutModalOpen.value = false;
+     router.push('/login');
+  }
 }
 
 watch(() => authStore.profile?.avatar, () => {
@@ -153,7 +168,6 @@ onMounted(async () => {
     radial-gradient(at 100% 100%, hsla(209, 43%, 80%, 0.6) 0, transparent 50%);
 }
 
-/* add new */
 
 .profile-pill {
   display: flex;

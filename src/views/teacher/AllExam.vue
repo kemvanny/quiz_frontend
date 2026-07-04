@@ -2,17 +2,16 @@
   <div class="exams-dashboard-container p-1">
     <div class="d-flex align-items-center justify-content-between flex-wrap gap-3 mb-4 pb-2">
       <div>
-        <h4 class="fw-bold text-dark mb-1" style="letter-spacing: -0.5px;">បញ្ជីវិញ្ញាសាទាំងអស់</h4>
+        <h4 class="fw-bold text-dark mb-1" style="letter-spacing: -0.5px;">បញ្ជីវិញ្ញាសារទាំងអស់</h4>
         <p class="text-muted small mb-0">គ្រប់គ្រង និងពិនិត្យមើលរាល់វិញ្ញាសាប្រឡងក្នុងប្រព័ន្ធ</p>
       </div>
       <div>
         <span class="vibrant-count-badge">
-          សរុប៖ {{ filteredResults.length }} វិញ្ញាសា
+          សរុប៖ {{ filteredResults.length }} វិញ្ញាសារ
         </span>
       </div>
     </div>
 
-    <!-- Loading State -->
     <div v-if="loading" class="text-center py-5">
       <div class="spinner-border vibrant-spinner" role="status">
         <span class="visually-hidden">កំពុងដំណើរការ...</span>
@@ -21,7 +20,7 @@
     <div v-else>
       <div v-if="paginatedResults.length > 0" class="row g-4">
         <div v-for="exam in paginatedResults" :key="exam.id" class="col-12 col-md-6 col-lg-4">
-          <div class="vibrant-exam-item transition-all">
+          <div class="vibrant-exam-item transition-all exam-card" @click="goToRoom(exam)">
             <div class="d-flex align-items-center justify-content-between mb-3">
               <div class="d-flex align-items-center gap-2">
                 <div class="vibrant-avatar-sm">
@@ -41,7 +40,7 @@
 
             <div class="mb-3 pt-1">
               <h5 class="vibrant-exam-title text-truncate-2" :title="exam.title">
-                {{ exam.title || 'វិញ្ញាសាគ្មានឈ្មោះ' }}
+                {{ exam.title || 'វិញ្ញាសារគ្មានឈ្មោះ' }}
               </h5>
               <p class="vibrant-exam-desc text-truncate-2" :title="exam.description">
                 {{ exam.description || 'គ្មានការពិពណ៌នាឡើយ' }}
@@ -68,15 +67,14 @@
                 </span>
               </div>
             </div>
-
           </div>
         </div>
       </div>
 
       <!-- Empty State -->
       <div v-else class="text-center py-5 bg-white shadow-sm rounded-4">
-        <i class="far fa-folder-open fa-2x mb-2 text-muted opacity-50"></i>
-        <h6 class="fw-bold text-secondary">មិនមានវិញ្ញាសាឡើយ</h6>
+        <i class="far fa-folder-open fa-2x mb-4 text-muted opacity-50"></i>
+        <h6 class="fw-semibold text-secondary">មិនមានវិញ្ញាសារឡើយ</h6>
       </div>
       <div v-if="totalPages > 1" class="d-flex align-items-center justify-content-between pt-3 flex-wrap gap-2">
         <div class="text-muted small fw-medium">
@@ -109,18 +107,17 @@
 import { ref, onMounted, computed } from "vue";
 import { useRouter } from "vue-router";
 import { useToast } from "vue-toastification";
-import { useAuthStore } from "@/stores/auth";
+import { useAuthStore } from "@/stores/authStore";
 import { getExams } from "@/api/exam.api";
 
-// --- State ---
 const loading = ref(true);
 const studentResults = ref([]);
 const currentPage = ref(1);
 const itemsPerPage = ref(6);
 const toast = useToast();
 const router = useRouter();
+const authStore = useAuthStore();
 
-// --- Computed ---
 const filteredResults = computed(() => studentResults.value || []);
 const paginatedResults = computed(() => {
   const startIndex = (currentPage.value - 1) * itemsPerPage.value;
@@ -146,33 +143,40 @@ const visiblePages = computed(() => {
   return pages;
 });
 
-// --- Navigation ---
 const prevPage = () => { if (currentPage.value > 1) currentPage.value--; };
 const nextPage = () => { if (currentPage.value < totalPages.value) currentPage.value++; };
 const goToPage = (page) => { currentPage.value = page; };
 
-// --- API Integration ---
+const goToRoom = (exam) => {
+  if (!exam?.room_id) {
+    toast.error("មិនមានបន្ទប់សម្រាប់វិញ្ញាសារនេះទេ។");
+    return;
+  }
+
+  router.push({
+    name: "ClassStream",
+    params: {
+      roomId: exam.room_id, 
+    },
+  });
+};
 const fetchStudentResults = async () => {
   loading.value = true;
   try {
-    const res = await getExams();
+    const res = await getExams();    
     const rawData = res?.data?.data || res.data || [];
     studentResults.value = Array.isArray(rawData) ? rawData : rawData ? [rawData] : [];
   } catch (err) {
-    console.error(err);
-    if (toast) toast.error("មានកំហុសក្នុងការទាញយកបញ្ជីវិញ្ញាសា");
+    if (toast) toast.error("មានកំហុសក្នុងការទាញយកបញ្ជីវិញ្ញាសារ");
   } finally {
     loading.value = false;
   }
 };
 
-onMounted(() => {
+onMounted( async () => {
   fetchStudentResults();
-  try {
-    useAuthStore().fetchUserProfile();
-  } catch (e) {
-    console.log("Auth store feature ignored or not implemented.");
-  }
+  await authStore.fetchProfile;
+  
 });
 </script>
 
@@ -374,5 +378,14 @@ onMounted(() => {
   opacity: 0.4;
   cursor: not-allowed;
   background: transparent;
+}
+.exam-card {
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.exam-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
 }
 </style>

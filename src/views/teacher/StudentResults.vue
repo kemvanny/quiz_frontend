@@ -22,7 +22,7 @@
         <!-- Filter Selector and Stats -->
         <div class="d-flex align-items-center gap-3 flex-wrap">
           <div class="d-flex align-items-center gap-2">
-            <span class="text-muted small fw-semibold text-nowrap">តម្រងវិញ្ញាសា៖</span>
+            <span class="text-muted small fw-semibold text-nowrap">កម្រងវិញ្ញាសា៖</span>
             <select v-model="selectedExam"
               class="form-select form-select-sm border border-secondary-subtle rounded-pill px-3 py-2 text-dark" style="
                 min-width: 180px;
@@ -37,7 +37,7 @@
             </select>
           </div>
           <span class="badge bg-light text-dark border px-3 py-2 rounded-pill fw-semibold">
-            សរុប៖ {{ filteredResults.length }} បញ្ជូល
+            សរុប {{ filteredResults.length }} លទ្ធផល
           </span>
         </div>
       </div>
@@ -202,10 +202,8 @@
 import { ref, onMounted, computed, watch } from "vue";
 import { useRouter } from "vue-router";
 import { useToast } from "vue-toastification";
-import { useAuthStore } from "@/stores/auth";
 import { getAllStudentResults, addFeedback } from "@/api/exam.api";
 
-// --- State ---
 const loading = ref(true);
 const studentResults = ref([]);
 const selectedExam = ref("all");
@@ -214,7 +212,6 @@ const itemsPerPage = ref(6);
 const toast = useToast();
 const imgBaseUrl = import.meta.env.VITE_BASE_URL_FOR_IMAGE;
 
-// --- Computed (Filter & Pagination) ---
 const availableExams = computed(() => {
   if (!studentResults.value) return [];
   return [
@@ -334,9 +331,8 @@ const getAvatarUrl = (avatar) => {
   return `${imgBaseUrl}${avatar}`;
 };
 
-onMounted(() => {
+onMounted(async () => {
   fetchStudentResults();
-  useAuthStore().fetchUserProfile();
 });
 </script>
 

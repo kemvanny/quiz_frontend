@@ -71,18 +71,12 @@ const handleDeleteRoom = async () => {
 
   try {
     loading.value = true;
-    // ហៅទៅកាន់ Endpoint: DEL /api/teacher/rooms/:id
     await deleteRoomApi(props.roomData.id);
 
-    // ផ្ញើ Event ទៅកាន់ Parent ដើម្បីធ្វើការ Update UI
     emit('deleted');
     emit('close');
   } catch (err) {
-  console.error("Delete room error:", err);
-  console.log("Response:", err.response);
-  console.log("Data:", err.response?.data);
-  console.log("Status:", err.response?.status);
-
+ 
   alert(err.response?.data?.message || "Delete failed");
   } finally {
     loading.value = false;

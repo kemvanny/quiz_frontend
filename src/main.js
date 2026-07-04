@@ -14,17 +14,19 @@ import './assets/main.css'
 import "vue-toastification/dist/index.css";
 
 
-import BaseSidebar from './components/layout/common/BaseSidebar.vue'
-import BaseNavbar from './components/layout/common/BaseNavbar.vue'
+import BaseSidebar from './components/common/BaseSidebar.vue'
+import BaseNavbar from './components/common/BaseNavbar.vue'
 import DataTable from './components/common/DataTable.vue'
 import SearchFilter from './components/common/SearchFilter.vue'
 import BaseButton from './components/common/BaseButton.vue'
 import BaseModal from './components/common/BaseModal.vue'
 import StatusBadge from './components/common/StatusBadge.vue'
-import TeacherNavbarExam from './components/layout/common/TeacherNavbarExam.vue'
-import CreateRoomModal from '@/components/teacher/CreateRoomModal.vue'
+import TeacherNavbarExam from './components/teachernavbar/TeacherNavbarExam.vue'
+import CreateRoomModal from '@/components/teachermodal/CreateRoomModal.vue'
 import BasePagination from '@/components/common/BasePagination.vue'
 import LogoutModal from '@/components/common/LogoutModal.vue'
+import BaseProfile from '@/components/common/BaseProfile.vue'
+import TeacherDashboardNav from '@/components/teachernavbar/TeacherDashboardNav.vue'
 
 const app = createApp(App)
 
@@ -39,12 +41,14 @@ app.component('TeacherNavbarExam',TeacherNavbarExam)
 app.component('CreateRoomModal',CreateRoomModal)
 app.component('BasePagination',BasePagination)
 app.component('LogoutModal',LogoutModal)
+app.component('BaseProfile',BaseProfile)
+app.component('TeacherDashboardNav',TeacherDashboardNav)
 
 app.use(createPinia())
 
 app.use(Toast, {
-  position: POSITION.BOTTOM_CENTER, 
-  containerClassName: "custom-toast-container",
+  position: POSITION.BOTTOM_RIGHT,
+  transition: "Vue-Toastification__bounce",
   timeout: 3000,
   closeOnClick: true,
   pauseOnFocusLoss: true,

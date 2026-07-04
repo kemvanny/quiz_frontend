@@ -3,20 +3,19 @@
     :is-open="isOpen"
     title="បញ្ជីការអញ្ជើញសិស្ស"
     subtitle="គ្រប់គ្រង និងមើលស្ថានភាពសិស្សដែលបានអញ្ជើញចូលរួមថ្នាក់រៀន។"
-    tag="ការអញ្ជើញចូលរួម"
     width="580px"
     @close="$emit('close')"
   >
     <div class="glass-body p-4">
       <div class="mb-4">
-        <label class="form-label small fw-bold text-muted text-uppercase" style="letter-spacing: .5px;">អញ្ជើញសិស្សបន្ថែម (អ៊ីមែល)</label>
+        <label class="form-label mb-3 small fw-bold text-muted text-uppercase" style="letter-spacing: .5px;">អញ្ជើញសិស្ស</label>
         <div class="d-flex gap-2">
           <input 
             type="email" 
             v-model="newEmail" 
             @keydown.enter.prevent="sendSingleInvite"
             class="form-control shadow-none focus-ring-emerald" 
-            placeholder="ឧទាហរណ៍៖ student@gmail.com" 
+            placeholder="student@gmail.com" 
             style="font-size: .95rem; background: #fafbfc; border-radius: 10px;"
             autocomplete="new-password"
           />
@@ -42,7 +41,7 @@
 
       <div v-else>
         <div class="small fw-bold text-muted mb-2 text-uppercase" style="font-size: 0.72rem; letter-spacing: 0.5px;">
-          ប្រវត្តិការអញ្ជើញក្នុងថ្នាក់ ({{ invitationsList.length }})
+          ប្រវត្តិការអញ្ជើញក្នុងថ្នាក់ {{ invitationsList.length }}
         </div>
         
         <div v-if="invitationsList.length === 0" class="text-center py-3 text-muted small">
