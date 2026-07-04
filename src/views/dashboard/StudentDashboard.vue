@@ -111,8 +111,8 @@
             <i class="bi bi-graph-up-arrow"></i>
           </div>
           <div>
-            <div class="stat-label">ពិន្ទុជាមធ្យមសរុប</div>
-            <div class="stat-value">{{ dashboardData.overallAvg || "0%" }}</div>
+            <div class="stat-label">ពិន្ទុមធ្យមភាគសរុប</div>
+            <div class="stat-value">{{ dashboardData.overallAvg || "0" }}%</div>
           </div>
         </a>
       </div>
@@ -141,7 +141,7 @@
           <div class="card">
             <div class="perf-head">
               <div>
-                <div class="card-title">លទ្ធផលសិក្សាតាមមុខវិជ្ជា</div>
+                <div class="card-title">លទ្ធផល និងមតិកែលម្អការសិក្សា</div>
               </div>
               <div class="gpa-block" v-if="performanceList">
                 <div class="gpa-val text-center">
@@ -152,7 +152,7 @@
             </div>
 
             <div v-if="performanceList.length === 0" class="py-3 text-center text-muted">
-              មិនមានទិន្នន័យលទ្ធផលសិក្សាទេ
+              រង់ចាំលទ្ធផល និងមតិកែលម្អពីគ្រូ
             </div>
             <div v-else v-for="(subject, index) in performanceList.subjects" :key="index" class="subj-row">
               <div class="subj-dot" :style="{ background: getSubjectColor(index) }"></div>
@@ -169,7 +169,7 @@
             </div>
 
             <div class="perf-footer">
-              ផ្អែកលើការវាយតម្លៃសិក្សាដែលបានផ្ទៀងផ្ទាត់
+              ផ្អែកលើលទ្ធផល និងមតិកែលម្អពីលោកគ្រូអ្នកគ្រូ
             </div>
           </div>
         </div>
@@ -178,7 +178,7 @@
           <div class="card" style="border-top: 3px solid #f59e0b; border-radius: 0 0 14px 14px">
             <div class="section-head">
               <div>
-                <div class="card-title">កាលកំណត់ជិតដល់</div>
+                <div class="card-title">ការប្រឡងជិតមកដល់</div>
               </div>
             </div>
 
@@ -209,7 +209,7 @@
           <div class="card">
             <div class="section-head">
               <div>
-                <div class="card-title">មតិកែលម្អថ្មីៗ</div>
+                <div class="card-title">លទ្ធផល និងមតិកែលម្អថ្មីៗ</div>
               </div>
               <router-link :to="{ name: 'AnalyticsResult' }" class="view-link">មើលលម្អិត</router-link>
             </div>
