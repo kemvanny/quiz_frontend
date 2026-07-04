@@ -466,7 +466,7 @@
             </p>
 
             <div class="row g-3 my-4">
-              <div class="col-4">
+              <div class="col-6">
                 <div class="metric-score-card p-3 border-0">
                   <span
                     class="text-muted d-block mb-1"
@@ -478,7 +478,7 @@
                   }}</span>
                 </div>
               </div>
-              <div class="col-4">
+              <div class="col-6">
                 <div class="metric-score-card p-3 border-0">
                   <span
                     class="text-muted d-block mb-1"
@@ -488,20 +488,6 @@
                   <span class="h4 fw-bold text-success-theme mb-0"
                     >{{ reportData.correctCount }} /
                     {{ examQuestions.length }}</span
-                  >
-                </div>
-              </div>
-              <div class="col-4">
-                <div class="metric-score-card p-3 border-0">
-                  <span
-                    class="text-muted d-block mb-1"
-                    style="font-size: 0.75rem; font-weight: 600"
-                    >TIME USED</span
-                  >
-                  <span
-                    class="h4 fw-bold text-dark mb-0"
-                    style="color: #4b5563 !important"
-                    >{{ reportData.timeSpent }}</span
                   >
                 </div>
               </div>
