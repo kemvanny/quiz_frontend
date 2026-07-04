@@ -1027,7 +1027,6 @@ const startExamSession = async () => {
       showToast("វិញ្ញាសានេះមិនទាន់មានសំណួរនៅឡើយទេ!", "warning");
       return;
     }
-
     examQuestions.value = questionsArray;
     currentStep.value = 3;
     saveProgressToStorage();
@@ -1035,7 +1034,20 @@ const startExamSession = async () => {
     clearSecurityEvents = setupExamSecurity();
     startTimer();
   } catch (error) {
-    showToast("មិនអាចចាប់ផ្តើមបានទេ! ", "error");
+    const rawMsg =
+      error.response?.data?.msg || error.response?.data?.message || "";
+    let khmerMessage = "";
+
+    if (rawMsg.includes("This exam is not available in the selected room.") || rawMsg.includes("yet")) {
+      khmerMessage = "វិញ្ញាសានេះមិនមាននៅក្នុងបន្ទប់ដែលបានជ្រើសរើសឡើយ!";
+    } else if (rawMsg.includes("Invalid Student Code! Please try again.") || rawMsg.includes("not found")) {
+      khmerMessage = "លេខកូដសិស្សមិនត្រឹមត្រូវទេ! សូមព្យាយាមម្ដងទៀត។";
+    } else if (rawMsg) {
+      khmerMessage = `${rawMsg}`;
+    } else {
+      khmerMessage = "មានបញ្ហាក្នុងការតភ្ជាប់ទៅកាន់ប្រព័ន្ធ!";
+    }
+    showToast(khmerMessage, "error");
   } finally {
     isLobbyLoading.value = false;
   }
