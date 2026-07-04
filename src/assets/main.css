@@ -1,9 +1,3 @@
-/* @font-face {
-  font-family: "Poppins";
-  src: url("./fonts/Poppins-Regular.ttf") format("truetype");
-  font-weight: 400;
-} */
-
 @font-face {
   font-family: "Inter";
   src: url("https://fonts.gstatic.com/s/inter/v13/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfAZ9hiA.woff2")
@@ -564,7 +558,6 @@ a {
       rotate(0);
   }
 }
-/* Toast must always stay above Bootstrap modal */
 .Vue-Toastification__container {
     z-index: 999999999 !important;
 }

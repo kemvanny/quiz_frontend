@@ -120,11 +120,6 @@
         <i class="fas fa-triangle-exclamation"></i>
       </div>
       <div class="flex-grow-1">
-        <div class="task-meta">
-          <span class="meta-chip" style="background: #fef2f2; color: #dc2626">
-            <i class="fas fa-circle-exclamation"></i> មិនមានទិន្នន័យ
-          </span>
-        </div>
         <div class="task-title">
           <span v-if="activeTab === 'todo'">គ្មានការប្រឡងដែលត្រូវធ្វើទេ</span>
           <span v-else-if="activeTab === 'completed'">មិនទាន់មានការប្រឡងដែលបានបញ្ចប់ឡើយ</span>
@@ -132,7 +127,7 @@
         </div>
         <div class="task-details">
           <span class="task-detail" style="color: #dc2626; font-weight: 400">
-            <i class="fas fa-info-circle"></i> {{ examError || "ថ្ងៃនេះអ្នកគ្មានការប្រឡងដែលត្រូវបង្ហាញនោះទេ" }}
+            {{ examError || "ថ្ងៃនេះអ្នកគ្មានការប្រឡងដែលត្រូវបង្ហាញនោះទេ" }}
           </span>
         </div>
       </div>

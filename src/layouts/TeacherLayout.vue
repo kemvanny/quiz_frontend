@@ -1,25 +1,43 @@
 <template>
   <div class="app-layout">
     <BaseSidebar :role-name="'TEACHER'" :main-menus="teacherMainMenus">
-         <template #user-profile>
+      <template #user-profile>
         <div class="profile-card">
           <div class="profile-info">
             <img
-              :src="authStore.profile?.avatar && authStore.profile?.avatar !== 'default.png' ? `${imgBaseUrl}${authStore.profile?.avatar}?t=${layoutImageRefresh}` : defaultImage"
-              alt="Profile" class="profile-img" />
+              :src="
+                authStore.profile?.avatar &&
+                authStore.profile?.avatar !== 'default.png'
+                  ? `${imgBaseUrl}${authStore.profile?.avatar}?t=${layoutImageRefresh}`
+                  : defaultImage
+              "
+              alt="Profile"
+              class="profile-img"
+            />
             <div class="profile-text">
-              <span class="profile-name">{{ authStore.profile?.firstName }} {{ authStore.profile?.lastName }}</span>
+              <span class="profile-name"
+                >{{ authStore.profile?.firstName }}
+                {{ authStore.profile?.lastName }}</span
+              >
               <span class="profile-role">{{ authStore.profile?.role }}</span>
             </div>
           </div>
 
-          <button class="logout-btn" @click.prevent="isLogoutModalOpen = true" title="ចាកចេញ">
+          <button
+            class="logout-btn"
+            @click.prevent="isLogoutModalOpen = true"
+            title="ចាកចេញ"
+          >
             <i class="bi bi-box-arrow-right"></i>
           </button>
 
-          <LogoutModal :show="isLogoutModalOpen" title="Student" @close="isLogoutModalOpen = false"
-            @confirm="handleLogout" :is-loading="isLogoutLoading"/>
-
+          <LogoutModal
+            :show="isLogoutModalOpen"
+            title="Student"
+            @close="isLogoutModalOpen = false"
+            @confirm="handleLogout"
+            :is-loading="isLogoutLoading"
+          />
         </div>
       </template>
     </BaseSidebar>
@@ -38,7 +56,7 @@
 </template>
 
 <script setup>
-import { computed, ref, provide,onMounted,watch } from "vue";
+import { computed, ref, provide, onMounted, watch } from "vue";
 import { useRoute } from "vue-router";
 import { useRouter } from "vue-router";
 import { useAuthStore } from "@/stores/authStore";
@@ -57,48 +75,44 @@ import TeacherRoomDetail from "@/components/teachernavbar/TeacherRoomDetail.vue"
 import TeacherExamDetail from "@/components/teachernavbar/TeacherExamDetail.vue";
 import TeacherAllexamNav from "@/components/teachernavbar/TeacherAllexamNav.vue";
 
-
 const router = useRouter();
 const route = useRoute();
 
 const authStore = useAuthStore();
 const isLogoutModalOpen = ref(false);
 
-const layoutImageRefresh = ref(Date.now())
-const imgBaseUrl = import.meta.env.VITE_BASE_URL_FOR_IMAGE
+const layoutImageRefresh = ref(Date.now());
+const imgBaseUrl = import.meta.env.VITE_BASE_URL_FOR_IMAGE;
 
 const searchQuery = ref("");
 
 const isLogoutLoading = ref(false);
 
-const openLogoutModal = () => {
-  isLogoutModalOpen.value = true;
-};
-
 onMounted(async () => {
-
-  if (typeof authStore.fetchProfile === 'function') {
-    await authStore.fetchProfile()
+  if (typeof authStore.fetchProfile === "function") {
+    await authStore.fetchProfile();
   }
-})
+});
 
 const handleLogout = async () => {
   isLogoutLoading.value = true;
   try {
-     await logoutAPI(); 
+    await logoutAPI();
   } catch (err) {
-     console.error("Logout failed", err);
+    console.error("Logout failed", err);
   } finally {
-     localStorage.clear();
-     isLogoutLoading.value = false;
-     isLogoutModalOpen.value = false;
-     router.push('/login');
+    localStorage.clear();
+    isLogoutLoading.value = false;
+    isLogoutModalOpen.value = false;
+    router.push("/login");
   }
-}
-watch(() => authStore.profile?.avatar, () => {
-  layoutImageRefresh.value = Date.now()
-})
-
+};
+watch(
+  () => authStore.profile?.avatar,
+  () => {
+    layoutImageRefresh.value = Date.now();
+  },
+);
 
 const teacherMainMenus = [
   {
@@ -106,19 +120,31 @@ const teacherMainMenus = [
     routeName: "TeacherDashboard",
     icon: "fas fa-th-large",
   },
-  { name: "បង្កើតការប្រឡង", routeName: "Quizzes", icon: "fas fa-edit" },
   {
     name: "គ្រប់គ្រងថ្នាក់រៀន",
     routeName: "RoomManagement",
     icon: "fas fa-users",
   },
-  { name: "បញ្ជីវិញ្ញាសា", routeName: "AllExams", icon: "fas fa-file-alt" },
+  { 
+    name: "បង្កើតការប្រឡង", 
+    routeName: "Quizzes",
+    icon: "fas fa-edit" 
+  },
+  { 
+    name: "បញ្ជីវិញ្ញាសារ", 
+    routeName: "AllExams", 
+    icon: "fas fa-file-alt" 
+  },
   {
     name: "លទ្ធផលសិស្ស",
     routeName: "StudentResults",
     icon: "fas fa-chart-bar",
   },
-  { name: "ប្រវត្តិរូប", routeName: "Profile", icon: "fas fa-user-circle" },
+  {
+    name: "ប្រវត្តិរូប", 
+    routeName: "Profile", 
+    icon: "fas fa-user-circle" 
+  },
 ];
 
 provide("searchQuery", searchQuery);
@@ -193,7 +219,7 @@ const activeNavbar = computed(() => {
 
 .sidebar-footer {
   padding: 15px 16px;
-  border-top: 1px solid #f1f5f9; 
+  border-top: 1px solid #f1f5f9;
   background-color: #ffffff;
 }
 
@@ -220,12 +246,12 @@ const activeNavbar = computed(() => {
 }
 
 .btn-logout:hover {
-  background-color: #fef2f2; 
+  background-color: #fef2f2;
   color: #dc2626;
 }
 
 .btn-logout:hover i {
-  transform: translateX(-2px); 
+  transform: translateX(-2px);
 }
 
 .btn-logout:active {

@@ -369,6 +369,23 @@ const profileData = reactive({
   avatarUrl: "",
 });
 
+const resetPasswordForm = () => {
+  passwordForm.value = {
+    oldPassword: "",
+    newPassword: "",
+    confirmPassword: "",
+  };
+
+  oldPasswordError.value = "";
+  newPasswordError.value = "";
+  confirmPasswordError.value = "";
+
+  showPassword.value = {
+    oldPassword: false,
+    newPassword: false,
+    confirmPassword: false,
+  };
+};
 const toastConfig = {
   position: "bottom-right",
   timeout: 3000,
@@ -471,6 +488,7 @@ const handleChangePassword = async () => {
     );
 
     triggerToast("ផ្លាស់ប្តូរលេខសម្ងាត់ជោគជ័យ!", "fa-solid fa-circle-check");
+    resetPasswordForm();
   } catch (err) {
     oldPasswordError.value = "លេខសម្ងាត់ចាស់មិនត្រឹមត្រូវ!";
     triggerToast("លេខសម្ងាត់ចាស់មិនត្រឹមត្រូវ!", "fa-solid fa-circle-xmark");
@@ -549,9 +567,12 @@ const handleAvatarUpload = async (event) => {
   }
 };
 watch(() => passwordForm.value.oldPassword, (newValue) => {
-  if (newValue.length > 0) {
-    oldPasswordError.value = ""; 
+  if (!newValue) {
+    oldPasswordError.value = "";
+    return;
   }
+
+  oldPasswordError.value = "";
 });
 
 watch(() => passwordForm.value.newPassword, (newValue) => {
@@ -563,6 +584,11 @@ watch(() => passwordForm.value.newPassword, (newValue) => {
 });
 
 watch(() => passwordForm.value.confirmPassword, (newValue) => {
+  if (!newValue) {
+    confirmPasswordError.value = "";
+    return;
+  }
+
   if (newValue !== passwordForm.value.newPassword) {
     confirmPasswordError.value = "លេខសម្ងាត់មិនដូចគ្នាទេ!";
   } else {
@@ -573,10 +599,14 @@ watch(() => passwordForm.value.confirmPassword, (newValue) => {
 watch(
   () => passwordForm.value.newPassword,
   (val) => {
-    validatePassword(val);
+    if (!val) {
+      newPasswordError.value = "";
+      return;
+    }
 
+    validatePassword(val);
     newPasswordError.value = errors.value.password;
-  },
+  }
 );
 
 const openDeleteModal = () => {
