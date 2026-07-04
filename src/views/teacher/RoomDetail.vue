@@ -1,11 +1,8 @@
 <template>
   <div class="room-page">
-    <div
-      class="card border-0 shadow-sm rounded-4 overflow-hidden custom-exams-card"
-    >
+    <div class="card border-0 shadow-sm rounded-4 overflow-hidden custom-exams-card">
       <div
-        class="card-header bg-white border-bottom-0 pt-4 px-4 pb-0 d-flex align-items-center justify-content-between flex-wrap gap-3"
-      >
+        class="card-header bg-white border-bottom-0 pt-4 px-4 pb-0 d-flex align-items-center justify-content-between flex-wrap gap-3">
         <div class="toolbar-left">
           <span class="stats-badge">
             <i class="fas fa-clipboard-list me-2"></i>
@@ -27,32 +24,18 @@
 
       <div class="card-body px-4 pb-4 pt-3">
         <div v-if="loading" class="state-empty border-0 shadow-none">
-          <div
-            class="spinner-border text-success spinner-border-sm"
-            role="status"
-          ></div>
+          <div class="spinner-border text-success spinner-border-sm" role="status"></div>
           <p class="mt-2 mb-0">កំពុងទាញយក...</p>
         </div>
 
-        <div
-          v-else-if="filteredByStatus.length === 0"
-          class="state-empty border-0 shadow-none"
-        >
+        <div v-else-if="filteredByStatus.length === 0" class="state-empty border-0 shadow-none">
           <i class="fas fa-folder-open empty-icon m-auto"></i>
           <p class="mb-0 mt-3">មិនមានវិញ្ញាសារ</p>
         </div>
 
         <div class="exam-list">
-          <div
-            class="exam-row"
-            v-for="exam in paginatedExams"
-            :key="exam.id"
-            @click="viewExamDetails(exam.id)"
-          >
-            <div
-              class="row-icon"
-              :class="exam.status === 'active' ? 'ic-active' : 'ic-draft'"
-            >
+          <div class="exam-row" v-for="exam in paginatedExams" :key="exam.id" @click="viewExamDetails(exam.id)">
+            <div class="row-icon" :class="exam.status === 'active' ? 'ic-active' : 'ic-draft'">
               <i class="fas fa-file-alt"></i>
             </div>
 
@@ -64,12 +47,9 @@
                 }}</span>
               </div>
               <div class="row-sub">
-                <span class="sub-item"
-                  ><i class="far fa-clock"></i> {{ exam.duration }} នាទី</span
-                >
+                <span class="sub-item"><i class="far fa-clock"></i> {{ exam.duration }} នាទី</span>
                 <div class="dot"></div>
-                <span class="sub-item"
-                  ><i class="far fa-user"></i>
+                <span class="sub-item"><i class="far fa-user"></i>
                   {{
                     authStore.profile?.firstName || authStore.profile?.lastName
                       ? `${authStore.profile.firstName || ""} ${authStore.profile.lastName || ""}`.trim()
@@ -78,10 +58,9 @@
                 </span>
                 <div class="dot"></div>
                 <span class="row-pts">
-                  <i class="fas fa-star text-warning me-1"></i
-                  >{{
+                  <i class="fas fa-star text-warning me-1"></i>{{
                     exam.total_points !== undefined &&
-                    exam.total_points !== null
+                      exam.total_points !== null
                       ? exam.total_points
                       : 0
                   }}
@@ -91,28 +70,17 @@
             </div>
 
             <div class="row-meta-actions" @click.stop>
-              <span
-                class="ec-badge"
-                :class="exam.status === 'active' ? 'b-active' : 'b-draft'"
-              >
+              <span class="ec-badge" :class="exam.status === 'active' ? 'b-active' : 'b-draft'">
                 {{ exam.status }}
               </span>
 
               <div class="vertical-divider"></div>
 
               <div class="action-buttons">
-                <button
-                  class="icon-btn btn-edit"
-                  @click.stop="handleUpdate(exam)"
-                  title="កែប្រែ"
-                >
+                <button class="icon-btn btn-edit" @click.stop="handleUpdate(exam)" title="កែប្រែ">
                   <i class="far fa-edit"></i>
                 </button>
-                <button
-                  class="icon-btn btn-del"
-                  @click.stop="handleDelete(exam)"
-                  title="លុប"
-                >
+                <button class="icon-btn btn-del" @click.stop="handleDelete(exam)" title="លុប">
                   <i class="far fa-trash-alt"></i>
                 </button>
               </div>
@@ -120,116 +88,86 @@
           </div>
         </div>
       </div>
-      <div
-        v-if="totalPages > 1"
-        class="card-footer bg-white border-top-0 px-4 pb-4 pt-0 d-flex justify-content-center"
-      >
+      <div v-if="totalPages > 1" class="card-footer bg-white border-top-0 px-4 pb-4 pt-0 d-flex justify-content-center">
         <div class="pagination-wrapper">
-          <button
-            class="pg-btn pg-arrow"
-            :disabled="currentPage === 1"
-            @click="currentPage--"
-          >
+          <button class="pg-btn pg-arrow" :disabled="currentPage === 1" @click="currentPage--">
             <i class="fas fa-chevron-left"></i>
           </button>
 
-          <button
-            v-for="page in totalPages"
-            :key="page"
-            class="pg-btn"
-            :class="{ 'pg-active': currentPage === page }"
-            @click="currentPage = page"
-          >
+          <button v-for="page in totalPages" :key="page" class="pg-btn" :class="{ 'pg-active': currentPage === page }"
+            @click="currentPage = page">
             {{ page }}
           </button>
 
-          <button
-            class="pg-btn pg-arrow"
-            :disabled="currentPage === totalPages"
-            @click="currentPage++"
-          >
+          <button class="pg-btn pg-arrow" :disabled="currentPage === totalPages" @click="currentPage++">
             <i class="fas fa-chevron-right"></i>
           </button>
         </div>
       </div>
     </div>
 
-    <div
-      v-if="showUpdateModal"
-      class="modal-backdrop-custom d-flex align-items-center justify-content-center"
-      @click.self="showUpdateModal = false"
-    >
-      <div
-        class="modal-dialog-custom p-4 bg-white rounded-4 shadow-lg slide-in"
-        style="width: 100%; max-width: 460px"
-      >
+    <div v-if="showUpdateModal" class="modal-backdrop-custom d-flex align-items-center justify-content-center"
+      @click.self="showUpdateModal = false">
+      <div class="modal-dialog-custom p-4 bg-white rounded-4 shadow-lg slide-in" style="width: 100%; max-width: 560px">
         <div class="d-flex justify-content-between align-items-center mb-3">
           <h5 class="fw-bold text-dark m-0">
             <i class="far fa-edit text-success me-2"></i>កែប្រែព័ត៌មានវិញ្ញាសា
           </h5>
-          <button
-            class="btn-close shadow-none"
-            style="font-size: 0.8rem"
-            @click="showUpdateModal = false"
-          ></button>
+          <button class="btn-close shadow-none" style="font-size: 0.8rem" @click="showUpdateModal = false"></button>
         </div>
 
-        <form @submit.prevent="submitUpdateExam">
+        <form @submit.prevent="submitUpdateExam" class="p-2">
+    
           <div class="mb-3 text-start">
-            <label class="form-label small fw-bold text-muted"
-              >ចំណងជើងវិញ្ញាសា</label
-            >
-            <input
-              type="text"
-              v-model="editForm.title"
-              class="form-control rounded-3 border-light-subtle shadow-sm small-input"
-              required
-            />
+            <label class="form-label small fw-bold text-muted">ចំណងជើងវិញ្ញាសា</label>
+            <input type="text" v-model="editForm.title"
+              class="form-control rounded-3 border-light-subtle shadow-sm small-input" required />
           </div>
 
-          <div class="mb-3 text-start">
-            <label class="form-label small fw-bold text-muted"
-              >រយៈពេលប្រឡង-នាទី</label
-            >
-            <input
-              type="number"
-              v-model.number="editForm.duration"
-              class="form-control rounded-3 border-light-subtle shadow-sm small-input"
-              required
-              min="1"
-            />
+          <div class="row g-3 mb-3">
+            <div class="col-md-6 text-start">
+              <label class="form-label small fw-bold text-muted">រយៈពេលប្រឡង-នាទី</label>
+              <input type="number" v-model.number="editForm.duration"
+                class="form-control rounded-3 border-light-subtle shadow-sm small-input" required min="1" />
+            </div>
+            <div class="col-md-6 text-start">
+              <label class="form-label small fw-bold text-muted">ស្ថានភាព</label>
+              <select v-model="editForm.status" class="form-select rounded-3 border-light-subtle shadow-sm small-input"
+                required>
+                <option value="active">កំពុងបើកប្រឡង</option>
+                <option value="draft">វិញ្ញាសាព្រាង</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="row g-3 mb-3">
+            <div class="col-md-6 text-start">
+              <label class="form-label small fw-bold text-muted">ម៉ោងចាប់ផ្តើម</label>
+              <input type="datetime-local" v-model="editForm.start_time"
+                class="form-control rounded-3 border-light-subtle shadow-sm small-input" required />
+            </div>
+            <div class="col-md-6 text-start">
+              <label class="form-label small fw-bold text-muted">ម៉ោងបញ្ចប់</label>
+              <input type="datetime-local" v-model="editForm.end_time"
+                class="form-control rounded-3 border-light-subtle shadow-sm small-input" required />
+            </div>
           </div>
 
           <div class="mb-4 text-start">
-            <label class="form-label small fw-bold text-muted"
-              >ការពិពណ៌នា</label
-            >
-            <textarea
-              v-model="editForm.description"
-              class="form-control rounded-3 border-light-subtle shadow-sm small-input"
-              rows="3"
-            ></textarea>
+            <label class="form-label small fw-bold text-muted">ការពិពណ៌នា</label>
+            <textarea v-model="editForm.description"
+              class="form-control rounded-3 border-light-subtle shadow-sm small-input" rows="3"></textarea>
           </div>
 
           <div class="d-flex gap-2 justify-content-end border-top pt-3">
-            <button
-              type="button"
-              class="btn btn-light rounded-3 px-4 fw-semibold text-muted small"
-              @click="showUpdateModal = false"
-              :disabled="isProcessing"
-            >
+            <button type="button" class="btn btn-light rounded-3 px-4 fw-semibold text-muted small"
+              @click="showUpdateModal = false" :disabled="isProcessing">
               បោះបង់
             </button>
-            <button
-              type="submit"
+            <button type="submit"
               class="btn btn-emerald rounded-3 px-4 fw-semibold small d-flex align-items-center gap-2"
-              :disabled="isProcessing"
-            >
-              <span
-                v-if="isProcessing"
-                class="spinner-border spinner-border-sm"
-                role="status"
-              ></span>
+              :disabled="isProcessing">
+              <span v-if="isProcessing" class="spinner-border spinner-border-sm" role="status"></span>
               {{ isProcessing ? "កំពុងរក្សាទុក..." : "រក្សាទុក" }}
             </button>
           </div>
@@ -237,19 +175,12 @@
       </div>
     </div>
 
-    <div
-      v-if="showDeleteModal"
-      class="modal-backdrop-custom d-flex align-items-center justify-content-center"
-      @click.self="showDeleteModal = false"
-    >
-      <div
-        class="modal-dialog-custom p-4 bg-white rounded-4 shadow-lg text-center slide-in"
-        style="max-width: 420px"
-      >
+    <div v-if="showDeleteModal" class="modal-backdrop-custom d-flex align-items-center justify-content-center"
+      @click.self="showDeleteModal = false">
+      <div class="modal-dialog-custom p-4 bg-white rounded-4 shadow-lg text-center slide-in" style="max-width: 420px">
         <div
           class="delete-icon-wrapper mb-3 mx-auto d-flex align-items-center justify-content-center rounded-circle bg-danger bg-opacity-10 text-danger"
-          style="width: 54px; height: 54px"
-        >
+          style="width: 54px; height: 54px">
           <i class="fas fa-exclamation-triangle fa-lg"></i>
         </div>
         <h5 class="fw-bold text-dark mb-2">
@@ -261,23 +192,13 @@
           នឹងត្រូវបាត់បង់ទាំងស្រុងពីប្រព័ន្ធ។
         </p>
         <div class="d-flex gap-2 justify-content-center">
-          <button
-            class="btn btn-light rounded-3 px-4 fw-bold text-muted small"
-            @click="showDeleteModal = false"
-            :disabled="isProcessing"
-          >
+          <button class="btn btn-light rounded-3 px-4 fw-bold text-muted small" @click="showDeleteModal = false"
+            :disabled="isProcessing">
             បោះបង់
           </button>
-          <button
-            class="btn btn-danger rounded-3 px-4 fw-bold small d-flex align-items-center gap-2"
-            @click="confirmDeleteExam"
-            :disabled="isProcessing"
-          >
-            <span
-              v-if="isProcessing"
-              class="spinner-border spinner-border-sm"
-              role="status"
-            ></span>
+          <button class="btn btn-danger rounded-3 px-4 fw-bold small d-flex align-items-center gap-2"
+            @click="confirmDeleteExam" :disabled="isProcessing">
+            <span v-if="isProcessing" class="spinner-border spinner-border-sm" role="status"></span>
             {{ isProcessing ? "កំពុងលុប..." : "យល់ព្រមលុប" }}
           </button>
         </div>
@@ -327,6 +248,8 @@ const editForm = ref({
   title: "",
   duration: 60,
   description: "",
+  start_time: "",
+  end_time: "",
 });
 
 const totalPages = computed(() =>
@@ -383,58 +306,37 @@ const handleUpdate = (exam) => {
     description: exam.description || "",
     type: exam.type || "quiz",
     status: exam.status || "active",
+    start_time: exam.start_time ? formatToInputDateTime(exam.start_time) : "",
+    end_time: exam.end_time ? formatToInputDateTime(exam.end_time) : "",
   };
   showUpdateModal.value = true;
 };
 
 const submitUpdateExam = async () => {
   if (!selectedExamId.value) return;
+  if (!editForm.value.start_time || !editForm.value.end_time) {
+    toast.error("សូមបំពេញថ្ងៃខែ និងម៉ោងចាប់ផ្តើម/បញ្ចប់ ឱ្យបានត្រឹមត្រូវ!");
+    return;
+  }
+
   try {
     isProcessing.value = true;
-
-    const today = new Date();
-    const year = today.getFullYear();
-    const month = String(today.getMonth() + 1).padStart(2, "0");
-    const day = String(today.getDate()).padStart(2, "0");
-    const start_date_formatted = `${year}-${month}-${day} 00:00`;
-
-    const nextWeek = new Date();
-    nextWeek.setDate(today.getDate() + 7);
-    const endYear = nextWeek.getFullYear();
-    const endMonth = String(nextWeek.getMonth() + 1).padStart(2, "0");
-    const endDay = String(nextWeek.getDate()).padStart(2, "0");
-    const end_date_formatted = `${endYear}-${endMonth}-${endDay} 23:59`;
+    const formattedStartTime = editForm.value.start_time.replace("T", " ");
+    const formattedEndTime = editForm.value.end_time.replace("T", " ");
 
     const fullUpdatePayload = {
       title: editForm.value.title.trim(),
       type: editForm.value.type,
-      description: editForm.value.description
-        ? editForm.value.description.trim()
-        : "គ្មានការពិពណ៌នា",
+      description: editForm.value.description ? editForm.value.description.trim() : "គ្មានការពិពណ៌នា",
       duration: parseInt(editForm.value.duration),
       status: editForm.value.status,
-      start_time: start_date_formatted,
-      end_time: end_date_formatted,
+      start_time: formattedStartTime,
+      end_time: formattedEndTime,
     };
-    await updateExam(selectedExamId.value, fullUpdatePayload);
+    const res = await updateExam(selectedExamId.value, fullUpdatePayload);
 
     toast.success("ព័ត៌មានវិញ្ញាសាត្រូវបានកែប្រែដោយជោគជ័យ!");
-    await fetchExamsData()   
-    showUpdateModal.value = false
-    const examIndex = allExams.value.findIndex(
-      (e) => e.id === selectedExamId.value,
-    );
-
-    if (examIndex !== -1) {
-      allExams.value[examIndex] = {
-        ...allExams.value[examIndex],
-        title: editForm.value.title,
-        duration: editForm.value.duration,
-        description: editForm.value.description,
-        type: editForm.value.type,
-        status: editForm.value.status,
-      };
-    }
+    await fetchExamsData();
 
     showUpdateModal.value = false;
   } catch (err) {
@@ -443,6 +345,33 @@ const submitUpdateExam = async () => {
   } finally {
     isProcessing.value = false;
   }
+};
+
+watch(
+  () => [editForm.value.start_time, editForm.value.duration],
+  ([newStart, newDuration]) => {
+    if (!newStart || !newDuration) return;
+    const start = new Date(newStart);
+    start.setMinutes(start.getMinutes() + parseInt(newDuration || 0));
+    const year = start.getFullYear();
+    const month = String(start.getMonth() + 1).padStart(2, "0");
+    const day = String(start.getDate()).padStart(2, "0");
+    const hours = String(start.getHours()).padStart(2, "0");
+    const minutes = String(start.getMinutes()).padStart(2, "0");
+    editForm.value.end_time = `${year}-${month}-${day}T${hours}:${minutes}`;
+  }
+);
+
+const formatToInputDateTime = (dateStr) => {
+  if (!dateStr) return "";
+  const date = new Date(dateStr);
+  if (isNaN(date.getTime())) return dateStr;
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  const hours = String(date.getHours()).padStart(2, "0");
+  const minutes = String(date.getMinutes()).padStart(2, "0");
+  return `${year}-${month}-${day}T${hours}:${minutes}`;
 };
 
 const handleDelete = (exam) => {
@@ -459,7 +388,7 @@ const confirmDeleteExam = async () => {
     await deleteExam(targetId);
 
     toast.success("បានលុបវិញ្ញាសាចេញពីប្រព័ន្ធដោយជោគជ័យ!");
-    await fetchExamsData() 
+    await fetchExamsData()
     allExams.value = allExams.value.filter(
       (e) => e.id !== examToDelete.value.id,
     );
@@ -705,6 +634,7 @@ onMounted(async () => {
   background: rgba(16, 185, 129, 0.1);
   color: #047857;
 }
+
 .b-draft {
   background: #f1f5f9;
   color: #64748b;
@@ -812,6 +742,7 @@ onMounted(async () => {
 .slide-in {
   animation: modalSlide 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
+
 /* Pagination */
 .pagination-wrapper {
   display: flex;
@@ -857,11 +788,13 @@ onMounted(async () => {
   color: #94a3b8;
   font-size: 11px;
 }
+
 @keyframes modalSlide {
   from {
     opacity: 0;
     transform: scale(0.96) translateY(8px);
   }
+
   to {
     opacity: 1;
     transform: scale(1) translateY(0);
