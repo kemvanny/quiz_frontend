@@ -743,7 +743,7 @@ onMounted(() => {
   border: 1px solid transparent;
   border-radius: 50px;
   padding: 4px 14px;
-  font-size: 0.78rem;
+  font-size: 0.90rem;
   font-weight: 600;
   color: #64748b;
   cursor: pointer;
@@ -764,13 +764,13 @@ onMounted(() => {
   color: #065f46;
   border-radius: 50px;
   padding: 1px 7px;
-  font-size: 0.7rem;
+  font-size: 0.9rem;
   font-weight: 700;
 }
 
 .results-table thead th {
   background: #f8fafc;
-  font-size: 0.68rem;
+  font-size: 0.80rem;
   font-weight: 700;
   letter-spacing: 0.6px;
   text-transform: uppercase;
