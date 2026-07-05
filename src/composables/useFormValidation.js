@@ -44,31 +44,37 @@ export function useFormValidation() {
     }
   };
 
-  const validateFirstName = (value) => {
-    if (!value || value.trim() === "") {
-      errors.value.firstName = "សូមបញ្ចូលនាមត្រកូល!";
-    } else if (value.trim().length < 2) {
-      errors.value.firstName = "នាមត្រកូលត្រូវមានយ៉ាងហោចណាស់ ២ តួអក្សរឡើងទៅ!";
-    } else if (!namePattern.test(value)) {
-      errors.value.firstName =
-        "នាមត្រកូលអាចវាយបានតែអក្សរ ខ្មែរ​ ឬ អង់គ្លេស ប៉ុណ្ណោះ ហាមប្រើសញ្ញាពិសេសផ្សេងៗ!";
-    } else {
-      errors.value.firstName = "";
-    }
-  };
+const validateFirstName = (value) => {
+  const trimmedValue = value?.trim() || "";
 
-  const validateLastName = (value) => {
-    if (!value || value.trim() === "") {
-      errors.value.lastName = "សូមបញ្ចូលនាមខ្លួន!";
-    } else if (value.trim().length < 2) {
-      errors.value.lastName = "នាមខ្លួនត្រូវមានយ៉ាងហោចណាស់ ២ តួអក្សរឡើងទៅ!";
-    } else if (!namePattern.test(value)) {
-      errors.value.lastName =
-        "នាមខ្លួនអាចវាយបានតែអក្សរ ខ្មែរ​ ឬ​ អង់គ្លេស ប៉ុណ្ណោះ ហាមប្រើសញ្ញាពិសេសផ្សេងៗ!";
-    } else {
-      errors.value.lastName = "";
-    }
-  };
+  if (trimmedValue === "") {
+    errors.value.firstName = "សូមបញ្ចូលនាមត្រកូល!";
+  } else if (trimmedValue.length < 2) {
+    errors.value.firstName = "នាមត្រកូលត្រូវមានយ៉ាងហោចណាស់ ២ តួអក្សរ!";
+  } else if (trimmedValue.length > 10) {
+    errors.value.firstName = "នាមត្រកូលមិនអាចលើសពី ១០ តួអក្សរទេ!";
+  } else if (!namePattern.test(trimmedValue)) {
+    errors.value.firstName = "នាមត្រកូលអាចវាយបានតែអក្សរ ខ្មែរ​ ឬ អង់គ្លេស ប៉ុណ្ណោះ!";
+  } else {
+    errors.value.firstName = "";
+  }
+};
+
+const validateLastName = (value) => {
+  const trimmedValue = value?.trim() || "";
+
+  if (trimmedValue === "") {
+    errors.value.lastName = "សូមបញ្ចូលនាមខ្លួន!";
+  } else if (trimmedValue.length < 2) {
+    errors.value.lastName = "នាមខ្លួនត្រូវមានយ៉ាងហោចណាស់ ២ តួអក្សរ!";
+  } else if (trimmedValue.length > 10) {
+    errors.value.lastName = "នាមខ្លួនមិនអាចលើសពី ១០ តួអក្សរទេ!";
+  } else if (!namePattern.test(trimmedValue)) {
+    errors.value.lastName = "នាមខ្លួនអាចវាយបានតែអក្សរ ខ្មែរ​ ឬ អង់គ្លេស ប៉ុណ្ណោះ!";
+  } else {
+    errors.value.lastName = "";
+  }
+};
 
   const validateRole = (value) => {
     if (!value) {
@@ -78,29 +84,36 @@ export function useFormValidation() {
     }
   };
 
-  const validatePhone = (value) => {
-    if (!value) {
-      errors.value.phone = "សូមបញ្ចូលលេខទូរស័ព្ទ!";
-    } else if (!phonePattern.test(value)) {
-      errors.value.phone =
-        "ទម្រង់លេខទូរស័ព្ទមិនត្រឹមត្រូវ (ឧទាហរណ៍៖ 012345678)";
-    } else {
-      errors.value.phone = "";
-    }
-  };
+ const validatePhone = (value) => {
+  const phone = value?.trim() || "";
 
-  const validateAddress = (value) => {
-    if (!value || value.trim() === "") {
-      errors.value.address = "សូមបញ្ចូលអាសយដ្ឋាន!";
-    } else if (value.trim().length < 4) {
-      errors.value.address = "អាសយដ្ឋានត្រូវមានយ៉ាងហោចណាស់ ៤ តួអក្សរឡើងទៅ!";
-    } else if (!addressPattern.test(value)) {
-      errors.value.address =
-        "អាសយដ្ឋានអាចវាយបានតែអក្សរ លេខ និងសញ្ញា ( , . / - ) ប៉ុណ្ណោះ ហាមប្រើសញ្ញាពិសេសផ្សេងៗ!";
-    } else {
-      errors.value.address = "";
-    }
-  };
+  if (!phone) {
+    errors.value.phone = "សូមបញ្ចូលលេខទូរស័ព្ទ!";
+  } else if (phone.length < 8 || phone.length > 10) {
+    errors.value.phone = "លេខទូរស័ព្ទត្រូវមានពី ៨ ដល់ ១០ ខ្ទង់!";
+  } else if (!phonePattern.test(phone)) {
+    errors.value.phone = "ទម្រង់លេខទូរស័ព្ទមិនត្រឹមត្រូវ!";
+  } else {
+    errors.value.phone = "";
+  }
+};
+
+const validateAddress = (value) => {
+  const address = value?.trim() || "";
+
+  if (!address) {
+    errors.value.address = "សូមបញ្ចូលអាសយដ្ឋាន!";
+  } else if (address.length < 4) {
+    errors.value.address = "អាសយដ្ឋានត្រូវមានយ៉ាងហោចណាស់ ៤ តួអក្សរ!";
+  } else if (address.length > 25) {
+    
+    errors.value.address = "អាសយដ្ឋានមិនអាចលើសពី ២៥ តួអក្សរទេ!";
+  } else if (!addressPattern.test(address)) {
+    errors.value.address = "អាសយដ្ឋានអាចវាយបានតែអក្សរ លេខ និងសញ្ញា ( , . / - ) ប៉ុណ្ណោះ!";
+  } else {
+    errors.value.address = "";
+  }
+};
   const validateAll = (data) => {
     validateFirstName(data.firstName);
     validateLastName(data.lastName);

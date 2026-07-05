@@ -55,16 +55,18 @@
                     <i class="bi bi-door-closed"></i>
                 </div>
                 <h5 class="text-muted" style="font-family: 'Kantumruy Pro';">រកមិនឃើញបន្ទប់រៀនទេ</h5>
-                <p class="text-muted small" style="font-family: 'Kantumruy Pro';">សូមសាកល្បងស្វែងរកពាក្យផ្សេង ឬបន្ថែមបន្ទប់ថ្មី។</p>
+                <p class="text-muted small" style="font-family: 'Kantumruy Pro';">សូមសាកល្បងស្វែងរកពាក្យផ្សេង
+                    ឬបន្ថែមបន្ទប់ថ្មី។</p>
             </div>
 
             <!-- Room Cards Grid -->
             <div v-else class="row g-4 room-grid mb-4">
-                <div v-for="(room,index) in rooms" :key="room.id" class="col-12 col-sm-6 col-lg-4 col-xl-3">
+                <div v-for="(room, index) in rooms" :key="room.id" class="col-12 col-sm-6 col-lg-4 col-xl-3">
                     <div class="room-card h-100">
                         <div class="card-accent" :style="getAccentColor(index)">
                             <div class="room-avatar">
-                                {{ getInitials(room.name) }}
+                                {{ room.teacher_avatar
+                                    ? '' : getInitials(room.name) }}
                             </div>
                         </div>
 
@@ -135,11 +137,12 @@ const fetchRooms = async (page = 1) => {
     try {
         const response = await getRoom({
             page: page,
-            limit: 8, 
+            limit: 8,
             search: searchQuery.value
         });
         rooms.value = response.data.data;
         pagination.value = response.data.pagination;
+        console.log('Fetched rooms:', rooms.value);
     } catch (e) {
         console.error(e);
         error.value = 'មានបញ្ហាក្នុងការផ្ទុកទិន្នន័យ';
@@ -149,22 +152,21 @@ const fetchRooms = async (page = 1) => {
 };
 
 const pastelGradients = [
-  'linear-gradient(160deg, #dcfce7 0%, #a7f3d0 100%)', // Green
-  'linear-gradient(160deg, #e0f2f1 0%, #b2dfdb 100%)', // Teal
-  'linear-gradient(160deg, #eff6ff 0%, #bfdbfe 100%)', // Blue
-  'linear-gradient(160deg, #fdf2f8 0%, #fbcfe8 100%)', // Pink
-  'linear-gradient(160deg, #fffbeb 0%, #fde68a 100%)', // Yellow
-  'linear-gradient(160deg, #faf5ff 0%, #e9d5ff 100%)', // Purple
-  'linear-gradient(160deg, #fef2f2 0%, #fecaca 100%)', // Red/Coral
-  'linear-gradient(160deg, #fff7ed 0%, #ffedd5 100%)'  // Orange
+    'linear-gradient(160deg, #dcfce7 0%, #a7f3d0 100%)',
+    'linear-gradient(160deg, #e0f2f1 0%, #b2dfdb 100%)',
+    'linear-gradient(160deg, #eff6ff 0%, #bfdbfe 100%)',
+    'linear-gradient(160deg, #fdf2f8 0%, #fbcfe8 100%)',
+    'linear-gradient(160deg, #fffbeb 0%, #fde68a 100%)',
+    'linear-gradient(160deg, #faf5ff 0%, #e9d5ff 100%)',
+    'linear-gradient(160deg, #fef2f2 0%, #fecaca 100%)',
+    'linear-gradient(160deg, #fff7ed 0%, #ffedd5 100%)'
 ];
 
 const getAccentColor = (index) => {
-  // ប្រើ Modulo เพื่อให้វា Loop กลับมารੰဂแรกเมื่อ Index เกินจำนวนពណ៌
-  const gradientIndex = index % pastelGradients.length;
-  return {
-    background: pastelGradients[gradientIndex]
-  };
+    const gradientIndex = index % pastelGradients.length;
+    return {
+        background: pastelGradients[gradientIndex]
+    };
 };
 
 const getInitials = (name = '') => name.split(' ').slice(0, 2).map(w => w[0]?.toUpperCase() ?? '').join('');
@@ -188,9 +190,10 @@ onMounted(() => fetchRooms())
 </script>
 
 <style scoped>
-.form-control{
+.form-control {
     font-family: 'Kantumruy Pro' !important;
 }
+
 .room-management-page {
     padding: 1.75rem 1.5rem;
     font-family: 'DM Sans', sans-serif;
@@ -198,7 +201,7 @@ onMounted(() => fetchRooms())
     border-radius: 30px;
 }
 
-.font{
+.font {
     font-family: 'Kantumruy Pro';
 }
 
