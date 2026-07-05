@@ -10,7 +10,7 @@
 
         <!-- MINI STATS -->
         <div class="row g-3 mb-3">
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <div class="dash-card text-center">
                     <div style="
               font-size: 28px;
@@ -25,7 +25,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <div class="dash-card text-center">
                     <div style="font-size: 28px; font-weight: 800; color: #f07a3b">
                         <span v-if="isLoadingQuiz" class="skeleton skeleton-text"></span>
@@ -36,7 +36,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <div class="dash-card text-center">
                     <div style="font-size: 28px; font-weight: 800; color: var(--green-dark)">
                         <span v-if="isLoadingQuiz" class="skeleton skeleton-text"></span>
@@ -47,17 +47,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-3">
-                <div class="dash-card text-center">
-                    <div style="font-size: 28px; font-weight: 800; color: #e05c5c">
-                        <span v-if="isLoadingQuiz" class="skeleton skeleton-text"></span>
-                        <span v-else>{{ examDashboardData?.finished_exams ?? 0 }}</span>
-                    </div>
-                    <div style="font-size: 12px; color: var(--text-muted); font-weight: 600">
-                        បានបញ្ចប់
-                    </div>
-                </div>
-            </div>
+           
         </div>
 
         <DataTable :headers="quizHeaders" :items="exam" :is-loading="isLoading" :current-page="currentPage"

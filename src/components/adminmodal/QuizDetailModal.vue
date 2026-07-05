@@ -88,8 +88,8 @@ const formatDate = (dateString) => {
 };
 watch(() => props.exam, (newExam) => {
   if (newExam) {
-    formData.teacher = newExam.teacher_name || 'N/A';
-    formData.room = newExam.room_name || 'N/A';
+    formData.teacher = newExam.teacher_name || 'មិនមានគ្រូបង្រៀន';
+    formData.room = newExam.room_name || 'បន្ទប់ត្រូវបានលុបចេញ';
     formData.start = formatDate(newExam.start_time);
     formData.end = formatDate(newExam.end_time);
   }
