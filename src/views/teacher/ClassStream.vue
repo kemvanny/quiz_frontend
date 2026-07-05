@@ -234,16 +234,12 @@
                     <p>{{ post.message }}</p>
                   </div>
 
-                  <!-- EXAM BLOCK -->
                   <div
-                    v-if="
-                      post.exam_link || post.examLink || post.exam_id === null
-                    "
+                    v-if="hasExam(post) || isDeletedExam(post)"
                     class="mt-3 mb-2"
                   >
-                    <!-- CASE 1: Exam was deleted -->
                     <div
-                      v-if="post.exam_id === null"
+                      v-if="isDeletedExam(post)"
                       class="d-flex align-items-center border rounded-3 shadow-sm bg-light p-3"
                     >
                       <div
@@ -270,9 +266,8 @@
                       </div>
                     </div>
 
-                    <!-- CASE 2: Exam still exists -->
                     <div
-                      v-else
+                      v-else-if="hasExam(post)"
                       class="assignment-card-link d-flex align-items-center border rounded-3 shadow-sm overflow-hidden bg-white p-2"
                     >
                       <div
@@ -806,6 +801,14 @@ const props = defineProps(["roomId"]);
 
 const roomData = ref(null);
 const posts = ref([]);
+
+const hasExam = (post) => {
+  return !!(post.exam_link || post.examLink || post.exam_id);
+};
+
+const isDeletedExam = (post) => {
+  return (post.exam_link || post.examLink) && !post.exam_id;
+};
 
 const loading = ref(true);
 const currentTab = ref("stream");
