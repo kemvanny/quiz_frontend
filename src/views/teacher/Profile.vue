@@ -159,7 +159,7 @@
                   padding: 10px 24px;
                   background-color: #38a169;
                   color: white;
-                " :disabled="updatingProfile">
+                " :disabled="!hasChanges || hasErrors">
                 <i class="fas fa-spinner fa-spin me-2" v-if="updatingProfile"></i>
                 រក្សាទុកព័ត៌មាន
               </button>
@@ -308,7 +308,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, onMounted, watch } from "vue";
+import { ref, reactive, onMounted, watch ,computed} from "vue";
 import { useToast } from "@/composables/useToast";
 import { updateProfileAPI} from '@/api/auth.api';
 import {getProfileAPI} from '@/api/auth.api';
@@ -368,6 +368,36 @@ const profileData = reactive({
   address: "",
   avatarUrl: "",
 });
+
+const originalProfile = ref({...profileData});
+
+const hasErrors = computed(() => {
+  return !!(errors.value.firstName || errors.value.lastName || errors.value.gender || errors.value.phone || errors.value.address);
+})
+
+const hasChanges = computed(() => {
+  return profileData.firstName !== originalProfile.value.firstName ||
+    profileData.lastName !== originalProfile.value.lastName ||
+    profileData.gender !== originalProfile.value.gender ||
+    profileData.email !== originalProfile.value.email ||
+    profileData.phone !== originalProfile.value.phone ||
+    profileData.address !== originalProfile.value.address;
+});
+
+const syncProfileData = () => {
+  if(authStore.profile){
+    profileData.firstName = authStore.profile.firstName || "";
+    profileData.lastName = authStore.profile.lastName || "";
+    profileData.gender = authStore.profile.gender ? authStore.profile.gender.toUpperCase() : "";
+    profileData.email = authStore.profile.email || "";
+    profileData.phone = authStore.profile.phone || "";
+    profileData.address = authStore.profile.address || "";
+  }
+}
+
+watch(() => authStore.profile, () => {
+  syncProfileData();
+},{immediate: true});
 
 const resetPasswordForm = () => {
   passwordForm.value = {
@@ -515,6 +545,7 @@ const handleSaveProfile = async () => {
     };
 
     await  updateProfileAPI(payload);
+    originalProfile.value = {...profileData};
     triggerToast("រក្សាទុកព័ត៌មានផ្ទាល់ខ្លួនជោគជ័យ","fa-solid fa-circle-check");
     isEditing.value = false;
     await fetchUserProfile();
