@@ -70,3 +70,6 @@ export default {
     return api.get(`/exams/student/rooms/${roomId}/posts`);
   }
 }
+export const getExamResult = (examId, studentId) => {
+  return api.get(`/students/${examId}/results/${studentId}`);
+}
