@@ -376,12 +376,7 @@ const hasErrors = computed(() => {
 })
 
 const hasChanges = computed(() => {
-  return profileData.firstName !== originalProfile.value.firstName ||
-    profileData.lastName !== originalProfile.value.lastName ||
-    profileData.gender !== originalProfile.value.gender ||
-    profileData.email !== originalProfile.value.email ||
-    profileData.phone !== originalProfile.value.phone ||
-    profileData.address !== originalProfile.value.address;
+ return JSON.stringify(profileData) !== JSON.stringify(originalProfile.value);
 });
 
 const syncProfileData = () => {
@@ -393,6 +388,7 @@ const syncProfileData = () => {
     profileData.phone = authStore.profile.phone || "";
     profileData.address = authStore.profile.address || "";
   }
+  originalProfile.value = JSON.parse(JSON.stringify(profileData));
 }
 
 watch(() => authStore.profile, () => {
