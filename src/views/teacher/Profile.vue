@@ -102,18 +102,20 @@
               <label class="info-label">នាមត្រកូល</label>
               <div class="input-wrapper">
                 <i class="fas fa-user input-icon"></i>
-                <input type="text" class="info-input" v-model="profileData.firstName" placeholder="បញ្ចូលនាមត្រកូល"
+                <input type="text" class="info-input" v-model="profileData.firstName"  @input="validateFirstName(profileData.firstName)" placeholder="បញ្ចូលនាមត្រកូល"
                   :disabled="!isEditing" />
               </div>
+               <span v-if="errors.firstName" class="error-text">{{ errors.firstName }}</span>
             </div>
 
             <div class="info-item">
               <label class="info-label">នាមខ្លួន</label>
               <div class="input-wrapper">
                 <i class="fas fa-user input-icon"></i>
-                <input type="text" class="info-input" v-model="profileData.lastName" placeholder="បញ្ចូលនាមខ្លួន"
+                <input type="text" class="info-input" v-model="profileData.lastName" @input="validateLastName(profileData.lastName)" placeholder="បញ្ចូលនាមខ្លួន"
                   :disabled="!isEditing" />
               </div>
+              <span v-if="errors.lastName" class="error-text">{{ errors.lastName }}</span>
             </div>
 
             <div class="info-item">
@@ -128,18 +130,20 @@
               <label class="info-label">លេខទូរសព្ទ</label>
               <div class="input-wrapper">
                 <i class="fas fa-phone input-icon"></i>
-                <input type="text" class="info-input" v-model="profileData.phone" placeholder="បញ្ចូលលេខទូរសព្ទ"
+                <input type="text" class="info-input" v-model="profileData.phone"  @input="validatePhone(profileData.phone)" placeholder="បញ្ចូលលេខទូរសព្ទ"
                   :disabled="!isEditing" />
               </div>
+               <span v-if="errors.phone" class="error-text">{{ errors.phone }}</span>
             </div>
 
             <div class="info-item" style="grid-column: span 2">
               <label class="info-label">អាសយដ្ឋាន</label>
               <div class="input-wrapper">
                 <i class="fas fa-map-marker-alt input-icon"></i>
-                <input type="text" class="info-input" v-model="profileData.address" placeholder="បញ្ចូលអាសយដ្ឋាន"
+                <input type="text" class="info-input" v-model="profileData.address"  @input="validateAddress(profileData.address)" placeholder="បញ្ចូលអាសយដ្ឋាន"
                   :disabled="!isEditing" />
               </div>
+              <span v-if="errors.address" class="error-text">{{ errors.address }}</span>
             </div>
           </div>
 
@@ -345,6 +349,10 @@ const imgBaseUrl = import.meta.env.VITE_BASE_URL_FOR_IMAGE;
 const {
   errors,
   validatePassword,
+  validateFirstName,
+  validateLastName,
+  validatePhone,
+  validateAddress
 } = useFormValidation();
 
 
@@ -391,6 +399,12 @@ const syncProfileData = () => {
   originalProfile.value = JSON.parse(JSON.stringify(profileData));
 }
 
+const clearErrors = () => {
+  errors.value.firstName = ''
+  errors.value.lastName = ''
+  errors.value.phone = ''
+  errors.value.address = ''
+}
 watch(() => authStore.profile, () => {
   syncProfileData();
 },{immediate: true});
@@ -524,12 +538,19 @@ const handleChangePassword = async () => {
 };
 
 const cancelEditing = () => {
+  clearErrors()
   isEditing.value = false;
   fetchUserProfile();
 };
 
 
 const handleSaveProfile = async () => {
+  validateFirstName(profileData.firstName)
+  validateLastName(profileData.lastName)
+  validatePhone(profileData.phone)
+  validateAddress(profileData.address)
+
+  if (hasErrors.value) return
   try {
     updatingProfile.value = true;
     const payload = {
