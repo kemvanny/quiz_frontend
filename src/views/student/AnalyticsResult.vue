@@ -6,77 +6,42 @@
           <div class="white-flat-card p-4 d-flex align-items-center gap-3">
             <div class="skeleton-avatar skeleton-shimmer"></div>
             <div class="flex-grow-1">
-              <div
-                class="skeleton-line skeleton-shimmer m b-2"
-                style="width: 40%; height: 12px"
-              ></div>
-              <div
-                class="skeleton-line skeleton-shimmer"
-                style="width: 75%; height: 20px"
-              ></div>
+              <div class="skeleton-line skeleton-shimmer m b-2" style="width: 40%; height: 12px"></div>
+              <div class="skeleton-line skeleton-shimmer" style="width: 75%; height: 20px"></div>
             </div>
           </div>
         </div>
       </div>
 
       <div class="table-card">
-        <div
-          class="table-top d-flex align-items-center justify-content-between px-4 pt-4 pb-3"
-        >
-          <div
-            class="skeleton-line skeleton-shimmer"
-            style="width: 250px; height: 20px"
-          ></div>
-          <div
-            class="skeleton-line skeleton-shimmer"
-            style="width: 160px; height: 36px; border-radius: 50px"
-          ></div>
+        <div class="table-top d-flex align-items-center justify-content-between px-4 pt-4 pb-3">
+          <div class="skeleton-line skeleton-shimmer" style="width: 250px; height: 20px"></div>
+          <div class="skeleton-line skeleton-shimmer" style="width: 160px; height: 36px; border-radius: 50px"></div>
         </div>
         <div class="filter-strip px-4 pb-2">
-          <div
-            class="skeleton-line skeleton-shimmer"
-            style="width: 80px; height: 26px; border-radius: 50px"
-          ></div>
+          <div class="skeleton-line skeleton-shimmer" style="width: 80px; height: 26px; border-radius: 50px"></div>
         </div>
         <div class="table-responsive">
           <table class="table results-table align-middle mb-0">
             <thead>
               <tr>
                 <th class="ps-4">
-                  <div
-                    class="skeleton-line skeleton-shimmer"
-                    style="width: 80px; height: 12px"
-                  ></div>
+                  <div class="skeleton-line skeleton-shimmer" style="width: 80px; height: 12px"></div>
                 </th>
                 <th>
-                  <div
-                    class="skeleton-line skeleton-shimmer"
-                    style="width: 40px; height: 12px"
-                  ></div>
+                  <div class="skeleton-line skeleton-shimmer" style="width: 40px; height: 12px"></div>
                 </th>
                 <th>
-                  <div
-                    class="skeleton-line skeleton-shimmer"
-                    style="width: 60px; height: 12px"
-                  ></div>
+                  <div class="skeleton-line skeleton-shimmer" style="width: 60px; height: 12px"></div>
                 </th>
                 <th>
-                  <div
-                    class="skeleton-line skeleton-shimmer"
-                    style="width: 70px; height: 12px"
-                  ></div>
+                  <div class="skeleton-line skeleton-shimmer" style="width: 70px; height: 12px"></div>
                 </th>
                 <th>
-                  <div
-                    class="skeleton-line skeleton-shimmer"
-                    style="width: 40px; height: 12px"
-                  ></div>
+                  <div class="skeleton-line skeleton-shimmer" style="width: 40px; height: 12px"></div>
                 </th>
                 <th class="text-center">
-                  <div
-                    class="skeleton-line skeleton-shimmer"
-                    style="width: 40px; height: 12px; margin: 0 auto"
-                  ></div>
+                  <div class="skeleton-line skeleton-shimmer" style="width: 40px; height: 12px; margin: 0 auto"></div>
                 </th>
               </tr>
             </thead>
@@ -84,47 +49,30 @@
             <tbody>
               <tr v-for="n in itemsPerPage" :key="n">
                 <td class="ps-4">
-                  <div
-                    class="skeleton-line skeleton-shimmer"
-                    style="width: 85%; height: 16px"
-                  ></div>
+                  <div class="skeleton-line skeleton-shimmer" style="width: 85%; height: 16px"></div>
                 </td>
                 <td>
-                  <div
-                    class="skeleton-line skeleton-shimmer"
-                    style="width: 70px; height: 22px; border-radius: 12px"
-                  ></div>
+                  <div class="skeleton-line skeleton-shimmer" style="width: 70px; height: 22px; border-radius: 12px">
+                  </div>
                 </td>
                 <td>
-                  <div
-                    class="skeleton-line skeleton-shimmer"
-                    style="width: 100px; height: 14px"
-                  ></div>
+                  <div class="skeleton-line skeleton-shimmer" style="width: 100px; height: 14px"></div>
                 </td>
                 <td>
-                  <div
-                    class="skeleton-line skeleton-shimmer"
-                    style="width: 90%; height: 32px; border-radius: 10px"
-                  ></div>
+                  <div class="skeleton-line skeleton-shimmer" style="width: 90%; height: 32px; border-radius: 10px">
+                  </div>
                 </td>
                 <td>
                   <div class="d-flex align-items-center gap-2">
-                    <div
-                      class="skeleton-line skeleton-shimmer flex-grow-1"
-                      style="height: 6px; border-radius: 99px"
-                    ></div>
-                    <div
-                      class="skeleton-line skeleton-shimmer"
-                      style="width: 24px; height: 14px"
-                    ></div>
+                    <div class="skeleton-line skeleton-shimmer flex-grow-1" style="height: 6px; border-radius: 99px">
+                    </div>
+                    <div class="skeleton-line skeleton-shimmer" style="width: 24px; height: 14px"></div>
                   </div>
                 </td>
                 <td>
                   <div class="d-flex justify-content-center">
-                    <div
-                      class="skeleton-line skeleton-shimmer"
-                      style="width: 34px; height: 34px; border-radius: 10px"
-                    ></div>
+                    <div class="skeleton-line skeleton-shimmer" style="width: 34px; height: 34px; border-radius: 10px">
+                    </div>
                   </div>
                 </td>
               </tr>
@@ -132,16 +80,9 @@
           </table>
         </div>
         <div
-          class="pagination-container d-flex align-items-center justify-content-between px-4 py-3 border-top border-light-subtle"
-        >
-          <div
-            class="skeleton-line skeleton-shimmer"
-            style="width: 220px; height: 16px"
-          ></div>
-          <div
-            class="skeleton-line skeleton-shimmer"
-            style="width: 140px; height: 34px; border-radius: 10px"
-          ></div>
+          class="pagination-container d-flex align-items-center justify-content-between px-4 py-3 border-top border-light-subtle">
+          <div class="skeleton-line skeleton-shimmer" style="width: 220px; height: 16px"></div>
+          <div class="skeleton-line skeleton-shimmer" style="width: 140px; height: 34px; border-radius: 10px"></div>
         </div>
       </div>
     </div>
@@ -163,9 +104,7 @@
     <div v-else>
       <div class="row g-3 mb-4">
         <div class="col-12 col-lg-4">
-          <div
-            class="white-flat-card h-100 p-4 d-flex align-items-center gap-3"
-          >
+          <div class="white-flat-card h-100 p-4 d-flex align-items-center gap-3">
             <div class="icon-pill purple">
               <i class="fas fa-user-graduate"></i>
             </div>
@@ -180,19 +119,12 @@
         </div>
 
         <div class="col-12 col-md-6 col-lg-4">
-          <div
-            class="white-flat-card h-100 p-4 d-flex align-items-center gap-3"
-          >
+          <div class="white-flat-card h-100 p-4 d-flex align-items-center gap-3">
             <div class="arc-ring">
               <svg viewBox="0 0 44 44">
                 <circle class="arc-track" cx="22" cy="22" r="18" />
-                <circle
-                  class="arc-fill"
-                  cx="22"
-                  cy="22"
-                  r="18"
-                  :style="{ strokeDashoffset: calculateArc(averageScore) }"
-                />
+                <circle class="arc-fill" cx="22" cy="22" r="18"
+                  :style="{ strokeDashoffset: calculateArc(averageScore) }" />
               </svg>
               <div class="arc-label">{{ averageScore.toFixed(0) }}%</div>
             </div>
@@ -206,9 +138,7 @@
         </div>
 
         <div class="col-12 col-md-6 col-lg-4">
-          <div
-            class="white-flat-card h-100 p-4 d-flex align-items-center gap-3"
-          >
+          <div class="white-flat-card h-100 p-4 d-flex align-items-center gap-3">
             <div class="icon-pill blue">
               <i class="fas fa-layer-group"></i>
             </div>
@@ -224,16 +154,11 @@
       </div>
 
       <div class="table-card">
-        <div
-          class="table-top d-flex align-items-center justify-content-between flex-wrap gap-3 px-4 pt-4 pb-3"
-        >
+        <div class="table-top d-flex align-items-center justify-content-between flex-wrap gap-3 px-4 pt-4 pb-3">
           <div>
             <h5 class="table-heading mb-1">ប្រវត្តិនៃការប្រឡង និងមតិកែលម្អ</h5>
           </div>
-          <button
-            class="dl-btn d-flex align-items-center gap-2 px-4 py-2"
-            @click="exportToCSV"
-          >
+          <button class="dl-btn d-flex align-items-center gap-2 px-4 py-2" @click="exportToCSV">
             <i class="fas fa-cloud-download-alt"></i>
             ទាញយកលទ្ធផលសរុប
           </button>
@@ -255,13 +180,11 @@
                 <th style="min-width: 240px">មតិកែលម្អ</th>
                 <th style="min-width: 160px">ពិន្ទុ</th>
                 <th class="text-center">និទ្ទេស</th>
+                <th class="text-center" style="min-width: 130px">ពិនិត្យចម្លើយ</th>
               </tr>
             </thead>
             <tbody>
-              <tr
-                v-for="result in paginatedExamResults"
-                :key="result.submission_id"
-              >
+              <tr v-for="result in paginatedExamResults" :key="result.submission_id">
                 <td class="ps-4">
                   <div class="d-flex align-items-center gap-3">
                     <span class="exam-name">{{ result.exam_title }}</span>
@@ -276,10 +199,7 @@
                   }}</span>
                 </td>
                 <td>
-                  <div
-                    class="feedback-box"
-                    :class="getFeedbackBorderClass(result.feedback)"
-                  >
+                  <div class="feedback-box" :class="getFeedbackBorderClass(result.feedback)">
                     <i class="fas fa-comment-dots me-1 opacity-50 small"></i>
                     {{ result.feedback || "មិនទាន់មានមតិកែលម្អ" }}
                   </div>
@@ -287,25 +207,19 @@
                 <td>
                   <div class="d-flex align-items-center gap-2">
                     <div class="score-track flex-grow-1">
-                      <div
-                        class="score-fill"
-                        :style="{
-                          width:
-                            (parseFloat(result.score || 0) /
-                              parseFloat(result.total_points || 1)) *
-                              100 +
-                            '%',
-                          background: getProgressBarColor(
-                            result.grade ||
-                              getGradeFromPercentage(getPercentage(result)),
-                          ),
-                        }"
-                      ></div>
+                      <div class="score-fill" :style="{
+                        width:
+                          (parseFloat(result.score || 0) /
+                            parseFloat(result.total_points || 1)) *
+                          100 +
+                          '%',
+                        background: getProgressBarColor(
+                          result.grade ||
+                          getGradeFromPercentage(getPercentage(result)),
+                        ),
+                      }"></div>
                     </div>
-                    <span
-                      class="score-num"
-                      :style="{ color: getProgressBarColor(result.grade) }"
-                    >
+                    <span class="score-num" :style="{ color: getProgressBarColor(result.grade) }">
                       {{ parseFloat(result.score).toFixed(0) }}/{{
                         result.total_points
                       }}
@@ -313,20 +227,27 @@
                   </div>
                 </td>
                 <td class="text-center">
-                  <span
-                    class="grade-badge"
-                    :class="
-                      getBadgeClass(
-                        result.grade ||
-                          getGradeFromPercentage(getPercentage(result)),
-                      )
-                    "
-                  >
+                  <span class="grade-badge" :class="getBadgeClass(
+                    result.grade ||
+                    getGradeFromPercentage(getPercentage(result)),
+                  )
+                    ">
                     {{
                       result.grade ||
                       getGradeFromPercentage(getPercentage(result))
                     }}
                   </span>
+                </td>
+                <td class="text-center">
+                  <router-link :to="{
+                    name: 'ExamResult',
+                    params: {
+                      examId: result.exam_id,
+                      studentId: result.student_id
+                    }
+                  }" class="btn btn-review-qa d-inline-flex align-items-center gap-1 btn-sm px-3 py-1.5 rounded-pill">
+                    <i class="fas fa-eye small"></i> មើល Q&A
+                  </router-link>
                 </td>
               </tr>
             </tbody>
@@ -334,8 +255,7 @@
         </div>
 
         <div
-          class="pagination-container d-flex align-items-center justify-content-between px-4 py-3 border-top border-light-subtle flex-wrap gap-2"
-        >
+          class="pagination-container d-flex align-items-center justify-content-between px-4 py-3 border-top border-light-subtle flex-wrap gap-2">
           <div class="pagination-info">
             បង្ហាញសន្លឹកកិច្ចការ <b>{{ rowRangeStart }}</b> ដល់
             <b>{{ rowRangeEnd }}</b> នៃលទ្ធផលសរុប
@@ -343,29 +263,16 @@
           </div>
 
           <div class="d-flex align-items-center gap-1">
-            <button
-              class="page-arrow-btn"
-              :disabled="currentPage === 1"
-              @click="changePage(currentPage - 1)"
-            >
+            <button class="page-arrow-btn" :disabled="currentPage === 1" @click="changePage(currentPage - 1)">
               <i class="fas fa-chevron-left"></i>
             </button>
 
-            <button
-              v-for="page in totalPages"
-              :key="page"
-              class="page-number-btn"
-              :class="{ active: currentPage === page }"
-              @click="changePage(page)"
-            >
+            <button v-for="page in totalPages" :key="page" class="page-number-btn"
+              :class="{ active: currentPage === page }" @click="changePage(page)">
               {{ page }}
             </button>
 
-            <button
-              class="page-arrow-btn"
-              :disabled="currentPage === totalPages"
-              @click="changePage(currentPage + 1)"
-            >
+            <button class="page-arrow-btn" :disabled="currentPage === totalPages" @click="changePage(currentPage + 1)">
               <i class="fas fa-chevron-right"></i>
             </button>
           </div>
@@ -511,9 +418,9 @@ const getBadgeClass = (grade) => {
 
 const getFeedbackBorderClass = (feedback) => {
   if (feedback && feedback.trim() !== "") {
-    return "fb-success"; 
+    return "fb-success";
   }
-  return "fb-danger"; 
+  return "fb-danger";
 };
 
 const exportToCSV = () => {
@@ -557,6 +464,23 @@ onMounted(() => {
   background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 37%, #f1f5f9 63%);
   background-size: 400% 100%;
   animation: shimmer-animation 1.4s ease infinite;
+}
+
+.btn-review-qa {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+  font-size: 0.8rem;
+  font-weight: 500;
+  border: 1px solid #c8e6c9;
+  transition: all 0.2s ease;
+}
+
+.btn-review-qa:hover {
+  background-color: #2e7d32;
+  color: #ffffff;
+  border-color: #2e7d32;
+  box-shadow: 0 4px 10px rgba(46, 125, 50, 0.15);
+  transform: translateY(-1px);
 }
 
 @keyframes shimmer-animation {

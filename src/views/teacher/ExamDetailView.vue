@@ -9,9 +9,11 @@
     />
 
     <div class="app-shell flex-grow-1 overflow-hidden">
-      <div v-if="loading" class="text-center py-5">
-        <div class="spinner-border text-success" role="status"></div>
-        <p class="mt-3 text-muted small">កំពុងផ្ទុកទិន្នន័យ...</p>
+      <div v-if="loading" class="loading-container">
+        <div class="text-center">
+          <div class="spinner-border text-success" role="status"></div>
+          <p class="mt-3 text-muted small">កំពុងផ្ទុកទិន្នន័យ...</p>
+        </div>
       </div>
 
       <div v-else-if="questions.length > 0" class="workspace">
@@ -1002,12 +1004,18 @@ onMounted(() => {
   border-color: #cbd5e1;
 }
 
-/* Adaptive Screens rulesets */
 @media (max-width: 992px) {
   .workspace {
     grid-template-columns: 1fr;
     height: auto;
     overflow-y: auto;
   }
+}
+.loading-container {
+  width: 100%;
+  height: calc(100vh - 70px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>
