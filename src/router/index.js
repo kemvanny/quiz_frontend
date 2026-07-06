@@ -35,6 +35,7 @@ import TakeExam from '@/views/student/TakeExam.vue'
 import RoomManagements from '@/views/admin/RoomManagements.vue'
 import RoomDetailStudent from '@/views/student/RoomDetail.vue'
 import AllExam from '@/views/teacher/AllExam.vue'
+import ReviewExamResult from '@/views/student/ReviewsResult.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -250,6 +251,12 @@ const router = createRouter({
       meta: { title: 'Take Exam' }
     },
     {
+      path: '/exam/:examId/result/:studentId',
+      name: 'ExamResult',
+      component: ReviewExamResult, 
+      meta: { title: 'Exam Result' }
+    },
+    {
       path: '/:pathMatch(.*)*',
       name: 'NotFound',
       component: NotFound
@@ -288,7 +295,7 @@ router.beforeEach((to, from) => {
     if (requiredRole && userRoleName !== requiredRole) {
       return { path: `/${userRoleName}/dashboard` };
     }
-  } 
+  }
   else if (requiresAuth) {
     return { path: '/login' };
   }
