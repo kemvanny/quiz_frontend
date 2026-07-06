@@ -74,7 +74,7 @@
       </div>
 
       <div class="footer-bottom">
-        <p>© 2026 Prolong. រក្សាសិទ្ធិគ្រប់យ៉ាង។</p>
+        <p>© 2026 Pralong. រក្សាសិទ្ធិគ្រប់យ៉ាង។</p>
 
         <div class="footer-bottom-links">
           <a href="#">Privacy</a>
