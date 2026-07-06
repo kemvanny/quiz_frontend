@@ -65,8 +65,7 @@
                     <div class="room-card h-100">
                         <div class="card-accent" :style="getAccentColor(index)">
                             <div class="room-avatar">
-                                {{ room.teacher_avatar
-                                    ? '' : getInitials(room.name) }}
+                                {{ getInitials(room.name) }}
                             </div>
                         </div>
 
@@ -74,7 +73,7 @@
                             <h6 class="room-name">{{ room.name }}</h6>
 
                             <div class="teacher-row">
-                                <span class="teacher-avatar-sm">{{ getInitials(room.teacher_name) }}</span>
+                                <img v-if="room.teacher_avatar" :src="room.teacher_avatar.startsWith('http') ? room.teacher_avatar : 'https://quiz-management-system.tdomain.work.gd' + room.teacher_avatar" :alt="room.teacher_name" class="teacher-avatar-sm">
                                 <span class="teacher-name">{{ room.teacher_name }}</span>
                             </div>
 
@@ -124,6 +123,7 @@
 import { ref, onMounted } from 'vue'
 import { getRoom } from '@/api/admin.api'
 import BasePagination from '@/components/common/BasePagination.vue'
+const imgBaseUrl = import.meta.env.VITE_BASE_URL_FOR_IMAGE
 
 const rooms = ref([])
 const loading = ref(false)
@@ -142,7 +142,6 @@ const fetchRooms = async (page = 1) => {
         });
         rooms.value = response.data.data;
         pagination.value = response.data.pagination;
-        console.log('Fetched rooms:', rooms.value);
     } catch (e) {
         console.error(e);
         error.value = 'មានបញ្ហាក្នុងការផ្ទុកទិន្នន័យ';
