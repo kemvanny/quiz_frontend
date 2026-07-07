@@ -685,7 +685,7 @@ const fetchUserProfile = async () => {
     loadingData.value = true;
     const res = await getProfileAPI();
     console.log(res.data.data);
-    
+
     const responseData = res.data;
 
     if (responseData?.result === false) {
@@ -816,9 +816,8 @@ const handleSaveProfile = async () => {
       "fa-solid fa-circle-check",
     );
     isEditing.value = false;
-    await fetchUserProfile();
     await authStore.fetchProfile(true);
-    await (authStore.profile.avatar = null);
+    await fetchUserProfile();
   } catch (err) {
     console.error(err);
     triggerToast("ការកែប្រែព័ត៌មានបានបរាជ័យ!", "fa-solid fa-circle-xmark");
@@ -967,7 +966,6 @@ const confirmDeleteAvatar = async () => {
 
     await authStore.fetchProfile(true);
     await fetchUserProfile();
-    await (authStore.profile.avatar = null);
 
     imageRefresh.value = Date.now();
 
@@ -979,9 +977,8 @@ const confirmDeleteAvatar = async () => {
 
     triggerToast(
       "លុបរូបភាពប្រវត្តិរូបជោគជ័យ!",
-      "fa-solid util fa-circle-check"
+      "fa-solid util fa-circle-check",
     );
-
   } catch (err) {
     console.log(err);
   } finally {
