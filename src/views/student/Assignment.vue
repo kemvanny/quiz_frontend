@@ -149,7 +149,6 @@ const isExamLoading = ref(false);
 const examError = ref("");
 const activeTab = ref("all");
 
-// Pagination States
 const currentPage = ref(1);
 const itemsPerPage = ref(4);
 

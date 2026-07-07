@@ -158,7 +158,6 @@ const isInviteOpen = ref(false)
 const isFocused = ref(false)
 const activeIndex = ref(-1)
 
-// PAGINATION STATE
 const currentPage = ref(1)
 const itemsPerPage = ref(9)
 
@@ -226,7 +225,6 @@ const totalPages = computed(() => {
   return Math.ceil(filteredRooms.value.length / itemsPerPage.value) || 1
 })
 
-// PAGINATION NAVIGATION METHODS
 const prevPage = () => {
   if (currentPage.value > 1) currentPage.value--
 }

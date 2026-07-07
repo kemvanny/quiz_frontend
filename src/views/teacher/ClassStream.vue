@@ -762,7 +762,6 @@
 
 <script setup>
 import { ref, onMounted, computed, watch } from "vue";
-import { useRouter } from "vue-router";
 import { useToast } from "vue-toastification";
 import { useAuthStore } from "@/stores/authStore";
 import { getStudentResultsByExam, addFeedback } from "@/api/exam.api";
@@ -784,7 +783,6 @@ import {
 import RemoveStudentModal from "@/components/teachermodal/RemoveStudentModal.vue";
 import defaultAvatar from "@/assets/images/default.png";
 
-const router = useRouter();
 const toast = useToast();
 const authStore = useAuthStore();
 

@@ -200,7 +200,6 @@
 
 <script setup>
 import { ref, onMounted, computed, watch } from "vue";
-import { useRouter } from "vue-router";
 import { useToast } from "vue-toastification";
 import { getAllStudentResults, addFeedback } from "@/api/exam.api";
 
@@ -242,7 +241,6 @@ const totalPages = computed(
   () => Math.ceil(filteredResults.value.length / itemsPerPage.value) || 1,
 );
 
-// --- Navigation ---
 const prevPage = () => {
   if (currentPage.value > 1) currentPage.value--;
 };
@@ -257,7 +255,6 @@ watch(selectedExam, () => {
   currentPage.value = 1;
 });
 
-// --- API Calls ---
 const fetchStudentResults = async () => {
   loading.value = true;
   try {

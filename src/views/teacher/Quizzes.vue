@@ -680,14 +680,6 @@ const finalizePublish = async () => {
   }
 };
 
-const copyLinkToClipboard = async () => {
-  try {
-    await navigator.clipboard.writeText(generatedExamLink.value);
-    toast.success("បានចម្លងតំណភ្ជាប់វិញ្ញាសារួចរាល់!");
-  } catch (err) {
-    toast.error("មិនអាចចម្លងតំណភ្ជាប់បានទេ!");
-  }
-};
 </script>
 
 <style scoped>

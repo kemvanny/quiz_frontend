@@ -371,7 +371,6 @@ const totalPoints = computed(() =>
   SECTIONS.reduce((acc, sec) => acc + questions.filter(q => q.type === sec.type).length * sec.pts, 0)
 )
 
-// ── Methods ──
 function questionsOf(type) { return questions.filter(q => q.type === type) }
 
 function iconFor(type) {
@@ -423,7 +422,6 @@ function openPreview() { showPreviewModal.value = true }
 </script>
 
 <style scoped>
-/* ── Tokens ── */
 :root {
   --em:      #10b981;
   --em-dk:   #059669;
@@ -435,7 +433,6 @@ function openPreview() { showPreviewModal.value = true }
   --bdr:     #e2e8f0;
 }
 
-/* ── Workspace grid ── */
 .workspace {
   display: flex;
   flex-direction: column;
