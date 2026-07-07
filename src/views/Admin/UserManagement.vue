@@ -128,9 +128,6 @@ import StatusBadge from "@/components/common/StatusBadge.vue";
 import Swal from 'sweetalert2';
 import UserDetailModal from "@/components/adminmodal/UserDetailModal.vue";
 import { useToast } from "@/composables/useToast";
-import {useAuthStore} from "@/stores/authStore";
-
-const authStore = useAuthStore();
 
 const { triggerToast } = useToast();
 
