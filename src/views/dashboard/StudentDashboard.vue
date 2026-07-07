@@ -53,8 +53,7 @@
             <div class="section-head">
               <div class="skeleton-element skeleton-line w-50" style="height: 16px"></div>
             </div>
-            <div v-for="i in 2" :key="'dl-skey-' + i" class="d-flex align-items-center gap-3 p-3 mb-2"
-              style="border-radius: 10px; background: #f8fafc">
+            <div v-for="i in 2" :key="'dl-skey-' + i" class="d-flex align-items-center gap-3 p-3 mb-2" style="border-radius: 10px; background: #f8fafc">
               <div class="skeleton-element skeleton-circle" style="width: 36px; height: 36px; border-radius: 8px"></div>
               <div class="flex-grow-1">
                 <div class="skeleton-element skeleton-line w-75 mb-2"></div>
@@ -70,8 +69,7 @@
             </div>
             <div v-for="i in 2" :key="'fb-skey-' + i" class="fb-row">
               <div class="fb-left w-75">
-                <div class="skeleton-element skeleton-circle" style="width: 36px; height: 36px; border-radius: 9px">
-                </div>
+                <div class="skeleton-element skeleton-circle" style="width: 36px; height: 36px; border-radius: 9px"></div>
                 <div class="w-100">
                   <div class="skeleton-element skeleton-line w-60 mb-2"></div>
                   <div class="skeleton-element skeleton-line w-40"></div>
@@ -126,7 +124,7 @@
               </div>
               <div class="qa-btns">
                 <router-link :to="{ name: 'Classroom' }" class="btn primary">
-                  <i class="bi bi-building"></i>ថ្នាក់រៀន
+                  <i class="bi bi-building"></i> ថ្នាក់រៀន
                 </router-link>
                 <router-link :to="{ name: 'Assignment' }" class="btn">
                   <i class="bi bi-clipboard-check"></i> ការប្រឡង
@@ -151,21 +149,24 @@
               </div>
             </div>
 
-            <div v-if="performanceList.length === 0" class="py-3 text-center text-muted">
-              រង់ចាំលទ្ធផល និងមតិកែលម្អពីគ្រូ
-            </div>
-            <div v-else v-for="(subject, index) in performanceList.subjects" :key="index" class="subj-row">
-              <div class="subj-dot" :style="{ background: getSubjectColor(index) }"></div>
-              <div class="subj-info">
-                <div class="subj-name">{{ subject.subjectName }}</div>
+            <div class="perf-scroll-container">
+              <div v-if="!performanceList || (performanceList.subjects && performanceList.subjects.length === 0)" class="py-3 text-center text-muted">
+                រង់ចាំលទ្ធផល និងមតិកែលម្អពីគ្រូ
               </div>
-              <div class="subj-track">
-                <div class="subj-fill" :style="{
-                  width: subject.percentage + '%',
-                  background: getSubjectColor(index),
-                }"></div>
+              
+              <div v-else v-for="(subject, index) in performanceList.subjects" :key="index" class="subj-row">
+                <div class="subj-dot" :style="{ background: getSubjectColor(index) }"></div>
+                <div class="subj-info">
+                  <div class="subj-name">{{ subject.subjectName }}</div>
+                </div>
+                <div class="subj-track">
+                  <div class="subj-fill" :style="{
+                    width: subject.percentage + '%',
+                    background: getSubjectColor(index),
+                  }"></div>
+                </div>
+                <div class="subj-pct">{{ subject.percentage }}%</div>
               </div>
-              <div class="subj-pct">{{ subject.percentage }}%</div>
             </div>
 
             <div class="perf-footer">
@@ -175,6 +176,7 @@
         </div>
 
         <div class="right-col">
+  
           <div class="card" style="border-top: 3px solid #f59e0b; border-radius: 0 0 14px 14px">
             <div class="section-head">
               <div>
@@ -237,9 +239,9 @@
             </div>
           </div>
 
-        </div>
-      </div>
-    </div>
+        </div> 
+      </div> 
+    </div> 
   </section>
 </template>
 
@@ -817,5 +819,29 @@ onMounted(loadDashboardContent);
 .fb-when {
   font-size: 12px;
   color: var(--txt-lt);
+}
+
+.perf-scroll-container {
+  max-height: 240px;       
+  overflow-y: auto;         
+  overflow-x: hidden;       
+  padding-right: 14px;       
+}
+
+.perf-scroll-container::-webkit-scrollbar {
+  width: 5px;               
+}
+
+.perf-scroll-container::-webkit-scrollbar-track {
+  background: transparent;  
+}
+
+.perf-scroll-container::-webkit-scrollbar-thumb {
+  background: #cbd5e1;      
+  border-radius: 10px;
+}
+
+.perf-scroll-container::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;      
 }
 </style>
