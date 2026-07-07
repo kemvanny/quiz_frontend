@@ -1,10 +1,8 @@
 <template>
   <div class="workspace">
 
-    <!-- ── LEFT: FORM ── -->
     <div class="left-col">
 
-      <!-- Configuration Panel -->
       <div class="panel slide-in">
         <div class="panel-head">
           <span class="panel-lbl">
@@ -13,7 +11,6 @@
         </div>
         <div class="panel-body">
 
-          <!-- Title -->
           <div class="field-group">
             <label class="field-label">Assignment Title <span class="req">*</span></label>
             <input
@@ -24,7 +21,6 @@
             />
           </div>
 
-          <!-- Type Chips -->
           <div class="field-group">
             <label class="field-label">Assignment Type</label>
             <div class="chips">
@@ -132,10 +128,8 @@
 
     </div>
 
-    <!-- ── RIGHT: SUMMARY & PUBLISH ── -->
     <div class="right-col">
 
-      <!-- Publish Card -->
       <div class="panel publish-card slide-in" style="animation-delay:.1s">
         <div class="pub-badge">
           <span class="spinner-dot"></span> Ready to Publish
@@ -150,7 +144,6 @@
         </button>
       </div>
 
-      <!-- Summary -->
       <div class="panel slide-in" style="animation-delay:.15s">
         <div class="panel-head">
           <span class="panel-lbl"><i class="fas fa-chart-pie em"></i> Summary</span>
@@ -171,7 +164,6 @@
         </div>
       </div>
 
-      <!-- Checklist -->
       <div class="panel slide-in" style="animation-delay:.2s">
         <div class="panel-head">
           <span class="panel-lbl"><i class="fas fa-list-check em"></i> Setup Checklist</span>
@@ -200,7 +192,6 @@
 
     </div>
 
-    <!-- ── PUBLISH MODAL ── -->
     <Teleport to="body">
       <div v-if="showModal" class="modal-overlay" @click.self="showModal = false">
         <div class="modal-box">

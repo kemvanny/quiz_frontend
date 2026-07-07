@@ -180,7 +180,6 @@ const exportToCSV = () => {
   document.body.removeChild(link);
 };
 
-// LIFECYCLE HOOKS
 onMounted(() => {
   fetchResultSubmission();
 });
