@@ -40,8 +40,8 @@ Frontend សម្រាប់ប្រព័ន្ធគ្រប់គ្រ�
 បង្កើតឯកសារ `.env` នៅក្នុង folder `QUIZ_FRONTEND` ដោយបញ្ចូលព័ត៌មានដូចខាងក្រោម៖
 
 
-  - VITE_BASE_URL=https://quiz-management-system.tdomain.work.gd/api
-  - VITE_BASE_URL_FOR_IMAGE=https://quiz-management-system.tdomain.work.gd
+    VITE_BASE_URL=https://quiz-management-system.tdomain.work.gd/api
+    VITE_BASE_URL_FOR_IMAGE=https://quiz-management-system.tdomain.work.gd
 
 
  **ចំណាំ៖** តម្លៃទាំងនេះជា URL របស់ server ដែល frontend នេះនឹងភ្ជាប់ទៅប្រើប្រាស់។ សូមប្តូរទៅជា URL ត្រឹមត្រូវ បើសិនជាអ្នកប្រើ server ខុសគ្នា (ឧទាហរណ៍៖ local backend)។
