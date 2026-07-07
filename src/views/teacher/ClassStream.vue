@@ -184,20 +184,7 @@
                         </h6>
                         <small class="text-muted">
                           {{
-                            new Date(post.created_at).toLocaleDateString(
-                              "en-US",
-                              { month: "short", day: "numeric" },
-                            )
-                          }},
-                          {{
-                            new Date(post.created_at).toLocaleTimeString(
-                              "en-US",
-                              {
-                                hour: "numeric",
-                                minute: "2-digit",
-                                hour12: true,
-                              },
-                            )
+                            formatDateTime(post.created_at)
                           }}
                         </small>
                       </div>
@@ -775,10 +762,13 @@
 
 <script setup>
 import { ref, onMounted, computed, watch } from "vue";
-import { useRouter } from "vue-router";
 import { useToast } from "vue-toastification";
 import { useAuthStore } from "@/stores/authStore";
 import { getStudentResultsByExam, addFeedback } from "@/api/exam.api";
+
+import { useDate } from "@/composables/useDate";
+
+const { formatDateTime ,formatDate} = useDate();
 
 import {
   getOneRoom,
@@ -793,14 +783,13 @@ import {
 import RemoveStudentModal from "@/components/teachermodal/RemoveStudentModal.vue";
 import defaultAvatar from "@/assets/images/default.png";
 
-const router = useRouter();
 const toast = useToast();
 const authStore = useAuthStore();
 
 const props = defineProps(["roomId"]);
 
 const roomData = ref(null);
-const posts = ref([]);
+const  posts= ref([]);
 
 const hasExam = (post) => {
   return !!(post.exam_link || post.examLink || post.exam_id);
@@ -848,15 +837,7 @@ const getStudentAvatar = (student) => {
   )}`;
 };
 
-const formatDate = (date) => {
-  if (!date) return "-";
 
-  return new Date(date).toLocaleDateString("en-GB", {
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-  });
-};
 
 const availableExams = computed(() => {
   if (!studentResults.value) return [];
@@ -970,6 +951,8 @@ const fetchRoomData = async () => {
 const fetchPosts = async () => {
   try {
     const res = await getPosts(props.roomId);
+    console.log(res.data.data);
+    
 
     posts.value = (res.data.data || []).reverse();
   } catch (err) {

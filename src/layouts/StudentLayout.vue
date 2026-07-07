@@ -5,8 +5,11 @@
         <div class="profile-card">
           <div class="profile-info">
             <img
-              :src="authStore.profile?.avatar && authStore.profile?.avatar !== 'default.png' ? `${imgBaseUrl}${authStore.profile?.avatar}?t=${layoutImageRefresh}` : defaultImage"
-              alt="Profile" class="profile-img" />
+              :src="layoutAvatar"
+              alt="Profile"
+              class="profile-img"
+              @error="onAvatarError"
+            />
             <div class="profile-text">
               <span class="profile-name">{{ authStore.profile?.firstName }} {{ authStore.profile?.lastName }}</span>
               <span class="profile-role">{{ authStore.profile?.role }}</span>
@@ -122,9 +125,31 @@ const handleLogout = async () => {
   }
 }
 
-watch(() => authStore.profile?.avatar, () => {
-  layoutImageRefresh.value = Date.now()
-})
+const layoutAvatar = computed(() => {
+  const avatar = authStore.profile?.avatar;
+
+  if (!avatar) {
+    return defaultImage;
+  }
+
+  if (avatar.toLowerCase().includes("default.png")) {
+    return defaultImage;
+  }
+
+  return `${imgBaseUrl}${avatar}?t=${layoutImageRefresh.value}`;
+});
+
+const onAvatarError = (e) => {
+  e.target.src = defaultImage;
+};
+
+watch(
+  () => authStore.profile?.avatar,
+  () => {
+    layoutImageRefresh.value = Date.now();
+  },
+  { immediate: true }
+);
 
 onMounted(async () => {
 

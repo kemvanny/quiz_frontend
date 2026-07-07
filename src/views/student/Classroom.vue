@@ -90,7 +90,6 @@ const isLoading = ref(false);
 const errorMessage = ref('');
 
 const searchQuery = ref('');
-const activeTab = ref('All');
 
 const currentPage = ref(1);
 const itemsPerPage = ref(8);
