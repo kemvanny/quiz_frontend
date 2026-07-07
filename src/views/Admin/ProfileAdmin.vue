@@ -37,7 +37,7 @@
         </div>
       </div>
 
-      <input type="file" ref="fileInput" style="display: none" accept="image/*" @change="onFileSelected" />
+      <input type="file" ref="fileInput" style="display: none" accept=".jpg,.jpeg,.png,.webp" @change="onFileSelected" />
 
       <button class="upload-btn" @click="triggerFileInput">
         <i class="fa-solid fa-cloud-arrow-up"></i>
@@ -208,35 +208,67 @@ const hasChanges = computed(() => {
 // Upload Image
 const onFileSelected = async (event) => {
   const file = event.target.files[0]
+
   if (!file) return
 
-  if (file.size > 2 * 1024 * 1024) {
-    triggerToast('ទំហំរូបភាពត្រូវតែតូចជាង 2MB', 'fa-solid fa-circle-xmark')
+  const allowedExtensions = ["jpg", "jpeg", "png", "webp"]
+
+  const allowedMimeTypes = [
+    "image/jpeg",
+    "image/png",
+    "image/webp",
+  ]
+
+  const extension = file.name.split(".").pop().toLowerCase()
+
+  if (
+    !allowedExtensions.includes(extension) ||
+    !allowedMimeTypes.includes(file.type)
+  ) {
+    triggerToast(
+      "អាចផ្ទុកបានតែរូបភាព .jpg, .jpeg, .png និង .webp ប៉ុណ្ណោះ",
+      "fa-solid fa-circle-xmark"
+    )
+    event.target.value = ""
     return
   }
-try {
-  triggerToast('កំពុងផ្ទុកឡើងរូបភាព...', 'fa-solid fa-spinner fa-spin')
-  if (authStore.error) authStore.error = null
 
-  await authStore.uploadAvatar(file)
+  const maxSize = 2 * 1024 * 1024
 
- if (typeof authStore.fetchProfile === 'function') {
-      await authStore.fetchProfile()
-    }
-  
-  imageRefresh.value = Date.now()
-  
-  triggerToast('ផ្លាស់ប្តូររូបភាពប្រវត្តិរូបជោគជ័យ!', 'fa-solid fa-circle-check')
+  if (file.size > maxSize) {
+    triggerToast(
+      "ទំហំរូបភាពត្រូវតែតូចជាង 2MB",
+      "fa-solid fa-circle-xmark"
+    )
+    event.target.value = ""
+    return
+  }
 
-} catch (err) {
-  const errorMsg = err.response?.data?.msg || 'មិនអាចផ្ទុកឡើងរូបភាពបានទេ'
-  triggerToast(errorMsg, 'fa-solid fa-circle-xmark')
-} finally {
-  event.target.value = ''
+  try {
+    triggerToast(
+      "កំពុងផ្ទុកឡើងរូបភាព...",
+      "fa-solid fa-spinner fa-spin"
+    )
+
+    await authStore.uploadAvatar(file)
+
+    await authStore.fetchProfile()
+
+    imageRefresh.value = Date.now()
+
+    triggerToast(
+      "ផ្លាស់ប្តូររូបភាពប្រវត្តិរូបជោគជ័យ!",
+      "fa-solid fa-circle-check"
+    )
+  } catch (err) {
+    triggerToast(
+      err.response?.data?.message || "មិនអាចផ្ទុករូបភាពបានទេ",
+      "fa-solid fa-circle-xmark"
+    )
+  } finally {
+    event.target.value = ""
+  }
 }
-}
-
-
 const syncProfileData = () => {
   if (authStore.profile) {
     userProfile.firstName = authStore.profile.firstName || ""

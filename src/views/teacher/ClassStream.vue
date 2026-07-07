@@ -899,14 +899,12 @@ watch(selectedExam, () => {
   currentPage.value = 1;
 });
 
-//new post
 const newPost = ref({
   title: "",
   message: "",
   examLink: "",
 });
 
-//edit post
 const editPost = ref({
   id: null,
   title: "",
@@ -934,7 +932,6 @@ const getRoomStudentAvatar = (student) => {
   return `${BASE_IMAGE_URL}${avatar}`;
 };
 
-//fetch room
 const fetchRoomData = async () => {
   try {
     loading.value = true;
@@ -947,7 +944,6 @@ const fetchRoomData = async () => {
   }
 };
 
-//fetch posts
 const fetchPosts = async () => {
   try {
     const res = await getPosts(props.roomId);
@@ -996,17 +992,6 @@ const openDeletePostModal = (post) => {
   activeMenu.value = null;
 };
 
-//delete post
-const handleDelete = async (postId) => {
-  try {
-    await deletePost(props.roomId, postId);
-    toast.success("បានលុបជោគជ័យ!");
-    await fetchPosts();
-  } catch (err) {
-    toast.error("មិនអាចលុបបាន");
-  }
-};
-
 const handleUpdate = async () => {
   if (isUpdating.value) return;
 
@@ -1031,13 +1016,11 @@ const handleUpdate = async () => {
   }
 };
 
-//open delete modal
 const openDeleteModal = (student) => {
   studentToDelete.value = student;
   isDeleteModalOpen.value = true;
 };
 
-//confirm delete
 const confirmDelete = async () => {
   if (!studentToDelete.value) return;
 
@@ -1085,7 +1068,6 @@ const confirmDeletePost = async () => {
   }
 };
 
-//open edit modal
 const openEditModal = (post) => {
   editPost.value = {
     id: post.id,
@@ -1125,6 +1107,7 @@ const fetchStudentResults = async (examId) => {
   studentResults.value = [];
   try {
     const res = await getStudentResultsByExam(examId);
+    console.log("Student Results:", res.data.data);
     const rawData = res.data?.data || res.data || [];
     studentResults.value = Array.isArray(rawData) ? rawData : [];
     if (studentResults.value.length === 0) {
