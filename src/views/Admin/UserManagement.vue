@@ -1,6 +1,5 @@
 <template>
     <div>
-        <!-- Title Section -->
         <div class="d-flex justify-content-between align-items-center mb-4">
             <div>
                 <div class="page-title">គ្រប់គ្រងអ្នកប្រើប្រាស់</div>
@@ -11,7 +10,6 @@
             </BaseButton>
 
         </div>
-        <!-- Search Component -->
         <SearchFilter placeholder="ស្វែងរកតាមឈ្មោះ ឬអ៊ីមែល..." @update:search="searchQuery = $event">
             <template #filters>
                 <div class="col-md-2">
@@ -38,7 +36,6 @@
                 </div>
             </template>
         </SearchFilter>
-        <!-- Table Component -->
         <DataTable :headers="userHeaders" :items="filteredUsers" :is-loading="isLoading" :current-page="currentPage"
             :limit="limit" :total="totalRecords" @update:page="changePage">
             <template #row="{ item }">

@@ -284,11 +284,6 @@ watch(() => authStore.profile, () => {
 }, { immediate: true })
 
 const isEditMode = ref(false)
-const toast = reactive({
-  show: false,
-  message: '',
-  icon: ''
-})
 
 const toggleEdit = () => {
   isEditMode.value = !isEditMode.value
@@ -296,8 +291,6 @@ const toggleEdit = () => {
     clearErrors()
   }
 }
-
-
 
 // Update Profile
 const saveChanges = async () => {

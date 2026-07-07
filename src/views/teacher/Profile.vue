@@ -684,8 +684,6 @@ const fetchUserProfile = async () => {
   try {
     loadingData.value = true;
     const res = await getProfileAPI();
-    console.log(res.data.data);
-
     const responseData = res.data;
 
     if (responseData?.result === false) {

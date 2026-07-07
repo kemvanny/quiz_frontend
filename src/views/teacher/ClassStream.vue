@@ -946,10 +946,7 @@ const fetchRoomData = async () => {
 
 const fetchPosts = async () => {
   try {
-    const res = await getPosts(props.roomId);
-    console.log(res.data.data);
-    
-
+    const res = await getPosts(props.roomId);    
     posts.value = (res.data.data || []).reverse();
   } catch (err) {
     console.error("getPosts error status:", err.response?.status);
@@ -1107,7 +1104,6 @@ const fetchStudentResults = async (examId) => {
   studentResults.value = [];
   try {
     const res = await getStudentResultsByExam(examId);
-    console.log("Student Results:", res.data.data);
     const rawData = res.data?.data || res.data || [];
     studentResults.value = Array.isArray(rawData) ? rawData : [];
     if (studentResults.value.length === 0) {
