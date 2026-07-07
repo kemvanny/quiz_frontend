@@ -2,22 +2,38 @@
   <div class="layout">
     <div class="left-card">
       <div class="avatar-wrapper">
-        <img :src="authStore.profile?.avatar &&
-          authStore.profile?.avatar !== 'default.png'
-          ? `${imgBaseUrl}${authStore.profile.avatar}?t=${imageRefresh}`
-          : defaultImage
-          " alt="Profile photo" class="avatar-image" />
-        <button class="btn-upload" @click="triggerFileInput" title="ប្តូររូបភាព">
+        <img
+          :src="avatarSrc"
+          class="avatar-image"
+          alt="Profile photo"
+          @error="($event) => ($event.target.src = defaultImage)"
+        />
+        <button
+          class="btn-upload"
+          @click="triggerFileInput"
+          title="ប្តូររូបភាព"
+        >
           <i class="fas fa-upload"></i>
         </button>
-        <button v-if="
-          profileData.avatarUrl &&
-          !profileData.avatarUrl.includes('ui-avatars.com')
-        " class="btn-delete-avatar" @click="openDeleteModal" :disabled="loadingAvatar">
+        <button
+          v-if="
+            authStore.profile?.avatar &&
+            authStore.profile.avatar !== 'default.png'
+          "
+          class="btn-delete-avatar"
+          @click="openDeleteModal"
+          :disabled="loadingAvatar"
+        >
           <i class="fas fa-spinner fa-spin" v-if="loadingAvatar"></i>
           <i class="fas fa-trash-alt" v-else></i>
         </button>
-        <input ref="fileInput" type="file" hidden accept="image/*" @change="handleAvatarUpload" />
+        <input
+          ref="fileInput"
+          type="file"
+          hidden
+          accept="image/*"
+          @change="handleAvatarUpload"
+        />
       </div>
 
       <h4 class="user-name">
@@ -26,10 +42,13 @@
 
       <div class="mb-4">
         <span class="role-badge">
-          <i :class="profileData.role?.toUpperCase() === 'STUDENT'
-            ? 'fas fa-graduation-cap'
-            : 'fas fa-chalkboard-teacher'
-            "></i>
+          <i
+            :class="
+              profileData.role?.toUpperCase() === 'STUDENT'
+                ? 'fas fa-graduation-cap'
+                : 'fas fa-chalkboard-teacher'
+            "
+          ></i>
           {{
             profileData.role?.toUpperCase() === "STUDENT"
               ? "សិស្ស"
@@ -39,26 +58,38 @@
       </div>
 
       <div class="action-buttons">
-        <button type="button" :class="[
-          'btn',
-          currentTab === 'general' ? 'btn-green' : 'btn-green-outline',
-        ]" @click="currentTab = 'general'">
+        <button
+          type="button"
+          :class="[
+            'btn',
+            currentTab === 'general' ? 'btn-green' : 'btn-green-outline',
+          ]"
+          @click="currentTab = 'general'"
+        >
           <i class="fas fa-edit"></i>
           ព័ត៌មានផ្ទាល់ខ្លួន
         </button>
 
-        <button type="button" :class="[
-          'btn',
-          currentTab === 'security' ? 'btn-purple' : 'btn-purple-outline',
-        ]" @click="currentTab = 'security'">
+        <button
+          type="button"
+          :class="[
+            'btn',
+            currentTab === 'security' ? 'btn-purple' : 'btn-purple-outline',
+          ]"
+          @click="currentTab = 'security'"
+        >
           <i class="fas fa-lock"></i>
           ផ្លាស់ប្តូរពាក្យសម្ងាត់
         </button>
 
-        <button type="button" :class="[
-          'btn',
-          currentTab === 'delete' ? 'btn-danger' : 'btn-danger-outline',
-        ]" @click="currentTab = 'delete'">
+        <button
+          type="button"
+          :class="[
+            'btn',
+            currentTab === 'delete' ? 'btn-danger' : 'btn-danger-outline',
+          ]"
+          @click="currentTab = 'delete'"
+        >
           <i class="fas fa-user-times"></i>
           លុបគណនីចោល
         </button>
@@ -66,7 +97,11 @@
     </div>
 
     <div class="right-card">
-      <div v-if="currentTab === 'general'" id="tab-general" class="fade-in-panel w-100">
+      <div
+        v-if="currentTab === 'general'"
+        id="tab-general"
+        class="fade-in-panel w-100"
+      >
         <div class="mb-4">
           <h2 class="m-0">ព័ត៌មានរបស់ខ្ញុំ</h2>
         </div>
@@ -81,7 +116,12 @@
               <label class="info-label">ID គណនី</label>
               <div class="input-wrapper">
                 <i class="fas fa-id-badge input-icon"></i>
-                <input type="text" class="info-input" v-model="profileData.userId" disabled />
+                <input
+                  type="text"
+                  class="info-input"
+                  v-model="profileData.userId"
+                  disabled
+                />
               </div>
             </div>
 
@@ -89,7 +129,11 @@
               <label class="info-label">ភេទ</label>
               <div class="input-wrapper">
                 <i class="fas fa-venus-mars input-icon"></i>
-                <select class="info-input selector-custom" v-model="profileData.gender" :disabled="!isEditing">
+                <select
+                  class="info-input selector-custom"
+                  v-model="profileData.gender"
+                  :disabled="!isEditing"
+                >
                   <option value="" disabled>ជ្រើសរើសភេទ</option>
                   <option value="MALE">ប្រុស</option>
                   <option value="FEMALE">ស្រី</option>
@@ -102,27 +146,48 @@
               <label class="info-label">នាមត្រកូល</label>
               <div class="input-wrapper">
                 <i class="fas fa-user input-icon"></i>
-                <input type="text" class="info-input" v-model="profileData.firstName"  @input="validateFirstName(profileData.firstName)" placeholder="បញ្ចូលនាមត្រកូល"
-                  :disabled="!isEditing" />
+                <input
+                  type="text"
+                  class="info-input"
+                  v-model="profileData.firstName"
+                  @input="validateFirstName(profileData.firstName)"
+                  placeholder="បញ្ចូលនាមត្រកូល"
+                  :disabled="!isEditing"
+                />
               </div>
-               <span v-if="errors.firstName" class="error-text">{{ errors.firstName }}</span>
+              <span v-if="errors.firstName" class="error-text">{{
+                errors.firstName
+              }}</span>
             </div>
 
             <div class="info-item">
               <label class="info-label">នាមខ្លួន</label>
               <div class="input-wrapper">
                 <i class="fas fa-user input-icon"></i>
-                <input type="text" class="info-input" v-model="profileData.lastName" @input="validateLastName(profileData.lastName)" placeholder="បញ្ចូលនាមខ្លួន"
-                  :disabled="!isEditing" />
+                <input
+                  type="text"
+                  class="info-input"
+                  v-model="profileData.lastName"
+                  @input="validateLastName(profileData.lastName)"
+                  placeholder="បញ្ចូលនាមខ្លួន"
+                  :disabled="!isEditing"
+                />
               </div>
-              <span v-if="errors.lastName" class="error-text">{{ errors.lastName }}</span>
+              <span v-if="errors.lastName" class="error-text">{{
+                errors.lastName
+              }}</span>
             </div>
 
             <div class="info-item">
               <label class="info-label">អាសយដ្ឋានអ៊ីមែល</label>
               <div class="input-wrapper">
                 <i class="fas fa-envelope input-icon"></i>
-                <input type="email" class="info-input" v-model="profileData.email" disabled />
+                <input
+                  type="email"
+                  class="info-input"
+                  v-model="profileData.email"
+                  disabled
+                />
               </div>
             </div>
 
@@ -130,41 +195,74 @@
               <label class="info-label">លេខទូរសព្ទ</label>
               <div class="input-wrapper">
                 <i class="fas fa-phone input-icon"></i>
-                <input type="text" class="info-input" v-model="profileData.phone"  @input="validatePhone(profileData.phone)" placeholder="បញ្ចូលលេខទូរសព្ទ"
-                  :disabled="!isEditing" />
+                <input
+                  type="text"
+                  class="info-input"
+                  v-model="profileData.phone"
+                  @input="validatePhone(profileData.phone)"
+                  placeholder="បញ្ចូលលេខទូរសព្ទ"
+                  :disabled="!isEditing"
+                />
               </div>
-               <span v-if="errors.phone" class="error-text">{{ errors.phone }}</span>
+              <span v-if="errors.phone" class="error-text">{{
+                errors.phone
+              }}</span>
             </div>
 
             <div class="info-item" style="grid-column: span 2">
               <label class="info-label">អាសយដ្ឋាន</label>
               <div class="input-wrapper">
                 <i class="fas fa-map-marker-alt input-icon"></i>
-                <input type="text" class="info-input" v-model="profileData.address"  @input="validateAddress(profileData.address)" placeholder="បញ្ចូលអាសយដ្ឋាន"
-                  :disabled="!isEditing" />
+                <input
+                  type="text"
+                  class="info-input"
+                  v-model="profileData.address"
+                  @input="validateAddress(profileData.address)"
+                  placeholder="បញ្ចូលអាសយដ្ឋាន"
+                  :disabled="!isEditing"
+                />
               </div>
-              <span v-if="errors.address" class="error-text">{{ errors.address }}</span>
+              <span v-if="errors.address" class="error-text">{{
+                errors.address
+              }}</span>
             </div>
           </div>
 
           <div class="d-flex justify-content-end gap-3 mt-5 pt-4 border-top">
-            <button v-if="!isEditing" type="button" class="btn btn-green" style="width: auto; padding: 10px 24px"
-              @click="isEditing = true">
+            <button
+              v-if="!isEditing"
+              type="button"
+              class="btn btn-green"
+              style="width: auto; padding: 10px 24px"
+              @click="isEditing = true"
+            >
               <i class="fas fa-edit me-1"></i> កែប្រែព័ត៌មាន
             </button>
 
             <template v-else>
-              <button type="button" class="btn btn-outline" style="width: auto; padding: 10px 24px"
-                @click="cancelEditing">
+              <button
+                type="button"
+                class="btn btn-outline"
+                style="width: auto; padding: 10px 24px"
+                @click="cancelEditing"
+              >
                 បោះបង់
               </button>
-              <button type="submit" class="btn btn-green" style="
+              <button
+                type="submit"
+                class="btn btn-green"
+                style="
                   width: auto;
                   padding: 10px 24px;
                   background-color: #38a169;
                   color: white;
-                " :disabled="!hasChanges || hasErrors">
-                <i class="fas fa-spinner fa-spin me-2" v-if="updatingProfile"></i>
+                "
+                :disabled="!hasChanges || hasErrors"
+              >
+                <i
+                  class="fas fa-spinner fa-spin me-2"
+                  v-if="updatingProfile"
+                ></i>
                 រក្សាទុកព័ត៌មាន
               </button>
             </template>
@@ -172,34 +270,80 @@
         </form>
       </div>
 
-      <div v-if="currentTab === 'security'" id="tab-security" class="fade-in-panel w-100">
+      <div
+        v-if="currentTab === 'security'"
+        id="tab-security"
+        class="fade-in-panel w-100"
+      >
         <h2>សុវត្ថិភាព និងពាក្យសម្ងាត់</h2>
         <form @submit.prevent>
-          <div class="profile-form" style="display: grid; grid-template-columns: 1fr; gap: 20px">
-
+          <div
+            class="profile-form"
+            style="display: grid; grid-template-columns: 1fr; gap: 20px"
+          >
             <div class="profile-field">
               <label>ពាក្យសម្ងាត់បច្ចុប្បន្ន</label>
-              <div class="password-input-wrapper" style="position: relative;">
-                <input :type="showPassword.oldPassword ? 'text' : 'password'" v-model.trim="passwordForm.oldPassword"
-                  placeholder="បញ្ចូលលេខសម្ងាត់ចាស់" class="form-control" />
-                <i :class="showPassword.oldPassword ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye'"
+              <div class="password-input-wrapper" style="position: relative">
+                <input
+                  :type="showPassword.oldPassword ? 'text' : 'password'"
+                  v-model.trim="passwordForm.oldPassword"
+                  placeholder="បញ្ចូលលេខសម្ងាត់ចាស់"
+                  class="form-control"
+                />
+                <i
+                  :class="
+                    showPassword.oldPassword
+                      ? 'fa-solid fa-eye-slash'
+                      : 'fa-solid fa-eye'
+                  "
                   @click="showPassword.oldPassword = !showPassword.oldPassword"
-                  style="position: absolute; right: 10px; top: 35%; cursor: pointer;"></i>
+                  style="
+                    position: absolute;
+                    right: 10px;
+                    top: 35%;
+                    cursor: pointer;
+                  "
+                ></i>
               </div>
               <span class="text-danger small">{{ oldPasswordError }}</span>
             </div>
 
-            <div style="  display: grid;  grid-template-columns: repeat(2, 1fr); gap: 20px;  ">
+            <div
+              style="
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 20px;
+              "
+            >
               <div class="profile-field">
                 <label>ពាក្យសម្ងាត់ថ្មី</label>
 
-                <div style="position: relative;">
-                  <input :type="showPassword.newPassword ? 'text' : 'password'" v-model.trim="passwordForm.newPassword"
-                    placeholder="បញ្ចូលលេខសម្ងាត់ថ្មី" class="form-control" />
+                <div style="position: relative">
+                  <input
+                    :type="showPassword.newPassword ? 'text' : 'password'"
+                    v-model.trim="passwordForm.newPassword"
+                    placeholder="បញ្ចូលលេខសម្ងាត់ថ្មី"
+                    class="form-control"
+                  />
 
-                  <i @click="showPassword.newPassword = !showPassword.newPassword"
-                    :class="showPassword.newPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"
-                    style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #6c757d;"></i>
+                  <i
+                    @click="
+                      showPassword.newPassword = !showPassword.newPassword
+                    "
+                    :class="
+                      showPassword.newPassword
+                        ? 'fas fa-eye-slash'
+                        : 'fas fa-eye'
+                    "
+                    style="
+                      position: absolute;
+                      right: 15px;
+                      top: 50%;
+                      transform: translateY(-50%);
+                      cursor: pointer;
+                      color: #6c757d;
+                    "
+                  ></i>
                 </div>
 
                 <span class="text-danger small">{{ newPasswordError }}</span>
@@ -207,27 +351,62 @@
 
               <div class="profile-field">
                 <label>បញ្ជាក់ពាក្យសម្ងាត់ថ្មី</label>
-                <div style="position: relative;">
-                  <input :type="showPassword.confirmPassword ? 'text' : 'password'" v-model.trim="passwordForm.confirmPassword"
-                    placeholder="បញ្ជាក់លេខសម្ងាត់ថ្មី" class="form-control" />
-                  <i @click="showPassword.confirmPassword = !showPassword.confirmPassword"
-                    :class="showPassword.confirmPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"
-                    style="position: absolute; right: 15px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #6c757d;"></i>
+                <div style="position: relative">
+                  <input
+                    :type="showPassword.confirmPassword ? 'text' : 'password'"
+                    v-model.trim="passwordForm.confirmPassword"
+                    placeholder="បញ្ជាក់លេខសម្ងាត់ថ្មី"
+                    class="form-control"
+                  />
+                  <i
+                    @click="
+                      showPassword.confirmPassword =
+                        !showPassword.confirmPassword
+                    "
+                    :class="
+                      showPassword.confirmPassword
+                        ? 'fas fa-eye-slash'
+                        : 'fas fa-eye'
+                    "
+                    style="
+                      position: absolute;
+                      right: 15px;
+                      top: 50%;
+                      transform: translateY(-50%);
+                      cursor: pointer;
+                      color: #6c757d;
+                    "
+                  ></i>
                 </div>
-                <span class="text-danger small">{{ confirmPasswordError }}</span>
+                <span class="text-danger small">{{
+                  confirmPasswordError
+                }}</span>
               </div>
             </div>
           </div>
 
           <div class="d-flex justify-content-end mt-5 pt-4 border-top">
-            <button type="button" class="btn btn-purple" @click="handleChangePassword" :disabled="passwordLoading">
-              {{ passwordLoading ? "កំពុងរក្សាទុក..." : "ធ្វើបច្ចុប្បន្នភាពពាក្យសម្ងាត់" }}
+            <button
+              type="button"
+              class="btn btn-purple"
+              @click="handleChangePassword"
+              :disabled="passwordLoading"
+            >
+              {{
+                passwordLoading
+                  ? "កំពុងរក្សាទុក..."
+                  : "ធ្វើបច្ចុប្បន្នភាពពាក្យសម្ងាត់"
+              }}
             </button>
           </div>
         </form>
       </div>
 
-      <div v-if="currentTab === 'delete'" id="tab-delete" class="fade-in-panel w-100">
+      <div
+        v-if="currentTab === 'delete'"
+        id="tab-delete"
+        class="fade-in-panel w-100"
+      >
         <h2>លុបគណនីចោល</h2>
         <div class="p-4 border rounded bg-light mt-4">
           <div class="text-danger mb-3">
@@ -240,8 +419,12 @@
             សកម្មភាពនេះមិនអាចទាញត្រឡប់មកវិញបានឡើយ។
           </p>
           <div class="d-flex justify-content-start">
-            <button type="button" class="btn btn-danger" style="width: auto; padding: 10px 24px"
-              @click="openDeleteAccountModal">
+            <button
+              type="button"
+              class="btn btn-danger"
+              style="width: auto; padding: 10px 24px"
+              @click="openDeleteAccountModal"
+            >
               <i class="fas fa-user-times me-2"></i> លុបគណនីរបស់ខ្ញុំ
             </button>
           </div>
@@ -249,7 +432,11 @@
       </div>
     </div>
 
-    <BaseModal :isOpen="isDeleteModalOpen" @close="isDeleteModalOpen = false" width="350px">
+    <BaseModal
+      :isOpen="isDeleteModalOpen"
+      @close="isDeleteModalOpen = false"
+      width="350px"
+    >
       <div class="p-3 text-center">
         <div class="modal-icon-alert text-danger mb-3">
           <i class="fas fa-exclamation-circle fa-2x"></i>
@@ -258,21 +445,39 @@
           លុបរូបភាពប្រវត្តិរូប?
         </h5>
         <p class="text-muted mb-4 small" style="line-height: 1.5">
-          តើអ្នកពិតជាចង់លុបរូបភាពបច្ចុប្បន្ននេះមែនទេ? សកម្មភាពនេះមិនអាចទាញត្រឡប់មកវិញបានឡើយ។
+          តើអ្នកពិតជាចង់លុបរូបភាពបច្ចុប្បន្ននេះមែនទេ?
+          សកម្មភាពនេះមិនអាចទាញត្រឡប់មកវិញបានឡើយ។
         </p>
         <div class="d-flex gap-2 w-100">
-          <button class="btn btn-outline flex-fill" @click="isDeleteModalOpen = false">
+          <button
+            class="btn btn-outline flex-fill"
+            @click="isDeleteModalOpen = false"
+          >
             បោះបង់
           </button>
-          <button class="btn btn-danger flex-fill" style="margin-top: 0" @click="confirmDeleteAvatar"
-            :disabled="loadingAvatar">
-            <span v-if="loadingAvatar" class="spinner-border spinner-border-sm me-1"></span>លុបចេញ
+          <button
+            class="btn btn-danger flex-fill"
+            style="margin-top: 0"
+            @click="confirmDeleteAvatar"
+            :disabled="loadingAvatar"
+          >
+            <span
+              v-if="loadingAvatar"
+              class="spinner-border spinner-border-sm me-2"
+              role="status"
+            ></span>
+
+            {{ loadingAvatar ? "កំពុងលុប..." : "លុបចេញ" }}
           </button>
         </div>
       </div>
     </BaseModal>
 
-    <BaseModal :isOpen="isDeleteAccountModalOpen" @close="isDeleteAccountModalOpen = false" width="400px">
+    <BaseModal
+      :isOpen="isDeleteAccountModalOpen"
+      @close="isDeleteAccountModalOpen = false"
+      width="400px"
+    >
       <div class="p-3">
         <div class="text-center">
           <div class="modal-icon-alert text-danger mb-3">
@@ -282,26 +487,48 @@
             បញ្ជាក់ការលុបគណនី
           </h5>
           <p class="text-muted mb-4 small" style="line-height: 1.5">
-            ដើម្បីសុវត្ថិភាព សូមបញ្ចូលពាក្យសម្ងាត់បច្ចុប្បន្នរបស់អ្នក ដើម្បីបន្តដំណើរការលុបគណនីនេះជាអចិន្ត្រៃយ៍។
+            ដើម្បីសុវត្ថិភាព សូមបញ្ចូលពាក្យសម្ងាត់បច្ចុប្បន្នរបស់អ្នក
+            ដើម្បីបន្តដំណើរការលុបគណនីនេះជាអចិន្ត្រៃយ៍។
           </p>
         </div>
 
         <div class="mb-4">
-          <label class="form-label small fw-bold text-secondary mb-1">ពាក្យសម្ងាត់បច្ចុប្បន្ន</label>
+          <label class="form-label small fw-bold text-secondary mb-1"
+            >ពាក្យសម្ងាត់បច្ចុប្បន្ន</label
+          >
           <div class="password-input">
-            <input type="password" v-model="deleteAccountPassword" placeholder="បញ្ចូលលេខសម្ងាត់បច្ចុប្បន្ន"
-              style="width: 100%; padding: 10px; border: 1px solid #ced4da; border-radius: 4px;" />
+            <input
+              type="password"
+              v-model="deleteAccountPassword"
+              placeholder="បញ្ចូលលេខសម្ងាត់បច្ចុប្បន្ន"
+              style="
+                width: 100%;
+                padding: 10px;
+                border: 1px solid #ced4da;
+                border-radius: 4px;
+              "
+            />
           </div>
         </div>
 
         <div class="d-flex gap-2 w-100">
-          <button class="btn btn-outline flex-fill" @click="isDeleteAccountModalOpen = false"
-            :disabled="deletingAccount">
+          <button
+            class="btn btn-outline flex-fill"
+            @click="isDeleteAccountModalOpen = false"
+            :disabled="deletingAccount"
+          >
             បោះបង់
           </button>
-          <button class="btn btn-danger flex-fill" style="margin-top: 0" @click="confirmDeleteAccount"
-            :disabled="deletingAccount || !deleteAccountPassword">
-            <span v-if="deletingAccount" class="spinner-border spinner-border-sm me-1"></span>
+          <button
+            class="btn btn-danger flex-fill"
+            style="margin-top: 0"
+            @click="confirmDeleteAccount"
+            :disabled="deletingAccount || !deleteAccountPassword"
+          >
+            <span
+              v-if="deletingAccount"
+              class="spinner-border spinner-border-sm me-1"
+            ></span>
             លុបជាដាច់ខាត
           </button>
         </div>
@@ -312,11 +539,11 @@
 </template>
 
 <script setup>
-import { ref, reactive, onMounted, watch ,computed} from "vue";
+import { ref, reactive, onMounted, watch, computed } from "vue";
 import { useToast } from "@/composables/useToast";
-import { updateProfileAPI} from '@/api/auth.api';
-import {getProfileAPI} from '@/api/auth.api';
-import { deleteAccountAPI} from "@/api/auth.api";
+import { updateProfileAPI } from "@/api/auth.api";
+import { getProfileAPI } from "@/api/auth.api";
+import { deleteAccountAPI } from "@/api/auth.api";
 import BaseModal from "@/components/common/BaseModal.vue";
 import { useAuthStore } from "@/stores/authStore";
 import defaultImage from "../../assets/images/default.png";
@@ -352,13 +579,20 @@ const {
   validateFirstName,
   validateLastName,
   validatePhone,
-  validateAddress
+  validateAddress,
 } = useFormValidation();
 
+const passwordForm = ref({
+  oldPassword: "",
+  newPassword: "",
+  confirmPassword: "",
+});
 
-const passwordForm = ref({ oldPassword: "", newPassword: "", confirmPassword: "" });
-
-const showPassword = ref({ oldPassword: false, newPassword: false, confirmPassword: false });
+const showPassword = ref({
+  oldPassword: false,
+  newPassword: false,
+  confirmPassword: false,
+});
 
 const fileInput = ref(null);
 const localUploadedUrl = ref("");
@@ -377,37 +611,49 @@ const profileData = reactive({
   avatarUrl: "",
 });
 
-const originalProfile = ref({...profileData});
+const originalProfile = ref({ ...profileData });
 
 const hasErrors = computed(() => {
-  return !!(errors.value.firstName || errors.value.lastName || errors.value.gender || errors.value.phone || errors.value.address);
-})
+  return !!(
+    errors.value.firstName ||
+    errors.value.lastName ||
+    errors.value.gender ||
+    errors.value.phone ||
+    errors.value.address
+  );
+});
 
 const hasChanges = computed(() => {
- return JSON.stringify(profileData) !== JSON.stringify(originalProfile.value);
+  return JSON.stringify(profileData) !== JSON.stringify(originalProfile.value);
 });
 
 const syncProfileData = () => {
-  if(authStore.profile){
+  if (authStore.profile) {
     profileData.firstName = authStore.profile.firstName || "";
     profileData.lastName = authStore.profile.lastName || "";
-    profileData.gender = authStore.profile.gender ? authStore.profile.gender.toUpperCase() : "";
+    profileData.gender = authStore.profile.gender
+      ? authStore.profile.gender.toUpperCase()
+      : "";
     profileData.email = authStore.profile.email || "";
     profileData.phone = authStore.profile.phone || "";
     profileData.address = authStore.profile.address || "";
   }
   originalProfile.value = JSON.parse(JSON.stringify(profileData));
-}
+};
 
 const clearErrors = () => {
-  errors.value.firstName = ''
-  errors.value.lastName = ''
-  errors.value.phone = ''
-  errors.value.address = ''
-}
-watch(() => authStore.profile, () => {
-  syncProfileData();
-},{immediate: true});
+  errors.value.firstName = "";
+  errors.value.lastName = "";
+  errors.value.phone = "";
+  errors.value.address = "";
+};
+watch(
+  () => authStore.profile,
+  () => {
+    syncProfileData();
+  },
+  { immediate: true },
+);
 
 const resetPasswordForm = () => {
   passwordForm.value = {
@@ -438,6 +684,8 @@ const fetchUserProfile = async () => {
   try {
     loadingData.value = true;
     const res = await getProfileAPI();
+    console.log(res.data.data);
+    
     const responseData = res.data;
 
     if (responseData?.result === false) {
@@ -464,11 +712,13 @@ const fetchUserProfile = async () => {
         } else {
           const url = new URL(import.meta.env.VITE_BASE_URL);
           const serverOrigin = url.origin;
-          const cleanAvatarPath = user.avatar.startsWith("/") ? user.avatar.slice(1) : user.avatar;
+          const cleanAvatarPath = user.avatar.startsWith("/")
+            ? user.avatar.slice(1)
+            : user.avatar;
           profileData.avatarUrl = `${serverOrigin}/${cleanAvatarPath}`;
         }
       } else {
-        profileData.avatarUrl = `https://ui-avatars.com/api/?name=${profileData.firstName}+${profileData.lastName}&background=random`;
+        profileData.avatarUrl = defaultImage;
       }
     }
   } catch (err) {
@@ -508,7 +758,6 @@ const handleChangePassword = async () => {
     return;
   }
 
-
   if (passwordForm.value.newPassword !== passwordForm.value.confirmPassword) {
     confirmPasswordError.value = "លេខសម្ងាត់ថ្មី និងការបញ្ជាក់មិនដូចគ្នា!";
     triggerToast("លេខសម្ងាត់មិនដូចគ្នាទេ!", "fa-solid fa-circle-xmark");
@@ -538,19 +787,18 @@ const handleChangePassword = async () => {
 };
 
 const cancelEditing = () => {
-  clearErrors()
+  clearErrors();
   isEditing.value = false;
   fetchUserProfile();
 };
 
-
 const handleSaveProfile = async () => {
-  validateFirstName(profileData.firstName)
-  validateLastName(profileData.lastName)
-  validatePhone(profileData.phone)
-  validateAddress(profileData.address)
+  validateFirstName(profileData.firstName);
+  validateLastName(profileData.lastName);
+  validatePhone(profileData.phone);
+  validateAddress(profileData.address);
 
-  if (hasErrors.value) return
+  if (hasErrors.value) return;
   try {
     updatingProfile.value = true;
     const payload = {
@@ -561,15 +809,19 @@ const handleSaveProfile = async () => {
       address: profileData.address ? profileData.address.trim() : null,
     };
 
-    await  updateProfileAPI(payload);
-    originalProfile.value = {...profileData};
-    triggerToast("រក្សាទុកព័ត៌មានផ្ទាល់ខ្លួនជោគជ័យ","fa-solid fa-circle-check");
+    await updateProfileAPI(payload);
+    originalProfile.value = { ...profileData };
+    triggerToast(
+      "រក្សាទុកព័ត៌មានផ្ទាល់ខ្លួនជោគជ័យ",
+      "fa-solid fa-circle-check",
+    );
     isEditing.value = false;
     await fetchUserProfile();
     await authStore.fetchProfile(true);
+    await (authStore.profile.avatar = null);
   } catch (err) {
     console.error(err);
-    triggerToast("ការកែប្រែព័ត៌មានបានបរាជ័យ!","fa-solid fa-circle-xmark");
+    triggerToast("ការកែប្រែព័ត៌មានបានបរាជ័យ!", "fa-solid fa-circle-xmark");
   } finally {
     updatingProfile.value = false;
   }
@@ -583,8 +835,21 @@ const handleAvatarUpload = async (event) => {
   const file = event.target.files[0];
   if (!file) return;
 
-  if (file.size > 2 * 1024 * 1024) {
-    triggerToast("ទំហំរូបភាពត្រូវតែតូចជាង 2MB", "fa-solid fa-circle-xmark");
+  const allowedTypes = ["image/jpeg", "image/png", "image/webp"];
+
+  if (!allowedTypes.includes(file.type)) {
+    triggerToast(
+      "សូមជ្រើសរើសរូបភាពប្រភេទ JPG, PNG ឬ WEBP ប៉ុណ្ណោះ។",
+      "fa-solid fa-circle-xmark",
+    );
+    event.target.value = "";
+    return;
+  }
+
+  const maxSize = 2 * 1024 * 1024;
+
+  if (file.size > maxSize) {
+    triggerToast("ទំហំរូបភាពមិនអាចលើស 2MB បានទេ។", "fa-solid fa-circle-xmark");
     event.target.value = "";
     return;
   }
@@ -592,57 +857,67 @@ const handleAvatarUpload = async (event) => {
   try {
     triggerToast("កំពុងផ្ទុកឡើងរូបភាព...", "fa-solid fa-spinner fa-spin");
 
-    if (authStore.error) authStore.error = null;
+    if (authStore.error) {
+      authStore.error = null;
+    }
 
     await authStore.uploadAvatar(file);
 
-    if (typeof authStore.fetchProfile === "function") {
-      await authStore.fetchProfile();
-    }
+    await authStore.fetchProfile(true);
 
     imageRefresh.value = Date.now();
 
     triggerToast(
       "ផ្លាស់ប្តូររូបភាពប្រវត្តិរូបជោគជ័យ!",
       "fa-solid fa-circle-check",
-      500,
     );
   } catch (err) {
-    const errorMsg = err.response?.data?.msg || "មិនអាចផ្ទុកឡើងរូបភាពបានទេ";
-    triggerToast(errorMsg, "fa-solid fa-circle-xmark");
+    triggerToast(
+      err.response?.data?.msg || "មិនអាចផ្ទុកឡើងរូបភាពបានទេ។",
+      "fa-solid fa-circle-xmark",
+    );
   } finally {
     event.target.value = "";
   }
 };
-watch(() => passwordForm.value.oldPassword, (newValue) => {
-  if (!newValue) {
+watch(
+  () => passwordForm.value.oldPassword,
+  (newValue) => {
+    if (!newValue) {
+      oldPasswordError.value = "";
+      return;
+    }
+
     oldPasswordError.value = "";
-    return;
-  }
+  },
+);
 
-  oldPasswordError.value = "";
-});
+watch(
+  () => passwordForm.value.newPassword,
+  (newValue) => {
+    if (newValue.length > 0 && newValue.length < 6) {
+      newPasswordError.value = "ពាក្យសម្ងាត់ត្រូវមានយ៉ាងតិច ៦ ខ្ទង់!";
+    } else {
+      newPasswordError.value = "";
+    }
+  },
+);
 
-watch(() => passwordForm.value.newPassword, (newValue) => {
-  if (newValue.length > 0 && newValue.length < 6) {
-    newPasswordError.value = "ពាក្យសម្ងាត់ត្រូវមានយ៉ាងតិច ៦ ខ្ទង់!";
-  } else {
-    newPasswordError.value = "";
-  }
-});
+watch(
+  () => passwordForm.value.confirmPassword,
+  (newValue) => {
+    if (!newValue) {
+      confirmPasswordError.value = "";
+      return;
+    }
 
-watch(() => passwordForm.value.confirmPassword, (newValue) => {
-  if (!newValue) {
-    confirmPasswordError.value = "";
-    return;
-  }
-
-  if (newValue !== passwordForm.value.newPassword) {
-    confirmPasswordError.value = "លេខសម្ងាត់មិនដូចគ្នាទេ!";
-  } else {
-    confirmPasswordError.value = "";
-  }
-});
+    if (newValue !== passwordForm.value.newPassword) {
+      confirmPasswordError.value = "លេខសម្ងាត់មិនដូចគ្នាទេ!";
+    } else {
+      confirmPasswordError.value = "";
+    }
+  },
+);
 
 watch(
   () => passwordForm.value.newPassword,
@@ -654,45 +929,63 @@ watch(
 
     validatePassword(val);
     newPasswordError.value = errors.value.password;
-  }
+  },
 );
 
 const openDeleteModal = () => {
   isDeleteModalOpen.value = true;
 };
 
-const confirmDeleteAvatar = async () => {
+const avatarSrc = computed(() => {
   const avatar = authStore.profile?.avatar;
-  if (!avatar || avatar.includes("default")) {
-    triggerToast(
-      "មិនមានរូបភាពសម្រាប់លុបទេ!",
-      "fa-solid fa-triangle-exclamation",
-    );
-    return;
+
+  if (
+    !avatar ||
+    avatar === "/public/uploads/avatars/default.png" ||
+    avatar === "default.png" ||
+    avatar.includes("default.png")
+  ) {
+    return defaultImage;
   }
 
+  if (avatar.startsWith("http")) {
+    return `${avatar}?t=${imageRefresh.value}`;
+  }
+
+  return `${imgBaseUrl}${avatar}?t=${imageRefresh.value}`;
+});
+
+const confirmDeleteAvatar = async () => {
   try {
-    avatarDeleting.value = true;
-    triggerToast("កំពុងលុបរូបភាព...", "fa-solid fa-spinner fa-spin");
-    isDeleteModalOpen.value = false;
+    loadingAvatar.value = true;
 
     await authStore.deleteAvatar();
 
-    if (typeof authStore.fetchProfile === "function") {
-      await authStore.fetchProfile();
+    if (authStore.profile) {
+      authStore.profile.avatar = null;
     }
+
+    await authStore.fetchProfile(true);
+    await fetchUserProfile();
+    await (authStore.profile.avatar = null);
 
     imageRefresh.value = Date.now();
 
-    if (avatarInput.value) {
-      avatarInput.value.value = "";
+    if (fileInput.value) {
+      fileInput.value.value = "";
     }
 
-    triggerToast("លុបរូបភាពប្រវត្តិរូបជោគជ័យ!", "fa-solid fa-circle-check");
+    isDeleteModalOpen.value = false;
+
+    triggerToast(
+      "លុបរូបភាពប្រវត្តិរូបជោគជ័យ!",
+      "fa-solid util fa-circle-check"
+    );
+
   } catch (err) {
-    triggerToast("មានបញ្ហាក្នុងការលុបរូបភាព!", "fa-solid fa-circle-xmark");
+    console.log(err);
   } finally {
-    avatarDeleting.value = false;
+    loadingAvatar.value = false;
   }
 };
 
@@ -703,7 +996,10 @@ const openDeleteAccountModal = () => {
 
 const confirmDeleteAccount = async () => {
   if (!deleteAccountPassword.value?.trim()) {
-    triggerToast("សូមបញ្ចូលពាក្យសម្ងាត់បច្ចុប្បន្នរបស់អ្នក!", "fa-solid fa-triangle-exclamation");
+    triggerToast(
+      "សូមបញ្ចូលពាក្យសម្ងាត់បច្ចុប្បន្នរបស់អ្នក!",
+      "fa-solid fa-triangle-exclamation",
+    );
     return;
   }
 
@@ -713,13 +1009,19 @@ const confirmDeleteAccount = async () => {
     const res = await deleteAccountAPI(deleteAccountPassword.value);
 
     if (res.data?.result === false) {
-      triggerToast(res.data?.msg || "លេខសម្ងាត់មិនត្រឹមត្រូវ!", "fa-solid fa-circle-xmark");
+      triggerToast(
+        res.data?.msg || "លេខសម្ងាត់មិនត្រឹមត្រូវ!",
+        "fa-solid fa-circle-xmark",
+      );
       return;
     }
 
     isDeleteAccountModalOpen.value = false;
-  
-    triggerToast("គណនីរបស់អ្នកត្រូវបានលុបដោយជោគជ័យ!", "fa-solid fa-circle-check");
+
+    triggerToast(
+      "គណនីរបស់អ្នកត្រូវបានលុបដោយជោគជ័យ!",
+      "fa-solid fa-circle-check",
+    );
     setTimeout(() => {
       if (authStore?.logout) {
         authStore.logout();
@@ -727,12 +1029,12 @@ const confirmDeleteAccount = async () => {
         localStorage.clear();
         window.location.href = "/login";
       }
-    }, 1000); 
-
+    }, 1000);
   } catch (err) {
     triggerToast(
-      err?.response?.data?.msg || "លេខសម្ងាត់មិនត្រឹមត្រូវ ឬការលុបគណនីបានបរាជ័យ!",
-      "fa-solid fa-circle-xmark"
+      err?.response?.data?.msg ||
+        "លេខសម្ងាត់មិនត្រឹមត្រូវ ឬការលុបគណនីបានបរាជ័យ!",
+      "fa-solid fa-circle-xmark",
     );
   } finally {
     deletingAccount.value = false;
