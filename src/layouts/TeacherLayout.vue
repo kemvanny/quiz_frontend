@@ -5,14 +5,9 @@
         <div class="profile-card">
           <div class="profile-info">
             <img
-              :src="
-                authStore.profile?.avatar &&
-                authStore.profile?.avatar !== 'default.png'
-                  ? `${imgBaseUrl}${authStore.profile?.avatar}?t=${layoutImageRefresh}`
-                  : defaultImage
-              "
-              alt="Profile"
+              :src="layoutAvatar"
               class="profile-img"
+              @error="(e) => (e.target.src = defaultImage)"
             />
             <div class="profile-text">
               <span class="profile-name"
@@ -88,9 +83,23 @@ const searchQuery = ref("");
 
 const isLogoutLoading = ref(false);
 
+const layoutAvatar = computed(() => {
+  const avatar = authStore.profile?.avatar;
+
+  if (!avatar || avatar.includes("default.png")) {
+    return defaultImage;
+  }
+
+  return `${imgBaseUrl}${avatar}?t=${layoutImageRefresh.value}`;
+});
+
 onMounted(async () => {
   if (typeof authStore.fetchProfile === "function") {
     await authStore.fetchProfile();
+
+    console.log("PROFILE AFTER REFRESH:", authStore.profile);
+
+    console.log("AVATAR:", authStore.profile?.avatar);
   }
 });
 
@@ -125,15 +134,15 @@ const teacherMainMenus = [
     routeName: "RoomManagement",
     icon: "fas fa-users",
   },
-  { 
-    name: "បង្កើតការប្រឡង", 
+  {
+    name: "បង្កើតការប្រឡង",
     routeName: "Quizzes",
-    icon: "fas fa-edit" 
+    icon: "fas fa-edit",
   },
-  { 
-    name: "បញ្ជីវិញ្ញាសារ", 
-    routeName: "AllExams", 
-    icon: "fas fa-file-alt" 
+  {
+    name: "បញ្ជីវិញ្ញាសារ",
+    routeName: "AllExams",
+    icon: "fas fa-file-alt",
   },
   {
     name: "លទ្ធផលសិស្ស",
@@ -141,9 +150,9 @@ const teacherMainMenus = [
     icon: "fas fa-chart-bar",
   },
   {
-    name: "ប្រវត្តិរូប", 
-    routeName: "Profile", 
-    icon: "fas fa-user-circle" 
+    name: "ប្រវត្តិរូប",
+    routeName: "Profile",
+    icon: "fas fa-user-circle",
   },
 ];
 

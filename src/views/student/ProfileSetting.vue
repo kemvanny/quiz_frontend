@@ -2,11 +2,11 @@
   <div class="layout" v-if="authStore.profile">
     <div class="left-card">
       <div class="avatar-wrapper">
-        <img :src="authStore.profile?.avatar &&
-          authStore.profile?.avatar !== 'default.png'
-          ? `${imgBaseUrl}${authStore.profile.avatar}?t=${imageRefresh}`
-          : defaultImage
-          " alt="Profile photo" class="avatar-image" />
+        <img
+          :src="avatarSrc"
+          class="avatar-image"
+          @error="onAvatarError"
+        />
         <input ref="avatarInput" type="file" accept="image/*" hidden @change="uploadAvatar" />
 
         <button class="btn-upload" title="Upload photo" @click="avatarInput.click()">
@@ -17,8 +17,16 @@
           </svg>
         </button>
 
-        <button class="btn-delete-avatar" title="Delete photo" :disabled="avatarDeleting || !authStore.profile.avatar"
-          @click="deleteAvatar">
+        <button
+          class="btn-delete-avatar"
+          title="Delete photo"
+          :disabled="
+            avatarDeleting ||
+            !authStore.profile.avatar ||
+            authStore.profile.avatar.includes('default.png')
+          "
+          @click="isDeleteAvatarModalOpen = true"
+        >
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"
             stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round"
@@ -320,6 +328,51 @@
     </BaseModal>
 
     <ToastNotification />
+
+    <BaseModal
+      :is-open="isDeleteAvatarModalOpen"
+      title="លុបរូបភាពប្រវត្តិរូប"
+      width="450px"
+      @close="isDeleteAvatarModalOpen = false"
+    >
+      <div style="text-align:center;padding:10px 0;">
+        <i
+          class="fa-solid fa-circle-exclamation"
+          style="font-size:55px;color:#f59e0b;margin-bottom:15px;"
+        ></i>
+
+        <p style="font-size:16px;font-weight:600;margin-bottom:8px;">
+          តើអ្នកប្រាកដថាចង់លុបរូបភាពប្រវត្តិរូបមែនទេ?
+        </p>
+
+        <p style="color:#6b7280;font-size:14px;">
+          បន្ទាប់ពីលុប ប្រព័ន្ធនឹងប្រើរូបភាពលំនាំដើម (Default Avatar)។
+        </p>
+      </div>
+
+      <template #footer>
+        <button
+          class="btn btn-outline"
+          @click="isDeleteAvatarModalOpen = false"
+          :disabled="avatarDeleting"
+        >
+          បោះបង់
+        </button>
+
+        <button
+          class="btn btn-danger"
+          @click="confirmDeleteAvatar"
+          :disabled="avatarDeleting"
+        >
+          <i
+            v-if="avatarDeleting"
+            class="fa-solid fa-spinner fa-spin"
+          ></i>
+
+          {{ avatarDeleting ? "កំពុងលុប..." : "លុបរូបភាព" }}
+        </button>
+      </template>
+    </BaseModal>
   </div>
 </template>
 <script setup>
@@ -352,6 +405,7 @@ const isLoading = ref(false);
 const imgBaseUrl = import.meta.env.VITE_BASE_URL_FOR_IMAGE;
 const avatarInput = ref(null);
 const imageRefresh = ref(Date.now());
+const isDeleteAvatarModalOpen = ref(false);
 
 const isEditModalOpen = ref(false);
 const isPasswordModalOpen = ref(false);
@@ -483,32 +537,64 @@ const uploadAvatar = async (event) => {
   const file = event.target.files[0];
   if (!file) return;
 
-  if (file.size > 2 * 1024 * 1024) {
-    triggerToast("ទំហំរូបភាពត្រូវតែតូចជាង 2MB", "fa-solid fa-circle-xmark");
+  // Allowed file types
+  const allowedMimeTypes = [
+    "image/jpeg", // .jpg, .jpeg
+    "image/png",  // .png
+    "image/webp", // .webp
+  ];
+
+  const allowedExtensions = [".jpg", ".jpeg", ".png", ".webp"];
+
+  const fileName = file.name.toLowerCase();
+  const hasValidExtension = allowedExtensions.some(ext =>
+    fileName.endsWith(ext)
+  );
+
+  // Validate file type
+  if (!allowedMimeTypes.includes(file.type) || !hasValidExtension) {
+    triggerToast(
+      "អាចផ្ទុកបានតែរូបភាព .jpg, .jpeg, .png និង .webp ប៉ុណ្ណោះ!",
+      "fa-solid fa-circle-xmark"
+    );
+    event.target.value = "";
+    return;
+  }
+
+  // Validate file size (2MB)
+  const maxSize = 2 * 1024 * 1024;
+
+  if (file.size > maxSize) {
+    triggerToast(
+      "ទំហំរូបភាពមិនអាចលើស 2MB បានទេ!",
+      "fa-solid fa-circle-xmark"
+    );
     event.target.value = "";
     return;
   }
 
   try {
-    triggerToast("កំពុងផ្ទុកឡើងរូបភាព...", "fa-solid fa-spinner fa-spin");
+    triggerToast(
+      "កំពុងផ្ទុកឡើងរូបភាព...",
+      "fa-solid fa-spinner fa-spin"
+    );
 
     if (authStore.error) authStore.error = null;
 
     await authStore.uploadAvatar(file);
 
-    if (typeof authStore.fetchProfile === "function") {
-      await authStore.fetchProfile();
-    }
+    await authStore.fetchProfile();
 
     imageRefresh.value = Date.now();
 
     triggerToast(
       "ផ្លាស់ប្តូររូបភាពប្រវត្តិរូបជោគជ័យ!",
-      "fa-solid fa-circle-check",
-      500,
+      "fa-solid fa-circle-check"
     );
   } catch (err) {
-    const errorMsg = err.response?.data?.msg || "មិនអាចផ្ទុកឡើងរូបភាពបានទេ";
+    const errorMsg =
+      err.response?.data?.msg || "មិនអាចផ្ទុករូបភាពបានទេ!";
+
     triggerToast(errorMsg, "fa-solid fa-circle-xmark");
   } finally {
     event.target.value = "";
@@ -516,25 +602,29 @@ const uploadAvatar = async (event) => {
 };
 
 //Delete avatar
-const deleteAvatar = async () => {
+const confirmDeleteAvatar = async () => {
   const avatar = authStore.profile?.avatar;
+
   if (!avatar || avatar.includes("default")) {
     triggerToast(
       "មិនមានរូបភាពសម្រាប់លុបទេ!",
-      "fa-solid fa-triangle-exclamation",
+      "fa-solid fa-triangle-exclamation"
     );
+    isDeleteAvatarModalOpen.value = false;
     return;
   }
 
   try {
     avatarDeleting.value = true;
-    triggerToast("កំពុងលុបរូបភាព...", "fa-solid fa-spinner fa-spin");
+
+    triggerToast(
+      "កំពុងលុបរូបភាព...",
+      "fa-solid fa-spinner fa-spin"
+    );
 
     await authStore.deleteAvatar();
 
-    if (typeof authStore.fetchProfile === "function") {
-      await authStore.fetchProfile();
-    }
+    await authStore.fetchProfile();
 
     imageRefresh.value = Date.now();
 
@@ -542,9 +632,17 @@ const deleteAvatar = async () => {
       avatarInput.value.value = "";
     }
 
-    triggerToast("លុបរូបភាពប្រវត្តិរូបជោគជ័យ!", "fa-solid fa-circle-check");
+    isDeleteAvatarModalOpen.value = false;
+
+    triggerToast(
+      "លុបរូបភាពប្រវត្តិរូបជោគជ័យ!",
+      "fa-solid fa-circle-check"
+    );
   } catch (err) {
-    triggerToast("មានបញ្ហាក្នុងការលុបរូបភាព!", "fa-solid fa-circle-xmark");
+    triggerToast(
+      "មានបញ្ហាក្នុងការលុបរូបភាព!",
+      "fa-solid fa-circle-xmark"
+    );
   } finally {
     avatarDeleting.value = false;
   }
@@ -622,7 +720,24 @@ const handleUpdateProfile = async () => {
   }
 };
 
-//Delete Account
+const avatarSrc = computed(() => {
+  const avatar = authStore.profile?.avatar;
+
+  if (!avatar) {
+    return defaultImage;
+  }
+
+  if (avatar.toLowerCase().includes("default.png")) {
+    return defaultImage;
+  }
+
+  return `${imgBaseUrl}${avatar}?t=${imageRefresh.value}`;
+});
+
+const onAvatarError = (e) => {
+  e.target.src = defaultImage;
+};
+
 const handleDeleteAccount = async () => {
   deleteAccountError.value = "";
 
