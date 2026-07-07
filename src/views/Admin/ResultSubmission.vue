@@ -73,15 +73,11 @@ const submissionHeaders = [
 ];
 
 
-// Data Filtering
 const uniqueQuizzes = computed(() => {
   const quizzes = submissions.value.map(item => item.display_quiz_title);
   return [...new Set(quizzes)].filter(Boolean);
 });
 
-
-
-// Search & Filter
 const filteredSubmissions = computed(() => {
   return submissions.value.filter((item) => {
     const studentName = item.display_student_name ? item.display_student_name.toLowerCase() : "";
@@ -97,7 +93,6 @@ const filteredSubmissions = computed(() => {
 });
 
 
-// Grade
 const calculateGrade = (score, maxScore = 10) => {
   const percentage = (score / maxScore) * 100;
   if (percentage >= 90) return 'A';

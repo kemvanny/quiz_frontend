@@ -127,7 +127,6 @@ onMounted(async () => {
 });
 </script>
 <style scoped>
-/* ── Design Tokens */
 :root {
     --g50: #f2fbf6;
     --g100: #d8f3e6;
@@ -142,7 +141,6 @@ onMounted(async () => {
     --shadow: 0 20px 40px rgba(21, 122, 79, 0.05);
 }
 
-/* ── Full Window Core (លុបចោលការ Scroll ទាំងស្រុង) ─────── */
 .shell {
     height: 100vh;
     max-height: 100vh;
@@ -156,7 +154,6 @@ onMounted(async () => {
     overflow: hidden;
 }
 
-/* ── Topbar Styling ─────────────────────────────────────── */
 .topbar {
     padding: 0 2rem;
     height: 60px;
@@ -209,7 +206,6 @@ onMounted(async () => {
     gap: .35rem;
 }
 
-/* ── Content Body Wrapper ───────────────────────────────── */
 .content-wrapper {
     display: flex;
     flex-direction: column;
@@ -218,7 +214,7 @@ onMounted(async () => {
     padding: 1rem;
 }
 
-/* ── Beautiful Scene Card ───────────────────────────────── */
+
 .scene-card {
     background: #ffffff;
     border: 1px solid rgba(16, 185, 129, 0.12);
@@ -236,7 +232,7 @@ onMounted(async () => {
     text-align: center;
 }
 
-/* ── Mint Loading Spinner ───────────────────────────────── */
+
 .text-mint {
     color: #10b981;
 }
@@ -245,7 +241,7 @@ onMounted(async () => {
     color: #065f46;
 }
 
-/* ── Classroom Illustration Style ────────────────────────── */
+
 .illus-wrap {
     position: relative;
     width: 200px;

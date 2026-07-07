@@ -272,7 +272,7 @@ function confirmPublish() {
 </script>
 
 <style scoped>
-/* ── Tokens ── */
+
 :root {
   --em:      #10b981;
   --em-dk:   #059669;
@@ -287,7 +287,7 @@ function confirmPublish() {
   --r-xl:    20px;
 }
 
-/* ── Workspace grid ── */
+
 .workspace {
   display: flex;
   flex-direction: column;
@@ -312,7 +312,6 @@ function confirmPublish() {
   gap: 16px;
 }
 
-/* ── Panel ── */
 .panel {
   background: #fff;
   border: 1px solid var(--bdr);
@@ -339,7 +338,7 @@ function confirmPublish() {
 }
 .panel-body { padding: 20px; display: flex; flex-direction: column; gap: 18px;}
 
-/* ── Fields ── */
+
 .field-group { display: flex; flex-direction: column; gap: 6px; }
 .field-label {
   font-size: .7rem;
@@ -371,7 +370,7 @@ function confirmPublish() {
   box-shadow: 0 0 0 3px rgba(16,185,129,.08);
 }
 
-/* ── Select wrapper ── */
+
 .select-group {
   background: #f8fafc;
   border: 1px solid #f1f5f9;
@@ -397,7 +396,7 @@ function confirmPublish() {
 .q-select { padding-left: 42px !important; }
 .ps-ico   { padding-left: 42px !important; }
 
-/* ── Classroom row ── */
+
 .room-row { display: flex; }
 .flex-1   { flex: 1; min-width: 0; }
 .room-sel { border-radius: 12px 0 0 12px !important; border-right: none !important; }
@@ -417,7 +416,7 @@ function confirmPublish() {
 }
 .btn-room:hover { background: #d1fae5; }
 
-/* ── Type chips ── */
+
 .chips { display: flex; flex-wrap: wrap; gap: 8px; }
 .tchip {
   background: #fff;
@@ -442,7 +441,7 @@ function confirmPublish() {
 }
 .tchip.sel .icon-box { background: #10b981; color: #fff; }
 
-/* ── Upload ── */
+
 .upload-z {
   border: 2px dashed var(--bdr);
   border-radius: 16px;

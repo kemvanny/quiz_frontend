@@ -227,9 +227,6 @@ const roomName = ref("កំពុងទាញយក...");
 const loading = ref(false);
 const isProcessing = ref(false);
 
-const roomData = ref(null);
-const exams = ref([]);
-
 const statusFilter = ref("all");
 
 const currentPage = ref(1);
